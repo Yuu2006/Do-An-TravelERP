@@ -22,12 +22,12 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
 > **Mục tiêu:** Dựng xong môi trường, cài DB, chạy được Hello World có auth
 
 ### Ngày 1–2: Khởi tạo dự án
-- [ ] Khởi tạo Spring Boot project (Maven/Gradle) với các dependencies cơ bản:
+- [x] Khởi tạo Spring Boot project (Maven/Gradle) với các dependencies cơ bản:
   - `spring-boot-starter-web`, `spring-boot-starter-data-jpa`
   - `spring-boot-starter-security`, `jjwt` (JWT)
   - `ojdbc8` (Oracle JDBC driver)
   - `lombok`, `mapstruct`, `springdoc-openapi` (Swagger)
-- [ ] Cấu hình kết nối Oracle EE 18c (`application.yml`)
+- [x] Cấu hình kết nối Oracle EE 18c (`application.yml`)
 - [ ] Thiết lập cấu trúc package theo kiến trúc phân lớp:
   ```
   com.digitaltravel
