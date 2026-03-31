@@ -1,22 +1,22 @@
 # Contributing Guide
 
-Tai lieu nay mo ta quy trinh dong gop code cho du an Digital Travel ERP.
-Muc tieu: dong bo cach lam viec, merge nhanh, giam loi khi release.
+Tài liệu này mô tả quy trình đóng góp code cho dự án Digital Travel ERP.
+Mục tiêu: đồng bộ cách làm việc, merge nhanh, giảm lỗi khi release.
 
 ## 1) Branch strategy
 
-- `main`: nhanh on dinh de demo/release, khong commit truc tiep.
-- `dev`: nhanh tich hop chinh, nhan PR tu `feature/*`.
-- `feature/*`: nhanh phat trien tinh nang, tao tu `dev`.
+- `main`: nhánh ổn định để demo/release, không commit trực tiếp.
+- `dev`: nhánh tích hợp chính, nhận PR từ `feature/*`.
+- `feature/*`: nhánh phát triển tính năng, tạo từ `dev`.
 
-Dat ten branch de nhin la biet viec gi dang lam:
+Đặt tên branch để nhìn là biết việc gì đang làm:
 
 - `feature/auth-jwt`
 - `feature/booking-create`
 - `feature/tour-search-filter`
 - `fix/payment-callback`
 
-### Flow lam viec
+### Flow làm việc
 
 ```powershell
 git switch dev
@@ -32,25 +32,25 @@ git commit -m "feat(scope): mo ta ngan gon"
 git push -u origin feature/<ten-ngan-gon>
 ```
 
-Mo Pull Request: `feature/*` -> `dev`.
-Chi merge `dev` -> `main` khi da test va chuan bi demo/release.
+Mở Pull Request: `feature/*` -> `dev`.
+Chỉ merge `dev` -> `main` khi đã test và chuẩn bị demo/release.
 
 ## 2) Commit message convention
 
-Su dung mau Conventional Commits rut gon:
+Sử dụng mẫu Conventional Commits rút gọn:
 
 `<type>(<scope>): <subject>`
 
-Loai commit khuyen nghi:
+Loại commit khuyến nghị:
 
-- `feat`: them tinh nang
-- `fix`: sua loi
-- `refactor`: doi cau truc, khong doi hanh vi
-- `test`: bo sung/chinh sua test
-- `docs`: cap nhat tai lieu
-- `chore`: viec he thong/build/tooling
+- `feat`: thêm tính năng
+- `fix`: sửa lỗi
+- `refactor`: đổi cấu trúc, không đổi hành vi
+- `test`: bổ sung/chỉnh sửa test
+- `docs`: cập nhật tài liệu
+- `chore`: việc hệ thống/build/tooling
 
-Vi du:
+Ví dụ:
 
 - `feat(auth): add jwt login endpoint`
 - `fix(booking): prevent overbooking when seats are full`
@@ -58,66 +58,66 @@ Vi du:
 
 ## 3) Pull Request rules
 
-Moi PR can co:
+Mỗi PR cần có:
 
-- Tieu de ro rang, ngan gon
-- Mo ta "tai sao thay doi" va "thay doi gi"
-- Link task/use case (neu co)
-- Huong dan test nhanh hoac bang chung test
-- Screenshot/Swagger response neu thay doi API/UI
+- Tiêu đề rõ ràng, ngắn gọn
+- Mô tả "tại sao thay đổi" và "thay đổi gì"
+- Link task/use case (nếu có)
+- Hướng dẫn test nhanh hoặc bằng chứng test
+- Screenshot/Swagger response nếu thay đổi API/UI
 
-Khuyen nghi:
+Khuyến nghị:
 
-- 1 PR chi nen giai quyet 1 van de chinh
-- Trach PR qua lon (> 500 dong thay doi neu khong can thiet)
-- Resolve conversation truoc khi merge
+- 1 PR chỉ nên giải quyết 1 vấn đề chính
+- Tránh PR quá lớn (> 500 dòng thay đổi nếu không cần thiết)
+- Resolve conversation trước khi merge.
 
 ## 4) Review checklist
 
-Truoc khi request review, tu kiem tra:
+Trước khi request review, tự kiểm tra:
 
-- [ ] Build pass tren may local
-- [ ] Test lien quan pass (hoac ghi ro ly do chua co test)
-- [ ] Khong commit file rac (log, secrets, file tam)
-- [ ] Dat ten class/package bien ro rang, dung convention
-- [ ] Khong pha vo API/hanh vi cu ma khong ghi chu
-- [ ] Cap nhat `README.md`/tai lieu neu doi cach dung
+- [ ] Build pass trên máy local
+- [ ] Test liên quan pass (hoặc ghi rõ lý do chưa có test)
+- [ ] Không commit file rác (log, secrets, file tạm)
+- [ ] Đặt tên class/package/biến rõ ràng, đúng convention
+- [ ] Không phá vỡ API/hành vi cũ mà không ghi chú
+- [ ] Cập nhật `README.md`/tài liệu nếu đổi cách dùng
 
-## 5) Local quality gate (toi thieu)
+## 5) Local quality gate (tối thiểu)
 
-Chay truoc khi mo PR:
+Chạy trước khi mở PR:
 
 ```powershell
 ./mvnw.cmd test
 ```
 
-Neu thay doi lien quan compile/build, chay them:
+Nếu thay đổi liên quan compile/build, chạy thêm:
 
 ```powershell
 ./mvnw.cmd clean verify
 ```
 
-## 6) Khong commit thong tin nhay cam
+## 6) Không commit thông tin nhạy cảm
 
-Tuyet doi khong commit:
+Tuyệt đối không commit:
 
-- Mat khau DB, API key, token that
+- Mật khẩu DB, API key, token thật
 - File env local (`.env`, `application-local.yml`...)
-- Du lieu ca nhan that cua khach hang
+- Dữ liệu cá nhân thật của khách hàng
 
-Neu lo commit thong tin nhay cam:
+Nếu lỡ commit thông tin nhạy cảm:
 
-1. Thu hoi/rotate secret ngay lap tuc.
-2. Tao commit xoa secret.
-3. Thong bao cho team de kiem tra anh huong.
+1. Thu hồi/rotate secret ngay lập tức.
+2. Tạo commit xóa secret.
+3. Thông báo cho team để kiểm tra ảnh hưởng.
 
-## 7) Nguyen tac merge
+## 7) Nguyên tắc merge
 
-- Uu tien squash merge vao `dev` de lich su gon gang.
-- Khong force-push len nhanh chung (`main`, `dev`).
-- Release branch (neu can) tao tu `dev`, merge nguoc ve `dev` sau khi hotfix.
+- Ưu tiên squash merge vào `dev` để lịch sử gọn gàng.
+- Không force-push lên nhánh chung (`main`, `dev`).
+- Release branch (nếu cần) tạo từ `dev`, merge ngược về `dev` sau khi hotfix.
 
 ---
 
-Cam on ban da dong gop. Lam nho, review nhanh, merge deu.
+Cảm ơn bạn đã đóng góp. Làm nhỏ, review nhanh, merge đều.
 
