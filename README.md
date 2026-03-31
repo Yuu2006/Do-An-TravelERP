@@ -28,7 +28,7 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
   - `ojdbc8` (Oracle JDBC driver)
   - `lombok`, `mapstruct`, `springdoc-openapi` (Swagger)
 - [x] Cấu hình kết nối Oracle EE 18c (`application.yml`)
-- [ ] Thiết lập cấu trúc package theo kiến trúc phân lớp:
+- [x] Thiết lập cấu trúc package theo kiến trúc phân lớp:
   ```
   com.digitaltravel
   ├── config/         (Security, CORS, Swagger)
@@ -40,7 +40,13 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
   ├── mapper/
   └── exception/
   ```
-- [ ] Cấu hình Git repository, `.gitignore`, quy ước branch (`main`, `dev`, `feature/*`)
+- [x] Cấu hình Git repository, `.gitignore`, quy ước branch (`main`, `dev`, `feature/*`)
+
+### Quy ước Git branch (áp dụng từ tuần 1)
+- `main`: nhánh ổn định để demo/release, chỉ nhận merge từ `dev`.
+- `dev`: nhánh tích hợp chính trong quá trình phát triển hằng ngày.
+- `feature/*`: nhánh chức năng tạo từ `dev`, ví dụ: `feature/auth-jwt`, `feature/booking-create`.
+- Quy trình đề xuất: `feature/*` -> Pull Request -> `dev` -> kiểm thử -> merge `main`.
 
 ### Ngày 3–5: Tạo Database Schema
 - [ ] Viết script DDL Oracle tạo toàn bộ bảng theo thiết kế:
