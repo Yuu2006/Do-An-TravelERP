@@ -49,15 +49,14 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
 - Quy trình đề xuất: `feature/*` -> Pull Request -> `dev` -> kiểm thử -> merge `main`.
 
 ### Ngày 3–5: Tạo Database Schema
-- [ ] Viết script DDL Oracle tạo toàn bộ bảng theo thiết kế:
+- [x] Viết script DDL Oracle tạo toàn bộ bảng theo thiết kế:
   - Nhóm 1 (Nền tảng): `TAIKHOAN`, `VAITRO`, `NHANVIEN`, `NANGLUCNHANVIEN`
   - Nhóm 2 (Sản phẩm): `TOURMAU`, `LICHTRINHTOUR`, `TOURTHUCTE`, `LOAIPHONG`, `DICHVUTHEM`
   - Nhóm 3 (Khách hàng): `HOCHIEUSO`, `LICHSUTOUR`, `DSKHACHDITOUR`
   - Nhóm 4 (Giao dịch): `DONDATTOUR`, `CHITIETDATTOUR`, `CHITIETDICHVU`, `THANHTOAN`
   - Nhóm 5 (Ưu đãi): `VOUCHER`, `KHUYENMAI_KH`, `DATTOUR_UUDAI`, `NHATKYDOIDIEM`
-  - Nhóm 6 (Vận hành): `PHANCONGTOUR`, `HANHDONG`, `HANHDONGXANH`, `NHATKYSUCO`, `CHIPHITHUCTE`
+  - Nhóm 6 (Vận hành): `PHANCONGTOUR`, `HANHDONG`, `HANHDONGXANH`, `NHATKYSUCO`, `CHIPHITHUCTE`, `DIEMDANH`
   - Nhóm 7 (Tài chính): `QUYETTOAN`, `YEUCAUHOTRO`, `DANHGIAKH`
-- [ ] Tạo sequences, indexes và foreign key constraints
 - [ ] Viết script INSERT dữ liệu mẫu (seed data) cho các bảng danh mục
 - [ ] Test kết nối từ Spring Boot → Oracle thành công
 
