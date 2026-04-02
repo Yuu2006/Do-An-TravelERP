@@ -50,5 +50,3 @@ src/main/resources/application-dev-local.yaml
 Thumbs.db
 *.tmp
 *.swp
-
-.agents/
