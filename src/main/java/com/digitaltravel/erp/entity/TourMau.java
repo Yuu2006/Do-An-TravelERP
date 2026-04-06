@@ -1,0 +1,70 @@
+package com.digitaltravel.erp.entity;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Entity
+@Table(name = "TOURMAU")
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class TourMau {
+    @Id
+    @Column(name = "MaTourMau", nullable = false, length = 50)
+    String MaTourMau;
+
+    @Column(name = "TieuDe", nullable = false, length = 500)
+    String TieuDe;
+
+    // CLOB
+    @Lob
+    @Column(name = "MoTa")
+    String MoTa;
+
+    // NUMBER(5): so ngay
+    @Column(name = "ThoiLuong", nullable = false)
+    Integer ThoiLuong;
+
+    // NUMBER(18,2): gia san (gia toi thieu khong duoc ban thap hon)
+    @Column(name = "GiaSan", nullable = false, precision = 18, scale = 2)
+    BigDecimal GiaSan;
+
+    // NUMBER(3,2): diem trung binh 0.00 - 5.00
+    @Column(name = "DanhGia", precision = 3, scale = 2)
+    BigDecimal DanhGia;
+
+    // NUMBER(10): tong so luot danh gia
+    @Column(name = "SoDanhGia")
+    Integer SoDanhGia;
+
+    // Gia tri hop le: HOAT_DONG | KHOA
+    @Column(name = "TrangThai", nullable = false, length = 20)
+    String TrangThai;
+
+    @CreationTimestamp
+    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
+    LocalDateTime ThoiDiemTao;
+
+    @UpdateTimestamp
+    @Column(name = "CapNhatVao")
+    LocalDateTime CapNhatVao;
+
+    @Column(name = "TaoBoi", length = 100)
+    String TaoBoi;
+
+    @Column(name = "CapNhatBoi", length = 100)
+    String CapNhatBoi;
+}

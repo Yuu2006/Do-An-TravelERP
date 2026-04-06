@@ -1,0 +1,75 @@
+package com.digitaltravel.erp.entity;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Entity
+@Table(name = "VOUCHER")
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Voucher {
+    @Id
+    @Column(name = "MaVoucher", nullable = false, length = 50)
+    String MaVoucher;
+
+    @Column(name = "MaCode", nullable = false, length = 50, unique = true)
+    String MaCode;
+
+    // Gia tri hop le: PHAN_TRAM | SO_TIEN
+    @Column(name = "LoaiUuDai", nullable = false, length = 20)
+    String LoaiUuDai;
+
+    // NUMBER(18,2): gia tri giam (% hoac so tien VND)
+    @Column(name = "GiaTriGiam", nullable = false, precision = 18, scale = 2)
+    BigDecimal GiaTriGiam;
+
+    @Column(name = "DieuKienApDung", length = 2000)
+    String DieuKienApDung;
+
+    // NUMBER(10): tong so luot duoc phat hanh
+    @Column(name = "SoLuotPhatHanh", nullable = false)
+    Integer SoLuotPhatHanh;
+
+    // NUMBER(10): so luot da duoc su dung
+    @Column(name = "SoLuotDaDung", nullable = false)
+    Integer SoLuotDaDung;
+
+    @Column(name = "NgayHieuLuc", nullable = false)
+    LocalDate NgayHieuLuc;
+
+    // Oracle DATE -> LocalDate
+    @Column(name = "NgayHetHan", nullable = false)
+    LocalDate NgayHetHan;
+
+    // Gia tri hop le: SAN_SANG | VO_HIEU
+    @Column(name = "TrangThai", nullable = false, length = 20)
+    String TrangThai;
+
+    @CreationTimestamp
+    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
+    LocalDateTime ThoiDiemTao;
+
+    @UpdateTimestamp
+    @Column(name = "CapNhatVao")
+    LocalDateTime CapNhatVao;
+
+    @Column(name = "TaoBoi", length = 100)
+    String TaoBoi;
+
+    @Column(name = "CapNhatBoi", length = 100)
+    String CapNhatBoi;
+}

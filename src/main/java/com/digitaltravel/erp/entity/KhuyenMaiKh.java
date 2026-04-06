@@ -1,0 +1,62 @@
+package com.digitaltravel.erp.entity;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+@Entity
+@Table(name = "KHUYENMAI_KH")
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class KhuyenMaiKh {
+    // Composite PK: (MaKhachHang, MaVoucher)
+    @EmbeddedId
+    KhuyenMaiKhId id;
+
+    // FK -> HOCHIEUSO(MaKhachHang) — dung insertable/updatable=false vi da map trong EmbeddedId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("MaKhachHang")
+    @JoinColumn(name = "MaKhachHang")
+    HoChieuSo khachHang;
+
+    // FK -> VOUCHER(MaVoucher)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("MaVoucher")
+    @JoinColumn(name = "MaVoucher")
+    Voucher voucher;
+
+    // Gia tri hop le: SAN_SANG | DA_DUNG | HET_HAN | VO_HIEU
+    @Column(name = "TrangThai", nullable = false, length = 20)
+    String TrangThai;
+
+    // Oracle DATE -> LocalDate
+    @Column(name = "NgayHetHan")
+    LocalDate NgayHetHan;
+
+    @Column(name = "NgayNhan", nullable = false)
+    LocalDateTime NgayNhan;
+
+    @CreationTimestamp
+    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
+    LocalDateTime ThoiDiemTao;
+
+    @UpdateTimestamp
+    @Column(name = "CapNhatVao")
+    LocalDateTime CapNhatVao;
+}
