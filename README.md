@@ -57,8 +57,8 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
   - Nhóm 5 (Ưu đãi): `VOUCHER`, `KHUYENMAI_KH`, `DATTOUR_UUDAI`, `NHATKYDOIDIEM`
   - Nhóm 6 (Vận hành): `PHANCONGTOUR`, `HANHDONG`, `HANHDONGXANH`, `NHATKYSUCO`, `CHIPHITHUCTE`, `DIEMDANH`
   - Nhóm 7 (Tài chính): `QUYETTOAN`, `YEUCAUHOTRO`, `DANHGIAKH`
-- [ ] Viết script INSERT dữ liệu mẫu (seed data) cho các bảng danh mục
-- [ ] Test kết nối từ Spring Boot → Oracle thành công
+- [x] Viết script INSERT dữ liệu mẫu (seed data) cho các bảng danh mục
+- [x] Test kết nối từ Spring Boot → Oracle thành công
 
 ### Ngày 6–7: Cơ sở hạ tầng bảo mật (UC57–UC62)
 - [ ] Cài đặt JWT Authentication filter
