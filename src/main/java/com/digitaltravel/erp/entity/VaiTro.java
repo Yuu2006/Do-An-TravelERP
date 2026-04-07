@@ -7,6 +7,8 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -49,6 +51,7 @@ public class VaiTro {
     String CapNhatBoi;
 
     // Danh sach tai khoan thuoc vai tro nay
+    @JsonIgnore
     @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)
     List<TaiKhoan> dsTaiKhoan = new ArrayList<>();
 }
