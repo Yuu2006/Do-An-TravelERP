@@ -665,49 +665,49 @@ INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KHACHHANG',  'Khá
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_ADMIN01', 'admin',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Nguyen Van Admin', '079099000001', 'admin@digitaltravel.vn', '0900000001',
         'ADMIN', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_MGR01', 'manager01',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Tran Thi Manager', '079099000002', 'manager01@digitaltravel.vn', '0900000002',
         'MANAGER', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_SALES01', 'sales01',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Le Van Sales', '079099000003', 'sales01@digitaltravel.vn', '0900000003',
         'SALES', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_KT01', 'ketoan01',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Pham Thi Ke Toan', '079099000004', 'ketoan01@digitaltravel.vn', '0900000004',
         'KETOAN', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_HDV01', 'hdv01',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Hoang Van Huong Dan', '079099000005', 'hdv01@digitaltravel.vn', '0900000005',
         'HDV', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_HDV02', 'hdv02',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Nguyen Thi Huong', '079099000006', 'hdv02@digitaltravel.vn', '0900000006',
         'HDV', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_KH01', 'khachhang01',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Bui Thi Khach Hang', '079099000007', 'kh01@gmail.com', '0900000007',
         'KHACHHANG', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_KH02', 'khachhang02',
-        '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Dinh Van Khach Hang', '079099000008', 'kh02@gmail.com', '0900000008',
         'KHACHHANG', 'HOAT_DONG', 'SYSTEM');
 
@@ -787,3 +787,4 @@ COMMIT;
 -- ============================================================
 -- END SEED DATA
 -- ============================================================
+

@@ -12,13 +12,37 @@ import com.digitaltravel.erp.entity.TaiKhoan;
 
 @Repository
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String>{
-    boolean existsByEmail(String email);
+    @Query("""
+            SELECT CASE WHEN COUNT(tk) > 0 THEN true ELSE false END
+            FROM TaiKhoan tk
+            WHERE tk.Email = :email
+            """)
+    boolean existsByEmail(@Param("email") String email);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(tk) > 0 THEN true ELSE false END
+            FROM TaiKhoan tk
+            WHERE tk.TenDangNhap = :tenDangNhap
+            """)
+    boolean existsByTenDangNhap(@Param("tenDangNhap") String tenDangNhap);
 
     default boolean TonTaiTaiKhoan(String email) {
         return existsByEmail(email);
     }
     
-    Optional<TaiKhoan> findByEmail(String email);
+    @Query("""
+            SELECT tk FROM TaiKhoan tk
+            WHERE tk.Email = :email
+            """)
+    Optional<TaiKhoan> findByEmail(@Param("email") String email);
+
+    @Query("""
+            SELECT tk FROM TaiKhoan tk
+            JOIN FETCH tk.vaiTro
+            WHERE tk.TenDangNhap = :tenDangNhap
+            """)
+    Optional<TaiKhoan> findByTenDangNhapWithVaiTro(@Param("tenDangNhap") String tenDangNhap);
+
     @Query(
             value = """
             select tk.* from TAIKHOAN tk
