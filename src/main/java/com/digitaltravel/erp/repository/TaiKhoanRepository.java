@@ -19,6 +19,14 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String>{
     }
     
     Optional<TaiKhoan> findByEmail(String email);
+
+    @Query("""
+            SELECT tk FROM TaiKhoan tk
+            JOIN FETCH tk.vaiTro
+            WHERE tk.TenDangNhap = :tenDangNhap
+            """)
+    Optional<TaiKhoan> findByTenDangNhapWithVaiTro(@Param("tenDangNhap") String tenDangNhap);
+
     @Query(
             value = """
             select tk.* from TAIKHOAN tk
