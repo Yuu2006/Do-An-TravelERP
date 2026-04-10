@@ -1,4 +1,4 @@
-package com.digitaltravel.erp.dto;
+package com.digitaltravel.erp.dto.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

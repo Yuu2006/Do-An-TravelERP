@@ -1,4 +1,4 @@
-package com.digitaltravel.erp.dto;
+package com.digitaltravel.erp.dto.responses;
 
 import lombok.Builder;
 import lombok.Getter;
