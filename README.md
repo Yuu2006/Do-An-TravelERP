@@ -55,12 +55,12 @@ Luồng ưu tiên: **Đăng nhập → Đặt tour → Thanh toán → HDV vận
 - [x] Test kết nối từ Spring Boot → Oracle thành công
 
 ### Cơ sở hạ tầng bảo mật (UC57–UC62)
-- [ ] Cài đặt JWT Authentication filter
-- [ ] Cài đặt RBAC với Spring Security (`@PreAuthorize`)
-- [ ] Định nghĩa 5 vai trò: `ADMIN`, `MANAGER`, `SALES`, `KETOAN`, `HDV`, `KHACHHANG`
-- [ ] API: Đăng ký `UC58`, Đăng nhập `UC59`, Đăng xuất `UC60`, Quên mật khẩu `UC61`
-- [ ] Global Exception Handler (`@ControllerAdvice`)
-- [ ] Chuẩn hóa `ApiResponse<T>` wrapper cho toàn bộ response
+- [x] Cài đặt JWT Authentication filter
+- [x] Cài đặt RBAC với Spring Security (`@PreAuthorize`)
+- [x] Định nghĩa 5 vai trò: `ADMIN`, `MANAGER`, `SALES`, `KETOAN`, `HDV`, `KHACHHANG`
+- [x] API: Đăng ký `UC58`, Đăng nhập `UC59`, Đăng xuất `UC60`, Quên mật khẩu `UC61`
+- [x] Global Exception Handler (`@ControllerAdvice`)
+- [x] Chuẩn hóa `ApiResponse<T>` wrapper cho toàn bộ response
 
 **✅ Milestone tuần 1:** Gọi được API đăng nhập, nhận JWT, gọi API protected thành công.
 
