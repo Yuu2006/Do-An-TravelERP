@@ -18,7 +18,9 @@ import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.config.VaiTroConst;
 import com.digitaltravel.erp.dto.requests.DangKyRequest;
 import com.digitaltravel.erp.dto.requests.DangNhapRequest;
+import com.digitaltravel.erp.dto.requests.DatLaiMatKhauRequest;
 import com.digitaltravel.erp.dto.requests.DoiMatKhauRequest;
+import com.digitaltravel.erp.dto.requests.QuenMatKhauRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DangNhapResponse;
 import com.digitaltravel.erp.entity.TaiKhoan;
@@ -114,6 +116,28 @@ public class AuthController {
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
         return ResponseEntity.ok(ApiResponse.noContent("Doi mat khau thanh cong"));
+    }
+
+    @PostMapping("/quen-mat-khau")
+    public ResponseEntity<ApiResponse<String>> quenMatKhau(@Valid @RequestBody QuenMatKhauRequest request) {
+        taiKhoanRepository.findByTenDangNhapWithVaiTro(request.getTenDangNhap())
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tai khoan"));
+        String resetToken = jwtUtil.generateResetToken(request.getTenDangNhap());
+        // TODO: Thay viec tra ve token bang gui email trong production
+        return ResponseEntity.ok(ApiResponse.ok("Da tao token dat lai mat khau (hieu luc 15 phut)", resetToken));
+    }
+
+    @PostMapping("/dat-lai-mat-khau")
+    public ResponseEntity<ApiResponse<Void>> datLaiMatKhau(@Valid @RequestBody DatLaiMatKhauRequest request) {
+        if (!request.getMatKhauMoi().equals(request.getXacNhanMatKhau())) {
+            throw AppException.badRequest("Mat khau moi va xac nhan khong khop");
+        }
+        String tenDangNhap = jwtUtil.extractResetSubject(request.getResetToken());
+        TaiKhoan taiKhoan = taiKhoanRepository.findByTenDangNhapWithVaiTro(tenDangNhap)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tai khoan"));
+        taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
+        taiKhoanRepository.save(taiKhoan);
+        return ResponseEntity.ok(ApiResponse.noContent("Dat lai mat khau thanh cong"));
     }
 
     @PostMapping("/dang-xuat")
