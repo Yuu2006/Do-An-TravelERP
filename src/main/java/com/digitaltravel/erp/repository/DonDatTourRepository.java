@@ -54,7 +54,11 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
     );
 
     // Dùng cho Scheduler: lấy đơn CHO_XAC_NHAN đã hết hạn giữ chỗ
-    List<DonDatTour> findAllByTrangThaiAndThoiGianHetHanBefore(String trangThai, LocalDateTime thoiGian);
+    @Query("SELECT d FROM DonDatTour d WHERE d.TrangThai = :trangThai AND d.ThoiGianHetHan < :thoiGian")
+    List<DonDatTour> findAllByTrangThaiAndThoiGianHetHanBefore(
+            @Param("trangThai") String trangThai,
+            @Param("thoiGian") LocalDateTime thoiGian
+    );
 
     // Kiểm tra đơn theo maDatTour (không lọc khách hàng) — dùng cho thanh toán
     @Query("""

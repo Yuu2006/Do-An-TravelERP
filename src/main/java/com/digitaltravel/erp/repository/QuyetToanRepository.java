@@ -28,7 +28,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
 
     // Thống kê doanh thu theo khoảng thời gian (LOCKED quyết toán)
     @Query("""
-            SELECT SUM(qt.TongThu), COUNT(qt)
+            SELECT SUM(qt.TongDoanhThu), COUNT(qt)
             FROM QuyetToan qt
             WHERE qt.TrangThai = 'LOCKED'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
@@ -40,7 +40,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
 
     // Top tour doanh thu
     @Query("""
-            SELECT qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe, COUNT(dt), SUM(qt.TongThu)
+            SELECT qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe, COUNT(dt), SUM(qt.TongDoanhThu)
             FROM QuyetToan qt
             JOIN qt.tourThucTe tt
             JOIN tt.tourMau tm
@@ -48,7 +48,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             WHERE qt.TrangThai = 'LOCKED'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
             GROUP BY qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe
-            ORDER BY SUM(qt.TongThu) DESC
+            ORDER BY SUM(qt.TongDoanhThu) DESC
             """)
     List<Object[]> topTourDoanhThu(
             @Param("tuNgay") java.time.LocalDateTime tuNgay,
