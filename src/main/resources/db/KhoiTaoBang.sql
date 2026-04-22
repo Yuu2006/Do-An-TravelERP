@@ -782,6 +782,56 @@ VALUES ('VC003', 'BAC15', 'PHAN_TRAM', 15,
         'Uu dai 15% danh rieng thanh vien hang Bac tro len. Don toi thieu 5.000.000 VND.',
         200, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
 
+-- ------------------------------------------------------------
+-- 12. KHUYENMAI_KH — Phat hanh voucher cho khach hang
+-- ------------------------------------------------------------
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayPhatHanh, NgayHetHan, TaoBoi)
+VALUES ('KH001', 'VC003', 'SAN_SANG', DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
+
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayPhatHanh, NgayHetHan, TaoBoi)
+VALUES ('KH002', 'VC001', 'SAN_SANG', DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
+
+-- ------------------------------------------------------------
+-- 13. TOURTHUCTE bo sung — 1 tour KET_THUC de test bao cao
+-- ------------------------------------------------------------
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
+VALUES ('TTT099', 'TM001', DATE '2026-02-10', 3500000, 20, 8, 0, 'KET_THUC', 'SYSTEM');
+
+-- ------------------------------------------------------------
+-- 14. DONDATTOUR — Don dat tour mau
+-- ------------------------------------------------------------
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, SoKhach, TongTien, TrangThai, TaoBoi)
+VALUES ('DDT001', 'KH001', 'TTT001', 2, 7000000, 'DA_XAC_NHAN', 'SYSTEM');
+
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, SoKhach, TongTien, TrangThai, TaoBoi)
+VALUES ('DDT002', 'KH002', 'TTT003', 1, 4200000, 'CHO_XAC_NHAN', 'SYSTEM');
+
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, SoKhach, TongTien, TrangThai, TaoBoi)
+VALUES ('DDT099', 'KH001', 'TTT099', 2, 7000000, 'DA_XAC_NHAN', 'SYSTEM');
+
+-- ------------------------------------------------------------
+-- 15. LICHSUTOUR — Lich su tour da hoan thanh
+-- ------------------------------------------------------------
+INSERT INTO LICHSUTOUR (MaLichSu, MaKhachHang, MaTourThucTe, MaDatTour, NgayKhoiHanh, GiaDaTraTien, TaoBoi)
+VALUES ('LS001', 'KH001', 'TTT099', 'DDT099', DATE '2026-02-10', 7000000, 'SYSTEM');
+
+-- ------------------------------------------------------------
+-- 16. DANHGIAKH — Danh gia tour da hoan thanh
+-- ------------------------------------------------------------
+INSERT INTO DANHGIAKH (MaDanhGia, MaKhachHang, MaTourThucTe, DiemDanhGia, NhanXet, TrangThai, TaoBoi)
+VALUES ('DG001', 'KH001', 'TTT099', 5, 'Tour rat tot, HDV nhiet tinh, dich vu chuan.', 'HIEU_LUC', 'SYSTEM');
+
+-- ------------------------------------------------------------
+-- 17. GIAODICH — Giao dich thanh toan mau
+-- ------------------------------------------------------------
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, SoTien, LoaiGiaoDich, TrangThai, TaoBoi)
+VALUES ('GD001', 'DDT001', 7000000, 'THANH_TOAN', 'THANH_CONG', 'SYSTEM');
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, SoTien, LoaiGiaoDich, TrangThai, TaoBoi)
+VALUES ('GD099', 'DDT099', 7000000, 'THANH_TOAN', 'THANH_CONG', 'SYSTEM');
+-- Giao dich hoan tien cho test UC52
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, SoTien, LoaiGiaoDich, TrangThai, TaoBoi)
+VALUES ('GD_HOA01', 'DDT002', 4200000, 'HOAN_TIEN', 'CHO_THANH_TOAN', 'SYSTEM');
+
 COMMIT;
 -- ============================================================
 -- END SEED DATA

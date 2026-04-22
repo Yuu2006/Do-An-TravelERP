@@ -1,5 +1,6 @@
 package com.digitaltravel.erp.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -24,4 +25,33 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             ORDER BY qt.NgayQuyetToan DESC
             """)
     Page<QuyetToan> findByTrangThai(@Param("trangThai") String trangThai, Pageable pageable);
+
+    // Thống kê doanh thu theo khoảng thời gian (LOCKED quyết toán)
+    @Query("""
+            SELECT SUM(qt.TongThu), COUNT(qt)
+            FROM QuyetToan qt
+            WHERE qt.TrangThai = 'LOCKED'
+              AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
+            """)
+    List<Object[]> thongKeDoanhThu(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
+
+    // Top tour doanh thu
+    @Query("""
+            SELECT qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe, COUNT(dt), SUM(qt.TongThu)
+            FROM QuyetToan qt
+            JOIN qt.tourThucTe tt
+            JOIN tt.tourMau tm
+            LEFT JOIN DonDatTour dt ON dt.tourThucTe.MaTourThucTe = qt.tourThucTe.MaTourThucTe
+            WHERE qt.TrangThai = 'LOCKED'
+              AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
+            GROUP BY qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe
+            ORDER BY SUM(qt.TongThu) DESC
+            """)
+    List<Object[]> topTourDoanhThu(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
 }

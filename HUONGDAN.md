@@ -1,23 +1,361 @@
-﻿# HÆ°á»›ng dáº«n sá»­ dá»¥ng API Authentication vá»›i Postman
+# Hướng dẫn sử dụng Digital Travel ERP API
 
 Base URL: `http://localhost:8080`
 
 ---
 
-## 1. ÄÄƒng kÃ½ tÃ i khoáº£n khÃ¡ch hÃ ng
+## 1. Cài đặt & Khởi chạy
+
+### Yêu cầu
+- Java 17+
+- Maven 3.8+
+- Oracle Database 18c+
+
+### Cấu hình kết nối
+Chỉnh sửa `src/main/resources/application.yaml`:
+```yaml
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: your_user
+    password: your_password
+```
+
+### Khởi tạo Database & Dữ liệu mẫu (Seed Data)
+Để phục vụ việc test toàn diện các Use-Case (UC), file script khởi tạo đã có sẵn dữ liệu mẫu.
+```sql
+-- Kết nối Oracle bằng SQL*Plus hoặc SQL Developer
+@src/main/resources/db/KhoiTaoBang.sql
+```
+
+**Dữ liệu mẫu sau khi chạy script:**
+- Mật khẩu chung của tất cả user: `<username>123`
+- Ví dụ: `admin` -> `admin123`, `kh01` -> `kh123`
+
+### Build & Run
+```powershell
+./mvnw.cmd spring-boot:run
+```
+
+---
+
+## 2. Tài khoản mặc định (Dùng để Test)
+
+| Vai trò    | Tên đăng nhập | Chức năng test / Dữ liệu đang có                         |
+|------------|-------------|---------------------------------------------------------|
+| **ADMIN**  | `admin`     | Dùng test UC24, UC54-56 (Voucher), quản lý User, Vai trò |
+| **MANAGER**| `manager`   | Dùng test định giá tour, phân công HDV                   |
+| **SALES**  | `sales01`   | Dùng test UC34 (Xem đơn), UC41 (Xử lý khiếu nại)         |
+| **KETOAN** | `ketoan01`  | Dùng test UC52 (Hoàn tiền), UC53 (Báo cáo doanh thu)     |
+| **HDV**    | `hdv01`     | Dùng test UC39 (Lịch công tác), UC63 (Năng lực), Điểm danh|
+| **KHACHHANG**| `kh01`      | Đã mua tour TTT099, có Lịch sử tour, hạng Bạc (350 điểm). Có voucher `WELCOME10`, `BAC15`. Dùng test UC22, UC28, UC30, UC31, UC35. |
+| **KHACHHANG**| `kh02`      | Dùng test UC36, UC28 (Đơn chờ xác nhận DDT002). Đã có giao dịch HOAN_TIEN chờ xử lý (GD_HOA01). |
+
+*(Ghi chú: Token Bearer sinh ra từ `/api/auth/dang-nhap` của các user trên phải được gắn vào Header Authorization trong mọi request phía dưới).*
+
+---
+
+## 3. Xác thực (Authentication)
+
+### 3.1 Đăng ký tài khoản khách hàng
+
+**Endpoint:** `POST /api/auth/dang-ky`
+*(Public, không yêu cầu Token).*
+
+**Dữ liệu mẫu để Test:**
+```json
+{
+  "tenDangNhap": "testuser01",
+  "matKhau": "123456",
+  "xacNhanMatKhau": "123456",
+  "hoTen": "Người Dùng Test",
+  "email": "testuser01@example.com",
+  "soDienThoai": "0999888777"
+}
+```
+
+### 3.2 Đăng nhập
+
+**Endpoint:** `POST /api/auth/dang-nhap`
+
+**Dữ liệu mẫu để Test (Đăng nhập KH):**
+```json
+{
+  "tenDangNhap": "kh01",
+  "matKhau": "kh123"
+}
+```
+
+---
+
+## 4. Luồng nghiệp vụ Khách hàng (KHACHHANG)
+
+*=> Lưu ý: Cần lấy token của `kh01` hoặc `kh02` (Vai trò: KHACHHANG) để test các UC này.*
+
+### 4.1 UC22 — Xem lịch sử tour của tôi
+**Endpoint:** `GET /api/khachhang/lich-su-tour`
+- **Dữ liệu mẫu:** Sử dụng tài khoản `kh01` sẽ thấy kết quả là đơn hàng `LS001` (Nằm trong tour `TTT099` đã đi).
+
+### 4.2 UC25/26 — Xem tour công khai
+**Endpoint:** `GET /api/public/tour?page=0&size=10` *(Không cần Token)*  
+**Endpoint chi tiết:** `GET /api/public/tour/TTT001` *(TTT001 có sẵn trong DB)*
+
+### 4.3 UC28 — Áp voucher vào đơn đặt tour
+**Endpoint:** `POST /api/khachhang/ap-voucher`
+
+**Dữ liệu mẫu để Test (User kh01):**
+```json
+{
+  "maDatTour": "DDT001",
+  "maCode": "WELCOME10"
+}
+```
+*(Trong DB DDT001 thuộc kh01, trạng thái DA_XAC_NHAN).*
+
+### 4.4 UC30 — Đổi điểm xanh lấy voucher
+**Endpoint:** `POST /api/khachhang/doi-diem`
+
+Quy tắc: Tiền giảm / 100đ, Phần trăm giảm x 50đ.  
+**Dữ liệu mẫu (User kh01 - đang có 350đ):**
+```json
+{
+  "maVoucher": "VC001"
+}
+```
+
+### 4.5 UC31 — Ví voucher của tôi
+**Endpoint:** `GET /api/khachhang/vi-voucher`
+- **Dữ liệu mẫu (User kh01):** Sẽ thấy có sẵn voucher WELCOME10 và BAC15.
+
+### 4.6 UC35 — Gửi đánh giá tour
+**Endpoint:** `POST /api/khachhang/danh-gia`
+
+Điều kiện: Phải có Lịch sử tour với `maTourThucTe` truyền lên.  
+**Dữ liệu mẫu (User kh01 - đã hoàn thành tour TTT099):**
+```json
+{
+  "maTourThucTe": "TTT099",
+  "diemDanhGia": 5,
+  "nhanXet": "Tour rất tuyệt vời, HDV chuyên nghiệp!"
+}
+```
+
+### 4.7 UC36 — Gửi yêu cầu hỗ trợ / khiếu nại
+**Endpoint:** `POST /api/khachhang/yeu-cau-ho-tro`
+
+**Dữ liệu mẫu (Bất kỳ KH nào):**
+```json
+{
+  "tieuDe": "Hủy tour do bận việc gấp",
+  "noiDung": "Tôi muốn hủy phần booking DDT002, xin hỗ trợ"
+}
+```
+
+---
+
+## 5. Luồng nghiệp vụ nhân viên SALES
+
+*=> Yêu cầu dùng token của User `sales01`.*
+
+### 5.1 UC34 — Xem danh sách đơn đặt tour
+**Endpoint:** `GET /api/sales/don-dat-tour?page=0&size=20`
+- **Dữ liệu mẫu:** Trả về danh sách gồm `DDT001`, `DDT002`, `DDT099`.
+
+### 5.2 UC41 — Xử lý yêu cầu hỗ trợ
+Danh sách yêu cầu (do KH gửi từ UC36):
+```
+GET /api/sales/yeu-cau-ho-tro
+```
+
+Cập nhật trạng thái xử lý (Thay `Mã yêu cầu` thực tế khi test):
+```
+PUT /api/sales/yeu-cau-ho-tro/{maYeuCau}
+```
+**Body mẫu:**
+```json
+{
+  "trangThai": "DANG_XU_LY",
+  "ghiChu": "Đang tiến hành thủ tục hoàn trả cho khách"
+}
+```
+*(Trạng thái hợp lệ: `MOI_TAO`, `DANG_XU_LY`, `DA_DONG`)*
+
+---
+
+## 6. Luồng nghiệp vụ Hướng dẫn viên (HDV)
+
+*=> Yêu cầu dùng token của User `hdv01`.*
+
+### 6.1 UC39 — Lịch công tác HDV
+**Endpoint:** `GET /api/hdv/lich-cong-tac`
+- **Dữ liệu mẫu:** Bản thân `hdv01` đã được phân công thực tế trong database vào `TTT001` và `TTT099`. Output sẽ trả về list này.
+
+### 6.2 UC63 — Xem năng lực bản thân
+**Endpoint:** `GET /api/hdv/nang-luc`
+
+### 6.3 Điểm danh khách hàng trên tour (Dành cho HDV)
+**Endpoint:** `POST /api/hdv/diem-danh`
+**Body mẫu (Test HDV điểm danh kh01 trên tour TTT001):**
+```json
+{
+  "maTourThucTe": "TTT001",
+  "maDatTour": "DDT001",
+  "trangThai": "CO_MAT"
+}
+```
+
+---
+
+## 7. Luồng nghiệp vụ Kế toán (KETOAN)
+
+*=> Yêu cầu dùng token của User `ketoan01`.*
+
+### 7.1 UC52 — Quản lý hoàn tiền khách hàng
+**Lấy danh sách các giao dịch chờ hoàn (CHO_HOAN_TIEN):**
+**Endpoint:** `GET /api/ketoan/giao-dich-hoan`
+- **Dữ liệu mẫu:** Hệ thống sẽ trả về mã giao dịch `GD_HOA01` (Của kh02 bị hủy).
+
+**Xác nhận đã chuyển khoản thành công giao dịch hoàn:**
+**Endpoint:** `PUT /api/ketoan/giao-dich-hoan/GD_HOA01/xac-nhan`
+*(Sau request này, trạng thái GD_HOA01 về DA_HOAN_TIEN).*
+
+### 7.2 UC53 — Báo cáo doanh thu tổng hợp
+**Endpoint:** `GET /api/ketoan/bao-cao/doanh-thu?tuNgay=2025-01-01&denNgay=2026-12-31`
+- **Dữ liệu mẫu:** DB có sẵn `GD001` thanh toán thành công 12tr, `GD099` thanh toán thành công 10tr. API sẽ trả về tổng doanh thu.
+
+---
+
+## 8. Luồng Admin & Các tính năng chung
+
+*=> Yêu cầu dùng token của User `admin`.*
+
+### 8.1 UC24 — Tìm kiếm hồ sơ khách hàng toàn hệ thống
+**Endpoint:** `GET /api/admin/khach-hang?tuKhoa=nguyen&page=0&size=20`
+
+### 8.2 UC54-56 — Quản lý phát hành Voucher (Admin)
+
+**Tạo voucher mới:** `POST /api/admin/voucher`
+```json
+{
+  "maCode": "TET2026",
+  "loaiUuDai": "SO_TIEN",
+  "giaTriGiam": 500000,
+  "dieuKienApDung": "Sale lễ tết",
+  "soLuotPhatHanh": 50,
+  "ngayHieuLuc": "2026-01-01",
+  "ngayHetHan": "2026-03-31"
+}
+```
+
+**Phát hành voucher (Bắn thẳng vào ví một danh sách user):**
+`POST /api/admin/voucher/TET2026/phat-hanh`
+```json
+{
+  "maKhachHang": "KH001"
+}
+```
+
+### 8.3 UC69 — Phân quyền / Đổi vai trò nhân viên
+**Endpoint:** `PUT /api/admin/nhan-vien/NV_SALES01/vai-tro`
+```json
+{
+  "vaiTro": "MANAGER"
+}
+```
+
+---
+
+## 9. Dynamic Pricing (Tự động tăng giảm giá tour)
+Là một tác vụ Cron Job chạy ngầm trên Background (`TourThucTeScheduler.java` chạy mỗi giờ `0 0 * * * *`).
+
+**Quy tắc đổi giá:**
+1. **Sắp diễn ra, đắt hàng**: Còn <= 7 ngày, số chỗ đã kín định mức >= 80% => **Tăng 10%** (Tối đa = 2.0 x GiaSan từ TourMau).
+2. **Còn xa, ế hàng**: Còn >= 30 ngày, tỷ lệ kín chỗ < 30% => **Giảm 5%** (Tối thiểu = GiaSan từ TourMau).
+
+**Cách Test thủ công không chờ cron:**  
+Gọi trực tiếp Method Service `tourThucTeScheduler.updateDynamicPricing()` trong một endpoint test hoặc Unit Test. Để thuận tiện, DB đã chèn sẵn tour `TTT003` cận sát ngày khởi hành (Chờ hiệu ứng đổi).
+
+---
+
+## Ghi chú kỹ thuật (Bảng Trạng thái Constant)
+
+| Thuộc tính (Entity) | Trạng thái có sẵn & Hợp lệ |
+|---------------------|----------------------------|
+| `DonDatTour.TrangThai`| `CHO_XAC_NHAN`, `DA_XAC_NHAN`, `DA_HUY`, `THANH_TOAN_THAT_BAI` |
+| `TourThucTe.TrangThai`| `MO_BAN`, `DANG_DIEN_RA`, `KET_THUC`, `HUY`, `DA_QUYET_TOAN` |
+| `GiaoDich.TrangThai` | `CHO_THANH_TOAN`, `THANH_CONG`, `THAT_BAI`, `DA_HOAN_TIEN` |
+| `GiaoDich.LoaiGiaoDich`| `THANH_TOAN`, `HOAN_TIEN` |
+| `Voucher.LoaiUuDai` | `PHAN_TRAM`, `SO_TIEN` |
+| `YeuCauHoTro.TrangThai`| `MOI_TAO`, `DANG_XU_LY`, `DA_DONG` |
+| `HoChieuSo.HangThanhVien`| `CO_BAN` (0đ), `BAC` (500đ), `VANG` (2000đ), `KIM_CUONG` (5000đ) |
+
+**Cổng Swagger UI (Giao diện đồ họa để Test chi tiết):**
+- Truy cập: `http://localhost:8080/swagger-ui/index.html`
+- Tại đây đã liệt kê 100% các endpoint với tham số mẫu do hệ thống tự sinh. Chú ý click nút "Authorize" (ổ khóa) để add token Bearer trước khi gọi.
+# Hướng dẫn sử dụng Digital Travel ERP API
+
+Base URL: `http://localhost:8080`
+
+---
+
+## 1. Cài đặt & Khởi chạy
+
+### Yêu cầu
+- Java 17+
+- Maven 3.8+
+- Oracle Database 18c+
+
+### Cấu hình kết nối
+Chỉnh sửa `src/main/resources/application.yaml`:
+```yaml
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: your_user
+    password: your_password
+```
+
+### Khởi tạo Database
+```sql
+-- Kết nối Oracle bằng SQL*Plus hoặc SQL Developer
+@src/main/resources/db/KhoiTaoBang.sql
+```
+
+### Build & Run
+```powershell
+./mvnw.cmd spring-boot:run
+```
+
+---
+
+## 2. Tài khoản mặc định (Seed Data)
+
+| Vai trò    | Username    | Password     | Ghi chú                          |
+|------------|-------------|--------------|----------------------------------|
+| ADMIN      | `admin`     | `admin123`   | Quản trị toàn hệ thống           |
+| MANAGER    | `manager`   | `manager123` | Quản lý                          |
+| SALES      | `sales01`   | `sales123`   | Nhân viên kinh doanh             |
+| KETOAN     | `ketoan01`  | `ketoan123`  | Kế toán                          |
+| HDV        | `hdv01`     | `hdv123`     | Hướng dẫn viên                   |
+| KHACHHANG  | `kh01`      | `kh123`      | Khách hàng 1 (hạng Bạc, 350đ)   |
+| KHACHHANG  | `kh02`      | `kh123`      | Khách hàng 2 (hạng Cơ Bản)      |
+
+---
+
+## 3. Xác thực (Authentication)
+
+### 3.1 Đăng ký tài khoản khách hàng
 
 **Endpoint:** `POST /api/auth/dang-ky`
 
-**YÃªu cáº§u token:** KhÃ´ng (public)
-
-**Vai trÃ² Ä‘Æ°á»£c gÃ¡n tá»± Ä‘á»™ng:** `KHACHHANG`
+**Yêu cầu token:** Không (public)
 
 **Headers:**
 ```
 Content-Type: application/json
 ```
 
-**Body (raw JSON):**
+**Body:**
 ```json
 {
   "tenDangNhap": "nguyenvana",
@@ -29,9 +367,7 @@ Content-Type: application/json
 }
 ```
 
-> CÃ¡c trÆ°á»ng `email` vÃ  `soDienThoai` lÃ  tuá»³ chá»n.
-
-**Response thÃ nh cÃ´ng (201):**
+**Response thành công (201):**
 ```json
 {
   "status": 201,
@@ -40,1628 +376,1014 @@ Content-Type: application/json
     "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
     "tokenType": "Bearer",
     "maVaiTro": "KHACHHANG",
-    "tenHienThi": "Khach hang",
     "hoTen": "Nguyen Van A"
   }
 }
 ```
 
-> Sau khi Ä‘Äƒng kÃ½ thÃ nh cÃ´ng, há»‡ thá»‘ng tá»± Ä‘Äƒng nháº­p vÃ  tráº£ vá» `accessToken` ngay.
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `tenDangNhap` Ä‘Ã£ tá»“n táº¡i |
-| 400 | `email` Ä‘Ã£ Ä‘Æ°á»£c sá»­ dá»¥ng |
-| 400 | Máº­t kháº©u vÃ  xÃ¡c nháº­n khÃ´ng khá»›p |
-| 400 | Validation tháº¥t báº¡i (tÃªn Ä‘Äƒng nháº­p < 4 kÃ½ tá»±, máº­t kháº©u < 6 kÃ½ tá»±, v.v.) |
-| 404 | Vai trÃ² `KHACHHANG` chÆ°a cÃ³ trong DB |
-
 ---
 
-## 2. ÄÄƒng kÃ½ tÃ i khoáº£n nhÃ¢n viÃªn (ADMIN only)
-
-**Endpoint:** `POST /api/admin/dang-ky-nhan-vien`
-
-**YÃªu cáº§u token:** CÃ³ â€” TÃ i khoáº£n **ADMIN**
-
-**Vai trÃ² Ä‘Æ°á»£c chá»‰ Ä‘á»‹nh bá»Ÿi ADMIN:** `MANAGER` | `SALES` | `KETOAN` | `HDV`
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer <accessToken_ADMIN>
-```
-
-**Body (raw JSON):**
-```json
-{
-  "tenDangNhap": "nhanvien01",
-  "matKhau": "password123",
-  "hoTen": "Tran Thi B",
-  "email": "tranthib@company.com",
-  "soDienThoai": "0912345678",
-  "maVaiTro": "SALES"
-}
-```
-
-> `maVaiTro` cháº¥p nháº­n (khÃ´ng phÃ¢n biá»‡t hoa thÆ°á»ng): `MANAGER`, `SALES`, `KETOAN`, `HDV`
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "message": "Tao tai khoan nhan vien thanh cong"
-}
-```
-
-> KhÃ¡c vá»›i Ä‘Äƒng kÃ½ khÃ¡ch hÃ ng, endpoint nÃ y **khÃ´ng** tráº£ vá» token â€” ADMIN táº¡o tÃ i khoáº£n rá»“i giao thÃ´ng tin Ä‘Äƒng nháº­p cho nhÃ¢n viÃªn.
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `maVaiTro` khÃ´ng há»£p lá»‡ (khÃ´ng pháº£i MANAGER/SALES/KETOAN/HDV) |
-| 400 | `tenDangNhap` Ä‘Ã£ tá»“n táº¡i |
-| 400 | `email` Ä‘Ã£ Ä‘Æ°á»£c sá»­ dá»¥ng |
-| 401 | ChÆ°a gáº¯n token hoáº·c token háº¿t háº¡n |
-| 403 | Token khÃ´ng pháº£i ADMIN |
-| 404 | Vai trÃ² chá»‰ Ä‘á»‹nh chÆ°a cÃ³ trong DB |
-
----
-
-## 3. ÄÄƒng nháº­p
+### 3.2 Đăng nhập
 
 **Endpoint:** `POST /api/auth/dang-nhap`
 
-**Headers:**
-```
-Content-Type: application/json
-```
-
-**Body (raw JSON):**
+**Body:**
 ```json
 {
   "tenDangNhap": "admin",
-  "matKhau": "123456"
+  "matKhau": "admin123"
 }
 ```
 
-**Response thÃ nh cÃ´ng (200):**
+**Response:**
 ```json
 {
   "status": 200,
   "success": true,
-  "message": "Dang nhap thanh cong",
   "data": {
     "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
     "tokenType": "Bearer",
-    "maVaiTro": "ADMIN",
-    "tenHienThi": "Quan tri vien",
-    "hoTen": "Nguyen Van A"
+    "maVaiTro": "ADMIN"
   }
 }
 ```
 
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | error | NguyÃªn nhÃ¢n |
-|------|-------|-------------|
-| 401 | BAD_CREDENTIALS | Sai tÃªn Ä‘Äƒng nháº­p hoáº·c máº­t kháº©u |
-| 403 | FORBIDDEN | TÃ i khoáº£n chÆ°a Ä‘Æ°á»£c kÃ­ch hoáº¡t (khÃ´ng á»Ÿ tráº¡ng thÃ¡i HOAT_DONG) |
-| 423 | ACCOUNT_LOCKED | TÃ i khoáº£n bá»‹ khÃ³a (tráº¡ng thÃ¡i BI_KHOA) |
-
-> **LÆ°u Ã½:** Sao chÃ©p giÃ¡ trá»‹ `accessToken` tá»« response Ä‘á»ƒ dÃ¹ng cho cÃ¡c bÆ°á»›c tiáº¿p theo.
-
----
-
-## 4. Gáº¯n token vÃ o Postman (dÃ¹ng cho má»i request cáº§n xÃ¡c thá»±c)
-
-**CÃ¡ch 1 â€” Tab Authorization:**
-1. Má»Ÿ request báº¥t ká»³ trong Postman
-2. Chá»n tab **Authorization**
-3. Chá»n **Type: Bearer Token**
-4. Paste `accessToken` vÃ o Ã´ **Token**
-
-**CÃ¡ch 2 â€” Header thá»§ cÃ´ng:**
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
-```
-
----
-
-## 5. Xem thÃ´ng tin tÃ i khoáº£n Ä‘ang Ä‘Äƒng nháº­p
-
-**Endpoint:** `GET /api/me`
-
-**Headers:**
+Sử dụng token trong header tất cả các request tiếp theo:
 ```
 Authorization: Bearer <accessToken>
 ```
 
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Thanh cong",
-  "data": {
-    "tenDangNhap": "admin",
-    "hoTen": "Nguyen Van A",
-    "vaiTro": "ADMIN",
-    "tenVaiTro": "Quan tri vien",
-    "roles": ["ROLE_ADMIN"]
-  }
-}
-```
+---
+
+### 3.3 Xem thông tin tài khoản
+
+**Endpoint:** `GET /api/auth/toi`
+
+**Yêu cầu token:** Có
 
 ---
 
-## 6. Äá»•i máº­t kháº©u
+### 3.4 Đổi mật khẩu
 
-**Endpoint:** `POST /api/auth/doi-mat-khau`
+**Endpoint:** `PUT /api/auth/doi-mat-khau`
 
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer <accessToken>
-```
-
-**Body (raw JSON):**
+**Body:**
 ```json
 {
   "matKhauCu": "123456",
-  "matKhauMoi": "newpassword123",
-  "xacNhanMatKhau": "newpassword123"
+  "matKhauMoi": "newpass123",
+  "xacNhanMatKhauMoi": "newpass123"
 }
 ```
 
-**Response thÃ nh cÃ´ng (200):**
+---
+
+## 4. Hồ sơ khách hàng
+
+### 4.1 Xem hồ sơ
+
+**Endpoint:** `GET /api/khachhang/ho-so`
+
+**Vai trò:** KHACHHANG
+
+### 4.2 Cập nhật hồ sơ
+
+**Endpoint:** `PUT /api/khachhang/ho-so`
+
+**Vai trò:** KHACHHANG
+
+**Body:**
 ```json
 {
-  "status": 200,
-  "success": true,
-  "message": "Doi mat khau thanh cong"
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | error | NguyÃªn nhÃ¢n |
-|------|-------|-------------|
-| 400 | BAD_REQUEST | Máº­t kháº©u má»›i vÃ  xÃ¡c nháº­n khÃ´ng khá»›p |
-| 400 | VALIDATION_ERROR | `matKhauMoi` Ã­t hÆ¡n 6 kÃ½ tá»± |
-| 401 | UNAUTHORIZED | Máº­t kháº©u cÅ© khÃ´ng Ä‘Ãºng |
-| 401 | UNAUTHORIZED | ChÆ°a gáº¯n token vÃ o header |
-
----
-
-## 7. ÄÄƒng xuáº¥t
-
-**Endpoint:** `POST /api/auth/dang-xuat`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken>
-```
-
-**Body:** KhÃ´ng cáº§n
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Dang xuat thanh cong"
-}
-```
-
-> **LÆ°u Ã½:** Há»‡ thá»‘ng dÃ¹ng JWT Stateless â€” server khÃ´ng lÆ°u session. Sau khi Ä‘Äƒng xuáº¥t, client cáº§n tá»± xÃ³a token khá»i bá»™ nhá»›. Token váº«n cÃ²n hiá»‡u lá»±c cho Ä‘áº¿n khi háº¿t háº¡n (máº·c Ä‘á»‹nh 24 giá»).
-
----
-
-## 8. CÃ¡c lá»—i chung
-
-| HTTP | NguyÃªn nhÃ¢n | Giáº£i phÃ¡p |
-|------|-------------|-----------|
-| 401 | KhÃ´ng cÃ³ hoáº·c sai token | ÄÄƒng nháº­p láº¡i, gáº¯n Ä‘Ãºng token |
-| 403 | Token há»£p lá»‡ nhÆ°ng khÃ´ng Ä‘á»§ quyá»n | DÃ¹ng tÃ i khoáº£n cÃ³ vai trÃ² phÃ¹ há»£p |
-| 404 | Sai Ä‘Æ°á»ng dáº«n | Kiá»ƒm tra láº¡i URL |
-| 500 | Lá»—i server | Xem log á»©ng dá»¥ng |
-
----
-
-# Module 1 â€” Quáº£n lÃ½ Sáº£n pháº©m Tour
-
-> Táº¥t cáº£ endpoint dÆ°á»›i Ä‘Ã¢y yÃªu cáº§u **Bearer Token** (trá»« khi ghi chÃº khÃ¡c).
-> Dá»¯ liá»‡u máº«u Ä‘Ã£ Ä‘Æ°á»£c seed sáºµn trong `KhoiTaoBang.sql`:
-> - Tour máº«u: `TM001` â€“ `TM004` (kÃ¨m lá»‹ch trÃ¬nh)
-> - Loáº¡i phÃ²ng: `LP001` â€“ `LP004`
-> - Dá»‹ch vá»¥ thÃªm: `DV001` â€“ `DV005`
-> - HÃ nh Ä‘á»™ng xanh: `HDX001` â€“ `HDX005`
-
----
-
-## 9. Tour Máº«u & Lá»‹ch trÃ¬nh (`/api/tour-mau`)
-
-### 9.1. Danh sÃ¡ch Tour Máº«u (cÃ³ phÃ¢n trang & lá»c)
-
-**Endpoint:** `GET /api/tour-mau`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`, `SALES`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken>
-```
-
-**Query Params (táº¥t cáº£ tuá»³ chá»n):**
-
-| Param | Kiá»ƒu | MÃ´ táº£ | VÃ­ dá»¥ |
-|-------|-------|-------|-------|
-| `tieuDe` | String | TÃ¬m kiáº¿m theo tiÃªu Ä‘á» (LIKE) | `Ha Long` |
-| `trangThai` | String | Lá»c theo tráº¡ng thÃ¡i | `HOAT_DONG` hoáº·c `KHOA` |
-| `thoiLuongMin` | Integer | Thá»i lÆ°á»£ng tá»‘i thiá»ƒu (ngÃ y) | `3` |
-| `thoiLuongMax` | Integer | Thá»i lÆ°á»£ng tá»‘i Ä‘a (ngÃ y) | `5` |
-| `page` | Integer | Trang (báº¯t Ä‘áº§u tá»« 0) | `0` |
-| `size` | Integer | Sá»‘ báº£n ghi/trang | `10` |
-| `sort` | String | Sáº¯p xáº¿p | `ThoiDiemTao,DESC` |
-
-**VÃ­ dá»¥ request:**
-```
-GET /api/tour-mau?tieuDe=Ha Long&trangThai=HOAT_DONG&page=0&size=5
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "content": [
-      {
-        "maTourMau": "TM001",
-        "tieuDe": "Kham pha Ha Long - Cat Ba 3N2D",
-        "moTa": "Vinh Ha Long ky vi...",
-        "thoiLuong": 3,
-        "giaSan": 3500000,
-        "danhGia": 4.5,
-        "soDanhGia": 128,
-        "trangThai": "HOAT_DONG",
-        "thoiDiemTao": "...",
-        "capNhatVao": "...",
-        "taoBoi": "SYSTEM",
-        "capNhatBoi": null
-      }
-    ],
-    "totalElements": 1,
-    "totalPages": 1,
-    "number": 0,
-    "size": 5
-  }
+  "diUng": "Hải sản, Gluten",
+  "ghiChuYTe": "Cao huyết áp, dùng thuốc định kỳ"
 }
 ```
 
 ---
 
-### 9.2. Chi tiáº¿t Tour Máº«u (kÃ¨m lá»‹ch trÃ¬nh)
+## 5. Luồng nghiệp vụ theo vai trò
 
-**Endpoint:** `GET /api/tour-mau/{id}`
+### 5.1 Khách hàng (KHACHHANG)
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`, `SALES`
-
-**VÃ­ dá»¥ request:**
+#### UC22 — Xem lịch sử tour
 ```
-GET /api/tour-mau/TM001
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "tourMau": {
-      "maTourMau": "TM001",
-      "tieuDe": "Kham pha Ha Long - Cat Ba 3N2D",
-      "thoiLuong": 3,
-      "giaSan": 3500000,
-      "trangThai": "HOAT_DONG",
-      "..."
-    },
-    "lichTrinh": [
-      {
-        "maLichTrinhTour": "LT001_N1",
-        "ngayThu": 1,
-        "hoatDong": "Ha Noi â†’ Ha Long â†’ Len tau...",
-        "moTa": "Xe limousine khoi hanh 7:30...",
-        "thucDon": "Trua: Hai san tuoi tren tau..."
-      },
-      {
-        "maLichTrinhTour": "LT001_N2",
-        "ngayThu": 2,
-        "hoatDong": "Sang: Cheo kayak...",
-        "moTa": "...",
-        "thucDon": "..."
-      },
-      {
-        "maLichTrinhTour": "LT001_N3",
-        "ngayThu": 3,
-        "hoatDong": "Boi loc sau buoi sang...",
-        "moTa": "...",
-        "thucDon": "..."
-      }
-    ]
-  }
-}
+GET /api/khachhang/lich-su-tour
+Authorization: Bearer <token>
 ```
 
-**Lá»—i:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 404 | MÃ£ tour máº«u khÃ´ng tá»“n táº¡i |
-| 403 | Vai trÃ² khÃ´ng Ä‘á»§ quyá»n |
-
----
-
-### 9.3. Táº¡o Tour Máº«u má»›i (kÃ¨m lá»‹ch trÃ¬nh tuá»³ chá»n)
-
-**Endpoint:** `POST /api/tour-mau`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Headers:**
+#### UC25/26 — Tour công khai (không cần đăng nhập)
 ```
+GET /api/public/tour
+GET /api/public/tour/{maTourThucTe}
+GET /api/public/tour/{maTourThucTe}/danh-gia
+```
+
+Ví dụ:
+```
+GET /api/public/tour?page=0&size=10
+```
+
+#### UC28 — Áp voucher vào đơn đặt tour
+```
+POST /api/khachhang/ap-voucher
 Content-Type: application/json
-Authorization: Bearer <accessToken>
+Authorization: Bearer <token>
+
+{
+  "maDatTour": "DDT001",
+  "maCode": "WELCOME10"
+}
 ```
 
-**Body (raw JSON):**
+#### UC30 — Đổi điểm xanh lấy voucher
+```
+POST /api/khachhang/doi-diem
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "maVoucher": "VC001"
+}
+```
+
+Quy tắc đổi điểm:
+- Voucher loại `SO_TIEN`: GiaTriGiam / 100 điểm
+- Voucher loại `PHAN_TRAM`: GiaTriGiam × 50 điểm
+
+#### UC31 — Ví voucher của tôi
+```
+GET /api/khachhang/vi-voucher
+Authorization: Bearer <token>
+```
+
+#### UC35 — Gửi đánh giá tour
+```
+POST /api/khachhang/danh-gia
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "maTourThucTe": "TTT099",
+  "diemDanhGia": 5,
+  "nhanXet": "Tour rất tuyệt vời, HDV nhiệt tình!"
+}
+```
+
+Điều kiện: khách hàng phải có lịch sử tour tương ứng, chưa đánh giá tour này.
+
+#### UC36 — Gửi yêu cầu hỗ trợ / khiếu nại
+```
+POST /api/khachhang/yeu-cau-ho-tro
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "tieuDe": "Khiếu nại dịch vụ",
+  "noiDung": "HDV đến muộn 2 tiếng, không có giải thích..."
+}
+```
+
+Xem danh sách yêu cầu của mình:
+```
+GET /api/khachhang/yeu-cau-ho-tro
+Authorization: Bearer <token>
+```
+
+---
+
+### 5.2 Nhân viên SALES
+
+#### UC34 — Xem danh sách đơn đặt tour
+```
+GET /api/sales/don-dat-tour?page=0&size=20
+Authorization: Bearer <token>
+```
+
+#### UC41 — Xử lý yêu cầu hỗ trợ
+
+Danh sách yêu cầu:
+```
+GET /api/sales/yeu-cau-ho-tro
+Authorization: Bearer <token>
+```
+
+Cập nhật trạng thái:
+```
+PUT /api/sales/yeu-cau-ho-tro/{maYeuCau}
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "trangThai": "DA_DONG",
+  "ghiChu": "Đã liên hệ và giải quyết xong với khách hàng."
+}
+```
+
+Giá trị `trangThai` hợp lệ: `MOI_TAO`, `DANG_XU_LY`, `DA_DONG`
+
+---
+
+### 5.3 Hướng dẫn viên (HDV)
+
+#### UC39 — Xem lịch công tác
+```
+GET /api/hdv/lich-cong-tac
+Authorization: Bearer <token>
+```
+
+#### UC63 — Xem năng lực bản thân
+```
+GET /api/hdv/nang-luc
+Authorization: Bearer <token>
+```
+
+---
+
+### 5.4 Kế toán (KETOAN)
+
+#### Quản lý quyết toán
+
+Danh sách tour cần quyết toán:
+```
+GET /api/ketoan/tour-can-quyet-toan
+Authorization: Bearer <token>
+```
+
+Tính toán sơ bộ:
+```
+GET /api/ketoan/tinh-toan/{maTour}
+Authorization: Bearer <token>
+```
+
+Tạo quyết toán:
+```
+POST /api/ketoan/quyet-toan/{maTour}
+Authorization: Bearer <token>
+```
+
+Chốt quyết toán:
+```
+PUT /api/ketoan/quyet-toan/{maQuyetToan}/chot
+Authorization: Bearer <token>
+```
+
+#### UC52 — Quản lý hoàn tiền
+
+Danh sách giao dịch chờ hoàn:
+```
+GET /api/ketoan/giao-dich-hoan
+Authorization: Bearer <token>
+```
+
+Xác nhận đã chuyển khoản hoàn tiền:
+```
+PUT /api/ketoan/giao-dich-hoan/{maGiaoDich}/xac-nhan
+Authorization: Bearer <token>
+```
+
+#### UC53 — Báo cáo doanh thu
+```
+GET /api/ketoan/bao-cao/doanh-thu
+Authorization: Bearer <token>
+```
+
+Lọc theo kỳ (format ISO: yyyy-MM-dd):
+```
+GET /api/ketoan/bao-cao/doanh-thu?tuNgay=2026-01-01&denNgay=2026-06-30
+Authorization: Bearer <token>
+```
+
+**Response mẫu:**
 ```json
 {
-  "tieuDe": "Da Lat Thanh Pho Nghin Hoa 3N2D",
-  "moTa": "Kham pha Da Lat lang man voi thung lung tinh yeu, ho Xuan Huong, cho dem.",
-  "thoiLuong": 3,
-  "giaSan": 2800000,
-  "lichTrinh": [
+  "tongDoanhThu": 350000000,
+  "soQuyetToan": 12,
+  "soDonDatTour": 87,
+  "soTourKetThuc": 12,
+  "topTour": [
     {
-      "ngayThu": 1,
-      "hoatDong": "San bay Lien Khuong â†’ Da Lat â†’ Thung Lung Tinh Yeu",
-      "moTa": "Don tai san bay, nhan phong khach san. Chieu tham Thung Lung Tinh Yeu.",
-      "thucDon": "Trua: Tu tuc | Toi: Lau ga la e Da Lat"
-    },
-    {
-      "ngayThu": 2,
-      "hoatDong": "Ho Xuan Huong â†’ Dinh Bao Dai â†’ Cho Dem",
-      "moTa": "Sang dao quanh ho. Tham dinh Bao Dai. Toi kham pha cho dem.",
-      "thucDon": "Sang: Banh mi xiu mai | Trua: Com ga | Toi: An vat cho dem"
-    },
-    {
-      "ngayThu": 3,
-      "hoatDong": "Lang hoa Van Thanh â†’ Ve san bay",
-      "moTa": "Tham lang hoa Van Thanh, mua sam. Ra san bay.",
-      "thucDon": "Sang: Pho | Trua: Banh can Da Lat"
+      "maTourThucTe": "TTT001",
+      "tieuDe": "Hạ Long 3N2Đ",
+      "soDon": 25,
+      "doanhThu": 87500000
     }
   ]
 }
 ```
 
-> TrÆ°á»ng `lichTrinh` lÃ  tuá»³ chá»n â€” cÃ³ thá»ƒ táº¡o tour máº«u trÆ°á»›c rá»“i thÃªm lá»‹ch trÃ¬nh sau.
+---
 
-**Response thÃ nh cÃ´ng (201):**
-```json
+### 5.5 Admin
+
+#### UC24 — Tìm kiếm hồ sơ khách hàng
+```
+GET /api/admin/khach-hang?tuKhoa=nguyen&page=0&size=20
+Authorization: Bearer <token>
+
+GET /api/admin/khach-hang/{maKhachHang}
+Authorization: Bearer <token>
+```
+
+#### UC54-56 — Quản lý Voucher
+
+Danh sách:
+```
+GET /api/admin/voucher
+GET /api/admin/voucher?trangThai=SAN_SANG
+Authorization: Bearer <token>
+```
+
+Tạo mới:
+```
+POST /api/admin/voucher
+Content-Type: application/json
+Authorization: Bearer <token>
+
 {
-  "status": 201,
-  "success": true,
-  "data": {
-    "tourMau": { "maTourMau": "TM...", "tieuDe": "Da Lat...", "..." },
-    "lichTrinh": [ ... ]
-  }
+  "maCode": "NEWYEAR25",
+  "loaiUuDai": "PHAN_TRAM",
+  "giaTriGiam": 25,
+  "dieuKienApDung": "Áp dụng cho đơn từ 5 triệu trở lên",
+  "soLuotPhatHanh": 100,
+  "ngayHieuLuc": "2026-12-25",
+  "ngayHetHan": "2027-01-10"
 }
 ```
 
-**Lá»—i validation:**
+Giá trị `loaiUuDai`: `PHAN_TRAM` (%) hoặc `SO_TIEN` (VND)
 
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `tieuDe` trá»‘ng hoáº·c vÆ°á»£t 500 kÃ½ tá»± |
-| 400 | `thoiLuong` < 1 |
-| 400 | `giaSan` â‰¤ 0 |
-| 400 | `lichTrinh[].ngayThu` < 1 hoáº·c `hoatDong` trá»‘ng |
+Vô hiệu hóa:
+```
+PUT /api/admin/voucher/{maVoucher}/vo-hieu
+Authorization: Bearer <token>
+```
+
+Phát hành cho khách hàng:
+```
+POST /api/admin/voucher/{maVoucher}/phat-hanh
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "maKhachHang": "KH001"
+}
+```
+
+#### Quản lý đánh giá (Admin)
+```
+GET /api/admin/danh-gia
+GET /api/admin/danh-gia?trangThai=HIEU_LUC
+Authorization: Bearer <token>
+```
+
+#### UC63 — Năng lực HDV (Admin)
+
+Xem năng lực:
+```
+GET /api/admin/nhan-vien/{maNhanVien}/nang-luc
+Authorization: Bearer <token>
+```
+
+Cập nhật:
+```
+PUT /api/admin/nhan-vien/{maNhanVien}/nang-luc
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "ngonNgu": "Tiếng Việt, Tiếng Anh (IELTS 7.5), Tiếng Pháp (B2)",
+  "chungChi": "HDV quốc tế, Sơ cứu nâng cao, WSET Level 2",
+  "chuyenMon": "Miền Bắc, Eco-tour, Du thuyền"
+}
+```
+
+#### UC69 — Gán vai trò nhân viên
+```
+PUT /api/admin/nhan-vien/{maNhanVien}/vai-tro
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "vaiTro": "HDV"
+}
+```
+
+Giá trị `vaiTro` hợp lệ: `ADMIN`, `MANAGER`, `SALES`, `KETOAN`, `HDV`
 
 ---
 
-### 9.4. Cáº­p nháº­t Tour Máº«u
+## 6. Quản lý Tour (Manager/Admin)
 
-**Endpoint:** `PUT /api/tour-mau/{id}`
+### Tour mẫu
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON) â€” chá»‰ gá»­i cÃ¡c trÆ°á»ng cáº§n sá»­a:**
-```json
-{
-  "tieuDe": "Da Lat Mong Mo 4N3D",
-  "thoiLuong": 4,
-  "giaSan": 3200000,
-  "trangThai": "HOAT_DONG"
-}
+```
+GET    /api/manager/tour-mau
+POST   /api/manager/tour-mau
+PUT    /api/manager/tour-mau/{id}
+DELETE /api/manager/tour-mau/{id}
 ```
 
-**Response thÃ nh cÃ´ng (200):**
-```json
+### Tour thực tế
+
+```
+GET    /api/manager/tour-thuc-te
+POST   /api/manager/tour-thuc-te
+PUT    /api/manager/tour-thuc-te/{id}
+```
+
+### Phòng & Dịch vụ thêm
+
+```
+GET    /api/manager/loai-phong
+POST   /api/manager/loai-phong
+GET    /api/manager/dich-vu-them
+POST   /api/manager/dich-vu-them
+```
+
+---
+
+## 7. Tính năng tự động
+
+### Dynamic Pricing (Định giá động)
+
+Scheduler chạy **mỗi giờ** tự động điều chỉnh giá các tour đang mở bán:
+
+| Điều kiện | Hành động |
+|-----------|-----------|
+| Còn ≤ 7 ngày đến khởi hành **VÀ** tỷ lệ đặt chỗ ≥ 80% | Tăng giá 10% (tối đa 2× giá sàn) |
+| Còn ≥ 30 ngày đến khởi hành **VÀ** tỷ lệ đặt chỗ < 30% | Giảm giá 5% (tối thiểu bằng giá sàn) |
+
+### Nâng hạng thành viên (Tự động)
+
+Sau mỗi lần tích điểm xanh từ hành động xanh, hệ thống tự kiểm tra và nâng hạng:
+
+| Điểm tích lũy | Hạng thành viên |
+|--------------|-----------------|
+| 0 – 499      | Cơ Bản (CO_BAN) |
+| 500 – 1999   | Bạc (BAC)       |
+| 2000 – 4999  | Vàng (VANG)     |
+| ≥ 5000       | Kim Cương (KIM_CUONG) |
+
+---
+
+## 8. Hành động xanh & Điểm xanh
+
+### Xem danh sách hành động xanh
+```
+GET /api/public/hanh-dong-xanh
+```
+
+### Ghi nhận hành động xanh (cho khách hàng)
+```
+POST /api/khachhang/hanh-dong-xanh
+Content-Type: application/json
+Authorization: Bearer <token>
+
 {
-  "status": 200,
-  "success": true,
-  "data": {
-    "maTourMau": "TM...",
-    "tieuDe": "Da Lat Mong Mo 4N3D",
-    "thoiLuong": 4,
-    "giaSan": 3200000,
-    "..."
-  }
+  "maHanhDong": "HD001",
+  "maTourThucTe": "TTT001"
 }
 ```
 
 ---
 
-### 9.5. XoÃ¡ má»m Tour Máº«u (chuyá»ƒn tráº¡ng thÃ¡i â†’ KHOA)
+## 9. Phân công tour & Điểm danh (Manager/HDV)
 
-**Endpoint:** `DELETE /api/tour-mau/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
+### Phân công HDV cho tour
 ```
-DELETE /api/tour-mau/TM004
-```
+POST /api/manager/phan-cong
+Content-Type: application/json
+Authorization: Bearer <token>
 
-**Response thÃ nh cÃ´ng (200):**
-```json
 {
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
+  "maTourThucTe": "TTT001",
+  "maNhanVien": "NV_HDV01",
+  "vaiTro": "HDV_CHINH"
 }
 ```
 
-**Lá»—i:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | Tour máº«u Ä‘ang cÃ³ Tour Thá»±c táº¿ á»Ÿ tráº¡ng thÃ¡i `MO_BAN` â€” khÃ´ng thá»ƒ xoÃ¡ |
-| 404 | MÃ£ tour máº«u khÃ´ng tá»“n táº¡i |
-
----
-
-### 9.6. Sao chÃ©p Tour Máº«u (deep copy kÃ¨m lá»‹ch trÃ¬nh)
-
-**Endpoint:** `POST /api/tour-mau/{id}/sao-chep`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body:** KhÃ´ng cáº§n
-
-**VÃ­ dá»¥:**
+### Điểm danh khách hàng (HDV)
 ```
-POST /api/tour-mau/TM001/sao-chep
-```
+POST /api/hdv/diem-danh
+Content-Type: application/json
+Authorization: Bearer <token>
 
-> Há»‡ thá»‘ng táº¡o báº£n sao má»›i vá»›i mÃ£ tá»± sinh, tiÃªu Ä‘á» cÃ³ háº­u tá»‘ `(Ban sao)`, vÃ  toÃ n bá»™ lá»‹ch trÃ¬nh.
-
-**Response thÃ nh cÃ´ng (201):**
-```json
 {
-  "status": 201,
-  "success": true,
-  "data": {
-    "tourMau": {
-      "maTourMau": "TM...",
-      "tieuDe": "Kham pha Ha Long - Cat Ba 3N2D (Ban sao)",
-      "..."
-    },
-    "lichTrinh": [ ... ]
-  }
+  "maTourThucTe": "TTT001",
+  "maDatTour": "DDT001",
+  "trangThai": "CO_MAT"
 }
 ```
 
 ---
 
-### 9.7. ThÃªm Lá»‹ch trÃ¬nh vÃ o Tour Máº«u
+## 10. Chi phí thực tế & Quyết toán (KeToan)
 
-**Endpoint:** `POST /api/tour-mau/{id}/lich-trinh`
+### Quản lý chi phí
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON):**
-```json
-{
-  "ngayThu": 4,
-  "hoatDong": "Tu do mua sam tai cho dem",
-  "moTa": "Ngay tu do cho khach tu kham pha.",
-  "thucDon": "Sang: Buffet khach san"
-}
 ```
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "data": {
-    "maLichTrinhTour": "LT...",
-    "ngayThu": 4,
-    "hoatDong": "Tu do mua sam tai cho dem",
-    "moTa": "Ngay tu do cho khach tu kham pha.",
-    "thucDon": "Sang: Buffet khach san"
-  }
-}
+GET  /api/ketoan/chi-phi?maTour=TTT001
+POST /api/ketoan/chi-phi
+PUT  /api/ketoan/chi-phi/{maChiPhi}/duyet
+PUT  /api/ketoan/chi-phi/{maChiPhi}/tu-choi
 ```
-
-**Lá»—i:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `ngayThu` Ä‘Ã£ tá»“n táº¡i trong tour máº«u nÃ y |
-| 404 | MÃ£ tour máº«u khÃ´ng tá»“n táº¡i |
 
 ---
 
-### 9.8. Sá»­a Lá»‹ch trÃ¬nh
+## 11. Swagger / API Docs
 
-**Endpoint:** `PUT /api/tour-mau/{id}/lich-trinh/{maLichTrinh}`
+Sau khi ứng dụng chạy, truy cập:
+- **Swagger UI:** `http://localhost:8080/swagger-ui/index.html`
+- **OpenAPI JSON:** `http://localhost:8080/v3/api-docs`
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
+---
 
-**VÃ­ dá»¥:**
+## 12. Ghi chú kỹ thuật
+
+### Trạng thái đơn đặt tour (`DONDATTOUR.TrangThai`)
+| Giá trị | Ý nghĩa |
+|---------|---------|
+| `CHO_XAC_NHAN` | Chờ SALES xác nhận |
+| `DA_XAC_NHAN` | Đã xác nhận, chờ thanh toán |
+| `DA_HUY` | Đã hủy |
+| `HET_HAN_GIU_CHO` | Hết hạn giữ chỗ |
+| `CHO_HUY` | Yêu cầu hủy đang xử lý |
+| `THANH_TOAN_THAT_BAI` | Thanh toán thất bại |
+
+### Trạng thái tour thực tế (`TOURTHUCTE.TrangThai`)
+| Giá trị | Ý nghĩa |
+|---------|---------|
+| `CHO_KICH_HOAT` | Chờ kích hoạt |
+| `MO_BAN` | Đang mở bán |
+| `SAP_DIEN_RA` | Sắp diễn ra |
+| `DANG_DIEN_RA` | Đang diễn ra |
+| `KET_THUC` | Đã kết thúc |
+| `HUY` | Đã hủy |
+| `DA_QUYET_TOAN` | Đã quyết toán |
+
+### Trạng thái giao dịch (`GIAODICH.TrangThai`)
+| Giá trị | Ý nghĩa |
+|---------|---------|
+| `CHO_THANH_TOAN` | Đang chờ |
+| `THANH_CONG` | Thành công |
+| `THAT_BAI` | Thất bại |
+| `DA_HOAN_TIEN` | Đã hoàn tiền |
+
+---
+
+## 13. Xác thực nâng cao (Auth)
+
+### 13.1 Quên mật khẩu
+**Endpoint:** `POST /api/auth/quen-mat-khau` *(Không cần Token)*
+
+**Body:**
+```json
+{
+  "tenDangNhap": "kh01"
+}
 ```
-PUT /api/tour-mau/TM001/lich-trinh/LT001_N1
+**Response:** Trả về `resetToken` (hợp lệ 15 phút). Môi trường production thay bằng gửi email.
+
+### 13.2 Đặt lại mật khẩu
+**Endpoint:** `POST /api/auth/dat-lai-mat-khau` *(Không cần Token)*
+
+**Body:**
+```json
+{
+  "resetToken": "<token từ bước trên>",
+  "matKhauMoi": "newpass123",
+  "xacNhanMatKhau": "newpass123"
+}
 ```
 
-**Body (raw JSON):**
+### 13.3 Đăng xuất
+**Endpoint:** `POST /api/auth/dang-xuat`  
+*(Phía client xóa token. Server trả 200 ngay lập tức, không blacklist token.)*
+
+---
+
+## 14. Admin — Quản lý nhân viên
+
+### 14.1 Tạo tài khoản nhân viên
+**Endpoint:** `POST /api/admin/dang-ky-nhan-vien`  
+**Vai trò:** ADMIN *(Không cần PreAuthorize — dùng trong nội bộ. Cần bổ sung sau nếu cần security.)*
+
+**Dữ liệu mẫu:**
+```json
+{
+  "tenDangNhap": "hdv_new01",
+  "matKhau": "hdv123",
+  "hoTen": "Nguyen Thi Mai",
+  "email": "mai.hdv@company.vn",
+  "soDienThoai": "0912345678",
+  "maVaiTro": "HDV"
+}
+```
+Giá trị `maVaiTro` hợp lệ: `MANAGER`, `SALES`, `KETOAN`, `HDV`
+
+### 14.2 UC68 — Danh sách nhân viên
+**Endpoint:** `GET /api/admin/nhan-vien?hoTen=&maVaiTro=HDV&trangThai=&page=0&size=10`  
+**Vai trò:** ADMIN, MANAGER
+
+### 14.3 UC68 — Chi tiết nhân viên
+**Endpoint:** `GET /api/admin/nhan-vien/{maNhanVien}`  
+**Vai trò:** ADMIN, MANAGER
+
+### 14.4 UC66 — Khóa tài khoản nhân viên
+**Endpoint:** `PUT /api/admin/nhan-vien/{maNhanVien}/khoa`  
+**Vai trò:** ADMIN  
+**Test:** `PUT /api/admin/nhan-vien/NV_HDV01/khoa`
+
+### 14.5 UC67 — Mở khóa tài khoản nhân viên
+**Endpoint:** `PUT /api/admin/nhan-vien/{maNhanVien}/mo-khoa`  
+**Vai trò:** ADMIN
+
+---
+
+## 15. Khách hàng — Đặt tour & Quản lý đơn
+
+*=> Token của `kh01` hoặc `kh02`.*
+
+### 15.1 UC27 — Đặt tour
+**Endpoint:** `POST /api/khachhang/dat-tour`
+
+**Dữ liệu mẫu:**
+```json
+{
+  "maTourThucTe": "TTT001",
+  "soLuongKhach": 2,
+  "loaiPhong": "DELUXE",
+  "dsDichVuThem": ["DV001", "DV002"],
+  "ghiChu": "Ăn chay cho 1 người"
+}
+```
+- `dsDichVuThem`: danh sách `maDichVuThem` từ `/api/dich-vu-them`
+- `loaiPhong`: mã từ `/api/loai-phong`
+
+### 15.2 Xem danh sách đơn của tôi
+**Endpoint:** `GET /api/khachhang/dat-tour?page=0&size=10`  
+**Dữ liệu mẫu (kh01):** Trả về DDT001, DDT099.
+
+### 15.3 Chi tiết đơn của tôi
+**Endpoint:** `GET /api/khachhang/dat-tour/DDT001`
+
+### 15.4 Hủy đơn (khi còn CHO_XAC_NHAN)
+**Endpoint:** `DELETE /api/khachhang/dat-tour/{maDatTour}`  
+*(Chỉ hủy được khi đơn đang ở trạng thái `CHO_XAC_NHAN`. Đơn chuyển sang `DA_HUY`.)*
+
+### 15.5 UC32 — Yêu cầu hủy tour đã thanh toán (DA_XAC_NHAN)
+**Endpoint:** `POST /api/khachhang/dat-tour/{maDatTour}/huy`
+
+**Dữ liệu mẫu (kh01 — đơn DDT001):**
+```json
+{
+  "lyDoHuy": "Thay đổi kế hoạch cá nhân, không thể đi được",
+  "soTaiKhoanNganHang": "1234567890",
+  "tenNganHang": "BIDV"
+}
+```
+*(Tạo bản ghi `YeuCauHoTro`. SALES duyệt qua UC33. KeToan chuyển tiền qua UC52.)*
+
+---
+
+## 16. SALES — Xác nhận đơn & Xử lý hủy tour
+
+*=> Token của `sales01`.*
+
+### 16.1 Xác nhận đơn đặt tour
+**Endpoint:** `PUT /api/khachhang/admin/dat-tour/{maDatTour}/xac-nhan`  
+**Vai trò:** ADMIN, MANAGER, SALES
+
+**Test:** `PUT /api/khachhang/admin/dat-tour/DDT002/xac-nhan`  
+*(Đơn DDT002 đang `CHO_XAC_NHAN`, sau xác nhận sẽ thành `DA_XAC_NHAN`.)*
+
+### 16.2 UC33 — Danh sách yêu cầu hủy tour
+**Endpoint:** `GET /api/sales/yeu-cau-huy?loaiYeuCau=&trangThai=MOI_TAO&page=0&size=10`  
+**Vai trò:** ADMIN, MANAGER, SALES
+
+### 16.3 UC33 — Duyệt yêu cầu hủy tour
+**Endpoint:** `POST /api/sales/yeu-cau-huy/{maYeuCau}/duyet`
+
+**Body (có thể để trống hoặc truyền thêm ghi chú):**
+```json
+{
+  "ghiChu": "Đã xác nhận đủ điều kiện hoàn tiền theo chính sách"
+}
+```
+
+### 16.4 UC33 — Từ chối yêu cầu hủy tour
+**Endpoint:** `POST /api/sales/yeu-cau-huy/{maYeuCau}/tu-choi`
+
+```json
+{
+  "ghiChu": "Tour đã khởi hành, không thể hoàn tiền"
+}
+```
+
+---
+
+## 17. HDV — Vận hành tour trên chuyến đi
+
+*=> Token của `hdv01`.*
+
+### 17.1 Xem tour được giao (đơn giản)
+**Endpoint:** `GET /api/hdv/tour-cua-toi`  
+*(Giống `/api/hdv/lich-cong-tac` nhưng trả về format PhanCongResponse.)*
+
+### 17.2 UC42 — Xem danh sách đoàn khách trên tour
+**Endpoint:** `GET /api/hdv/tour/{maTour}/doan`  
+**Vai trò:** ADMIN, MANAGER, HDV
+
+**Test:** `GET /api/hdv/tour/TTT001/doan`
+
+### 17.3 UC43 — Điểm danh khách
+**Endpoint:** `POST /api/hdv/tour/{maTour}/diem-danh`
+
+**Dữ liệu mẫu (hdv01 điểm danh kh01 trên TTT001):**
+```json
+{
+  "maDatTour": "DDT001",
+  "trangThai": "CO_MAT"
+}
+```
+Giá trị `trangThai` hợp lệ: `CO_MAT`, `VANG_MAT`, `TRE_MUON`
+
+### 17.4 UC44 — Ghi nhận hành động xanh trong chuyến
+**Endpoint:** `POST /api/hdv/tour/{maTour}/hanh-dong-xanh`  
+**Vai trò:** ADMIN, HDV
+
+**Dữ liệu mẫu:**
+```json
+{
+  "maKhachHang": "KH001",
+  "maHanhDong": "HD001",
+  "ghiChu": "Khách mang túi tái sử dụng trong suốt hành trình"
+}
+```
+*(Hành động này tự động tích điểm xanh và kiểm tra nâng hạng thành viên.)*
+
+### 17.5 UC45 — Báo cáo sự cố
+**Xem danh sách sự cố:** `GET /api/hdv/tour/{maTour}/su-co`
+
+**Báo cáo sự cố mới:**  
+`POST /api/hdv/tour/{maTour}/su-co`
+```json
+{
+  "tieuDe": "Khách bị cảm nắng",
+  "moTa": "Một khách trong đoàn bị cảm nắng nhẹ lúc 14:00, đã xử lý bằng thuốc sơ cứu",
+  "mucDoNghiemTrong": "NHE"
+}
+```
+
+**Cập nhật sự cố:**  
+`PUT /api/hdv/su-co/{maSuCo}`
+```json
+{
+  "tieuDe": "Khách bị cảm nắng — đã xử lý xong",
+  "moTa": "Khách đã hồi phục, tiếp tục hành trình bình thường",
+  "mucDoNghiemTrong": "NHE"
+}
+```
+
+### 17.6 UC46 — Khai chi phí phát sinh
+**Endpoint:** `POST /api/hdv/tour/{maTour}/chi-phi`
+
+**Dữ liệu mẫu:**
+```json
+{
+  "loaiChiPhi": "PHAT_SINH",
+  "soTien": 500000,
+  "moTa": "Mua thêm nước uống cho đoàn do nắng nóng bất ngờ",
+  "hoaDonUrl": "https://example.com/hoadon.jpg"
+}
+```
+
+**Xem chi phí của tour:** `GET /api/hdv/tour/{maTour}/chi-phi`
+
+---
+
+## 18. Kế toán — Duyệt chi phí phát sinh
+
+*=> Token của `ketoan01`.*
+
+### 18.1 Danh sách chi phí (lọc theo trạng thái)
+**Endpoint:** `GET /api/ketoan/chi-phi?trangThai=CHO_DUYET&page=0&size=20`
+
+### 18.2 Duyệt chi phí
+**Endpoint:** `PUT /api/ketoan/chi-phi/{maChiPhi}/duyet`
+
+### 18.3 Từ chối chi phí
+**Endpoint:** `PUT /api/ketoan/chi-phi/{maChiPhi}/tu-choi`
+
+---
+
+## 19. Quyết toán — Endpoints đầy đủ
+
+*=> Token của `ketoan01`.*
+
+| Endpoint | Mô tả |
+|----------|-------|
+| `GET /api/ketoan/tour-can-quyet-toan` | UC47 — Tour KET_THUC chưa có quyết toán |
+| `GET /api/ketoan/tinh-toan/{maTour}` | UC48 — Preview quyết toán (không lưu) |
+| `POST /api/ketoan/quyet-toan/{maTour}` | UC49 — Tạo/cập nhật bản nháp |
+| `PUT /api/ketoan/quyet-toan/{maQuyetToan}/chot` | UC50 — Chốt quyết toán |
+| `GET /api/ketoan/quyet-toan?trangThai=DRAFT` | UC51 — Danh sách quyết toán (lọc) |
+| `GET /api/ketoan/quyet-toan/{maQuyetToan}` | Chi tiết 1 quyết toán |
+
+**Dữ liệu mẫu Test UC47-50:**  
+Trong DB có tour `TTT099` (KET_THUC). Dùng `maTour = TTT099` qua từng bước UC48 → UC49 → UC50.
+
+---
+
+## 20. UC29 — Thanh toán
+
+*=> Token của `kh01` hoặc `kh02`.*
+
+### 20.1 Khởi tạo giao dịch thanh toán
+**Endpoint:** `POST /api/thanh-toan/khoi-tao`
+
+**Dữ liệu mẫu (kh01 thanh toán đơn DDT001):**
+```json
+{
+  "maDatTour": "DDT001",
+  "mock": true
+}
+```
+- `mock: true` → Bỏ qua cổng MoMo, tự động tạo giao dịch THANH_CONG (dùng khi test dev).
+- `mock: false` → Gửi request thật đến MoMo (cần cấu hình key MoMo).
+
+### 20.2 Kiểm tra kết quả giao dịch (polling)
+**Endpoint:** `GET /api/thanh-toan/{maDatTour}/ket-qua`
+
+**Test:** `GET /api/thanh-toan/DDT001/ket-qua`
+
+---
+
+## 21. Phân công HDV — Endpoints đầy đủ
+
+*=> Token của `manager`.*
+
+### 21.1 UC38 — Xem HDV khả dụng cho tour
+**Endpoint:** `GET /api/manager/hdv-kha-dung?maTourThucTe=TTT001`  
+*(Trả về HDV chưa có lịch trùng với ngày tour TTT001.)*
+
+### 21.2 UC37 — Phân công HDV vào tour
+**Endpoint:** `POST /api/manager/phan-cong`
+
+**Dữ liệu mẫu:**
+```json
+{
+  "maTourThucTe": "TTT001",
+  "maNhanVien": "NV_HDV01",
+  "vaiTro": "HDV_CHINH"
+}
+```
+
+### 21.3 UC37 — Hủy phân công
+**Endpoint:** `DELETE /api/manager/phan-cong/{maPhanCong}`
+
+---
+
+## 22. Tour mẫu — Endpoints đầy đủ (ADMIN/MANAGER)
+
+*=> Token của `manager`.*
+
+| Endpoint | UC | Mô tả |
+|----------|-----|-------|
+| `GET /api/tour-mau?tieuDe=&trangThai=&page=0` | UC06 | Danh sách + filter |
+| `GET /api/tour-mau/{id}` | UC06 | Chi tiết + lịch trình |
+| `POST /api/tour-mau` | UC02 | Tạo tour mẫu mới |
+| `PUT /api/tour-mau/{id}` | UC04 | Sửa tour mẫu |
+| `DELETE /api/tour-mau/{id}` | UC05 | Xóa mềm (ẩn) |
+| `POST /api/tour-mau/{id}/sao-chep` | UC03 | Sao chép tour mẫu |
+| `POST /api/tour-mau/{id}/lich-trinh` | UC08 | Thêm ngày lịch trình |
+| `PUT /api/tour-mau/{id}/lich-trinh/{maLT}` | UC09 | Sửa lịch trình |
+| `DELETE /api/tour-mau/{id}/lich-trinh/{maLT}` | UC09 | Xóa lịch trình |
+
+**Dữ liệu mẫu tạo tour mẫu (POST /api/tour-mau):**
+```json
+{
+  "tieuDe": "Hội An - Đà Nẵng 3N2Đ",
+  "moTa": "Tour trải nghiệm văn hóa miền Trung",
+  "thoiLuong": 3,
+  "soNguoiToiDa": 20,
+  "soNguoiToiThieu": 5,
+  "giaSan": 3500000,
+  "loaiTour": "TRONG_NUOC",
+  "diemKhoiHanh": "Hà Nội",
+  "diemDen": "Đà Nẵng"
+}
+```
+
+**Dữ liệu mẫu thêm lịch trình (POST /api/tour-mau/TM001/lich-trinh):**
 ```json
 {
   "ngayThu": 1,
-  "hoatDong": "Ha Noi â†’ Ha Long â†’ Hang Sung Sot (cap nhat)",
-  "moTa": "Cap nhat hanh trinh ngay 1.",
-  "thucDon": "Trua: Hai san | Toi: BBQ tren tau"
-}
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "maLichTrinhTour": "LT001_N1",
-    "ngayThu": 1,
-    "hoatDong": "Ha Noi â†’ Ha Long â†’ Hang Sung Sot (cap nhat)",
-    "..."
-  }
+  "hoatDong": "Khởi hành từ Hà Nội, bay vào Đà Nẵng, check-in khách sạn",
+  "moTa": "Máy bay 06:00, đến Đà Nẵng 08:00, xe đưa đón khách sạn",
+  "thucDon": "Bữa trưa hải sản Mỹ Khê, bữa tối buffet"
 }
 ```
 
 ---
 
-### 9.9. XoÃ¡ Lá»‹ch trÃ¬nh
+## 23. Tour thực tế — Endpoints đầy đủ
 
-**Endpoint:** `DELETE /api/tour-mau/{id}/lich-trinh/{maLichTrinh}`
+*=> Token của `manager`.*
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
+| Endpoint | UC | Vai trò | Mô tả |
+|----------|-----|---------|-------|
+| `GET /api/tour-thuc-te?trangThai=MO_BAN` | UC14 | Tất cả (trừ public) | Danh sách nội bộ |
+| `GET /api/tour-thuc-te?congKhai=true` | UC25 | Tất cả | Chỉ tour đang mở bán, còn chỗ |
+| `GET /api/tour-thuc-te/{id}` | UC14 | Tất cả | Chi tiết |
+| `POST /api/tour-thuc-te` | UC11 | ADMIN, MANAGER | Tạo từ tour mẫu |
+| `PUT /api/tour-thuc-te/{id}` | UC13 | ADMIN, MANAGER | Sửa thông tin |
+| `DELETE /api/tour-thuc-te/{id}` | UC12 | ADMIN, MANAGER | Hủy tour (→ HUY) |
 
-**VÃ­ dá»¥:**
-```
-DELETE /api/tour-mau/TM001/lich-trinh/LT001_N3
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
-}
-```
-
----
-
-## 10. Tour Thá»±c táº¿ (`/api/tour-thuc-te`)
-
-### 10.1. Danh sÃ¡ch Tour Thá»±c táº¿ (ná»™i bá»™)
-
-**Endpoint:** `GET /api/tour-thuc-te`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`, `SALES`, `HDV`, `KETOAN`, `KHACHHANG`
-
-**Query Params (táº¥t cáº£ tuá»³ chá»n):**
-
-| Param | Kiá»ƒu | MÃ´ táº£ | VÃ­ dá»¥ |
-|-------|-------|-------|-------|
-| `trangThai` | String | Lá»c tráº¡ng thÃ¡i | `MO_BAN` |
-| `maTourMau` | String | Lá»c theo tour máº«u gá»‘c | `TM001` |
-| `giaTu` | BigDecimal | GiÃ¡ tá»‘i thiá»ƒu | `1000000` |
-| `giaDen` | BigDecimal | GiÃ¡ tá»‘i Ä‘a | `5000000` |
-| `thoiLuongMin` | Integer | Thá»i lÆ°á»£ng tour máº«u tá»‘i thiá»ƒu | `3` |
-| `thoiLuongMax` | Integer | Thá»i lÆ°á»£ng tour máº«u tá»‘i Ä‘a | `5` |
-| `congKhai` | Boolean | `true` = danh sÃ¡ch cÃ´ng khai (chá»‰ `MO_BAN`) | `false` |
-| `page` | Integer | Trang | `0` |
-| `size` | Integer | Báº£n ghi/trang | `10` |
-| `sort` | String | Sáº¯p xáº¿p | `NgayKhoiHanh,ASC` |
-
-**VÃ­ dá»¥ â€” Danh sÃ¡ch ná»™i bá»™ (xem táº¥t cáº£ tráº¡ng thÃ¡i):**
-```
-GET /api/tour-thuc-te?trangThai=MO_BAN&page=0&size=10
-```
-
-**VÃ­ dá»¥ â€” Danh sÃ¡ch cÃ´ng khai (cho khÃ¡ch hÃ ng, chá»‰ MO_BAN):**
-```
-GET /api/tour-thuc-te?congKhai=true&giaTu=2000000&giaDen=5000000
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "content": [
-      {
-        "maTourThucTe": "TTT001",
-        "maTourMau": "TM001",
-        "tieuDeTour": "Kham pha Ha Long - Cat Ba 3N2D",
-        "ngayKhoiHanh": "2026-06-15",
-        "ngayKetThuc": "2026-06-17",
-        "giaHienHanh": 3800000,
-        "soKhachToiDa": 30,
-        "soKhachToiThieu": 10,
-        "choConLai": 30,
-        "trangThai": "MO_BAN",
-        "thoiDiemTao": "...",
-        "capNhatVao": "..."
-      }
-    ],
-    "totalElements": 1,
-    "totalPages": 1
-  }
-}
-```
-
-> **LÆ°u Ã½:** `ngayKetThuc` Ä‘Æ°á»£c tÃ­nh tá»± Ä‘á»™ng = `ngayKhoiHanh + thoiLuong(tour máº«u) - 1`
-
----
-
-### 10.2. Chi tiáº¿t Tour Thá»±c táº¿
-
-**Endpoint:** `GET /api/tour-thuc-te/{id}`
-
-**Vai trÃ²:** Táº¥t cáº£ vai trÃ² Ä‘Ã£ xÃ¡c thá»±c
-
-**VÃ­ dá»¥:**
-```
-GET /api/tour-thuc-te/TTT001
-```
-
----
-
-### 10.3. Táº¡o Tour Thá»±c táº¿ (tá»« Tour Máº«u)
-
-**Endpoint:** `POST /api/tour-thuc-te`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer <accessToken>
-```
-
-**Body (raw JSON):**
+**Dữ liệu mẫu tạo tour thực tế (POST /api/tour-thuc-te):**
 ```json
 {
   "maTourMau": "TM001",
-  "ngayKhoiHanh": "2026-07-01",
-  "soKhachToiDa": 25,
-  "soKhachToiThieu": 10,
+  "ngayKhoiHanh": "2026-08-15",
+  "soKhachToiDa": 20,
+  "soKhachToiThieu": 5,
   "giaHienHanh": 3800000
 }
 ```
 
-> - `ngayKhoiHanh` pháº£i lÃ  ngÃ y trong tÆ°Æ¡ng lai
-> - `giaHienHanh` > 0
-> - Tour máº«u pháº£i á»Ÿ tráº¡ng thÃ¡i `HOAT_DONG`
-> - Tráº¡ng thÃ¡i tour thá»±c táº¿ máº·c Ä‘á»‹nh: `CHO_KICH_HOAT`
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "data": {
-    "maTourThucTe": "TTT...",
-    "maTourMau": "TM001",
-    "tieuDeTour": "Kham pha Ha Long - Cat Ba 3N2D",
-    "ngayKhoiHanh": "2026-07-01",
-    "ngayKetThuc": "2026-07-03",
-    "giaHienHanh": 3800000,
-    "soKhachToiDa": 25,
-    "soKhachToiThieu": 10,
-    "choConLai": 25,
-    "trangThai": "CHO_KICH_HOAT"
-  }
-}
-```
-
-**Lá»—i:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `ngayKhoiHanh` khÃ´ng á»Ÿ tÆ°Æ¡ng lai |
-| 400 | `giaHienHanh` â‰¤ 0 |
-| 404 | `maTourMau` khÃ´ng tá»“n táº¡i |
-| 400 | Tour máº«u bá»‹ khoÃ¡ (`KHOA`) |
-
 ---
 
-### 10.4. Cáº­p nháº­t Tour Thá»±c táº¿
+## 24. Hành động xanh — Quản lý CRUD
 
-**Endpoint:** `PUT /api/tour-thuc-te/{id}`
+| Endpoint | Vai trò | Mô tả |
+|----------|---------|-------|
+| `GET /api/hanh-dong-xanh` | Tất cả (public) | Danh sách |
+| `GET /api/hanh-dong-xanh/{id}` | Tất cả (public) | Chi tiết |
+| `POST /api/hanh-dong-xanh` | ADMIN, MANAGER | Tạo mới |
+| `PUT /api/hanh-dong-xanh/{id}` | ADMIN, MANAGER | Sửa |
+| `DELETE /api/hanh-dong-xanh/{id}` | ADMIN, MANAGER | Xóa |
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON) â€” chá»‰ gá»­i trÆ°á»ng cáº§n sá»­a:**
+**Dữ liệu mẫu (POST /api/hanh-dong-xanh) — Token manager:**
 ```json
 {
-  "giaHienHanh": 4000000,
-  "soKhachToiDa": 35,
-  "trangThai": "MO_BAN"
-}
-```
-
-> Tráº¡ng thÃ¡i há»£p lá»‡: `CHO_KICH_HOAT`, `MO_BAN`, `SAP_DIEN_RA`, `DANG_DIEN_RA`, `KET_THUC`, `HUY`, `DA_QUYET_TOAN`
-
-**Response thÃ nh cÃ´ng (200):** Tráº£ vá» `TourThucTeResponse` Ä‘áº§y Ä‘á»§
-
----
-
-### 10.5. XoÃ¡ má»m Tour Thá»±c táº¿ (chuyá»ƒn â†’ HUY)
-
-**Endpoint:** `DELETE /api/tour-thuc-te/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-DELETE /api/tour-thuc-te/TTT001
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
+  "tenHanhDong": "Không dùng nhựa một lần",
+  "moTa": "Khách mang bình nước cá nhân, không dùng chai nhựa trong suốt hành trình",
+  "diemThuong": 30
 }
 ```
 
 ---
 
-## 11. Loáº¡i PhÃ²ng (`/api/loai-phong`)
+## 25. Dịch vụ thêm — Quản lý CRUD
 
-### 11.1. Danh sÃ¡ch Loáº¡i PhÃ²ng
+| Endpoint | Vai trò | Mô tả |
+|----------|---------|-------|
+| `GET /api/dich-vu-them` | Tất cả (public) | Danh sách dịch vụ |
+| `POST /api/dich-vu-them` | ADMIN, MANAGER | Tạo mới |
+| `PUT /api/dich-vu-them/{id}` | ADMIN, MANAGER | Sửa |
+| `DELETE /api/dich-vu-them/{id}` | ADMIN, MANAGER | Xóa |
 
-**Endpoint:** `GET /api/loai-phong`
-
-**Vai trÃ²:** Táº¥t cáº£ (chá»‰ cáº§n token xÃ¡c thá»±c)
-
-**Response thÃ nh cÃ´ng (200):**
+**Dữ liệu mẫu (POST /api/dich-vu-them) — Token manager:**
 ```json
 {
-  "status": 200,
-  "success": true,
-  "data": [
-    {
-      "maLoaiPhong": "LP001",
-      "tenLoai": "Phong don (Single)",
-      "mucPhuThu": 0,
-      "trangThai": "HOAT_DONG"
-    },
-    {
-      "maLoaiPhong": "LP002",
-      "tenLoai": "Phong doi (Twin / Double)",
-      "mucPhuThu": 200000,
-      "trangThai": "HOAT_DONG"
-    }
-  ]
+  "tenDichVu": "Bảo hiểm du lịch cao cấp",
+  "moTa": "Bảo hiểm tai nạn + hành lý + hủy chuyến",
+  "giaTien": 150000
 }
 ```
 
 ---
 
-### 11.2. Táº¡o Loáº¡i PhÃ²ng má»›i
+## 26. Loại phòng — Quản lý CRUD
 
-**Endpoint:** `POST /api/loai-phong`
+| Endpoint | Vai trò | Mô tả |
+|----------|---------|-------|
+| `GET /api/loai-phong` | Tất cả (public) | Danh sách loại phòng |
+| `POST /api/loai-phong` | ADMIN, MANAGER | Tạo mới |
+| `PUT /api/loai-phong/{id}` | ADMIN, MANAGER | Sửa |
+| `DELETE /api/loai-phong/{id}` | ADMIN, MANAGER | Xóa |
 
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON):**
+**Dữ liệu mẫu (POST /api/loai-phong) — Token manager:**
 ```json
 {
-  "tenLoai": "Phong Suite VIP",
-  "mucPhuThu": 1500000,
-  "trangThai": "HOAT_DONG"
-}
-```
-
-> `trangThai` tuá»³ chá»n, máº·c Ä‘á»‹nh `HOAT_DONG`
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "data": {
-    "maLoaiPhong": "LP...",
-    "tenLoai": "Phong Suite VIP",
-    "mucPhuThu": 1500000,
-    "trangThai": "HOAT_DONG"
-  }
+  "tenLoaiPhong": "Suite",
+  "moTa": "Phòng Suite cao cấp, view biển",
+  "phuThu": 500000
 }
 ```
 
 ---
 
-### 11.3. Cáº­p nháº­t Loáº¡i PhÃ²ng
-
-**Endpoint:** `PUT /api/loai-phong/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-PUT /api/loai-phong/LP001
-```
-
-**Body (raw JSON):**
-```json
-{
-  "tenLoai": "Phong don (Single) - Cap nhat",
-  "mucPhuThu": 50000,
-  "trangThai": "HOAT_DONG"
-}
-```
-
----
-
-### 11.4. XoÃ¡ má»m Loáº¡i PhÃ²ng (chuyá»ƒn â†’ KHOA)
-
-**Endpoint:** `DELETE /api/loai-phong/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-DELETE /api/loai-phong/LP004
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
-}
-```
-
----
-
-## 12. Dá»‹ch vá»¥ ThÃªm (`/api/dich-vu-them`)
-
-### 12.1. Danh sÃ¡ch Dá»‹ch vá»¥ ThÃªm
-
-**Endpoint:** `GET /api/dich-vu-them`
-
-**Vai trÃ²:** Táº¥t cáº£ (chá»‰ cáº§n token xÃ¡c thá»±c)
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": [
-    {
-      "maDichVuThem": "DV001",
-      "ten": "Ve tham quan them",
-      "donViTinh": "Luot/nguoi",
-      "donGia": 150000,
-      "trangThai": "HOAT_DONG"
-    },
-    {
-      "maDichVuThem": "DV002",
-      "ten": "Bao hiem du lich",
-      "donViTinh": "Nguoi",
-      "donGia": 80000,
-      "trangThai": "HOAT_DONG"
-    }
-  ]
-}
-```
-
----
-
-### 12.2. Táº¡o Dá»‹ch vá»¥ ThÃªm má»›i
-
-**Endpoint:** `POST /api/dich-vu-them`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON):**
-```json
-{
-  "ten": "Sim 4G du lich",
-  "donViTinh": "Sim/nguoi",
-  "donGia": 100000,
-  "trangThai": "HOAT_DONG"
-}
-```
-
-> `trangThai` tuá»³ chá»n, máº·c Ä‘á»‹nh `HOAT_DONG`
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "data": {
-    "maDichVuThem": "DV...",
-    "ten": "Sim 4G du lich",
-    "donViTinh": "Sim/nguoi",
-    "donGia": 100000,
-    "trangThai": "HOAT_DONG"
-  }
-}
-```
-
----
-
-### 12.3. Cáº­p nháº­t Dá»‹ch vá»¥ ThÃªm
-
-**Endpoint:** `PUT /api/dich-vu-them/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-PUT /api/dich-vu-them/DV001
-```
-
-**Body (raw JSON):**
-```json
-{
-  "ten": "Ve tham quan them (gia moi)",
-  "donViTinh": "Luot/nguoi",
-  "donGia": 180000,
-  "trangThai": "HOAT_DONG"
-}
-```
-
----
-
-### 12.4. XoÃ¡ má»m Dá»‹ch vá»¥ ThÃªm (chuyá»ƒn â†’ KHOA)
-
-**Endpoint:** `DELETE /api/dich-vu-them/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-DELETE /api/dich-vu-them/DV005
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
-}
-```
-
----
-
-## 13. HÃ nh Ä‘á»™ng Xanh (`/api/hanh-dong-xanh`)
-
-### 13.1. Danh sÃ¡ch HÃ nh Ä‘á»™ng Xanh
-
-**Endpoint:** `GET /api/hanh-dong-xanh`
-
-**Vai trÃ²:** Táº¥t cáº£ (chá»‰ cáº§n token xÃ¡c thá»±c)
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": [
-    {
-      "maHanhDongXanh": "HDX001",
-      "tenHanhDong": "Mang binh nuoc tai su dung",
-      "diemCong": 50,
-      "trangThai": "HOAT_DONG"
-    },
-    {
-      "maHanhDongXanh": "HDX002",
-      "tenHanhDong": "Khong dung do nhua dung mot lan",
-      "diemCong": 80,
-      "trangThai": "HOAT_DONG"
-    }
-  ]
-}
-```
-
----
-
-### 13.2. Chi tiáº¿t HÃ nh Ä‘á»™ng Xanh
-
-**Endpoint:** `GET /api/hanh-dong-xanh/{id}`
-
-**Vai trÃ²:** Táº¥t cáº£ (chá»‰ cáº§n token xÃ¡c thá»±c)
-
-**VÃ­ dá»¥:**
-```
-GET /api/hanh-dong-xanh/HDX003
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "maHanhDongXanh": "HDX003",
-    "tenHanhDong": "Tham gia don rac moi truong tai diem den",
-    "diemCong": 150,
-    "trangThai": "HOAT_DONG"
-  }
-}
-```
-
----
-
-### 13.3. Táº¡o HÃ nh Ä‘á»™ng Xanh má»›i
-
-**Endpoint:** `POST /api/hanh-dong-xanh`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**Body (raw JSON):**
-```json
-{
-  "tenHanhDong": "Su dung phuong tien cong cong",
-  "diemCong": 120,
-  "trangThai": "HOAT_DONG"
-}
-```
-
-> `trangThai` tuá»³ chá»n, máº·c Ä‘á»‹nh `HOAT_DONG`
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "data": {
-    "maHanhDongXanh": "HDX...",
-    "tenHanhDong": "Su dung phuong tien cong cong",
-    "diemCong": 120,
-    "trangThai": "HOAT_DONG"
-  }
-}
-```
-
----
-
-### 13.4. Cáº­p nháº­t HÃ nh Ä‘á»™ng Xanh
-
-**Endpoint:** `PUT /api/hanh-dong-xanh/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-PUT /api/hanh-dong-xanh/HDX001
-```
-
-**Body (raw JSON):**
-```json
-{
-  "tenHanhDong": "Mang binh nuoc tai su dung (cap nhat)",
-  "diemCong": 60,
-  "trangThai": "HOAT_DONG"
-}
-```
-
----
-
-### 13.5. XoÃ¡ má»m HÃ nh Ä‘á»™ng Xanh (chuyá»ƒn â†’ KHOA)
-
-**Endpoint:** `DELETE /api/hanh-dong-xanh/{id}`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`
-
-**VÃ­ dá»¥:**
-```
-DELETE /api/hanh-dong-xanh/HDX005
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xoa thanh cong"
-}
-```
-
----
-
-## Ká»‹ch báº£n test nhanh Module 1
-
-> Thá»© tá»± test khuyáº¿n nghá»‹ Ä‘á»ƒ kiá»ƒm tra xuyÃªn suá»‘t:
-
-### BÆ°á»›c 1 â€” Chuáº©n bá»‹ token
-1. `POST /api/auth/dang-nhap` vá»›i tÃ i khoáº£n ADMIN â†’ lÆ°u `accessToken`
-
-### BÆ°á»›c 2 â€” Loáº¡i phÃ²ng, Dá»‹ch vá»¥ thÃªm, HÃ nh Ä‘á»™ng xanh (danh má»¥c)
-2. `GET /api/loai-phong` â†’ kiá»ƒm tra cÃ³ 4 loáº¡i phÃ²ng seed
-3. `POST /api/loai-phong` â†’ táº¡o loáº¡i phÃ²ng má»›i
-4. `PUT /api/loai-phong/{id}` â†’ sá»­a loáº¡i phÃ²ng vá»«a táº¡o
-5. `DELETE /api/loai-phong/{id}` â†’ xoÃ¡ má»m (kiá»ƒm tra `trangThai` = `KHOA`)
-6. Láº·p tÆ°Æ¡ng tá»± cho `/api/dich-vu-them` vÃ  `/api/hanh-dong-xanh`
-
-### BÆ°á»›c 3 â€” Tour Máº«u & Lá»‹ch trÃ¬nh
-7. `GET /api/tour-mau` â†’ kiá»ƒm tra cÃ³ 4 tour máº«u seed
-8. `GET /api/tour-mau/TM001` â†’ xem chi tiáº¿t + 3 lá»‹ch trÃ¬nh
-9. `POST /api/tour-mau` â†’ táº¡o tour máº«u má»›i kÃ¨m lá»‹ch trÃ¬nh
-10. `PUT /api/tour-mau/{mÃ£ vá»«a táº¡o}` â†’ cáº­p nháº­t tiÃªu Ä‘á», giÃ¡ sÃ n
-11. `POST /api/tour-mau/{mÃ£ vá»«a táº¡o}/lich-trinh` â†’ thÃªm lá»‹ch trÃ¬nh ngÃ y má»›i
-12. `PUT /api/tour-mau/{id}/lich-trinh/{maLichTrinh}` â†’ sá»­a lá»‹ch trÃ¬nh
-13. `DELETE /api/tour-mau/{id}/lich-trinh/{maLichTrinh}` â†’ xoÃ¡ lá»‹ch trÃ¬nh
-14. `POST /api/tour-mau/TM001/sao-chep` â†’ sao chÃ©p tour máº«u
-15. `DELETE /api/tour-mau/{id}` â†’ xoÃ¡ má»m tour máº«u
-
-### BÆ°á»›c 4 â€” Tour Thá»±c táº¿
-16. `POST /api/tour-thuc-te` â†’ táº¡o tá»« tour máº«u `TM001`
-17. `GET /api/tour-thuc-te` â†’ danh sÃ¡ch ná»™i bá»™
-18. `GET /api/tour-thuc-te?congKhai=true` â†’ danh sÃ¡ch cÃ´ng khai
-19. `PUT /api/tour-thuc-te/{id}` â†’ cáº­p nháº­t giÃ¡, tráº¡ng thÃ¡i â†’ `MO_BAN`
-20. `GET /api/tour-thuc-te/{id}` â†’ kiá»ƒm tra `ngayKetThuc` tÃ­nh Ä‘Ãºng
-21. `DELETE /api/tour-thuc-te/{id}` â†’ xoÃ¡ má»m â†’ tráº¡ng thÃ¡i `HUY`
-
-### BÆ°á»›c 5 â€” Kiá»ƒm tra phÃ¢n quyá»n
-22. ÄÄƒng nháº­p vá»›i tÃ i khoáº£n `SALES` â†’ thá»­ `POST /api/tour-mau` â†’ expect **403**
-23. ÄÄƒng nháº­p vá»›i tÃ i khoáº£n `KHACHHANG` â†’ `GET /api/tour-thuc-te?congKhai=true` â†’ expect **200**
-24. KhÃ´ng gáº¯n token â†’ gá»i báº¥t ká»³ endpoint â†’ expect **401**
-
----
-
-# Module 2 â€” KhÃ¡ch hÃ ng & Há»“ sÆ¡ cÃ¡ nhÃ¢n
-
-> **YÃªu cáº§u:** Bearer Token cá»§a tÃ i khoáº£n **KHACHHANG**.
-> Há»“ sÆ¡ (`HoChieuSo`) Ä‘Æ°á»£c tá»± Ä‘á»™ng táº¡o khi Ä‘Äƒng kÃ½ tÃ i khoáº£n khÃ¡ch hÃ ng.
-
----
-
-## 14. Há»“ sÆ¡ KhÃ¡ch hÃ ng (`/api/khachhang/ho-so`)
-
-### 14.1. Xem há»“ sÆ¡ cá»§a báº£n thÃ¢n
-
-**Endpoint:** `GET /api/khachhang/ho-so`
-
-**Vai trÃ²:** `KHACHHANG`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "ThÃ nh cÃ´ng",
-  "data": {
-    "maKhachHang": "KH_A1B2C3D4",
-    "maTaiKhoan": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "tenDangNhap": "nguyenvana",
-    "hoTen": "Nguyen Van A",
-    "email": "nguyenvana@example.com",
-    "soDienThoai": "0901234567",
-    "diUng": null,
-    "ghiChuYTe": null,
-    "hangThanhVien": "CO_BAN",
-    "diemXanh": 0,
-    "thoiDiemTao": "2026-04-22T10:00:00",
-    "capNhatVao": "2026-04-22T10:00:00"
-  }
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 401 | ChÆ°a gáº¯n token |
-| 403 | Token khÃ´ng pháº£i KHACHHANG |
-| 404 | TÃ i khoáº£n chÆ°a cÃ³ há»“ sÆ¡ (khÃ´ng xáº£y ra náº¿u Ä‘Äƒng kÃ½ qua `/api/auth/dang-ky`) |
-
----
-
-### 14.2. Cáº­p nháº­t há»“ sÆ¡ cÃ¡ nhÃ¢n
-
-**Endpoint:** `PUT /api/khachhang/ho-so`
-
-**Vai trÃ²:** `KHACHHANG`
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**Body (raw JSON):**
-```json
-{
-  "diUng": "Hai san, dau phong",
-  "ghiChuYTe": "Tieu duong type 2, can che do an it tinh bot"
-}
-```
-
-> Cáº£ hai trÆ°á»ng Ä‘á»u tuá»³ chá»n. Chá»‰ cÃ¡c trÆ°á»ng cÃ³ trong body má»›i Ä‘Æ°á»£c cáº­p nháº­t.
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Cap nhat ho so thanh cong",
-  "data": {
-    "maKhachHang": "KH_A1B2C3D4",
-    "diUng": "Hai san, dau phong",
-    "ghiChuYTe": "Tieu duong type 2, can che do an it tinh bot",
-    "hangThanhVien": "CO_BAN",
-    "diemXanh": 0
-  }
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | `diUng` vÆ°á»£t quÃ¡ 1000 kÃ½ tá»± |
-| 401 | ChÆ°a gáº¯n token |
-| 403 | Token khÃ´ng pháº£i KHACHHANG |
-
----
-
-# Module 3 â€” Äáº·t Tour
-
-> **YÃªu cáº§u:** Bearer Token. KhÃ¡ch hÃ ng sá»­ dá»¥ng `/api/khachhang/*`, nhÃ¢n viÃªn Sales dÃ¹ng `/api/khachhang/admin/*`.
-> **Äiá»u kiá»‡n tiÃªn quyáº¿t:** TÃ i khoáº£n pháº£i Ä‘Ã£ cÃ³ há»“ sÆ¡ `HoChieuSo` (tá»± Ä‘á»™ng khi Ä‘Äƒng kÃ½).
-
----
-
-## 15. Táº¡o Ä‘Æ¡n Ä‘áº·t tour
-
-**Endpoint:** `POST /api/khachhang/dat-tour`
-
-**Vai trÃ²:** `KHACHHANG`
-
-**Headers:**
-```
-Content-Type: application/json
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**Body (raw JSON â€” tá»‘i giáº£n):**
-```json
-{
-  "maTourThucTe": "TTT_XXXXXXXX"
-}
-```
-
-**Body (raw JSON â€” Ä‘áº§y Ä‘á»§):**
-```json
-{
-  "maTourThucTe": "TTT_XXXXXXXX",
-  "maLoaiPhong": "LP002",
-  "danhSachDichVu": [
-    { "maDichVuThem": "DV001", "soLuong": 1 },
-    { "maDichVuThem": "DV002", "soLuong": 2 }
-  ],
-  "ghiChu": "Yeu cau phong nhin ra bien"
-}
-```
-
-> - `maLoaiPhong`: tuá»³ chá»n â€” phá»¥ thu thÃªm vÃ o giÃ¡ gá»‘c.
-> - `danhSachDichVu`: tuá»³ chá»n â€” danh sÃ¡ch dá»‹ch vá»¥ bá»• sung.
-> - ÄÆ¡n tá»± háº¿t háº¡n sau **24 giá»** náº¿u chÆ°a Ä‘Æ°á»£c Sales xÃ¡c nháº­n.
-
-**Response thÃ nh cÃ´ng (201):**
-```json
-{
-  "status": 201,
-  "success": true,
-  "message": "Táº¡o má»›i thÃ nh cÃ´ng",
-  "data": {
-    "maDatTour": "DDT_A1B2C3D4",
-    "maTourThucTe": "TTT_XXXXXXXX",
-    "tieuDeTour": "Tour Ha Long 3 ngay 2 dem",
-    "ngayKhoiHanh": "2026-06-15",
-    "giaHienHanh": 3500000,
-    "thoiLuong": 3,
-    "maKhachHang": "KH_A1B2C3D4",
-    "tenKhachHang": "Nguyen Van A",
-    "ngayDat": "2026-04-22T10:00:00",
-    "tongTien": 3780000,
-    "trangThai": "CHO_XAC_NHAN",
-    "thoiGianHetHan": "2026-04-23T10:00:00",
-    "ghiChu": "Yeu cau phong nhin ra bien",
-    "chiTietKhach": [
-      {
-        "maChiTietDat": "CTDT_E5F6G7H8",
-        "maKhachHang": "KH_A1B2C3D4",
-        "hoTen": "Nguyen Van A",
-        "maLoaiPhong": "LP002",
-        "tenLoaiPhong": "Phong Double",
-        "mucPhuThu": 280000,
-        "giaTaiThoiDiemDat": 3780000
-      }
-    ],
-    "chiTietDichVu": [
-      {
-        "maChiTietDichVu": "CTDV_I9J0K1L2",
-        "maDichVuThem": "DV001",
-        "tenDichVu": "Ve tham quan them",
-        "donViTinh": "Luot/nguoi",
-        "soLuong": 1,
-        "donGia": 150000,
-        "thanhTien": 150000
-      }
-    ]
-  }
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | Tour khÃ´ng á»Ÿ tráº¡ng thÃ¡i `MO_BAN` |
-| 400 | Tour Ä‘Ã£ háº¿t chá»— (`choConLai = 0`) |
-| 400 | `maLoaiPhong` khÃ´ng tá»“n táº¡i hoáº·c Ä‘Ã£ `KHOA` |
-| 400 | `maDichVuThem` khÃ´ng tá»“n táº¡i hoáº·c Ä‘Ã£ `KHOA` |
-| 404 | KhÃ´ng tÃ¬m tháº¥y tour thá»±c táº¿ |
-| 404 | TÃ i khoáº£n chÆ°a cÃ³ há»“ sÆ¡ khÃ¡ch hÃ ng |
-
----
-
-## 16. Danh sÃ¡ch Ä‘Æ¡n Ä‘áº·t tour cá»§a tÃ´i
-
-**Endpoint:** `GET /api/khachhang/dat-tour`
-
-**Vai trÃ²:** `KHACHHANG`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**Query Params (tuá»³ chá»n):**
-
-| Param | Kiá»ƒu | MÃ´ táº£ |
-|-------|------|-------|
-| `page` | int | Trang (máº·c Ä‘á»‹nh 0) |
-| `size` | int | KÃ­ch thÆ°á»›c trang (máº·c Ä‘á»‹nh 10) |
-| `sort` | string | TrÆ°á»ng sáº¯p xáº¿p (máº·c Ä‘á»‹nh `ThoiDiemTao,desc`) |
-
-**VÃ­ dá»¥:**
-```
-GET /api/khachhang/dat-tour?page=0&size=5
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "ThÃ nh cÃ´ng",
-  "data": {
-    "content": [
-      {
-        "maDatTour": "DDT_A1B2C3D4",
-        "tieuDeTour": "Tour Ha Long 3 ngay 2 dem",
-        "ngayKhoiHanh": "2026-06-15",
-        "tongTien": 3780000,
-        "trangThai": "CHO_XAC_NHAN",
-        "thoiGianHetHan": "2026-04-23T10:00:00",
-        "chiTietKhach": [...],
-        "chiTietDichVu": [...]
-      }
-    ],
-    "totalElements": 1,
-    "totalPages": 1,
-    "number": 0
-  }
-}
-```
-
----
-
-## 17. Chi tiáº¿t Ä‘Æ¡n Ä‘áº·t tour cá»§a tÃ´i
-
-**Endpoint:** `GET /api/khachhang/dat-tour/{maDatTour}`
-
-**Vai trÃ²:** `KHACHHANG`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**VÃ­ dá»¥:**
-```
-GET /api/khachhang/dat-tour/DDT_A1B2C3D4
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 404 | KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n, hoáº·c Ä‘Æ¡n khÃ´ng thuá»™c vá» tÃ i khoáº£n Ä‘ang Ä‘Äƒng nháº­p |
-
----
-
-## 18. Há»§y Ä‘Æ¡n Ä‘áº·t tour
-
-**Endpoint:** `DELETE /api/khachhang/dat-tour/{maDatTour}`
-
-**Vai trÃ²:** `KHACHHANG`
-
-> Chá»‰ cÃ³ thá»ƒ há»§y khi Ä‘Æ¡n á»Ÿ tráº¡ng thÃ¡i **`CHO_XAC_NHAN`**. Há»§y sáº½ hoÃ n tráº£ 1 chá»— cho tour.
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_KHACHHANG>
-```
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Huy dat tour thanh cong"
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | ÄÆ¡n khÃ´ng á»Ÿ tráº¡ng thÃ¡i `CHO_XAC_NHAN` (Ä‘Ã£ xÃ¡c nháº­n hoáº·c Ä‘Ã£ há»§y) |
-| 404 | KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n hoáº·c khÃ´ng thuá»™c vá» báº¡n |
-
----
-
-## 19. Sales: Danh sÃ¡ch táº¥t cáº£ Ä‘Æ¡n Ä‘áº·t tour
-
-**Endpoint:** `GET /api/khachhang/admin/dat-tour`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`, `SALES`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_SALES>
-```
-
-**Query Params (tuá»³ chá»n):**
-
-| Param | GiÃ¡ trá»‹ há»£p lá»‡ | MÃ´ táº£ |
-|-------|----------------|-------|
-| `trangThai` | `CHO_XAC_NHAN` \| `DA_XAC_NHAN` \| `DA_HUY` \| `HET_HAN_GIU_CHO` | Lá»c theo tráº¡ng thÃ¡i |
-| `maTourThucTe` | string | Lá»c theo tour thá»±c táº¿ |
-| `page` | int | Trang (máº·c Ä‘á»‹nh 0) |
-| `size` | int | KÃ­ch thÆ°á»›c trang (máº·c Ä‘á»‹nh 10) |
-
-**VÃ­ dá»¥:**
-```
-GET /api/khachhang/admin/dat-tour?trangThai=CHO_XAC_NHAN&page=0&size=20
-```
-
----
-
-## 20. Sales: XÃ¡c nháº­n Ä‘Æ¡n Ä‘áº·t tour
-
-**Endpoint:** `PUT /api/khachhang/admin/dat-tour/{maDatTour}/xac-nhan`
-
-**Vai trÃ²:** `ADMIN`, `MANAGER`, `SALES`
-
-**Headers:**
-```
-Authorization: Bearer <accessToken_SALES>
-```
-
-**Body:** KhÃ´ng cáº§n
-
-**Response thÃ nh cÃ´ng (200):**
-```json
-{
-  "status": 200,
-  "success": true,
-  "message": "Xac nhan don dat tour thanh cong",
-  "data": {
-    "maDatTour": "DDT_A1B2C3D4",
-    "trangThai": "DA_XAC_NHAN",
-    ...
-  }
-}
-```
-
-**Lá»—i thÆ°á»ng gáº·p:**
-
-| HTTP | NguyÃªn nhÃ¢n |
-|------|-------------|
-| 400 | ÄÆ¡n khÃ´ng á»Ÿ tráº¡ng thÃ¡i `CHO_XAC_NHAN` |
-| 404 | KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n |
-
----
-
-## Ká»‹ch báº£n test Module 2 & 3
-
-### BÆ°á»›c 1 â€” Chuáº©n bá»‹
-1. ÄÄƒng nháº­p vá»›i tÃ i khoáº£n `admin` â†’ lÆ°u `accessToken_ADMIN`
-2. **`POST /api/auth/dang-ky`** vá»›i tÃ i khoáº£n `khachhang01` â†’ lÆ°u `accessToken_KH`
-3. ÄÄƒng nháº­p vá»›i tÃ i khoáº£n `sales01` â†’ lÆ°u `accessToken_SALES`
-
-### BÆ°á»›c 2 â€” Há»“ sÆ¡ khÃ¡ch hÃ ng
-4. `GET /api/khachhang/ho-so` (token: `accessToken_KH`) â†’ kiá»ƒm tra há»“ sÆ¡ Ä‘Æ°á»£c táº¡o tá»± Ä‘á»™ng
-5. `PUT /api/khachhang/ho-so` â†’ cáº­p nháº­t `diUng` vÃ  `ghiChuYTe`
-6. `GET /api/khachhang/ho-so` â†’ xÃ¡c nháº­n cáº­p nháº­t Ä‘Ã£ lÆ°u
-
-### BÆ°á»›c 3 â€” Xem tour trÆ°á»›c khi Ä‘áº·t
-7. `GET /api/tour-thuc-te?congKhai=true` (token: `accessToken_KH`) â†’ danh sÃ¡ch tour `MO_BAN`
-8. Ghi láº¡i `maTourThucTe` cá»§a 1 tour cÃ²n chá»— vÃ  cÃ¡c `maLoaiPhong`, `maDichVuThem` cáº§n dÃ¹ng
-9. `GET /api/loai-phong` â†’ xem danh sÃ¡ch loáº¡i phÃ²ng vÃ  phá»¥ thu
-
-### BÆ°á»›c 4 â€” Äáº·t tour
-10. `POST /api/khachhang/dat-tour` (token: `accessToken_KH`) vá»›i `maTourThucTe` vá»«a chá»n
-11. Kiá»ƒm tra:
-    - `trangThai = CHO_XAC_NHAN`
-    - `thoiGianHetHan` = 24h sau ngÃ y Ä‘áº·t
-    - `tongTien = giaHienHanh + mucPhuThuPhong + sumThanhTienDichVu`
-12. `GET /api/tour-thuc-te/{maTourThucTe}` â†’ kiá»ƒm tra `choConLai` Ä‘Ã£ giáº£m 1
-
-### BÆ°á»›c 5 â€” Xem & quáº£n lÃ½ Ä‘Æ¡n
-13. `GET /api/khachhang/dat-tour` â†’ danh sÃ¡ch Ä‘Æ¡n cá»§a tÃ´i
-14. `GET /api/khachhang/dat-tour/{maDatTour}` â†’ chi tiáº¿t Ä‘Æ¡n
-
-### BÆ°á»›c 6 â€” XÃ¡c nháº­n (Sales)
-15. `GET /api/khachhang/admin/dat-tour?trangThai=CHO_XAC_NHAN` (token: `accessToken_SALES`) â†’ xem cÃ¡c Ä‘Æ¡n chá»
-16. `PUT /api/khachhang/admin/dat-tour/{maDatTour}/xac-nhan` â†’ xÃ¡c nháº­n Ä‘Æ¡n
-17. `GET /api/khachhang/dat-tour/{maDatTour}` (token: `accessToken_KH`) â†’ kiá»ƒm tra `trangThai = DA_XAC_NHAN`
-
-### BÆ°á»›c 7 â€” Há»§y Ä‘Æ¡n (test negative case)
-18. **`POST /api/khachhang/dat-tour`** â†’ táº¡o Ä‘Æ¡n má»›i
-19. **`DELETE /api/khachhang/dat-tour/{maDatTour}`** â†’ há»§y Ä‘Æ¡n vá»«a táº¡o â†’ expect **200**
-20. `GET /api/tour-thuc-te/{maTourThucTe}` â†’ kiá»ƒm tra `choConLai` Ä‘Ã£ tÄƒng láº¡i 1
-21. **`DELETE /api/khachhang/dat-tour/{maDatTour}`** â†’ thá»­ há»§y láº§n 2 â†’ expect **400** (Ä‘Ã£ á»Ÿ tráº¡ng thÃ¡i DA_HUY)
-
-### BÆ°á»›c 8 â€” Kiá»ƒm tra phÃ¢n quyá»n & báº£o máº­t
-22. ÄÄƒng nháº­p vá»›i `khachhang02` (tÃ i khoáº£n khÃ¡c) â†’ `GET /api/khachhang/dat-tour/{maDatTour_KH01}` â†’ expect **404** (IDOR protection)
-23. DÃ¹ng token SALES Ä‘á»ƒ `GET /api/khachhang/ho-so` â†’ expect **403**
-24. KhÃ´ng gáº¯n token â†’ `POST /api/khachhang/dat-tour` â†’ expect **401**
-
+## 27. Tóm tắt toàn bộ API theo nhóm
+
+| Nhóm | Base Path | Token |
+|------|-----------|-------|
+| Public (không cần token) | `/api/public/**`, `/api/hanh-dong-xanh`, `/api/dich-vu-them`, `/api/loai-phong` | Không |
+| Xác thực | `/api/auth/**` | Không (trừ đổi MK) |
+| Khách hàng | `/api/khachhang/**`, `/api/thanh-toan/**` | KHACHHANG |
+| SALES | `/api/sales/**`, `/api/khachhang/admin/**` | SALES |
+| HDV | `/api/hdv/**` | HDV |
+| Kế toán | `/api/ketoan/**` | KETOAN |
+| Manager | `/api/manager/**`, `/api/tour-mau/**`, `/api/tour-thuc-te/**` | MANAGER |
+| Admin | `/api/admin/**` + tất cả bên trên | ADMIN |

@@ -1,0 +1,47 @@
+package com.digitaltravel.erp.repository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.digitaltravel.erp.entity.DanhGiaKh;
+
+@Repository
+public interface DanhGiaKhRepository extends JpaRepository<DanhGiaKh, String> {
+
+    @Query("""
+            SELECT d FROM DanhGiaKh d
+            JOIN FETCH d.khachHang kh
+            JOIN FETCH kh.taiKhoan
+            WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.TrangThai = 'HIEU_LUC'
+            ORDER BY d.NgayDanhGia DESC
+            """)
+    Page<DanhGiaKh> findByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe, Pageable pageable);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END
+            FROM DanhGiaKh d
+            WHERE d.khachHang.MaKhachHang = :maKhachHang
+              AND d.tourThucTe.MaTourThucTe = :maTourThucTe
+            """)
+    boolean existsByKhachHangAndTour(
+            @Param("maKhachHang") String maKhachHang,
+            @Param("maTourThucTe") String maTourThucTe
+    );
+
+    // Lấy tất cả đánh giá (admin quản lý)
+    @Query("""
+            SELECT d FROM DanhGiaKh d
+            JOIN FETCH d.khachHang kh
+            JOIN FETCH kh.taiKhoan
+            JOIN FETCH d.tourThucTe ttt
+            JOIN FETCH ttt.tourMau
+            WHERE (:trangThai IS NULL OR d.TrangThai = :trangThai)
+            ORDER BY d.NgayDanhGia DESC
+            """)
+    Page<DanhGiaKh> findAll(@Param("trangThai") String trangThai, Pageable pageable);
+}

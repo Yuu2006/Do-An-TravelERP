@@ -23,4 +23,16 @@ public interface GiaoDichRepository extends JpaRepository<GiaoDich, String> {
     // Lấy giao dịch thanh toán thành công của 1 đơn
     @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.MaDatTour = :maDatTour AND g.trangThai = 'THANH_CONG'")
     Optional<GiaoDich> findThanhCongByMaDatTour(@Param("maDatTour") String maDatTour);
+
+    // UC52: Lấy giao dịch chờ hoàn tiền (đơn DA_HUY)
+    @Query("""
+            SELECT g FROM GiaoDich g
+            JOIN FETCH g.donDatTour d
+            WHERE g.loaiGiaoDich = 'HOAN_TIEN'
+              AND g.trangThai = 'CHO_THANH_TOAN'
+            ORDER BY g.ngayThanhToan DESC
+            """)
+    org.springframework.data.domain.Page<GiaoDich> findChoHoanTien(
+            org.springframework.data.domain.Pageable pageable
+    );
 }

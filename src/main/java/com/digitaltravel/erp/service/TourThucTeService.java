@@ -9,10 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.digitaltravel.erp.dto.requests.CapNhatTourThucTeRequest;
 import com.digitaltravel.erp.dto.requests.TaoTourThucTeRequest;
+import com.digitaltravel.erp.dto.responses.LichTrinhResponse;
+import com.digitaltravel.erp.dto.responses.TourCongKhaiResponse;
 import com.digitaltravel.erp.dto.responses.TourThucTeResponse;
+import com.digitaltravel.erp.entity.LichTrinhTour;
 import com.digitaltravel.erp.entity.TourMau;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
@@ -24,6 +28,7 @@ public class TourThucTeService {
 
     private final TourThucTeRepository tourThucTeRepository;
     private final TourMauRepository tourMauRepository;
+    private final LichTrinhTourRepository lichTrinhTourRepository;
 
     // ── UC14: Danh sách tour thực tế (nội bộ - có filter) ───────────────────
     public Page<TourThucTeResponse> danhSach(String trangThai, String maTourMau,
@@ -46,6 +51,41 @@ public class TourThucTeService {
         TourThucTe ttt = tourThucTeRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + id));
         return toResponse(ttt);
+    }
+
+    // ── UC26: Chi tiết tour công khai kèm lịch trình ────────────────────────
+    public TourCongKhaiResponse chiTietCongKhai(String id) {
+        TourThucTe ttt = tourThucTeRepository.findById(id)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + id));
+        TourMau tm = ttt.getTourMau();
+
+        java.util.List<LichTrinhTour> lichTrinh = lichTrinhTourRepository.findByMaTourMau(tm.getMaTourMau());
+        java.util.List<LichTrinhResponse> lichTrinhResponses = lichTrinh.stream()
+                .map(lt -> LichTrinhResponse.builder()
+                        .maLichTrinhTour(lt.getMaLichTrinhTour())
+                        .ngayThu(lt.getNgayThu())
+                        .hoatDong(lt.getHoatDong())
+                        .moTa(lt.getMoTa())
+                        .thucDon(lt.getThucDon())
+                        .build())
+                .toList();
+
+        return TourCongKhaiResponse.builder()
+                .maTourThucTe(ttt.getMaTourThucTe())
+                .maTourMau(tm.getMaTourMau())
+                .tieuDeTour(tm.getTieuDe())
+                .moTa(tm.getMoTa())
+                .ngayKhoiHanh(ttt.getNgayKhoiHanh())
+                .thoiLuong(tm.getThoiLuong())
+                .giaHienHanh(ttt.getGiaHienHanh())
+                .soKhachToiDa(ttt.getSoKhachToiDa())
+                .choConLai(ttt.getChoConLai())
+                .trangThai(ttt.getTrangThai())
+                .diemDanhGia(tm.getDanhGia())
+                .soDanhGia(tm.getSoDanhGia())
+                .lichTrinh(lichTrinhResponses)
+                .thoiDiemTao(ttt.getThoiDiemTao())
+                .build();
     }
 
     // ── UC11: Khởi tạo tour thực tế từ tour mẫu ────────────────────────────
