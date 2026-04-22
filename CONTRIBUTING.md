@@ -19,8 +19,6 @@ Mục tiêu: đồng bộ cách làm việc, merge nhanh, giảm lỗi khi relea
 ### Flow làm việc
 
 ```powershell
-git switch dev
-git pull origin dev
 git switch -c feature/<ten-ngan-gon>
 ```
 
