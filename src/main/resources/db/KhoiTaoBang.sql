@@ -16,7 +16,7 @@ BEGIN
         WHERE table_name IN (
                              'DANHGIAKH','YEUCAUHOTRO','NHATKYDOIDIEM','QUYETTOAN',
                              'CHIPHITHUCTE','NHATKYSUCO','HANHDONG','DIEMDANH',
-                             'PHANCONGTOUR','LICHSUTOUR','THANHTOAN','DATTOUR_UUDAI',
+                             'PHANCONGTOUR','LICHSUTOUR','GIAODICH','DATTOUR_UUDAI',
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
                              'DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                              'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
@@ -326,22 +326,20 @@ CREATE TABLE DATTOUR_UUDAI (
 );
 
 -- Giao dich thanh toan
-CREATE TABLE THANHTOAN (
-                           MaThanhToan      VARCHAR2(50)  PRIMARY KEY,
-                           MaDatTour        VARCHAR2(50)  NOT NULL,
-                           PhuongThuc       VARCHAR2(50)  NOT NULL,
-                           SoTien           NUMBER(18,2)  NOT NULL,
-                           MaGiaoDich       VARCHAR2(200),
-                           TrangThai        VARCHAR2(30)  DEFAULT 'CHO_THANH_TOAN' NOT NULL,
-                           NgayThanhToan    TIMESTAMP,
-                           GhiChu           VARCHAR2(2000),
-                           ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                           CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
-                           CONSTRAINT FK_THANHTOAN_DatTour        FOREIGN KEY (MaDatTour)  REFERENCES DONDATTOUR(MaDatTour),
-                           CONSTRAINT CK_THANHTOAN_SoTien         CHECK (SoTien >= 0),
-                           CONSTRAINT CK_THANHTOAN_TrangThai      CHECK (TrangThai IN (
-                                                                                       'CHO_THANH_TOAN','THANH_CONG','THAT_BAI','CHO_HOAN_TIEN','DA_HOAN_TIEN'
-                               ))
+CREATE TABLE GIAODICH (
+                          MaGiaoDich       VARCHAR2(50)  PRIMARY KEY,
+                          MaDatTour        VARCHAR2(50)  NOT NULL,
+                          LoaiGiaoDich     VARCHAR2(50)  NOT NULL,
+                          PhuongThuc       VARCHAR2(50)  NOT NULL,
+                          SoTien           NUMBER(18,2)  NOT NULL,
+                          MaGDNH           VARCHAR2(200),
+                          TrangThai        VARCHAR2(30)  DEFAULT 'CHO_THANH_TOAN' NOT NULL,
+                          NgayThanhToan    TIMESTAMP,
+                          CONSTRAINT FK_GIAODICH_DatTour         FOREIGN KEY (MaDatTour)  REFERENCES DONDATTOUR(MaDatTour),
+                          CONSTRAINT CK_GIAODICH_SoTien          CHECK (SoTien >= 0),
+                          CONSTRAINT CK_GIAODICH_TrangThai       CHECK (TrangThai IN (
+                                                                                      'CHO_THANH_TOAN','THANH_CONG','THAT_BAI','DA_HOAN_TIEN'
+                              ))
 );
 
 -- Lich su tham gia tour cua khach
@@ -530,7 +528,7 @@ CREATE INDEX IDX_DONDATTOUR_TOURTHUCTE   ON DONDATTOUR(MaTourThucTe);
 CREATE INDEX IDX_DONDATTOUR_TRANGTHAI    ON DONDATTOUR(TrangThai);
 CREATE INDEX IDX_CTDATTOUR_DATTOUR       ON CHITIETDATTOUR(MaDatTour);
 CREATE INDEX IDX_CTDICHVU_DATTOUR        ON CHITIETDICHVU(MaDatTour);
-CREATE INDEX IDX_THANHTOAN_DATTOUR       ON THANHTOAN(MaDatTour);
+CREATE INDEX IDX_GIAODICH_DATTOUR        ON GIAODICH(MaDatTour);
 CREATE INDEX IDX_PHANCONGTOUR_NHANVIEN   ON PHANCONGTOUR(MaNhanVien);
 CREATE INDEX IDX_LICHSUTOUR_KHACHHANG    ON LICHSUTOUR(MaKhachHang);
 CREATE INDEX IDX_HANHDONG_KHACHHANG      ON HANHDONG(MaKhachHang);
