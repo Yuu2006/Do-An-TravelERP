@@ -21,13 +21,16 @@ import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.CapNhatHoChieuSoRequest;
 import com.digitaltravel.erp.dto.requests.DatTourRequest;
 import com.digitaltravel.erp.dto.requests.HuyTourRequest;
+import com.digitaltravel.erp.dto.requests.YeuCauHoTroRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
 import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
+import com.digitaltravel.erp.dto.responses.LichSuTourResponse;
 import com.digitaltravel.erp.dto.responses.YeuCauHoTroResponse;
 import com.digitaltravel.erp.service.DatTourService;
 import com.digitaltravel.erp.service.HuyTourService;
 import com.digitaltravel.erp.service.KhachHangService;
+import com.digitaltravel.erp.service.YeuCauHoTroService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +43,7 @@ public class KhachHangController {
     private final KhachHangService khachHangService;
     private final DatTourService datTourService;
     private final HuyTourService huyTourService;
+    private final YeuCauHoTroService yeuCauHoTroService;
 
     // ──────────────────────── HỒ SƠ KHÁCH HÀNG ───────────────────────────────
 
@@ -139,5 +143,37 @@ public class KhachHangController {
         String nguoiXacNhan = user.getUsername();
         return ResponseEntity.ok(ApiResponse.ok("Xac nhan don dat tour thanh cong",
                 datTourService.xacNhanDon(maDatTour, nguoiXacNhan)));
+    }
+
+    // ──────────────────────── LỊCH SỬ TOUR (UC22) ─────────────────────────────
+
+    @GetMapping("/lich-su-tour")
+    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    public ResponseEntity<ApiResponse<Page<LichSuTourResponse>>> lichSuTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                khachHangService.lichSuTour(user.getTaiKhoan().getMaTaiKhoan(), pageable)));
+    }
+
+    // ──────────────────────── YÊU CẦU HỖ TRỢ (UC36) ─────────────────────────
+
+    @PostMapping("/yeu-cau-ho-tro")
+    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> taoYeuCau(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @Valid @RequestBody YeuCauHoTroRequest request) {
+        return ResponseEntity.status(201).body(ApiResponse.created(
+                yeuCauHoTroService.taoYeuCau(user.getTaiKhoan().getMaTaiKhoan(), request)));
+    }
+
+    @GetMapping("/yeu-cau-ho-tro")
+    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCauCuaToi(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @RequestParam(required = false) String loaiYeuCau,
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                yeuCauHoTroService.danhSachCuaKhachHang(user.getTaiKhoan().getMaTaiKhoan(), loaiYeuCau, pageable)));
     }
 }

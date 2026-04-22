@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.QuyetToanRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
+import com.digitaltravel.erp.dto.responses.BaoCaoDoanhThuResponse;
 import com.digitaltravel.erp.dto.responses.QuyetToanResponse;
+import com.digitaltravel.erp.dto.responses.ThanhToanResponse;
+import com.digitaltravel.erp.service.BaoCaoService;
 import com.digitaltravel.erp.service.QuyetToanService;
 
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class QuyetToanController {
 
     private final QuyetToanService quyetToanService;
+    private final BaoCaoService baoCaoService;
 
     /**
      * UC47 — Danh sách tour cần quyết toán (KET_THUC, chưa có QT)
@@ -88,5 +92,41 @@ public class QuyetToanController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> chiTiet(@PathVariable String maQuyetToan) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.chiTiet(maQuyetToan)));
+    }
+
+    // ── UC52: Quản lý hoàn tiền ───────────────────────────────────────────────
+
+    /**
+     * UC52 — Danh sách giao dịch chờ hoàn tiền
+     */
+    @GetMapping("/giao-dich-hoan")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    public ResponseEntity<ApiResponse<Page<ThanhToanResponse>>> danhSachChoHoanTien(Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(quyetToanService.danhSachChoHoanTien(pageable)));
+    }
+
+    /**
+     * UC52 — KeToan xác nhận đã chuyển tiền hoàn
+     */
+    @PutMapping("/giao-dich-hoan/{maGiaoDich}/xac-nhan")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    public ResponseEntity<ApiResponse<ThanhToanResponse>> xacNhanHoanTien(
+            @PathVariable String maGiaoDich,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Xac nhan hoan tien thanh cong",
+                quyetToanService.xacNhanHoanTien(maGiaoDich, user.getUsername())));
+    }
+
+    // ── UC53: Báo cáo doanh thu ───────────────────────────────────────────────
+
+    /**
+     * UC53 — Báo cáo doanh thu theo kỳ
+     */
+    @GetMapping("/bao-cao/doanh-thu")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    public ResponseEntity<ApiResponse<BaoCaoDoanhThuResponse>> baoCaoDoanhThu(
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate tuNgay,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate denNgay) {
+        return ResponseEntity.ok(ApiResponse.ok(baoCaoService.baoCaoDoanhThu(tuNgay, denNgay)));
     }
 }

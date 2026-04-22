@@ -51,4 +51,22 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
             @Param("thoiLuongMax") Integer thoiLuongMax,
             Pageable pageable
     );
+
+    // Đếm số tour đã kết thúc trong khoảng thời gian (báo cáo)
+    @Query("""
+            SELECT COUNT(ttt) FROM TourThucTe ttt
+            WHERE ttt.TrangThai IN ('KET_THUC', 'DA_QUYET_TOAN')
+              AND ttt.NgayKhoiHanh BETWEEN :tuNgay AND :denNgay
+            """)
+    long demTourKetThuc(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
+
+    // Lấy tất cả tour đang bán để tính dynamic pricing
+    @Query("""
+            SELECT ttt FROM TourThucTe ttt
+            WHERE ttt.TrangThai IN ('MO_BAN', 'SAP_DIEN_RA')
+            """)
+    java.util.List<TourThucTe> findForDynamicPricing();
 }

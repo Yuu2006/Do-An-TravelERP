@@ -12,14 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.digitaltravel.erp.dto.requests.QuyetToanRequest;
 import com.digitaltravel.erp.dto.responses.QuyetToanResponse;
+import com.digitaltravel.erp.dto.responses.ThanhToanResponse;
 import com.digitaltravel.erp.entity.ChiPhiThucTe;
 import com.digitaltravel.erp.entity.DonDatTour;
+import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.entity.NhanVien;
 import com.digitaltravel.erp.entity.QuyetToan;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiPhiThucTeRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
+import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.QuyetToanRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
@@ -35,6 +38,7 @@ public class QuyetToanService {
     private final NhanVienRepository nhanVienRepository;
     private final DonDatTourRepository donDatTourRepository;
     private final ChiPhiThucTeRepository chiPhiThucTeRepository;
+    private final GiaoDichRepository giaoDichRepository;
 
     // ── UC47: Danh sách tour cần quyết toán (đã kết thúc, chưa quyết toán)
     public Page<QuyetToanResponse> tourCanQuyetToan(Pageable pageable) {
@@ -130,6 +134,50 @@ public class QuyetToanService {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));
         return toResponse(qt);
+    }
+
+    // ── UC52: KeToan xác nhận đã hoàn tiền cho KH ────────────────────────
+    @Transactional
+    public ThanhToanResponse xacNhanHoanTien(String maGiaoDich, String nguoiXacNhan) {
+        GiaoDich gd = giaoDichRepository.findById(maGiaoDich)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay giao dich: " + maGiaoDich));
+
+        if (!"HOAN_TIEN".equals(gd.getLoaiGiaoDich())) {
+            throw AppException.badRequest("Giao dich nay khong phai hoan tien");
+        }
+        if ("DA_HOAN_TIEN".equals(gd.getTrangThai())) {
+            throw AppException.badRequest("Giao dich nay da duoc xac nhan hoan tien roi");
+        }
+        if (!"CHO_THANH_TOAN".equals(gd.getTrangThai())) {
+            throw AppException.badRequest("Chi co the xac nhan giao dich o trang thai CHO_THANH_TOAN");
+        }
+
+        gd.setTrangThai("DA_HOAN_TIEN");
+        gd.setNgayThanhToan(LocalDateTime.now());
+        giaoDichRepository.save(gd);
+
+        return ThanhToanResponse.builder()
+                .maGiaoDich(gd.getMaGiaoDich())
+                .maDatTour(gd.getDonDatTour().getMaDatTour())
+                .soTien(gd.getSoTien())
+                .phuongThuc(gd.getPhuongThuc())
+                .trangThai(gd.getTrangThai())
+                .ngayThanhToan(gd.getNgayThanhToan())
+                .thongBao("Xac nhan hoan tien thanh cong")
+                .build();
+    }
+
+    // ── UC52: Danh sách giao dịch chờ hoàn tiền ──────────────────────────
+    public Page<ThanhToanResponse> danhSachChoHoanTien(Pageable pageable) {
+        return giaoDichRepository.findChoHoanTien(pageable)
+                .map(gd -> ThanhToanResponse.builder()
+                        .maGiaoDich(gd.getMaGiaoDich())
+                        .maDatTour(gd.getDonDatTour().getMaDatTour())
+                        .soTien(gd.getSoTien())
+                        .phuongThuc(gd.getPhuongThuc())
+                        .trangThai(gd.getTrangThai())
+                        .ngayThanhToan(gd.getNgayThanhToan())
+                        .build());
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────

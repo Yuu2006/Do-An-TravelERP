@@ -35,4 +35,19 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             @Param("trangThai") String trangThai,
             Pageable pageable
     );
+
+    // KH xem yêu cầu của chính mình
+    @Query("""
+            SELECT y FROM YeuCauHoTro y
+            JOIN FETCH y.khachHang kh
+            LEFT JOIN FETCH y.donDatTour
+            WHERE kh.MaKhachHang = :maKhachHang
+              AND (:loaiYeuCau IS NULL OR y.LoaiYeuCau = :loaiYeuCau)
+            ORDER BY y.ThoiDiemTao DESC
+            """)
+    Page<YeuCauHoTro> timKiemTheoKhachHang(
+            @Param("maKhachHang") String maKhachHang,
+            @Param("loaiYeuCau") String loaiYeuCau,
+            Pageable pageable
+    );
 }

@@ -102,6 +102,7 @@ public class VanHanhService {
 
         // Cộng điểm xanh cho KH
         kh.setDiemXanh(kh.getDiemXanh() + hdx.getDiemCong());
+        kiemTraNangHang(kh);
         hoChieuSoRepository.save(kh);
 
         return toHanhDongResponse(hd, hdx);
@@ -206,6 +207,25 @@ public class VanHanhService {
     private NhanVien getHdv(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+    }
+
+    // Nâng hạng thành viên tự động theo ngưỡng điểm xanh
+    private void kiemTraNangHang(HoChieuSo hcs) {
+        long diem = hcs.getDiemXanh();
+        String hangHienTai = hcs.getHangThanhVien();
+        String hangMoi = hangHienTai;
+        if (diem >= 5000 && !"KIM_CUONG".equals(hangHienTai)) {
+            hangMoi = "KIM_CUONG";
+        } else if (diem >= 2000 && "CO_BAN".equals(hangHienTai)) {
+            hangMoi = "VANG";
+        } else if (diem >= 2000 && "BAC".equals(hangHienTai)) {
+            hangMoi = "VANG";
+        } else if (diem >= 500 && "CO_BAN".equals(hangHienTai)) {
+            hangMoi = "BAC";
+        }
+        if (!hangMoi.equals(hangHienTai)) {
+            hcs.setHangThanhVien(hangMoi);
+        }
     }
 
     // ── Mappers ───────────────────────────────────────────────────────────

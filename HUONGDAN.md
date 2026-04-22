@@ -1665,3 +1665,116 @@ Authorization: Bearer <accessToken_SALES>
 23. DÃ¹ng token SALES Ä‘á»ƒ `GET /api/khachhang/ho-so` â†’ expect **403**
 24. KhÃ´ng gáº¯n token â†’ `POST /api/khachhang/dat-tour` â†’ expect **401**
 
+
+---
+
+## API moi bo sung (UC22 - UC70)
+
+### UC22 — Lich su tour (KHACHHANG)
+```
+GET /api/khachhang/lich-su-tour
+Authorization: Bearer <token>
+```
+
+### UC25/26 — Tour cong khai (Khong can dang nhap)
+```
+GET /api/public/tour
+GET /api/public/tour/{maTourThucTe}
+GET /api/public/tour/{maTourThucTe}/danh-gia
+```
+
+### UC28 — Ap voucher
+```
+POST /api/khachhang/ap-voucher
+{ "maDatTour": "DDT001", "maCode": "WELCOME10" }
+```
+
+### UC30 — Doi diem xanh lay voucher
+```
+POST /api/khachhang/doi-diem
+{ "maVoucher": "VC001" }
+```
+
+### UC31 — Vi voucher
+```
+GET /api/khachhang/vi-voucher
+```
+
+### UC35 — Gui danh gia tour
+```
+POST /api/khachhang/danh-gia
+{ "maTourThucTe": "TTT099", "diemDanhGia": 5, "nhanXet": "Tuyet voi!" }
+```
+
+### UC36 — Gui yeu cau ho tro
+```
+POST /api/khachhang/yeu-cau-ho-tro
+{ "tieuDe": "Khieu nai", "noiDung": "..." }
+```
+
+### UC34 — SALES xem don dat tour
+```
+GET /api/sales/don-dat-tour
+```
+
+### UC41 — SALES xu ly yeu cau ho tro
+```
+GET /api/sales/yeu-cau-ho-tro
+PUT /api/sales/yeu-cau-ho-tro/{maYeuCau}
+{ "trangThai": "DA_DONG", "ghiChu": "Da giai quyet." }
+```
+
+### UC39 — HDV lich cong tac
+```
+GET /api/hdv/lich-cong-tac
+```
+
+### UC52 — KeToan hoan tien
+```
+GET  /api/ketoan/giao-dich-hoan
+PUT  /api/ketoan/giao-dich-hoan/{maGiaoDich}/xac-nhan
+```
+
+### UC53 — Bao cao doanh thu
+```
+GET /api/ketoan/bao-cao/doanh-thu?tuNgay=2026-01-01&denNgay=2026-12-31
+```
+
+### UC24 — Admin tim ho so khach hang
+```
+GET /api/admin/khach-hang?tuKhoa=nguyen
+GET /api/admin/khach-hang/{maKhachHang}
+```
+
+### UC54-56 — Admin quan ly voucher
+```
+GET    /api/admin/voucher
+POST   /api/admin/voucher
+PUT    /api/admin/voucher/{maVoucher}
+PUT    /api/admin/voucher/{maVoucher}/vo-hieu
+POST   /api/admin/voucher/{maVoucher}/phat-hanh   { "maKhachHang": "KH001" }
+```
+
+### UC63 — Nang luc HDV
+```
+GET /api/hdv/nang-luc
+GET /api/admin/nhan-vien/{maNhanVien}/nang-luc
+PUT /api/admin/nhan-vien/{maNhanVien}/nang-luc
+{ "ngonNgu": "Tieng Anh", "chungChi": "HDV quoc te", "chuyenMon": "Mien Bac" }
+```
+
+### UC69 — Gan vai tro nhan vien
+```
+PUT /api/admin/nhan-vien/{maNhanVien}/vai-tro
+{ "vaiTro": "HDV" }
+```
+
+### Dynamic Pricing (Tu dong theo lich)
+He thong chay moi gio:
+- ConLai <= 7 ngay + lap >= 80%  => Tang gia 10% (toi da 2x gia san)
+- ConLai >= 30 ngay + lap < 30%  => Giam gia 5%  (toi thieu gia san)
+
+### Nang hang thanh vien (Tu dong sau tich diem)
+- >= 500 diem  => Bac (BAC)
+- >= 2000 diem => Vang (VANG)
+- >= 5000 diem => Kim Cuong (KIM_CUONG)
