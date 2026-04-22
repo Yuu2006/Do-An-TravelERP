@@ -111,8 +111,8 @@ public class DatTourService {
         don.setNgayDat(LocalDateTime.now());
         don.setTongTien(tongTien);
         don.setTrangThai("CHO_XAC_NHAN");
-        // Giữ chỗ 24 giờ, sau đó tự hủy nếu chưa xác nhận
-        don.setThoiGianHetHan(LocalDateTime.now().plusHours(24));
+        // Giữ chỗ 15 phút, Scheduler sẽ tự hủy nếu chưa thanh toán
+        don.setThoiGianHetHan(LocalDateTime.now().plusMinutes(15));
         don.setGhiChu(request.getGhiChu());
         don.setTaoBoi(maTaiKhoan);
         donDatTourRepository.save(don);
@@ -133,9 +133,7 @@ public class DatTourService {
             chiTietDichVuRepository.save(ctdv);
         }
 
-        // 9. Giảm số chỗ còn lại của tour
-        tour.setChoConLai(tour.getChoConLai() - 1);
-        tourThucTeRepository.save(tour);
+        // 9. KHÔNG trừ ChoConLai ngay — chỉ trừ sau khi thanh toán thành công
 
         return toResponse(don, List.of(chiTiet), dsDichVu);
     }
@@ -175,19 +173,16 @@ public class DatTourService {
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, khachHang.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
-        if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
+        String trangThai = don.getTrangThai();
+        if (!"CHO_XAC_NHAN".equals(trangThai) && !"HET_HAN_GIU_CHO".equals(trangThai)) {
             throw AppException.badRequest(
-                    "Chi co the huy don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + don.getTrangThai());
+                    "Chi co the huy don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + trangThai);
         }
 
         don.setTrangThai("DA_HUY");
         don.setCapNhatBoi(maTaiKhoan);
         donDatTourRepository.save(don);
-
-        // Hoàn trả số chỗ
-        TourThucTe tour = don.getTourThucTe();
-        tour.setChoConLai(tour.getChoConLai() + 1);
-        tourThucTeRepository.save(tour);
+        // Không cần hoàn ChoConLai vì chưa trừ (chưa thanh toán)
     }
 
     // ── Nhân viên Sales: xem tất cả đơn ────────────────────────────────────

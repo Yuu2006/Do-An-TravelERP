@@ -234,7 +234,8 @@ CREATE TABLE DONDATTOUR (
                             CONSTRAINT FK_DDT_KhachHang            FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                             CONSTRAINT CK_DDT_TongTien             CHECK (TongTien >= 0),
                             CONSTRAINT CK_DDT_TrangThai            CHECK (TrangThai IN (
-                                                                                        'CHO_XAC_NHAN','DA_XAC_NHAN','DA_HUY','HET_HAN_GIU_CHO'
+                                                                                        'CHO_XAC_NHAN','DA_XAC_NHAN','DA_HUY','HET_HAN_GIU_CHO',
+                                                                                        'CHO_HUY','THANH_TOAN_THAT_BAI'
                                 ))
 );
 

@@ -20,10 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.CapNhatHoChieuSoRequest;
 import com.digitaltravel.erp.dto.requests.DatTourRequest;
+import com.digitaltravel.erp.dto.requests.HuyTourRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
 import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
+import com.digitaltravel.erp.dto.responses.YeuCauHoTroResponse;
 import com.digitaltravel.erp.service.DatTourService;
+import com.digitaltravel.erp.service.HuyTourService;
 import com.digitaltravel.erp.service.KhachHangService;
 
 import jakarta.validation.Valid;
@@ -36,6 +39,7 @@ public class KhachHangController {
 
     private final KhachHangService khachHangService;
     private final DatTourService datTourService;
+    private final HuyTourService huyTourService;
 
     // ──────────────────────── HỒ SƠ KHÁCH HÀNG ───────────────────────────────
 
@@ -103,8 +107,19 @@ public class KhachHangController {
         return ResponseEntity.ok(ApiResponse.noContent("Huy dat tour thanh cong"));
     }
 
-    // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
+    // UC32 — Yêu cầu hủy tour đã thanh toán (DA_XAC_NHAN) → tạo yêu cầu hoàn tiền
+    @PostMapping("/dat-tour/{maDatTour}/huy")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> yeuCauHuyTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maDatTour,
+            @Valid @RequestBody HuyTourRequest request) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        YeuCauHoTroResponse result = huyTourService.yeuCauHuyTour(maTaiKhoan, maDatTour, request);
+        return ResponseEntity.ok(ApiResponse.ok("Gui yeu cau huy tour thanh cong. Dang cho nhan vien duyet.", result));
+    }
 
+    // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
     // Sales: xem tất cả đơn đặt (có filter)
     @GetMapping("/admin/dat-tour")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")

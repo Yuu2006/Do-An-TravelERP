@@ -124,11 +124,11 @@ String diaDiem;
 ```
 
 **Business logic:**
-- [ ] `UC02`: `giaSan > 0`; `thoiLuong >= 1`; tự gán `TrangThai = HOAT_DONG` khi tạo
-- [ ] `UC03`: Deep copy — nhân bản `TourMau` (mã mới) + toàn bộ `LichTrinhTour` của mẫu gốc; tên mặc định = `"[Sao chép] " + tenTourGoc`
-- [ ] `UC05`: Soft delete — không xóa DB; set `TrangThai = DA_XOA`; nếu đang có `TourThucTe` trạng thái `MO` thì từ chối xóa
-- [ ] `UC06`: Filter: `tenTour ILIKE`, `diaDiem`, `trangThai`, `thoiLuongMin/Max`; phân trang `Pageable`
-- [ ] `UC08/UC09`: Số thứ tự ngày (`NgayThu`) không trùng trong cùng 1 tour; validate `NgayThu <= thoiLuong`
+- [x] `UC02`: `giaSan > 0`; `thoiLuong >= 1`; tự gán `TrangThai = HOAT_DONG` khi tạo
+- [x] `UC03`: Deep copy — nhân bản `TourMau` (mã mới) + toàn bộ `LichTrinhTour` của mẫu gốc; tên mặc định = `"[Sao chép] " + tenTourGoc`
+- [x] `UC05`: Soft delete — không xóa DB; set `TrangThai = DA_XOA`; nếu đang có `TourThucTe` trạng thái `MO` thì từ chối xóa
+- [x] `UC06`: Filter: `tenTour ILIKE`, `diaDiem`, `trangThai`, `thoiLuongMin/Max`; phân trang `Pageable`
+- [x] `UC08/UC09`: Số thứ tự ngày (`NgayThu`) không trùng trong cùng 1 tour; validate `NgayThu <= thoiLuong`
 
 ---
 
@@ -161,10 +161,10 @@ String diaDiem;
 ```
 
 **Business logic:**
-- [ ] `UC11`: Khi khởi tạo → copy `thoiLuong`, `diaDiem`, `moTa` từ `TourMau`; `TrangThai = MO`; `ChoNgoi = soKhachToiDa`
-- [ ] `UC12`: Từ chối nếu `DonDatTour` có `TrangThai IN (CHO_XAC_NHAN, XAC_NHAN)` liên quan đến tour này
-- [ ] `UC13`: Chỉ sửa được giá/phương tiện/trạng thái; không sửa `maTourMau`
-- [ ] `UC14` (cho KH): Chỉ trả tour `TrangThai = MO`, `ChoNgoi > 0`, `ngayKhoiHanh > NOW()`; filter thêm: `diaDiem`, `giaTu/giaDen`, `thoiLuongMin/Max`, sort: `giaTangDan/GiamDan`, `ngayKhoiHanh`
+- [x] `UC11`: Khi khởi tạo → copy `thoiLuong`, `diaDiem`, `moTa` từ `TourMau`; `TrangThai = MO`; `ChoNgoi = soKhachToiDa`
+- [x] `UC12`: Từ chối nếu `DonDatTour` có `TrangThai IN (CHO_XAC_NHAN, XAC_NHAN)` liên quan đến tour này
+- [x] `UC13`: Chỉ sửa được giá/phương tiện/trạng thái; không sửa `maTourMau`
+- [x] `UC14` (cho KH): Chỉ trả tour `TrangThai = MO`, `ChoNgoi > 0`, `ngayKhoiHanh > NOW()`; filter thêm: `diaDiem`, `giaTu/giaDen`, `thoiLuongMin/Max`, sort: `giaTangDan/GiamDan`, `ngayKhoiHanh`
 
 ---
 
@@ -253,8 +253,8 @@ Integer tongSoTour;
 ```
 
 **Business logic:**
-- [ ] `UC21`: Join `HoChieuSo` ↔ `TaiKhoan` qua `maTaiKhoan`; tính `tongSoTour` từ `LichSuTour`
-- [ ] `UC23`: Không cho phép sửa `maTaiKhoan`; validate định dạng `soHoChieu`, `ngayHetHanHoChieu > NOW()`
+- [x] `UC21`: Join `HoChieuSo` ↔ `TaiKhoan` qua `maTaiKhoan`; tính `tongSoTour` từ `LichSuTour`
+- [x] `UC23`: Không cho phép sửa `maTaiKhoan`; validate định dạng `soHoChieu`, `ngayHetHanHoChieu > NOW()`
 - [ ] `UC24` (nhân viên): Filter: `hoTen ILIKE`, `soDienThoai`, `soCccd`, `email`; trả kết quả phân trang
 
 ---
@@ -348,17 +348,17 @@ List<ChiTietDatTourResponse> danhSachKhach;
 ```
 
 **Business logic:**
-- [ ] Kiểm tra `TourThucTe.TrangThai = MO` và `ChoNgoi >= soNguoi` — nếu không đủ → `400 Bad Request`
-- [ ] Tính `TongTien`:
+- [x] Kiểm tra `TourThucTe.TrangThai = MO` và `ChoNgoi >= soNguoi` — nếu không đủ → `400 Bad Request`
+- [x] Tính `TongTien`:
   ```
   giaGocTour    = GiaTien × soNguoi
   phuTruPhong   = LoaiPhong.PhuThu × soPhong   (nếu có)
   tongDichVu    = Σ(DichVuThem.Gia × soLuong)
   TongTien      = giaGocTour + phuTruPhong + tongDichVu
   ```
-- [ ] Ghi `GiaTaiThoiDiemDat = TourThucTe.GiaTien` (snapshot giá tại thời điểm đặt, không thay đổi sau)
+- [x] Ghi `GiaTaiThoiDiemDat = TourThucTe.GiaTien` (snapshot giá tại thời điểm đặt, không thay đổi sau)
 - [ ] **Không trừ `ChoNgoi` ngay** — chỉ trừ sau khi thanh toán thành công
-- [ ] Tạo bản ghi `DonDatTour` với `TrangThai = CHO_XAC_NHAN`, `ThoiGianHetHan = NOW() + 15 phút`
+- [x] Tạo bản ghi `DonDatTour` với `TrangThai = CHO_XAC_NHAN`, `ThoiGianHetHan = NOW() + 15 phút`
 - [ ] **Scheduler hủy đơn hết hạn:** `@Scheduled(fixedDelay = 60000)` — query `DonDatTour` có `TrangThai = CHO_XAC_NHAN` và `ThoiGianHetHan < NOW()` → cập nhật `TrangThai = HET_HAN`
 
 ---

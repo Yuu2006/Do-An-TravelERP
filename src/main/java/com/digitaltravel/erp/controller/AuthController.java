@@ -27,7 +27,7 @@ import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.TaiKhoan;
 import com.digitaltravel.erp.entity.VaiTro;
 import com.digitaltravel.erp.exception.AppException;
-//import com.digitaltravel.erp.repository.HoChieuSoRepository;
+import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
 
@@ -45,7 +45,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
-//    private final HoChieuSoRepository hoChieuSoRepository;
+   private final HoChieuSoRepository hoChieuSoRepository;
 
     @PostMapping("/dang-ky")
     @Transactional
@@ -76,12 +76,12 @@ public class AuthController {
         taiKhoanRepository.save(taiKhoan);
 
         // Tự động tạo hồ sơ khách hàng (HoChieuSo)
-        // HoChieuSo hoChieuSo = new HoChieuSo();
-        // hoChieuSo.setMaKhachHang("KH_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        // hoChieuSo.setTaiKhoan(taiKhoan);
-        // hoChieuSo.setHangThanhVien("CO_BAN");
-        // hoChieuSo.setDiemXanh(0L);
-        // hoChieuSoRepository.save(hoChieuSo);
+        HoChieuSo hoChieuSo = new HoChieuSo();
+        hoChieuSo.setMaKhachHang("KH_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        hoChieuSo.setTaiKhoan(taiKhoan);
+        hoChieuSo.setHangThanhVien("CO_BAN");
+        hoChieuSo.setDiemXanh(0L);
+        hoChieuSoRepository.save(hoChieuSo);
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
