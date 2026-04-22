@@ -107,16 +107,13 @@ public class YeuCauHoTroService {
     // ── Mapper ───────────────────────────────────────────────────────────────
     public YeuCauHoTroResponse toResponse(YeuCauHoTro yc) {
         return YeuCauHoTroResponse.builder()
-                .maYeuCauHoTro(yc.getMaYeuCauHoTro())
+                .maYeuCau(yc.getMaYeuCauHoTro())
                 .maDatTour(yc.getDonDatTour() != null ? yc.getDonDatTour().getMaDatTour() : null)
-                .maKhachHang(yc.getKhachHang().getMaKhachHang())
-                .hoTenKhachHang(yc.getKhachHang().getTaiKhoan().getHoTen())
                 .loaiYeuCau(yc.getLoaiYeuCau())
                 .noiDung(yc.getNoiDung())
                 .trangThai(yc.getTrangThai())
                 .maNhanVienXuLy(yc.getNhanVienXuLy() != null ? yc.getNhanVienXuLy().getMaNhanVien() : null)
                 .thoiDiemTao(yc.getThoiDiemTao())
-                .capNhatVao(yc.getCapNhatVao())
                 .build();
     }
 }

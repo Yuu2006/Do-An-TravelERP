@@ -50,7 +50,7 @@ public class TourThucTeScheduler {
     }
 
     private void apDungDynamicPricing(TourThucTe tour, LocalDate today) {
-        if (tour.getNgayKhoiHanh() == null || tour.getGiaSan() == null) return;
+        if (tour.getNgayKhoiHanh() == null || tour.getTourMau() == null || tour.getTourMau().getGiaSan() == null) return;
 
         long daysLeft = ChronoUnit.DAYS.between(today, tour.getNgayKhoiHanh());
         if (daysLeft < 0) return; // tour đã qua
@@ -60,7 +60,7 @@ public class TourThucTeScheduler {
         if (soKhachToiDa == 0) return;
 
         double fillRate = (double) (soKhachToiDa - choConLai) / soKhachToiDa;
-        BigDecimal giaSan = tour.getGiaSan();
+        BigDecimal giaSan = tour.getTourMau().getGiaSan();
         BigDecimal giaHienHanh = tour.getGiaHienHanh();
         BigDecimal giaTranToiDa = giaSan.multiply(BigDecimal.valueOf(2));
 

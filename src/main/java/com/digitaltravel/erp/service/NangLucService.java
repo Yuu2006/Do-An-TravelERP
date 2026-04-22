@@ -33,7 +33,7 @@ public class NangLucService {
                     .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
             return NangLucResponse.builder()
                     .maNhanVien(maNhanVien)
-                    .danhGia(0)
+                    .danhGia(java.math.BigDecimal.ZERO)
                     .soDanhGia(0)
                     .build();
         }
@@ -58,7 +58,6 @@ public class NangLucService {
         if (request.getChungChi() != null) nl.setChungChi(request.getChungChi());
         if (request.getChuyenMon() != null) nl.setChuyenMon(request.getChuyenMon());
         nl.setCapNhatVao(LocalDateTime.now());
-        nl.setCapNhatBoi(nguoiCapNhat);
 
         nangLucNhanVienRepository.save(nl);
         return toResponse(nl);
@@ -72,7 +71,7 @@ public class NangLucService {
                 .ngonNgu(nl.getNgonNgu())
                 .chungChi(nl.getChungChi())
                 .chuyenMon(nl.getChuyenMon())
-                .danhGia(nl.getDanhGia() != null ? nl.getDanhGia() : 0)
+                .danhGia(nl.getDanhGia() != null ? nl.getDanhGia() : java.math.BigDecimal.ZERO)
                 .soDanhGia(nl.getSoDanhGia() != null ? nl.getSoDanhGia() : 0)
                 .capNhatVao(nl.getCapNhatVao())
                 .build();

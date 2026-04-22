@@ -64,8 +64,9 @@ public class TourThucTeService {
                 .map(lt -> LichTrinhResponse.builder()
                         .maLichTrinhTour(lt.getMaLichTrinhTour())
                         .ngayThu(lt.getNgayThu())
-                        .tieuDe(lt.getTieuDe())
+                        .hoatDong(lt.getHoatDong())
                         .moTa(lt.getMoTa())
+                        .thucDon(lt.getThucDon())
                         .build())
                 .toList();
 
