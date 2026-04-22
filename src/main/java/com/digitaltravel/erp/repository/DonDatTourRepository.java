@@ -1,5 +1,7 @@
 package com.digitaltravel.erp.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -50,4 +52,17 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             @Param("maTourThucTe") String maTourThucTe,
             Pageable pageable
     );
+
+    // Dùng cho Scheduler: lấy đơn CHO_XAC_NHAN đã hết hạn giữ chỗ
+    List<DonDatTour> findAllByTrangThaiAndThoiGianHetHanBefore(String trangThai, LocalDateTime thoiGian);
+
+    // Kiểm tra đơn theo maDatTour (không lọc khách hàng) — dùng cho thanh toán
+    @Query("""
+            SELECT d FROM DonDatTour d
+            JOIN FETCH d.tourThucTe ttt
+            JOIN FETCH ttt.tourMau
+            JOIN FETCH d.khachHang
+            WHERE d.MaDatTour = :maDatTour
+            """)
+    Optional<DonDatTour> findByIdWithDetails(@Param("maDatTour") String maDatTour);
 }
