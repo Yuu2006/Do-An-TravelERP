@@ -1,0 +1,128 @@
+package com.digitaltravel.erp.controller;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.digitaltravel.erp.config.TaiKhoanDetails;
+import com.digitaltravel.erp.dto.requests.CapNhatHoChieuSoRequest;
+import com.digitaltravel.erp.dto.requests.DatTourRequest;
+import com.digitaltravel.erp.dto.responses.ApiResponse;
+import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
+import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
+import com.digitaltravel.erp.service.DatTourService;
+import com.digitaltravel.erp.service.KhachHangService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/khachhang")
+@RequiredArgsConstructor
+public class KhachHangController {
+
+    private final KhachHangService khachHangService;
+    private final DatTourService datTourService;
+
+    // ──────────────────────── HỒ SƠ KHÁCH HÀNG ───────────────────────────────
+
+    // Xem hồ sơ của bản thân
+    @GetMapping("/ho-so")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<HoChieuSoResponse>> layHoSo(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok(khachHangService.layHoSo(maTaiKhoan)));
+    }
+
+    // Cập nhật hồ sơ (chỉ DiUng và GhiChuYTe)
+    @PutMapping("/ho-so")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<HoChieuSoResponse>> capNhatHoSo(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @Valid @RequestBody CapNhatHoChieuSoRequest request) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok("Cap nhat ho so thanh cong",
+                khachHangService.capNhatHoSo(maTaiKhoan, request)));
+    }
+
+    // ──────────────────────── ĐẶT TOUR ───────────────────────────────────────
+
+    // Tạo đơn đặt tour
+    @PostMapping("/dat-tour")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<DonDatTourResponse>> datTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @Valid @RequestBody DatTourRequest request) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        DonDatTourResponse result = datTourService.datTour(maTaiKhoan, request);
+        return ResponseEntity.status(201).body(ApiResponse.created(result));
+    }
+
+    // Danh sách đơn đặt tour của tôi
+    @GetMapping("/dat-tour")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDatTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachCuaToi(maTaiKhoan, pageable)));
+    }
+
+    // Chi tiết đơn đặt tour của tôi
+    @GetMapping("/dat-tour/{maDatTour}")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<DonDatTourResponse>> chiTietDatTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maDatTour) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok(datTourService.chiTietCuaToi(maTaiKhoan, maDatTour)));
+    }
+
+    // Hủy đơn đặt tour (chỉ khi ở trạng thái CHO_XAC_NHAN)
+    @DeleteMapping("/dat-tour/{maDatTour}")
+    @PreAuthorize("hasRole('KHACHHANG')")
+    public ResponseEntity<ApiResponse<Void>> huyDatTour(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maDatTour) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        datTourService.huyDatTour(maTaiKhoan, maDatTour);
+        return ResponseEntity.ok(ApiResponse.noContent("Huy dat tour thanh cong"));
+    }
+
+    // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
+
+    // Sales: xem tất cả đơn đặt (có filter)
+    @GetMapping("/admin/dat-tour")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachTatCa(
+            @RequestParam(required = false) String trangThai,
+            @RequestParam(required = false) String maTourThucTe,
+            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachTatCa(trangThai, maTourThucTe, pageable)));
+    }
+
+    // Sales: xác nhận đơn đặt tour
+    @PutMapping("/admin/dat-tour/{maDatTour}/xac-nhan")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
+    public ResponseEntity<ApiResponse<DonDatTourResponse>> xacNhanDon(
+            @PathVariable String maDatTour,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String nguoiXacNhan = user.getUsername();
+        return ResponseEntity.ok(ApiResponse.ok("Xac nhan don dat tour thanh cong",
+                datTourService.xacNhanDon(maDatTour, nguoiXacNhan)));
+    }
+}
