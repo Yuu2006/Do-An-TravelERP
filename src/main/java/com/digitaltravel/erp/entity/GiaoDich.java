@@ -3,9 +3,6 @@ package com.digitaltravel.erp.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,46 +16,39 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "THANHTOAN")
+@Table(name = "GIAODICH")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ThanhToan {
+public class GiaoDich {
+
     @Id
-    @Column(name = "MaThanhToan", nullable = false, length = 50)
-    String MaThanhToan;
+    @Column(name = "MaGiaoDich", nullable = false, length = 50)
+    String maGiaoDich;
 
     // FK -> DONDATTOUR(MaDatTour)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaDatTour", nullable = false)
     DonDatTour donDatTour;
 
+    @Column(name = "LoaiGiaoDich", nullable = false, length = 50)
+    String loaiGiaoDich;
+
     @Column(name = "PhuongThuc", nullable = false, length = 50)
-    String PhuongThuc;
+    String phuongThuc;
 
     // NUMBER(18,2): so tien giao dich
     @Column(name = "SoTien", nullable = false, precision = 18, scale = 2)
-    BigDecimal SoTien;
+    BigDecimal soTien;
 
-    // Ma giao dich tra ve tu cong thanh toan (MoMo transId,...)
-    @Column(name = "MaGiaoDich", length = 200)
-    String MaGiaoDich;
+    // Ma giao dich ngan hang / cong thanh toan (MoMo transId,...)
+    @Column(name = "MaGDNH", length = 200)
+    String maGDNH;
 
-    // Gia tri hop le: CHO_THANH_TOAN | THANH_CONG | THAT_BAI | CHO_HOAN_TIEN | DA_HOAN_TIEN
+    // Gia tri hop le: CHO_THANH_TOAN | THANH_CONG | THAT_BAI | DA_HOAN_TIEN
     @Column(name = "TrangThai", nullable = false, length = 30)
-    String TrangThai;
+    String trangThai;
 
     @Column(name = "NgayThanhToan")
-    LocalDateTime NgayThanhToan;
-
-    @Column(name = "GhiChu", length = 2000)
-    String GhiChu;
-
-    @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
-
-    @UpdateTimestamp
-    @Column(name = "CapNhatVao")
-    LocalDateTime CapNhatVao;
+    LocalDateTime ngayThanhToan;
 }

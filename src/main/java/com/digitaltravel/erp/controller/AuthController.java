@@ -23,12 +23,15 @@ import com.digitaltravel.erp.dto.requests.DoiMatKhauRequest;
 import com.digitaltravel.erp.dto.requests.QuenMatKhauRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DangNhapResponse;
+import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.TaiKhoan;
 import com.digitaltravel.erp.entity.VaiTro;
 import com.digitaltravel.erp.exception.AppException;
+//import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -42,8 +45,10 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
+//    private final HoChieuSoRepository hoChieuSoRepository;
 
     @PostMapping("/dang-ky")
+    @Transactional
     public ResponseEntity<ApiResponse<DangNhapResponse>> dangKy(@Valid @RequestBody DangKyRequest request) {
         if (!request.getMatKhau().equals(request.getXacNhanMatKhau())) {
             throw AppException.badRequest("Mat khau va xac nhan mat khau khong khop");
@@ -69,6 +74,14 @@ public class AuthController {
         taiKhoan.setVaiTro(vaiTroKhach);
         taiKhoan.setTrangThai("HOAT_DONG");
         taiKhoanRepository.save(taiKhoan);
+
+        // Tự động tạo hồ sơ khách hàng (HoChieuSo)
+        // HoChieuSo hoChieuSo = new HoChieuSo();
+        // hoChieuSo.setMaKhachHang("KH_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        // hoChieuSo.setTaiKhoan(taiKhoan);
+        // hoChieuSo.setHangThanhVien("CO_BAN");
+        // hoChieuSo.setDiemXanh(0L);
+        // hoChieuSoRepository.save(hoChieuSo);
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
