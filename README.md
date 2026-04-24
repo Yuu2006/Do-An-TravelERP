@@ -106,8 +106,9 @@ src/main/java/com/digitaltravel/erp/
 | Role | Mô tả |
 |------|-------|
 | `ADMIN` | Toàn quyền hệ thống |
-| `MANAGER` | Quản lý sản phẩm, nhân sự, phân công |
-| `SALES` | Xử lý đơn hàng, hủy tour |
+| `SANPHAM` | Quản lý sản phẩm (tour mẫu, loại phòng, dịch vụ, hành động xanh) |
+| `KINHDOANH` | Xử lý đơn hàng, hủy tour, khiếu nại, voucher |
+| `DIEUHANH` | Quản lý nhân sự, phân công HDV, tour thực tế |
 | `KETOAN` | Quyết toán, chi phí, báo cáo tài chính |
 | `HDV` | Vận hành thực địa, điểm danh, sự cố |
 | `KHACHHANG` | Khách hàng — đặt tour, thanh toán |
@@ -116,12 +117,14 @@ src/main/java/com/digitaltravel/erp/
 
 | Pattern | Roles |
 |---------|-------|
-| `/api/admin/**` | ADMIN |
-| `/api/manager/**` | ADMIN, MANAGER |
-| `/api/sales/**` | ADMIN, MANAGER, SALES |
-| `/api/ketoan/**` | ADMIN, MANAGER, KETOAN |
-| `/api/hdv/**` | ADMIN, MANAGER, HDV |
-| `/api/khachhang/**` | ADMIN, KHACHHANG |
+| `/api/quan-tri/**` | ADMIN |
+| `/api/san-pham/**` | SANPHAM |
+| `/api/kinh-doanh/**` | KINHDOANH |
+| `/api/dieu-hanh/**` | DIEUHANH |
+| `/api/huong-dan-vien/**` | DIEUHANH, HDV |
+| `/api/ke-toan/**` | KETOAN |
+| `/api/khach-hang/**` | KHACHHANG |
+| `/api/thanh-toan/**` | KHACHHANG |
 | `/api/auth/**` | Public |
 | `/api/public/**` | Public |
 
@@ -150,60 +153,68 @@ src/main/java/com/digitaltravel/erp/
 
 > Filter hỗ trợ: `giaTu`, `giaDen`, `thoiLuongMin`, `thoiLuongMax`, phân trang.
 
-### Admin — Tài khoản nhân viên
+### Admin — Tài khoản nhân viên (`/api/quan-tri`)
 
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|----------|
-| POST | `/api/admin/dang-ky-nhan-vien` | ADMIN | UC64 | DONE |
-| GET | `/api/admin/nhan-vien` | ADMIN, MANAGER | UC68 | DONE |
-| GET | `/api/admin/nhan-vien/{maNhanVien}` | ADMIN, MANAGER | UC68 | DONE |
-| PUT | `/api/admin/nhan-vien/{maNhanVien}/khoa` | ADMIN | UC66 | DONE |
-| PUT | `/api/admin/nhan-vien/{maNhanVien}/mo-khoa` | ADMIN | UC67 | DONE |
-| GET | `/api/admin/nhan-vien/{maNhanVien}/nang-luc` | ADMIN, MANAGER | UC63 | DONE |
-| PUT | `/api/admin/nhan-vien/{maNhanVien}/nang-luc` | ADMIN, MANAGER | UC63 | DONE |
-| PUT | `/api/admin/nhan-vien/{maNhanVien}/vai-tro` | ADMIN | UC69 | DONE |
+| POST | `/api/quan-tri/dang-ky-nhan-vien` | ADMIN | UC64 | DONE |
+| GET | `/api/quan-tri/nhan-vien` | ADMIN | UC68 | DONE |
+| GET | `/api/quan-tri/nhan-vien/{maNhanVien}` | ADMIN | UC68 | DONE |
+| PUT | `/api/quan-tri/nhan-vien/{maNhanVien}/khoa` | ADMIN | UC66 | DONE |
+| PUT | `/api/quan-tri/nhan-vien/{maNhanVien}/mo-khoa` | ADMIN | UC67 | DONE |
+| PUT | `/api/quan-tri/nhan-vien/{maNhanVien}/vai-tro` | ADMIN | UC69 | DONE |
 
-### Admin — Khách hàng
+> **Request body PUT /vai-tro:** `{"maVaiTro": "KETOAN"}` — Giá trị hợp lệ: `SANPHAM`, `KINHDOANH`, `DIEUHANH`, `KETOAN`, `HDV`
+
+### Điều hành — Năng lực nhân viên (`/api/dieu-hanh`)
 
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|----------|
-| GET | `/api/admin/khach-hang` | ADMIN, MANAGER, SALES | UC24 | DONE |
-| GET | `/api/admin/khach-hang/{maKhachHang}` | ADMIN, MANAGER, SALES | UC24 | DONE |
-| GET | `/api/admin/dat-tour` | ADMIN, MANAGER, SALES | -- | DONE |
-| PUT | `/api/admin/dat-tour/{id}/xac-nhan` | ADMIN, MANAGER, SALES | -- | DONE |
-| GET | `/api/admin/danh-gia` | ADMIN | UC35 | DONE |
+| GET | `/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc` | DIEUHANH | UC63 | DONE |
+| PUT | `/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc` | DIEUHANH | UC63 | DONE |
+| GET | `/api/huong-dan-vien/nang-luc` | HDV | UC63 | DONE |
 
-### Tour Mẫu (`/api/tour-mau`)
+### Kinh doanh — Khách hàng & Đơn đặt tour (`/api/kinh-doanh`)
 
 | Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
-| GET | `/api/tour-mau` | MANAGER, ADMIN | UC06 | DONE |
-| GET | `/api/tour-mau/{id}` | MANAGER, ADMIN | UC06 | DONE |
-| POST | `/api/tour-mau` | MANAGER, ADMIN | UC02 | DONE |
-| PUT | `/api/tour-mau/{id}` | MANAGER, ADMIN | UC04 | DONE |
-| DELETE | `/api/tour-mau/{id}` | MANAGER, ADMIN | UC05 | DONE (soft delete) |
-| POST | `/api/tour-mau/{id}/sao-chep` | MANAGER, ADMIN | UC03 | DONE |
-| POST | `/api/tour-mau/{id}/lich-trinh` | MANAGER, ADMIN | UC08 | DONE |
-| PUT | `/api/tour-mau/{id}/lich-trinh/{maLT}` | MANAGER, ADMIN | UC09 | DONE |
-| DELETE | `/api/tour-mau/{id}/lich-trinh/{maLT}` | MANAGER, ADMIN | UC09 | DONE |
+|--------|------|------|----|----------|
+| GET | `/api/kinh-doanh/khach-hang` | KINHDOANH | UC24 | DONE |
+| GET | `/api/kinh-doanh/khach-hang/{maKhachHang}` | KINHDOANH | UC24 | DONE |
+| GET | `/api/kinh-doanh/dat-tour` | KINHDOANH | -- | DONE |
+| PUT | `/api/kinh-doanh/dat-tour/{maDatTour}/xac-nhan` | KINHDOANH | -- | DONE |
+| GET | `/api/kinh-doanh/danh-gia` | KINHDOANH | UC35 | DONE |
 
-### Tour Thực tế (`/api/tour-thuc-te`)
+### Tour Mẫu (`/api/san-pham/tour-mau`)
 
 | Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
-| GET | `/api/tour-thuc-te` | Bearer (all) | UC14 | DONE |
-| GET | `/api/tour-thuc-te/{id}` | Bearer | UC14 | DONE |
-| POST | `/api/tour-thuc-te` | MANAGER, ADMIN | UC11 | DONE |
-| PUT | `/api/tour-thuc-te/{id}` | MANAGER, ADMIN | UC13 | DONE |
-| DELETE | `/api/tour-thuc-te/{id}` | MANAGER, ADMIN | UC12 | DONE |
+|--------|------|------|----|----------|
+| GET | `/api/san-pham/tour-mau` | SANPHAM | UC06 | DONE |
+| GET | `/api/san-pham/tour-mau/{id}` | SANPHAM | UC06 | DONE |
+| POST | `/api/san-pham/tour-mau` | SANPHAM | UC02 | DONE |
+| PUT | `/api/san-pham/tour-mau/{id}` | SANPHAM | UC04 | DONE |
+| DELETE | `/api/san-pham/tour-mau/{id}` | SANPHAM | UC05 | DONE (soft delete) |
+| POST | `/api/san-pham/tour-mau/{id}/sao-chep` | SANPHAM | UC03 | DONE |
+| POST | `/api/san-pham/tour-mau/{id}/lich-trinh` | SANPHAM | UC08 | DONE |
+| PUT | `/api/san-pham/tour-mau/{id}/lich-trinh/{maLT}` | SANPHAM | UC09 | DONE |
+| DELETE | `/api/san-pham/tour-mau/{id}/lich-trinh/{maLT}` | SANPHAM | UC09 | DONE |
 
-### Danh mục
+### Tour Thực tế (`/api/dieu-hanh/tour-thuc-te`)
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|----------|
+| GET | `/api/dieu-hanh/tour-thuc-te` | DIEUHANH | UC14 | DONE |
+| GET | `/api/dieu-hanh/tour-thuc-te/{id}` | DIEUHANH | UC14 | DONE |
+| POST | `/api/dieu-hanh/tour-thuc-te` | DIEUHANH | UC11 | DONE |
+| PUT | `/api/dieu-hanh/tour-thuc-te/{id}` | DIEUHANH | UC13 | DONE |
+| DELETE | `/api/dieu-hanh/tour-thuc-te/{id}` | DIEUHANH | UC12 | DONE |
+
+### Danh mục (`/api/san-pham`)
 
 | Method | Path | Auth | Trạng thái |
 |--------|------|------|-----------|
-| GET/POST/PUT/DELETE | `/api/loai-phong/**` | MANAGER/ADMIN | DONE |
-| GET/POST/PUT/DELETE | `/api/dich-vu-them/**` | MANAGER/ADMIN | DONE |
-| GET/POST/PUT | `/api/hanh-dong-xanh/**` | MANAGER/ADMIN | DONE |
+| GET/POST/PUT/DELETE | `/api/san-pham/loai-phong/**` | SANPHAM | DONE |
+| GET/POST/PUT/DELETE | `/api/san-pham/dich-vu-them/**` | SANPHAM | DONE |
+| GET/POST/PUT | `/api/san-pham/hanh-dong-xanh/**` | SANPHAM | DONE |
 
 ### Khách hàng (`/api/khachhang`)
 
@@ -242,24 +253,24 @@ src/main/java/com/digitaltravel/erp/
 }
 ```
 
-### SALES (`/api/sales`)
+### Kinh doanh — Hủy tour & Hỗ trợ (`/api/kinh-doanh`)
 
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|----------|
-| GET | `/api/sales/yeu-cau-huy` | ADMIN, MANAGER, SALES | UC33 | DONE |
-| POST | `/api/sales/yeu-cau-huy/{id}/duyet` | ADMIN, MANAGER, SALES | UC33 | DONE |
-| POST | `/api/sales/yeu-cau-huy/{id}/tu-choi` | ADMIN, MANAGER, SALES | UC33 | DONE |
-| GET | `/api/sales/don-dat-tour` | ADMIN, MANAGER, SALES | UC34 | DONE |
-| GET | `/api/sales/yeu-cau-ho-tro` | ADMIN, MANAGER, SALES | UC41 | DONE |
-| PUT | `/api/sales/yeu-cau-ho-tro/{id}` | ADMIN, MANAGER, SALES | UC41 | DONE |
+| GET | `/api/kinh-doanh/yeu-cau-huy` | KINHDOANH | UC33 | DONE |
+| POST | `/api/kinh-doanh/yeu-cau-huy/{maYeuCau}/duyet` | KINHDOANH | UC33 | DONE |
+| POST | `/api/kinh-doanh/yeu-cau-huy/{maYeuCau}/tu-choi` | KINHDOANH | UC33 | DONE |
+| GET | `/api/kinh-doanh/don-dat-tour` | KINHDOANH | UC34 | DONE |
+| GET | `/api/kinh-doanh/yeu-cau-ho-tro` | KINHDOANH | UC41 | DONE |
+| PUT | `/api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}` | KINHDOANH | UC41 | DONE |
 
-### Manager — Phân công HDV (`/api/manager`)
+### Điều hành — Phân công HDV (`/api/dieu-hanh`)
 
 | Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
-| GET | `/api/manager/hdv-kha-dung?maTourThucTe=...` | ADMIN, MANAGER | UC38 | DONE |
-| POST | `/api/manager/phan-cong` | ADMIN, MANAGER | UC37 | DONE |
-| DELETE | `/api/manager/phan-cong/{id}` | ADMIN, MANAGER | UC37 | DONE |
+|--------|------|------|----|----------|
+| GET | `/api/dieu-hanh/hdv-kha-dung?maTourThucTe=...` | DIEUHANH | UC38 | DONE |
+| POST | `/api/dieu-hanh/phan-cong` | DIEUHANH | UC37 | DONE |
+| DELETE | `/api/dieu-hanh/phan-cong/{maPhanCong}` | DIEUHANH | UC37 | DONE |
 
 **Request body POST /phan-cong:**
 ```json
@@ -270,51 +281,54 @@ src/main/java/com/digitaltravel/erp/
 }
 ```
 
-### HDV — Vận hành thực địa (`/api/hdv`)
-
-| Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
-| GET | `/api/hdv/tour-cua-toi` | ADMIN, HDV | -- | DONE |
-| GET | `/api/hdv/lich-cong-tac` | ADMIN, MANAGER, HDV | UC39 | DONE |
-| GET | `/api/hdv/nang-luc` | ADMIN, HDV | UC63 | DONE |
-| GET | `/api/hdv/tour/{maTour}/doan` | ADMIN, MANAGER, HDV | UC42 | DONE |
-| POST | `/api/hdv/tour/{maTour}/diem-danh` | ADMIN, HDV | UC43 | DONE |
-| POST | `/api/hdv/tour/{maTour}/hanh-dong-xanh` | ADMIN, HDV | UC44 | DONE |
-| GET | `/api/hdv/tour/{maTour}/su-co` | ADMIN, MANAGER, HDV | UC45 | DONE |
-| POST | `/api/hdv/tour/{maTour}/su-co` | ADMIN, HDV | UC45 | DONE |
-| PUT | `/api/hdv/su-co/{maSuCo}` | ADMIN, HDV | UC45 | DONE |
-| POST | `/api/hdv/tour/{maTour}/chi-phi` | ADMIN, HDV | UC46 | DONE |
-| GET | `/api/hdv/tour/{maTour}/chi-phi` | ADMIN, MANAGER, HDV | UC46 | DONE |
-
-### Kế toán — Chi phí & Quyết toán (`/api/ketoan`)
-
-| Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
-| GET | `/api/ketoan/chi-phi?trangThai=CHO_DUYET` | ADMIN, MANAGER, KETOAN | UC49 | DONE |
-| PUT | `/api/ketoan/chi-phi/{id}/duyet` | ADMIN, MANAGER, KETOAN | UC49 | DONE |
-| PUT | `/api/ketoan/chi-phi/{id}/tu-choi` | ADMIN, MANAGER, KETOAN | UC49 | DONE |
-| GET | `/api/ketoan/tour-can-quyet-toan` | ADMIN, MANAGER, KETOAN | UC47 | DONE |
-| GET | `/api/ketoan/tinh-toan/{maTour}` | ADMIN, MANAGER, KETOAN | UC48 | DONE (preview) |
-| POST | `/api/ketoan/quyet-toan/{maTour}` | ADMIN, MANAGER, KETOAN | UC49/50 | DONE |
-| PUT | `/api/ketoan/quyet-toan/{id}/chot` | ADMIN, MANAGER, KETOAN | UC50 | DONE (DRAFT to LOCKED) |
-| GET | `/api/ketoan/quyet-toan` | ADMIN, MANAGER, KETOAN | UC51 | DONE |
-| GET | `/api/ketoan/quyet-toan/{id}` | ADMIN, MANAGER, KETOAN | UC51 | DONE |
-| GET | `/api/ketoan/giao-dich-hoan` | ADMIN, MANAGER, KETOAN | UC52 | DONE |
-| PUT | `/api/ketoan/giao-dich-hoan/{id}/xac-nhan` | ADMIN, MANAGER, KETOAN | UC52 | DONE |
-| GET | `/api/ketoan/bao-cao/doanh-thu` | ADMIN, MANAGER, KETOAN | UC53 | DONE |
-
-> Filter báo cáo: `tuNgay`, `denNgay` (ISO date format: `yyyy-MM-dd`).
-
-### Voucher Admin (`/api/admin/voucher`)
+### HDV — Vận hành thực địa (`/api/huong-dan-vien`)
 
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|----------|
-| GET | `/api/admin/voucher` | ADMIN | UC54 | DONE |
-| GET | `/api/admin/voucher/{maVoucher}` | ADMIN | UC54 | DONE |
-| POST | `/api/admin/voucher` | ADMIN | UC54 | DONE |
-| PUT | `/api/admin/voucher/{maVoucher}` | ADMIN | UC55 | DONE |
-| PUT | `/api/admin/voucher/{maVoucher}/vo-hieu` | ADMIN | UC55 | DONE |
-| POST | `/api/admin/voucher/{maVoucher}/phat-hanh` | ADMIN | UC56 | DONE |
+| GET | `/api/huong-dan-vien/tour-cua-toi` | HDV | -- | DONE |
+| GET | `/api/huong-dan-vien/lich-cong-tac` | DIEUHANH, HDV | UC39 | DONE |
+| GET | `/api/dieu-hanh/lich-cong-tac` | DIEUHANH, HDV | UC39 | DONE |
+| GET | `/api/huong-dan-vien/tour/{maTour}/doan` | DIEUHANH, HDV | UC42 | DONE |
+| GET | `/api/dieu-hanh/tour/{maTour}/doan` | DIEUHANH, HDV | UC42 | DONE |
+| POST | `/api/huong-dan-vien/tour/{maTour}/diem-danh` | HDV | UC43 | DONE |
+| POST | `/api/huong-dan-vien/tour/{maTour}/hanh-dong-xanh` | HDV | UC44 | DONE |
+| GET | `/api/huong-dan-vien/tour/{maTour}/su-co` | DIEUHANH, HDV | UC45 | DONE |
+| GET | `/api/dieu-hanh/tour/{maTour}/su-co` | DIEUHANH, HDV | UC45 | DONE |
+| POST | `/api/huong-dan-vien/tour/{maTour}/su-co` | HDV | UC45 | DONE |
+| PUT | `/api/huong-dan-vien/su-co/{maSuCo}` | HDV | UC45 | DONE |
+| POST | `/api/huong-dan-vien/tour/{maTour}/chi-phi` | HDV | UC46 | DONE |
+| GET | `/api/huong-dan-vien/tour/{maTour}/chi-phi` | DIEUHANH, HDV | UC46 | DONE |
+| GET | `/api/dieu-hanh/tour/{maTour}/chi-phi` | DIEUHANH, HDV | UC46 | DONE |
+
+### Kế toán — Chi phí & Quyết toán (`/api/ke-toan`)
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|-----------|
+| GET | `/api/ke-toan/chi-phi?trangThai=CHO_DUYET` | KETOAN | UC49 | DONE |
+| PUT | `/api/ke-toan/chi-phi/{maChiPhi}/duyet` | KETOAN | UC49 | DONE |
+| PUT | `/api/ke-toan/chi-phi/{maChiPhi}/tu-choi` | KETOAN | UC49 | DONE |
+| GET | `/api/ke-toan/tour-can-quyet-toan` | KETOAN | UC47 | DONE |
+| GET | `/api/ke-toan/tinh-toan/{maTour}` | KETOAN | UC48 | DONE (preview) |
+| POST | `/api/ke-toan/quyet-toan/{maTour}` | KETOAN | UC49/50 | DONE |
+| PUT | `/api/ke-toan/quyet-toan/{id}/chot` | KETOAN | UC50 | DONE (DRAFT to LOCKED) |
+| GET | `/api/ke-toan/quyet-toan` | KETOAN | UC51 | DONE |
+| GET | `/api/ke-toan/quyet-toan/{id}` | KETOAN | UC51 | DONE |
+| GET | `/api/ke-toan/giao-dich-hoan` | KETOAN | UC52 | DONE |
+| PUT | `/api/ke-toan/giao-dich-hoan/{id}/xac-nhan` | KETOAN | UC52 | DONE |
+| GET | `/api/ke-toan/bao-cao/doanh-thu` | KETOAN | UC53 | DONE |
+
+> Filter báo cáo: `tuNgay`, `denNgay` (ISO date format: `yyyy-MM-dd`).
+
+### Voucher Admin (`/api/kinh-doanh/voucher`)
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|----------|
+| GET | `/api/kinh-doanh/voucher` | KINHDOANH | UC54 | DONE |
+| GET | `/api/kinh-doanh/voucher/{maVoucher}` | KINHDOANH | UC54 | DONE |
+| POST | `/api/kinh-doanh/voucher` | KINHDOANH | UC54 | DONE |
+| PUT | `/api/kinh-doanh/voucher/{maVoucher}` | KINHDOANH | UC55 | DONE |
+| PUT | `/api/kinh-doanh/voucher/{maVoucher}/vo-hieu` | KINHDOANH | UC55 | DONE |
+| POST | `/api/kinh-doanh/voucher/{maVoucher}/phat-hanh` | KINHDOANH | UC56 | DONE |
 
 ---
 
@@ -459,7 +473,7 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 
 - Lombok `@FieldDefaults(level = PRIVATE)` — field uppercase (e.g. `MaDatTour`) → getter `getMaDatTour()`
 - `PhysicalNamingStrategyStandardImpl` — tên field Java == tên column Oracle (case-sensitive)
-- ID prefix convention: `DDT_`, `TTT_`, `QT_`, `PC_`, `DD_`, `HD_`, `SC_`, `CP_`
+- ID prefix convention: `DDT_`, `TTT_`, `QT_`, `PC_`, `DD_`, `HD_`, `SC_`, `CP_`, `NV_`
 
 ### Tech Stack
 
