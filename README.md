@@ -1,8 +1,8 @@
 ﻿# Digital Travel ERP — Backend API
 
-**Công nghệ:** Java 17 · Spring Boot 3.x · Oracle EE 18c · JWT (HS256)
+**Công nghệ:** Java 21 · Spring Boot 3.x · Oracle 19c/21c · JWT (HS256)
 **Package gốc:** `com.digitaltravel.erp`
-**Branch hiện tại:** `feature/hochieuso`
+**Branch hiện tại:** `main`
 
 ---
 
@@ -22,9 +22,9 @@
 
 ### Yêu cầu
 
-- Java 17+
+- Java 21+
 - Maven (hoặc dùng `mvnw.cmd` đính kèm)
-- Oracle EE 18c đang chạy và đã tạo schema
+- Oracle 19c/21c đang chạy và đã tạo schema
 
 ### Biến môi trường (`.env` hoặc OS env)
 
@@ -123,7 +123,7 @@ src/main/java/com/digitaltravel/erp/
 | `/api/hdv/**` | ADMIN, MANAGER, HDV |
 | `/api/khachhang/**` | ADMIN, KHACHHANG |
 | `/api/auth/**` | Public |
-| `GET /api/tour*/**` | Public |
+| `/api/public/**` | Public |
 
 ---
 
@@ -140,15 +140,38 @@ src/main/java/com/digitaltravel/erp/
 | POST | `/api/auth/quen-mat-khau` | Public | UC61 | DONE |
 | POST | `/api/auth/dat-lai-mat-khau` | Public | UC61 | DONE |
 
+### Tour Công khai (`/api/public`)
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|----------|
+| GET | `/api/public/tour` | Public | UC25 | DONE |
+| GET | `/api/public/tour/{maTourThucTe}` | Public | UC26 | DONE |
+| GET | `/api/public/tour/{maTourThucTe}/danh-gia` | Public | UC26 | DONE |
+
+> Filter hỗ trợ: `giaTu`, `giaDen`, `thoiLuongMin`, `thoiLuongMax`, phân trang.
+
 ### Admin — Tài khoản nhân viên
 
 | Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
+|--------|------|------|----|----------|
 | POST | `/api/admin/dang-ky-nhan-vien` | ADMIN | UC64 | DONE |
 | GET | `/api/admin/nhan-vien` | ADMIN, MANAGER | UC68 | DONE |
 | GET | `/api/admin/nhan-vien/{maNhanVien}` | ADMIN, MANAGER | UC68 | DONE |
 | PUT | `/api/admin/nhan-vien/{maNhanVien}/khoa` | ADMIN | UC66 | DONE |
 | PUT | `/api/admin/nhan-vien/{maNhanVien}/mo-khoa` | ADMIN | UC67 | DONE |
+| GET | `/api/admin/nhan-vien/{maNhanVien}/nang-luc` | ADMIN, MANAGER | UC63 | DONE |
+| PUT | `/api/admin/nhan-vien/{maNhanVien}/nang-luc` | ADMIN, MANAGER | UC63 | DONE |
+| PUT | `/api/admin/nhan-vien/{maNhanVien}/vai-tro` | ADMIN | UC69 | DONE |
+
+### Admin — Khách hàng
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|----------|
+| GET | `/api/admin/khach-hang` | ADMIN, MANAGER, SALES | UC24 | DONE |
+| GET | `/api/admin/khach-hang/{maKhachHang}` | ADMIN, MANAGER, SALES | UC24 | DONE |
+| GET | `/api/admin/dat-tour` | ADMIN, MANAGER, SALES | -- | DONE |
+| PUT | `/api/admin/dat-tour/{id}/xac-nhan` | ADMIN, MANAGER, SALES | -- | DONE |
+| GET | `/api/admin/danh-gia` | ADMIN | UC35 | DONE |
 
 ### Tour Mẫu (`/api/tour-mau`)
 
@@ -188,13 +211,18 @@ src/main/java/com/digitaltravel/erp/
 |--------|------|------|----|-----------|
 | GET | `/api/khachhang/ho-so` | KHACHHANG | UC21 | DONE |
 | PUT | `/api/khachhang/ho-so` | KHACHHANG | UC23 | DONE |
+| GET | `/api/khachhang/lich-su-tour` | KHACHHANG | UC22 | DONE |
 | POST | `/api/khachhang/dat-tour` | KHACHHANG | UC27 | DONE |
 | GET | `/api/khachhang/dat-tour` | KHACHHANG | -- | DONE |
 | GET | `/api/khachhang/dat-tour/{id}` | KHACHHANG | -- | DONE |
 | DELETE | `/api/khachhang/dat-tour/{id}` | KHACHHANG | UC32 | DONE (hủy CHO_XAC_NHAN) |
 | POST | `/api/khachhang/dat-tour/{id}/huy` | KHACHHANG | UC32 | DONE (yêu cầu hủy DA_XAC_NHAN) |
-| GET | `/api/admin/dat-tour` | ADMIN, MANAGER | -- | DONE |
-| PUT | `/api/admin/dat-tour/{id}/xac-nhan` | ADMIN, MANAGER | -- | DONE |
+| GET | `/api/khachhang/vi-voucher` | KHACHHANG | UC31 | DONE |
+| POST | `/api/khachhang/ap-voucher` | KHACHHANG | UC28 | DONE |
+| POST | `/api/khachhang/doi-diem` | KHACHHANG | UC30 | DONE |
+| POST | `/api/khachhang/danh-gia` | KHACHHANG | UC35 | DONE |
+| POST | `/api/khachhang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
+| GET | `/api/khachhang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
 
 ### Thanh toán (`/api/thanh-toan`)
 
@@ -214,13 +242,16 @@ src/main/java/com/digitaltravel/erp/
 }
 ```
 
-### SALES — Yêu cầu hủy tour (`/api/sales`)
+### SALES (`/api/sales`)
 
 | Method | Path | Auth | UC | Trạng thái |
-|--------|------|------|----|-----------|
+|--------|------|------|----|----------|
 | GET | `/api/sales/yeu-cau-huy` | ADMIN, MANAGER, SALES | UC33 | DONE |
 | POST | `/api/sales/yeu-cau-huy/{id}/duyet` | ADMIN, MANAGER, SALES | UC33 | DONE |
 | POST | `/api/sales/yeu-cau-huy/{id}/tu-choi` | ADMIN, MANAGER, SALES | UC33 | DONE |
+| GET | `/api/sales/don-dat-tour` | ADMIN, MANAGER, SALES | UC34 | DONE |
+| GET | `/api/sales/yeu-cau-ho-tro` | ADMIN, MANAGER, SALES | UC41 | DONE |
+| PUT | `/api/sales/yeu-cau-ho-tro/{id}` | ADMIN, MANAGER, SALES | UC41 | DONE |
 
 ### Manager — Phân công HDV (`/api/manager`)
 
@@ -244,6 +275,8 @@ src/main/java/com/digitaltravel/erp/
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|-----------|
 | GET | `/api/hdv/tour-cua-toi` | ADMIN, HDV | -- | DONE |
+| GET | `/api/hdv/lich-cong-tac` | ADMIN, MANAGER, HDV | UC39 | DONE |
+| GET | `/api/hdv/nang-luc` | ADMIN, HDV | UC63 | DONE |
 | GET | `/api/hdv/tour/{maTour}/doan` | ADMIN, MANAGER, HDV | UC42 | DONE |
 | POST | `/api/hdv/tour/{maTour}/diem-danh` | ADMIN, HDV | UC43 | DONE |
 | POST | `/api/hdv/tour/{maTour}/hanh-dong-xanh` | ADMIN, HDV | UC44 | DONE |
@@ -262,10 +295,26 @@ src/main/java/com/digitaltravel/erp/
 | PUT | `/api/ketoan/chi-phi/{id}/tu-choi` | ADMIN, MANAGER, KETOAN | UC49 | DONE |
 | GET | `/api/ketoan/tour-can-quyet-toan` | ADMIN, MANAGER, KETOAN | UC47 | DONE |
 | GET | `/api/ketoan/tinh-toan/{maTour}` | ADMIN, MANAGER, KETOAN | UC48 | DONE (preview) |
-| POST | `/api/ketoan/quyet-toan/{maTour}` | ADMIN, MANAGER, KETOAN | UC50 | DONE |
+| POST | `/api/ketoan/quyet-toan/{maTour}` | ADMIN, MANAGER, KETOAN | UC49/50 | DONE |
 | PUT | `/api/ketoan/quyet-toan/{id}/chot` | ADMIN, MANAGER, KETOAN | UC50 | DONE (DRAFT to LOCKED) |
 | GET | `/api/ketoan/quyet-toan` | ADMIN, MANAGER, KETOAN | UC51 | DONE |
 | GET | `/api/ketoan/quyet-toan/{id}` | ADMIN, MANAGER, KETOAN | UC51 | DONE |
+| GET | `/api/ketoan/giao-dich-hoan` | ADMIN, MANAGER, KETOAN | UC52 | DONE |
+| PUT | `/api/ketoan/giao-dich-hoan/{id}/xac-nhan` | ADMIN, MANAGER, KETOAN | UC52 | DONE |
+| GET | `/api/ketoan/bao-cao/doanh-thu` | ADMIN, MANAGER, KETOAN | UC53 | DONE |
+
+> Filter báo cáo: `tuNgay`, `denNgay` (ISO date format: `yyyy-MM-dd`).
+
+### Voucher Admin (`/api/admin/voucher`)
+
+| Method | Path | Auth | UC | Trạng thái |
+|--------|------|------|----|----------|
+| GET | `/api/admin/voucher` | ADMIN | UC54 | DONE |
+| GET | `/api/admin/voucher/{maVoucher}` | ADMIN | UC54 | DONE |
+| POST | `/api/admin/voucher` | ADMIN | UC54 | DONE |
+| PUT | `/api/admin/voucher/{maVoucher}` | ADMIN | UC55 | DONE |
+| PUT | `/api/admin/voucher/{maVoucher}/vo-hieu` | ADMIN | UC55 | DONE |
+| POST | `/api/admin/voucher/{maVoucher}/phat-hanh` | ADMIN | UC56 | DONE |
 
 ---
 
@@ -289,13 +338,25 @@ src/main/java/com/digitaltravel/erp/
 | UC15–17 | CRUD loại phòng, dịch vụ bổ sung | Danh mục |
 | UC18–20 | CRUD hành động xanh | Hành động xanh |
 | UC21 | Xem hồ sơ khách hàng | Khách hàng |
+| UC22 | Lịch sử tour khách hàng | Khách hàng |
 | UC23 | Cập nhật hộ chiếu số | Khách hàng |
+| UC24 | Tìm kiếm hồ sơ khách hàng | Nhân viên |
+| UC25 | Danh sách tour công khai | Tour Thực tế |
+| UC26 | Chi tiết tour + đánh giá (public) | Tour Thực tế |
 | UC27 | Đặt tour (giữ chỗ 15 phút) | Đặt tour |
+| UC28 | Áp dụng voucher vào đơn | Voucher |
 | UC29 | Thanh toán mock — trừ chỗ, tạo lịch sử tour | Thanh toán |
+| UC30 | Đổi điểm xanh lấy voucher | Voucher |
+| UC31 | Xem ví voucher | Voucher |
 | UC32 | KH yêu cầu hủy tour | Hủy tour |
 | UC33 | SALES duyệt / từ chối hoàn tiền | Hủy tour |
+| UC34 | SALES tìm kiếm đơn đặt tour | SALES |
+| UC35 | Đánh giá sau tour | Khách hàng |
+| UC36 | Tạo & xem yêu cầu hỗ trợ / khiếu nại | Khách hàng |
 | UC37 | Phân công HDV vào tour | Phân công |
 | UC38 | Tìm HDV khả dụng (không trùng lịch) | Phân công |
+| UC39 | Lịch công tác HDV | HDV |
+| UC41 | SALES xử lý yêu cầu hỗ trợ / khiếu nại | SALES |
 | UC42 | Xem danh sách đoàn | Vận hành |
 | UC43 | Điểm danh khách | Vận hành |
 | UC44 | Ghi nhận hành động xanh + cộng điểm tự động | Vận hành |
@@ -306,39 +367,30 @@ src/main/java/com/digitaltravel/erp/
 | UC49 | Duyệt chi phí / tạo quyết toán DRAFT | Quyết toán |
 | UC50 | Chốt quyết toán (LOCKED, tour -> DA_QUYET_TOAN) | Quyết toán |
 | UC51 | Xem danh sách & chi tiết quyết toán | Quyết toán |
+| UC52 | Kế toán xác nhận chuyển tiền hoàn | Quyết toán |
+| UC53 | Báo cáo doanh thu / top tour | Quyết toán |
+| UC54 | Tạo voucher mới | Voucher |
+| UC55 | Cập nhật / vô hiệu voucher | Voucher |
+| UC56 | Phát hành voucher cho khách hàng | Voucher |
 | UC58 | Đăng ký tài khoản khách hàng | Auth |
 | UC59 | Đăng nhập, nhận JWT | Auth |
 | UC60 | Đăng xuất stateless | Auth |
 | UC61 | Quên / đặt lại mật khẩu | Auth |
 | UC62 | Đổi mật khẩu | Auth |
+| UC63 | Cập nhật năng lực HDV | Nhân viên |
 | UC64 | Admin tạo tài khoản nhân viên | Nhân viên |
 | UC66 | Khóa tài khoản nhân viên | Nhân viên |
 | UC67 | Mở khóa tài khoản nhân viên | Nhân viên |
 | UC68 | Tìm kiếm & xem hồ sơ nhân viên | Nhân viên |
+| UC69 | Gán vai trò cho nhân viên | Nhân viên |
 | -- | Scheduler tự hủy đơn hết hạn (60s) | Đặt tour |
+| -- | Scheduler tự động đổi trạng thái tour | Tour Thực tế |
 
 ### TODO — Chưa hoàn thành
 
 | UC | Tên | Ghi chú |
 |----|-----|---------|
-| UC22 | Lịch sử tour KH | LichSuTour được tạo, chưa có GET endpoint |
-| UC24 | Nhân viên tìm hồ sơ khách | Chưa có endpoint |
-| UC25 | Tra cứu tour public | Chưa tách endpoint public riêng |
-| UC26 | Chi tiết tour public kèm lịch trình | Chưa aggregate response đầy đủ |
-| UC28 | Áp dụng voucher vào đơn | Chưa làm |
-| UC30 | Đổi điểm xanh lấy voucher | Chưa làm |
-| UC31 | Xem ví voucher | Chưa làm |
-| UC34 | NV tìm kiếm đơn hàng | Chưa làm |
-| UC35 | Đánh giá sau tour | Chưa làm |
-| UC36 | Khiếu nại / hỗ trợ | Chưa làm |
-| UC39 | Lịch công tác HDV | Chưa làm |
-| UC41 | SALES xử lý khiếu nại | Chưa làm |
-| UC52 | Kế toán xác nhận chuyển tiền hoàn | Chưa làm |
-| UC53 | Báo cáo doanh thu / top tour | Chưa làm |
-| UC54–56 | Quản lý & phân phối voucher | Chưa làm |
 | UC57 | Thanh toán MoMo thật | Chỉ có mock mode |
-| UC63 | Cập nhật năng lực HDV | Chưa làm |
-| UC69 | Gán vai trò cho nhân viên | Chưa làm |
 | UC70 | Nhật ký hệ thống | Chưa làm |
 | -- | Dynamic Pricing tự động | Chưa làm |
 | -- | Nâng hạng thành viên tự động | Điểm cộng đúng, chưa check ngưỡng hạng |
@@ -413,11 +465,11 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 
 | Layer | Công nghệ |
 |-------|-----------|
-| Language | Java 17 |
+| Language | Java 21 |
 | Framework | Spring Boot 3.x |
 | Security | Spring Security + JWT (jjwt) |
 | ORM | Spring Data JPA / Hibernate |
-| Database | Oracle EE 18c (ojdbc8) |
+| Database | Oracle 19c/21c (ojdbc8) |
 | Validation | Jakarta Bean Validation |
 | Connection Pool | HikariCP (max 10) |
 | Utilities | Lombok |
