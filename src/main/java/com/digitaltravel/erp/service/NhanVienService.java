@@ -1,10 +1,13 @@
 package com.digitaltravel.erp.service;
 
+import java.util.Locale;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.digitaltravel.erp.config.VaiTroConst;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
 import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
 import com.digitaltravel.erp.dto.responses.NhanVienResponse;
@@ -23,10 +26,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NhanVienService {
 
+
+
     private final NhanVienRepository nhanVienRepository;
     private final TaiKhoanRepository taiKhoanRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final VaiTroRepository vaiTroRepository;
+    private final NhatKyBaoMatService nhatKyBaoMatService;
 
     // ── Tìm kiếm nhân viên (UC68) ─────────────────────────────────────────
     public Page<NhanVienResponse> timKiem(String hoTen, String maVaiTro, String trangThai, Pageable pageable) {
@@ -58,11 +64,13 @@ public class NhanVienService {
         }
         tk.setTrangThai("KHOA");
         taiKhoanRepository.save(tk);
+        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "KHOA_TAI_KHOAN", NhatKyBaoMatService.THANH_CONG,
+                "Khoa tai khoan " + tk.getMaTaiKhoan(), null);
     }
 
     // ── Mở khóa tài khoản (UC67) ──────────────────────────────────────────
     @Transactional
-    public void moKhoaTaiKhoan(String maNhanVien) {
+    public void moKhoaTaiKhoan(String maNhanVien, String nguoiThucHien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
 
@@ -72,6 +80,8 @@ public class NhanVienService {
         }
         tk.setTrangThai("HOAT_DONG");
         taiKhoanRepository.save(tk);
+        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "MO_KHOA_TAI_KHOAN", NhatKyBaoMatService.THANH_CONG,
+                "Mo khoa tai khoan " + tk.getMaTaiKhoan(), null);
     }
 
     // ── UC69: Gán vai trò cho nhân viên ──────────────────────────────────────
@@ -80,12 +90,23 @@ public class NhanVienService {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
 
-        VaiTro vaiTro = vaiTroRepository.findById(request.getMaVaiTro())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro: " + request.getMaVaiTro()));
-
         TaiKhoan tk = nv.getTaiKhoan();
-        tk.setVaiTro(vaiTro);
+        String maVaiTro = request.getMaVaiTro().trim().toUpperCase(Locale.ROOT);
+        if (!VaiTroConst.VAI_TRO_NHAN_VIEN.contains(maVaiTro)) {
+            throw AppException.badRequest(VaiTroConst.VAI_TRO_NHAN_VIEN_MSG);
+        }
+        VaiTro vaiTroHopLe = vaiTroRepository.findById(maVaiTro)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro: " + maVaiTro));
+        if (!"HOAT_DONG".equals(vaiTroHopLe.getTrangThai())) {
+            throw AppException.badRequest("Vai tro dang o trang thai " + vaiTroHopLe.getTrangThai() + ", khong the gan");
+        }
+
+        tk.setVaiTro(vaiTroHopLe);
+        nv.setLoaiNhanVien(maVaiTro);
         taiKhoanRepository.save(tk);
+        nhanVienRepository.save(nv);
+        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "GAN_VAI_TRO", NhatKyBaoMatService.THANH_CONG,
+                "Gan vai tro " + maVaiTro + " cho tai khoan " + tk.getMaTaiKhoan(), null);
         return toResponse(nv);
     }
 

@@ -38,9 +38,7 @@ public class TaiKhoanAdminController {
     private final NhanVienRepository nhanVienRepository;
     private final NhatKyBaoMatService nhatKyBaoMatService;
 
-    private static final java.util.Set<String> VAI_TRO_NHAN_VIEN = java.util.Set.of(
-            VaiTroConst.SANPHAM, VaiTroConst.KINHDOANH, VaiTroConst.DIEUHANH, VaiTroConst.KETOAN, VaiTroConst.HDV
-    );
+
 
     @PostMapping("/dang-ky-nhan-vien")
     public ResponseEntity<ApiResponse<Void>> dangKyNhanVien(
@@ -49,10 +47,8 @@ public class TaiKhoanAdminController {
             HttpServletRequest httpRequest) {
         String maVaiTro = request.getMaVaiTro().toUpperCase();
 
-        if (!VAI_TRO_NHAN_VIEN.contains(maVaiTro)) {
-            throw AppException.badRequest(
-                    "Ma vai tro khong hop le. Chi chap nhan: SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV"
-            );
+        if (!VaiTroConst.VAI_TRO_NHAN_VIEN.contains(maVaiTro)) {
+            throw AppException.badRequest(VaiTroConst.VAI_TRO_NHAN_VIEN_MSG);
         }
         if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) {
             throw AppException.badRequest("Ten dang nhap da ton tai");
