@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/dich-vu-them")
+@RequestMapping("/api/san-pham/dich-vu-them")
 @RequiredArgsConstructor
 public class DichVuThemController {
 
@@ -34,14 +34,14 @@ public class DichVuThemController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<DichVuThemResponse>> taoMoi(@Valid @RequestBody DichVuThemRequest request) {
         DichVuThemResponse result = dichVuThemService.taoMoi(request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<DichVuThemResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody DichVuThemRequest request
@@ -50,7 +50,7 @@ public class DichVuThemController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         dichVuThemService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa dich vu thanh cong"));

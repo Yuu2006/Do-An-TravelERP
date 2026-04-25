@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/manager")
+@RequestMapping("/api/dieu-hanh")
 @RequiredArgsConstructor
 public class PhanCongController {
 
@@ -35,7 +35,7 @@ public class PhanCongController {
      * UC38 — Danh sách HDV khả dụng cho 1 tour (không trùng lịch)
      */
     @GetMapping("/hdv-kha-dung")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<List<NhanVienResponse>>> hdvKhaDung(
             @RequestParam String maTourThucTe) {
         return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.timHdvKhaDung(maTourThucTe)));
@@ -45,7 +45,7 @@ public class PhanCongController {
      * UC37 — Phân công HDV vào tour
      */
     @PostMapping("/phan-cong")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<PhanCongResponse>> phanCong(
             @Valid @RequestBody PhanCongHdvRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
@@ -58,7 +58,7 @@ public class PhanCongController {
      * UC37 — Hủy phân công
      */
     @DeleteMapping("/phan-cong/{maPhanCong}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<Void>> huyPhanCong(
             @PathVariable String maPhanCong) {
         phanCongTourService.huyPhanCong(maPhanCong);

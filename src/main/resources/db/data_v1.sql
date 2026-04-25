@@ -116,8 +116,9 @@ VALUES ('LT002_N4', 'TM002', 4,
 -- BCrypt(cost=10,"password")=$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lh32
 -- ------------------------------------------------------------
 INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('ADMIN',      'Quản trị hệ thống',  'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('MANAGER',    'Quản lý',            'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('SALES',      'Nhân viên kinh doanh','HOAT_DONG');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('SANPHAM',    'Nhan vien san pham',  'HOAT_DONG');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KINHDOANH',  'Nhan vien kinh doanh','HOAT_DONG');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('DIEUHANH',   'Nhan vien dieu hanh', 'HOAT_DONG');
 INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KETOAN',     'Kế toán',            'HOAT_DONG');
 INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('HDV',        'Hướng dẫn viên',     'HOAT_DONG');
 INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KHACHHANG',  'Khách hàng',         'HOAT_DONG');
@@ -131,14 +132,20 @@ VALUES ('TK_ADMIN01', 'admin',
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_MGR01', 'manager01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Tran Thi Manager', '079099000002', 'manager01@digitaltravel.vn', '0900000002',
-        'MANAGER', 'HOAT_DONG', 'SYSTEM');
+        'Tran Thi Dieu Hanh', '079099000002', 'dieuhanh01@digitaltravel.vn', '0900000002',
+        'DIEUHANH', 'HOAT_DONG', 'SYSTEM');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+VALUES ('TK_SP01', 'sanpham01',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Nguyen Thi San Pham', '079099000099', 'sanpham01@digitaltravel.vn', '0900000099',
+        'SANPHAM', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_SALES01', 'sales01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Le Van Sales', '079099000003', 'sales01@digitaltravel.vn', '0900000003',
-        'SALES', 'HOAT_DONG', 'SYSTEM');
+        'Le Van Kinh Doanh', '079099000003', 'kinhdoanh01@digitaltravel.vn', '0900000003',
+        'KINHDOANH', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_KT01', 'ketoan01',
@@ -176,9 +183,11 @@ VALUES ('TK_KH02', 'khachhang02',
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',   DATE '2022-01-01', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_MGR01',    'TK_MGR01',    'MANAGER', DATE '2022-01-15', 'AVAILABLE');
+VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH', DATE '2022-01-15', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES01',  'TK_SALES01',  'SALES',   DATE '2023-03-01', 'AVAILABLE');
+VALUES ('NV_SP01',     'TK_SP01',     'SANPHAM', DATE '2022-02-01', 'AVAILABLE');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_SALES01',  'TK_SALES01',  'KINHDOANH', DATE '2023-03-01', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_KT01',     'TK_KT01',     'KETOAN',  DATE '2023-06-01', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)

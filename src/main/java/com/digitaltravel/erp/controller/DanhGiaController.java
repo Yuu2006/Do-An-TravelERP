@@ -30,8 +30,8 @@ public class DanhGiaController {
     private final DanhGiaService danhGiaService;
 
     // ── UC35: KH gửi đánh giá ────────────────────────────────────────────────
-    @PostMapping("/api/khachhang/danh-gia")
-    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    @PostMapping("/api/khach-hang/danh-gia")
+    @PreAuthorize("hasRole('KHACHHANG')")
     public ResponseEntity<ApiResponse<DanhGiaKhResponse>> guiDanhGia(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody DanhGiaRequest request) {
@@ -40,8 +40,8 @@ public class DanhGiaController {
     }
 
     // ── Admin: Xem tất cả đánh giá (moderation) ───────────────────────────────
-    @GetMapping("/api/admin/danh-gia")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/api/kinh-doanh/danh-gia")
+    @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<Page<DanhGiaKhResponse>>> tatCaDanhGia(
             @org.springframework.web.bind.annotation.RequestParam(required = false) String trangThai,
             @PageableDefault(size = 10) Pageable pageable) {

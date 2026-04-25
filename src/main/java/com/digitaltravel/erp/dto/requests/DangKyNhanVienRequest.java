@@ -27,7 +27,7 @@ public class DangKyNhanVienRequest {
     String soDienThoai;
 
     /**
-     * Ma vai tro can gan: MANAGER, SALES, KETOAN, HDV
+     * Ma vai tro can gan: SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV
      * (ADMIN va KHACHHANG khong dung endpoint nay)
      */
     @NotBlank(message = "Ma vai tro khong duoc de trong")

@@ -20,7 +20,7 @@ BEGIN
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
                              'DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                              'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
-                             'LOAIPHONG','TOURMAU','VAITRO','TAIKHOAN'
+                             'LOAIPHONG','TOURMAU','NHATKYBAOMAT','THAMSOHETHONG','VAITRO','TAIKHOAN'
             )
         ) LOOP
             EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS PURGE';
@@ -64,6 +64,37 @@ CREATE TABLE TAIKHOAN (
                           CONSTRAINT UQ_TK_SoDinhDanh       UNIQUE (SoDinhDanh),
                           CONSTRAINT FK_TK_VaiTro           FOREIGN KEY (VaiTro) REFERENCES VAITRO(MaVaiTro),
     CONSTRAINT CK_TAIKHOAN_TTHAI      CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
+);
+
+-- Tham so cau hinh he thong do quan tri vien ky thuat quan ly
+CREATE TABLE THAMSOHETHONG (
+                               MaThamSo        VARCHAR2(50)   PRIMARY KEY,
+                               TenThamSo       VARCHAR2(100)  NOT NULL,
+                               GiaTri          VARCHAR2(2000) NOT NULL,
+                               KieuDuLieu      VARCHAR2(20)   NOT NULL,
+                               MoTa            VARCHAR2(1000),
+                               TrangThai       VARCHAR2(20)   DEFAULT 'HOAT_DONG' NOT NULL,
+                               ThoiDiemTao     TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
+                               CapNhatVao      TIMESTAMP      DEFAULT SYSTIMESTAMP,
+                               TaoBoi          VARCHAR2(100),
+                               CapNhatBoi      VARCHAR2(100),
+                               CONSTRAINT UQ_TSHH_TenThamSo UNIQUE (TenThamSo),
+                               CONSTRAINT CK_TSHH_KieuDuLieu CHECK (KieuDuLieu IN ('STRING','NUMBER','BOOLEAN','JSON')),
+                               CONSTRAINT CK_TSHH_TrangThai CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
+);
+
+-- Nhat ky bao mat va thao tac quan tri
+CREATE TABLE NHATKYBAOMAT (
+                              MaNhatKyBaoMat  VARCHAR2(50)   PRIMARY KEY,
+                              MaTaiKhoan      VARCHAR2(50),
+                              HanhDong        VARCHAR2(100)  NOT NULL,
+                              DiaChiIp        VARCHAR2(100),
+                              UserAgent       VARCHAR2(500),
+                              KetQua          VARCHAR2(20)   NOT NULL,
+                              NoiDung         VARCHAR2(1000),
+                              ThoiDiemTao     TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
+                              CONSTRAINT FK_NKBM_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
+                              CONSTRAINT CK_NKBM_KetQua CHECK (KetQua IN ('THANH_CONG','THAT_BAI'))
 );
 
 -- Ho so nghiep vu cua khach hang (1-1 voi TAIKHOAN co VaiTro = KHACHHANG)
@@ -536,5 +567,7 @@ CREATE INDEX IDX_HANHDONG_KHACHHANG      ON HANHDONG(MaKhachHang);
 CREATE INDEX IDX_DIEMDANH_KHACHHANG      ON DIEMDANH(MaKhachHang);
 CREATE INDEX IDX_CHIPHITHUCTE_TOURTT     ON CHIPHITHUCTE(MaTourThucTe);
 CREATE INDEX IDX_KMKH_VOUCHER            ON KHUYENMAI_KH(MaVoucher);
-
+CREATE INDEX IDX_NKBM_TAIKHOAN           ON NHATKYBAOMAT(MaTaiKhoan);
+CREATE INDEX IDX_NKBM_HANHDONG           ON NHATKYBAOMAT(HanhDong);
+CREATE INDEX IDX_NKBM_THOIDIEM           ON NHATKYBAOMAT(ThoiDiemTao);
 

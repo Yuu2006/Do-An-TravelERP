@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/ketoan")
+@RequestMapping("/api/ke-toan")
 @RequiredArgsConstructor
 public class QuyetToanController {
 
@@ -38,7 +38,7 @@ public class QuyetToanController {
      * UC47 — Danh sách tour cần quyết toán (KET_THUC, chưa có QT)
      */
     @GetMapping("/tour-can-quyet-toan")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<Page<QuyetToanResponse>>> tourCanQuyetToan(Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.tourCanQuyetToan(pageable)));
     }
@@ -47,7 +47,7 @@ public class QuyetToanController {
      * UC48 — Tính toán sơ bộ (preview, không lưu DB)
      */
     @GetMapping("/tinh-toan/{maTour}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> tinhToan(@PathVariable String maTour) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.tinhToan(maTour)));
     }
@@ -56,7 +56,7 @@ public class QuyetToanController {
      * UC49 — Tạo/cập nhật bản nháp quyết toán
      */
     @PostMapping("/quyet-toan/{maTour}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> taoQuyetToan(
             @PathVariable String maTour,
             @Valid @RequestBody(required = false) QuyetToanRequest request,
@@ -69,7 +69,7 @@ public class QuyetToanController {
      * UC50 — Chốt quyết toán (DRAFT → LOCKED)
      */
     @PutMapping("/quyet-toan/{maQuyetToan}/chot")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> chotQuyetToan(@PathVariable String maQuyetToan) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.chotQuyetToan(maQuyetToan)));
     }
@@ -78,7 +78,7 @@ public class QuyetToanController {
      * UC51-53 — Danh sách quyết toán
      */
     @GetMapping("/quyet-toan")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<Page<QuyetToanResponse>>> danhSach(
             @RequestParam(required = false) String trangThai,
             Pageable pageable) {
@@ -89,7 +89,7 @@ public class QuyetToanController {
      * Chi tiết 1 quyết toán
      */
     @GetMapping("/quyet-toan/{maQuyetToan}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> chiTiet(@PathVariable String maQuyetToan) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.chiTiet(maQuyetToan)));
     }
@@ -100,7 +100,7 @@ public class QuyetToanController {
      * UC52 — Danh sách giao dịch chờ hoàn tiền
      */
     @GetMapping("/giao-dich-hoan")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<Page<ThanhToanResponse>>> danhSachChoHoanTien(Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.danhSachChoHoanTien(pageable)));
     }
@@ -109,7 +109,7 @@ public class QuyetToanController {
      * UC52 — KeToan xác nhận đã chuyển tiền hoàn
      */
     @PutMapping("/giao-dich-hoan/{maGiaoDich}/xac-nhan")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<ThanhToanResponse>> xacNhanHoanTien(
             @PathVariable String maGiaoDich,
             @AuthenticationPrincipal TaiKhoanDetails user) {
@@ -123,7 +123,7 @@ public class QuyetToanController {
      * UC53 — Báo cáo doanh thu theo kỳ
      */
     @GetMapping("/bao-cao/doanh-thu")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'KETOAN')")
+    @PreAuthorize("hasRole('KETOAN')")
     public ResponseEntity<ApiResponse<BaoCaoDoanhThuResponse>> baoCaoDoanhThu(
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate tuNgay,
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) java.time.LocalDate denNgay) {

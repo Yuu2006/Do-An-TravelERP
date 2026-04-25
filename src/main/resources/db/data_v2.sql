@@ -125,7 +125,6 @@ VALUES ('LT007_N2', 'TM007', 2,
 -- ------------------------------------------------------------
 -- 6. VAITRO — them 1 vai tro moi
 -- ------------------------------------------------------------
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('SUPPORT', 'Nhân viên hỗ trợ', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
 -- 7. TAIKHOAN — them 7 tai khoan moi (2 HDV, 1 Sales, 4 KH)
@@ -146,7 +145,7 @@ INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email
 VALUES ('TK_SALES02', 'sales02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Vo Van Nam', '079099000011', 'sales02@digitaltravel.vn', '0900000011',
-        'SALES', 'HOAT_DONG', 'SYSTEM');
+        'KINHDOANH', 'HOAT_DONG', 'SYSTEM');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
 VALUES ('TK_KH03', 'khachhang03',
@@ -180,7 +179,7 @@ VALUES ('NV_HDV03', 'TK_HDV03', 'HDV', DATE '2023-08-01', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_HDV04', 'TK_HDV04', 'HDV', DATE '2024-01-15', 'AVAILABLE');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES02', 'TK_SALES02', 'SALES', DATE '2024-03-01', 'AVAILABLE');
+VALUES ('NV_SALES02', 'TK_SALES02', 'KINHDOANH', DATE '2024-03-01', 'AVAILABLE');
 
 -- ------------------------------------------------------------
 -- 9. HOCHIEUSO — ho so 4 khach hang moi

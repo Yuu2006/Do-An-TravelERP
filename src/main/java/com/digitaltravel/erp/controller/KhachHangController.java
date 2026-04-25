@@ -36,7 +36,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/khachhang")
+@RequestMapping("/api/khach-hang")
 @RequiredArgsConstructor
 public class KhachHangController {
 
@@ -125,30 +125,8 @@ public class KhachHangController {
 
     // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
     // Sales: xem tất cả đơn đặt (có filter)
-    @GetMapping("/admin/dat-tour")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
-    public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachTatCa(
-            @RequestParam(required = false) String trangThai,
-            @RequestParam(required = false) String maTourThucTe,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachTatCa(trangThai, maTourThucTe, pageable)));
-    }
-
-    // Sales: xác nhận đơn đặt tour
-    @PutMapping("/admin/dat-tour/{maDatTour}/xac-nhan")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES')")
-    public ResponseEntity<ApiResponse<DonDatTourResponse>> xacNhanDon(
-            @PathVariable String maDatTour,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
-        String nguoiXacNhan = user.getUsername();
-        return ResponseEntity.ok(ApiResponse.ok("Xac nhan don dat tour thanh cong",
-                datTourService.xacNhanDon(maDatTour, nguoiXacNhan)));
-    }
-
-    // ──────────────────────── LỊCH SỬ TOUR (UC22) ─────────────────────────────
-
     @GetMapping("/lich-su-tour")
-    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    @PreAuthorize("hasRole('KHACHHANG')")
     public ResponseEntity<ApiResponse<Page<LichSuTourResponse>>> lichSuTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PageableDefault(size = 10) Pageable pageable) {
@@ -159,7 +137,7 @@ public class KhachHangController {
     // ──────────────────────── YÊU CẦU HỖ TRỢ (UC36) ─────────────────────────
 
     @PostMapping("/yeu-cau-ho-tro")
-    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    @PreAuthorize("hasRole('KHACHHANG')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> taoYeuCau(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody YeuCauHoTroRequest request) {
@@ -168,7 +146,7 @@ public class KhachHangController {
     }
 
     @GetMapping("/yeu-cau-ho-tro")
-    @PreAuthorize("hasAnyRole('ADMIN', 'KHACHHANG')")
+    @PreAuthorize("hasRole('KHACHHANG')")
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCauCuaToi(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @RequestParam(required = false) String loaiYeuCau,

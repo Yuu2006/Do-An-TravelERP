@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/loai-phong")
+@RequestMapping("/api/san-pham/loai-phong")
 @RequiredArgsConstructor
 public class LoaiPhongController {
 
@@ -34,14 +34,14 @@ public class LoaiPhongController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<LoaiPhongResponse>> taoMoi(@Valid @RequestBody LoaiPhongRequest request) {
         LoaiPhongResponse result = loaiPhongService.taoMoi(request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<LoaiPhongResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody LoaiPhongRequest request
@@ -50,7 +50,7 @@ public class LoaiPhongController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         loaiPhongService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa loai phong thanh cong"));

@@ -30,15 +30,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/tour-thuc-te")
+@RequestMapping("/api/dieu-hanh/tour-thuc-te")
 @RequiredArgsConstructor
 public class TourThucTeController {
 
     private final TourThucTeService tourThucTeService;
 
-    // UC14: Danh sách tour thực tế (nội bộ - MANAGER/ADMIN/SALES)
+    // UC14: Danh sach tour thuc te cho dieu hanh
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'HDV', 'KETOAN', 'KHACHHANG')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<Page<TourThucTeResponse>>> danhSach(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourMau,
@@ -61,14 +61,14 @@ public class TourThucTeController {
 
     // UC14: Chi tiết tour thực tế
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'SALES', 'HDV', 'KETOAN', 'KHACHHANG')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourThucTeService.chiTiet(id)));
     }
 
     // UC11: Khởi tạo tour thực tế từ tour mẫu
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> taoMoi(
             @Valid @RequestBody TaoTourThucTeRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user
@@ -79,7 +79,7 @@ public class TourThucTeController {
 
     // UC13: Sửa tour thực tế
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody CapNhatTourThucTeRequest request,
@@ -90,7 +90,7 @@ public class TourThucTeController {
 
     // UC12: Xóa tour thực tế (soft delete → HUY)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         tourThucTeService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Huy tour thuc te thanh cong"));

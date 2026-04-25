@@ -22,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/hanh-dong-xanh")
+@RequestMapping("/api/san-pham/hanh-dong-xanh")
 @RequiredArgsConstructor
 public class HanhDongXanhController {
 
@@ -39,14 +39,14 @@ public class HanhDongXanhController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<HanhDongXanhResponse>> taoMoi(@Valid @RequestBody HanhDongXanhRequest request) {
         HanhDongXanhResponse result = hanhDongXanhService.taoMoi(request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<HanhDongXanhResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody HanhDongXanhRequest request
@@ -56,7 +56,7 @@ public class HanhDongXanhController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         hanhDongXanhService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa hanh dong xanh thanh cong"));
