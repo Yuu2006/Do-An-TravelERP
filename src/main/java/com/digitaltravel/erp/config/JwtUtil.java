@@ -34,13 +34,22 @@ public class JwtUtil {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(a -> a.getAuthority())
                 .toList();
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("roles", roles)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(secretKey)
-                .compact();
+                .expiration(new Date(System.currentTimeMillis() + expiration));
+
+        if (userDetails instanceof TaiKhoanDetails details) {
+            var taiKhoan = details.getTaiKhoan();
+            var vaiTro = taiKhoan.getVaiTro();
+            builder
+                    .claim("maVaiTro", vaiTro.getMaVaiTro())
+                    .claim("tenHienThi", vaiTro.getTenHienThi())
+                    .claim("hoTen", taiKhoan.getHoTen());
+        }
+
+        return builder.signWith(secretKey).compact();
     }
 
     public String extractUsername(String token) {
