@@ -27,6 +27,12 @@ public class LoaiPhongService {
                 .toList();
     }
 
+    public LoaiPhongResponse chiTiet(String id) {
+        LoaiPhong lp = loaiPhongRepository.findById(id)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay loai phong: " + id));
+        return toResponse(lp);
+    }
+
     @Transactional
     public LoaiPhongResponse taoMoi(LoaiPhongRequest request) {
         LoaiPhong lp = new LoaiPhong();

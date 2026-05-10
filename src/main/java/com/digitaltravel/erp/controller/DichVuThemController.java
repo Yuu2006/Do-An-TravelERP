@@ -33,6 +33,11 @@ public class DichVuThemController {
         return ResponseEntity.ok(ApiResponse.ok(dichVuThemService.danhSach()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<DichVuThemResponse>> chiTiet(@PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.ok(dichVuThemService.chiTiet(id)));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<DichVuThemResponse>> taoMoi(@Valid @RequestBody DichVuThemRequest request) {

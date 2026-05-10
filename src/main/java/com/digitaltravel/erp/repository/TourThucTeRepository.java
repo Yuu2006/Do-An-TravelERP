@@ -1,5 +1,7 @@
 package com.digitaltravel.erp.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,7 +23,7 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
 
     @Query("""
             SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
-            WHERE (:trangThai IS NULL OR ttt.TrangThai = :trangThai)
+            WHERE ((:trangThai IS NULL AND ttt.TrangThai <> 'HUY') OR ttt.TrangThai = :trangThai)
               AND (:maTourMau IS NULL OR ttt.tourMau.MaTourMau = :maTourMau)
               AND (:giaTu IS NULL OR ttt.GiaHienHanh >= :giaTu)
               AND (:giaDen IS NULL OR ttt.GiaHienHanh <= :giaDen)
@@ -69,4 +71,11 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
             WHERE ttt.TrangThai IN ('MO_BAN', 'SAP_DIEN_RA')
             """)
     java.util.List<TourThucTe> findForDynamicPricing();
+
+    @Query("""
+            SELECT ttt FROM TourThucTe ttt
+            WHERE ttt.tourMau.MaTourMau = :maTourMau
+              AND ttt.TrangThai <> 'HUY'
+            """)
+    List<TourThucTe> findActiveByTourMau(@Param("maTourMau") String maTourMau);
 }

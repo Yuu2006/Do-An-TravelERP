@@ -17,6 +17,7 @@ import com.digitaltravel.erp.entity.TourMau;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.LichTrinhTourRepository;
+import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
@@ -29,6 +30,7 @@ public class TourThucTeService {
     private final TourThucTeRepository tourThucTeRepository;
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
+    private final DonDatTourRepository donDatTourRepository;
 
     // ── UC14: Danh sách tour thực tế (nội bộ - có filter) ───────────────────
     public Page<TourThucTeResponse> danhSach(String trangThai, String maTourMau,
@@ -165,6 +167,9 @@ public class TourThucTeService {
         // Chỉ cho xóa khi ở trạng thái CHO_KICH_HOAT hoặc MO_BAN (chưa có đơn xác nhận)
         if (!"CHO_KICH_HOAT".equals(ttt.getTrangThai()) && !"MO_BAN".equals(ttt.getTrangThai())) {
             throw AppException.badRequest("Chi co the xoa tour thuc te o trang thai CHO_KICH_HOAT hoac MO_BAN");
+        }
+        if (donDatTourRepository.countBlockingBookingsByTourThucTe(id) > 0) {
+            throw AppException.badRequest("Khong the xoa tour thuc te da phat sinh don dat tour");
         }
 
         ttt.setTrangThai("HUY");

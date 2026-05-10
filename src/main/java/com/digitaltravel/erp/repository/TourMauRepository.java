@@ -15,7 +15,7 @@ public interface TourMauRepository extends JpaRepository<TourMau, String> {
     @Query("""
             SELECT tm FROM TourMau tm
             WHERE (:tieuDe IS NULL OR LOWER(tm.TieuDe) LIKE LOWER(CONCAT('%', :tieuDe, '%')))
-              AND (:trangThai IS NULL OR tm.TrangThai = :trangThai)
+              AND ((:trangThai IS NULL AND tm.TrangThai <> 'KHOA') OR tm.TrangThai = :trangThai)
               AND (:thoiLuongMin IS NULL OR tm.ThoiLuong >= :thoiLuongMin)
               AND (:thoiLuongMax IS NULL OR tm.ThoiLuong <= :thoiLuongMax)
             """)

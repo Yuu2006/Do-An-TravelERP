@@ -76,4 +76,11 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             @Param("tuNgay") LocalDateTime tuNgay,
             @Param("denNgay") LocalDateTime denNgay
     );
+
+    @Query("""
+            SELECT COUNT(d) FROM DonDatTour d
+            WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.TrangThai NOT IN ('DA_HUY', 'HET_HAN_GIU_CHO', 'THANH_TOAN_THAT_BAI')
+            """)
+    long countBlockingBookingsByTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 }

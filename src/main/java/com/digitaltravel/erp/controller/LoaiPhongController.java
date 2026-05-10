@@ -33,6 +33,11 @@ public class LoaiPhongController {
         return ResponseEntity.ok(ApiResponse.ok(loaiPhongService.danhSach()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<LoaiPhongResponse>> chiTiet(@PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.ok(loaiPhongService.chiTiet(id)));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<LoaiPhongResponse>> taoMoi(@Valid @RequestBody LoaiPhongRequest request) {

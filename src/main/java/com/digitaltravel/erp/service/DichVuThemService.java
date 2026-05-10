@@ -26,6 +26,12 @@ public class DichVuThemService {
                 .toList();
     }
 
+    public DichVuThemResponse chiTiet(String id) {
+        DichVuThem dv = dichVuThemRepository.findById(id)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu: " + id));
+        return toResponse(dv);
+    }
+
     @Transactional
     public DichVuThemResponse taoMoi(DichVuThemRequest request) {
         DichVuThem dv = new DichVuThem();

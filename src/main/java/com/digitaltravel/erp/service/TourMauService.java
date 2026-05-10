@@ -16,7 +16,9 @@ import com.digitaltravel.erp.dto.responses.TourMauChiTietResponse;
 import com.digitaltravel.erp.dto.responses.TourMauResponse;
 import com.digitaltravel.erp.entity.LichTrinhTour;
 import com.digitaltravel.erp.entity.TourMau;
+import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
@@ -30,6 +32,7 @@ public class TourMauService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final TourThucTeRepository tourThucTeRepository;
+    private final DonDatTourRepository donDatTourRepository;
 
     // ── UC06: Danh sách tour mẫu (filter + phân trang) ──────────────────────
     public Page<TourMauResponse> danhSach(String tieuDe, String trangThai,
@@ -108,9 +111,19 @@ public class TourMauService {
         TourMau tm = tourMauRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour mau: " + id));
 
-        // Kiểm tra có tour thực tế đang MO_BAN
-        if (tourThucTeRepository.existsTourThucTeMoBanByTourMau(id)) {
-            throw AppException.badRequest("Khong the xoa tour mau vi con tour thuc te dang mo ban");
+        List<TourThucTe> tourThucTeDangDung = tourThucTeRepository.findActiveByTourMau(id);
+        for (TourThucTe ttt : tourThucTeDangDung) {
+            if (!"CHO_KICH_HOAT".equals(ttt.getTrangThai()) && !"MO_BAN".equals(ttt.getTrangThai())) {
+                throw AppException.badRequest("Khong the xoa tour mau vi co tour thuc te dang van hanh hoac da phat sinh lich su");
+            }
+            if (donDatTourRepository.countBlockingBookingsByTourThucTe(ttt.getMaTourThucTe()) > 0) {
+                throw AppException.badRequest("Khong the xoa tour mau vi co tour thuc te da phat sinh don dat tour");
+            }
+        }
+
+        for (TourThucTe ttt : tourThucTeDangDung) {
+            ttt.setTrangThai("HUY");
+            tourThucTeRepository.save(ttt);
         }
 
         tm.setTrangThai("KHOA");
