@@ -66,22 +66,6 @@ CREATE TABLE TAIKHOAN (
     CONSTRAINT CK_TAIKHOAN_TTHAI      CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
 );
 
--- Tham so cau hinh he thong do quan tri vien ky thuat quan ly
-CREATE TABLE THAMSOHETHONG (
-                               MaThamSo        VARCHAR2(50)   PRIMARY KEY,
-                               TenThamSo       VARCHAR2(100)  NOT NULL,
-                               GiaTri          VARCHAR2(2000) NOT NULL,
-                               KieuDuLieu      VARCHAR2(20)   NOT NULL,
-                               MoTa            VARCHAR2(1000),
-                               TrangThai       VARCHAR2(20)   DEFAULT 'HOAT_DONG' NOT NULL,
-                               ThoiDiemTao     TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
-                               CapNhatVao      TIMESTAMP      DEFAULT SYSTIMESTAMP,
-                               TaoBoi          VARCHAR2(100),
-                               CapNhatBoi      VARCHAR2(100),
-                               CONSTRAINT UQ_TSHH_TenThamSo UNIQUE (TenThamSo),
-                               CONSTRAINT CK_TSHH_KieuDuLieu CHECK (KieuDuLieu IN ('STRING','NUMBER','BOOLEAN','JSON')),
-                               CONSTRAINT CK_TSHH_TrangThai CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
-);
 
 -- Nhat ky bao mat va thao tac quan tri
 CREATE TABLE NHATKYBAOMAT (
