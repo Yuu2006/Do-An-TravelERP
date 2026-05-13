@@ -87,13 +87,13 @@ CREATE TABLE HOCHIEUSO (
                            MaTaiKhoan       VARCHAR2(50)   NOT NULL,
                            GhiChuYTe        CLOB,
                            DiUng            VARCHAR2(1000),
-                           HangThanhVien    VARCHAR2(20)   DEFAULT 'CO_BAN' NOT NULL,
+                           HangThanhVien    VARCHAR2(20)   DEFAULT 'THANH_VIEN' NOT NULL,
                            DiemXanh         NUMBER(15)     DEFAULT 0 NOT NULL,
                            ThoiDiemTao      TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
                            CapNhatVao       TIMESTAMP      DEFAULT SYSTIMESTAMP,
                            CONSTRAINT UQ_HCS_TaiKhoan        UNIQUE (MaTaiKhoan),
                            CONSTRAINT FK_HCS_TaiKhoan        FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
-                           CONSTRAINT CK_HCS_HangTV          CHECK (HangThanhVien IN ('CO_BAN','BAC','VANG','KIM_CUONG')),
+                           CONSTRAINT CK_HCS_HangTV          CHECK (HangThanhVien IN ('THANH_VIEN','DONG','BAC','VANG','KIM_CUONG')),
                            CONSTRAINT CK_HCS_DiemXanh        CHECK (DiemXanh >= 0)
 );
 
@@ -103,12 +103,12 @@ CREATE TABLE NHANVIEN (
                           MaTaiKhoan           VARCHAR2(50) NOT NULL,
                           LoaiNhanVien         VARCHAR2(50),
                           NgayVaoLam           DATE,
-                          TrangThaiLamViec     VARCHAR2(20) DEFAULT 'AVAILABLE' NOT NULL,
+                          TrangThaiLamViec     VARCHAR2(20) DEFAULT 'SAN_SANG' NOT NULL,
                           ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                           CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                           CONSTRAINT UQ_NV_TaiKhoan          UNIQUE (MaTaiKhoan),
                           CONSTRAINT FK_NV_TaiKhoan          FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
-                          CONSTRAINT CK_NV_TrangThai         CHECK (TrangThaiLamViec IN ('AVAILABLE','BUSY','OFF'))
+                          CONSTRAINT CK_NV_TrangThai         CHECK (TrangThaiLamViec IN ('SAN_SANG','BAN','NGHI'))
 );
 
 -- Nang luc va chung chi huong dan vien
@@ -285,7 +285,7 @@ CREATE TABLE CHITIETDICHVU (
                                CONSTRAINT CK_CTDV_SoLuong             CHECK (SoLuong > 0),
                                CONSTRAINT CK_CTDV_DonGia              CHECK (DonGia >= 0),
                                CONSTRAINT CK_CTDV_ThanhTien           CHECK (ThanhTien >= 0),
-                               CONSTRAINT CK_CTDV_ThanhTien_Calc CHECK (ThanhTien = SoLuong * DonGia)
+                               CONSTRAINT CK_CTDV_ThanhTien_Tinh CHECK (ThanhTien = SoLuong * DonGia)
 );
 
 -- Chuong trinh uu dai (voucher master)
@@ -473,7 +473,7 @@ CREATE TABLE QUYETTOAN (
                            LoiNhuan         NUMBER(18,2)  NOT NULL,
                            MaNhanVien       VARCHAR2(50)  NOT NULL,
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                           TrangThai        VARCHAR2(20)  DEFAULT 'DRAFT' NOT NULL,
+                           TrangThai        VARCHAR2(20)  DEFAULT 'BAN_NHAP' NOT NULL,
                            GhiChu           CLOB,
                            ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                            CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
@@ -484,7 +484,7 @@ CREATE TABLE QUYETTOAN (
                            CONSTRAINT FK_QT_NhanVien              FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                            CONSTRAINT CK_QT_TongDoanhThu          CHECK (TongDoanhThu >= 0),
                            CONSTRAINT CK_QT_TongChiPhi            CHECK (TongChiPhi >= 0),
-                           CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('DRAFT','LOCKED')),
+                           CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('BAN_NHAP','DA_CHOT')),
                            CONSTRAINT CK_QT_LoiNhuan CHECK (LoiNhuan = TongDoanhThu - TongChiPhi)
 );
 
@@ -554,4 +554,3 @@ CREATE INDEX IDX_KMKH_VOUCHER            ON KHUYENMAI_KH(MaVoucher);
 CREATE INDEX IDX_NKBM_TAIKHOAN           ON NHATKYBAOMAT(MaTaiKhoan);
 CREATE INDEX IDX_NKBM_HANHDONG           ON NHATKYBAOMAT(HanhDong);
 CREATE INDEX IDX_NKBM_THOIDIEM           ON NHATKYBAOMAT(ThoiDiemTao);
-

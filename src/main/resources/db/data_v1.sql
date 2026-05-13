@@ -181,27 +181,27 @@ VALUES ('TK_KH02', 'khachhang02',
 -- 7. NHANVIEN — Hồ sơ nhân viên nội bộ
 -- ------------------------------------------------------------
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',     DATE '2022-01-01', 'AVAILABLE');
+VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',     DATE '2022-01-01', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH',  DATE '2022-01-15', 'AVAILABLE');
+VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH',  DATE '2022-01-15', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SP01',     'TK_SP01',     'SANPHAM',   DATE '2022-02-01', 'AVAILABLE');
+VALUES ('NV_SP01',     'TK_SP01',     'SANPHAM',   DATE '2022-02-01', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES01',  'TK_SALES01',  'KINHDOANH', DATE '2023-03-01', 'AVAILABLE');
+VALUES ('NV_SALES01',  'TK_SALES01',  'KINHDOANH', DATE '2023-03-01', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_KT01',     'TK_KT01',     'KETOAN',    DATE '2023-06-01', 'AVAILABLE');
+VALUES ('NV_KT01',     'TK_KT01',     'KETOAN',    DATE '2023-06-01', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'AVAILABLE');
+VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'AVAILABLE');
+VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'SAN_SANG');
 
 -- ------------------------------------------------------------
 -- 8. HOCHIEUSO — Hồ sơ khách hàng
 -- ------------------------------------------------------------
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH001', 'TK_KH01', 'BAC',    350);
+VALUES ('KH001', 'TK_KH01', 'THANH_VIEN', 350);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH002', 'TK_KH02', 'CO_BAN',   0);
+VALUES ('KH002', 'TK_KH02', 'THANH_VIEN', 0);
 
 -- ------------------------------------------------------------
 -- 9. NANGLUCNHANVIEN — Năng lực / chứng chỉ HDV
@@ -248,7 +248,7 @@ VALUES ('VC002', 'SUMMER500K', 'SO_TIEN', 500000,
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
 VALUES ('VC003', 'BAC15', 'PHAN_TRAM', 15,
-        'Ưu đãi 15% dành riêng thành viên hạng Bạc trở lên. Đơn tối thiểu 5.000.000 VNĐ.',
+        'Ưu đãi 15% dành riêng thành viên hạng BAC trở lên. Đơn tối thiểu 5.000.000 VNĐ.',
         200, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
 
 -- ------------------------------------------------------------

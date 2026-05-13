@@ -40,7 +40,7 @@ public class NhanVien {
     @Column(name = "NgayVaoLam")
     LocalDate NgayVaoLam;
 
-    // Gia tri hop le: AVAILABLE | BUSY | OFF
+    // Gia tri hop le: SAN_SANG | BAN | NGHI
     @Column(name = "TrangThaiLamViec", nullable = false, length = 20)
     String TrangThaiLamViec;
 

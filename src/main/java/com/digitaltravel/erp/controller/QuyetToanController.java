@@ -44,7 +44,7 @@ public class QuyetToanController {
     }
 
     /**
-     * UC48 — Tính toán sơ bộ (preview, không lưu DB)
+     * UC48 — Tính toán sơ bộ (xem trước, không lưu DB)
      */
     @GetMapping("/tinh-toan/{maTour}")
     @PreAuthorize("hasRole('KETOAN')")
@@ -66,7 +66,7 @@ public class QuyetToanController {
     }
 
     /**
-     * UC50 — Chốt quyết toán (DRAFT → LOCKED)
+     * UC50 — Chốt quyết toán (BAN_NHAP -> DA_CHOT)
      */
     @PutMapping("/quyet-toan/{maQuyetToan}/chot")
     @PreAuthorize("hasRole('KETOAN')")

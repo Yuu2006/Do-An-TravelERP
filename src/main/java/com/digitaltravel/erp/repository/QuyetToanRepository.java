@@ -26,11 +26,11 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             """)
     Page<QuyetToan> findByTrangThai(@Param("trangThai") String trangThai, Pageable pageable);
 
-    // Thống kê doanh thu theo khoảng thời gian (LOCKED quyết toán)
+    // Thống kê doanh thu theo khoảng thời gian (quyết toán đã chốt)
     @Query("""
             SELECT SUM(qt.TongDoanhThu), COUNT(qt)
             FROM QuyetToan qt
-            WHERE qt.TrangThai = 'LOCKED'
+            WHERE qt.TrangThai = 'DA_CHOT'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
             """)
     List<Object[]> thongKeDoanhThu(
@@ -45,7 +45,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             JOIN qt.tourThucTe tt
             JOIN tt.tourMau tm
             LEFT JOIN DonDatTour dt ON dt.tourThucTe.MaTourThucTe = qt.tourThucTe.MaTourThucTe
-            WHERE qt.TrangThai = 'LOCKED'
+            WHERE qt.TrangThai = 'DA_CHOT'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
             GROUP BY qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe
             ORDER BY SUM(qt.TongDoanhThu) DESC

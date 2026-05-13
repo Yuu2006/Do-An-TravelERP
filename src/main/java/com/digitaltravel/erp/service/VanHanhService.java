@@ -214,18 +214,30 @@ public class VanHanhService {
         long diem = hcs.getDiemXanh();
         String hangHienTai = hcs.getHangThanhVien();
         String hangMoi = hangHienTai;
-        if (diem >= 5000 && !"KIM_CUONG".equals(hangHienTai)) {
+        if (diem >= 5000) {
             hangMoi = "KIM_CUONG";
-        } else if (diem >= 2000 && "CO_BAN".equals(hangHienTai)) {
+        } else if (diem >= 2000) {
             hangMoi = "VANG";
-        } else if (diem >= 2000 && "BAC".equals(hangHienTai)) {
-            hangMoi = "VANG";
-        } else if (diem >= 500 && "CO_BAN".equals(hangHienTai)) {
+        } else if (diem >= 1000) {
             hangMoi = "BAC";
+        } else if (diem >= 500) {
+            hangMoi = "DONG";
+        } else {
+            hangMoi = "THANH_VIEN";
         }
-        if (!hangMoi.equals(hangHienTai)) {
+        if (thuTuHang(hangMoi) > thuTuHang(hangHienTai)) {
             hcs.setHangThanhVien(hangMoi);
         }
+    }
+
+    private int thuTuHang(String hangThanhVien) {
+        return switch (hangThanhVien) {
+            case "DONG" -> 1;
+            case "BAC" -> 2;
+            case "VANG" -> 3;
+            case "KIM_CUONG" -> 4;
+            default -> 0;
+        };
     }
 
     // ── Mappers ───────────────────────────────────────────────────────────

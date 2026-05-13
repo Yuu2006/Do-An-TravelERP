@@ -47,12 +47,12 @@ public class QuyetToanService {
                 .map(tt -> {
                     boolean daqt = quyetToanRepository.existsByTourThucTe_MaTourThucTe(tt.getMaTourThucTe());
                     if (daqt) return null;
-                    return toQuyetToanPreview(tt);
+                    return toQuyetToanXemTruoc(tt);
                 })
                 .map(r -> r); // filter nulls handled by client or via separate query
     }
 
-    // ── UC48: Tính toán sơ bộ (preview, không lưu DB) ────────────────────
+    // ── UC48: Tính toán sơ bộ (xem trước, không lưu DB) ──────────────────
     public QuyetToanResponse tinhToan(String maTour) {
         TourThucTe tour = getKetThucTour(maTour);
         BigDecimal doanhThu = tinhDoanhThu(maTour);
@@ -65,7 +65,7 @@ public class QuyetToanService {
                 .tongDoanhThu(doanhThu)
                 .tongChiPhi(chiPhi)
                 .loiNhuan(loiNhuan)
-                .trangThai("PREVIEW")
+                .trangThai("XEM_TRUOC")
                 .build();
     }
 
@@ -75,9 +75,9 @@ public class QuyetToanService {
         getKetThucTour(maTour);
 
         if (quyetToanRepository.existsByTourThucTe_MaTourThucTe(maTour)) {
-            // Nếu đã có DRAFT → cập nhật
+            // Nếu đã có BAN_NHAP thì cập nhật
             QuyetToan existing = quyetToanRepository.findByTourThucTe_MaTourThucTe(maTour).get();
-            if ("LOCKED".equals(existing.getTrangThai())) {
+            if ("DA_CHOT".equals(existing.getTrangThai())) {
                 throw AppException.badRequest("Quyet toan da bi chot, khong the sua.");
             }
             return capNhatQT(existing, maTour, req, maTaiKhoan);
@@ -97,7 +97,7 @@ public class QuyetToanService {
         qt.setTongChiPhi(chiPhi);
         qt.setLoiNhuan(doanhThu.subtract(chiPhi));
         qt.setNgayQuyetToan(LocalDateTime.now());
-        qt.setTrangThai("DRAFT");
+        qt.setTrangThai("BAN_NHAP");
         qt.setGhiChu(req != null ? req.getGhiChu() : null);
         qt.setTaoBoi(maTaiKhoan);
         quyetToanRepository.save(qt);
@@ -110,10 +110,10 @@ public class QuyetToanService {
     public QuyetToanResponse chotQuyetToan(String maQuyetToan) {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));
-        if (!"DRAFT".equals(qt.getTrangThai())) {
-            throw AppException.badRequest("Chi co the chot quyet toan o trang thai DRAFT.");
+        if (!"BAN_NHAP".equals(qt.getTrangThai())) {
+            throw AppException.badRequest("Chi co the chot quyet toan o trang thai BAN_NHAP.");
         }
-        qt.setTrangThai("LOCKED");
+        qt.setTrangThai("DA_CHOT");
 
         // Cập nhật tour sang DA_QUYET_TOAN
         TourThucTe tour = qt.getTourThucTe();
@@ -219,7 +219,7 @@ public class QuyetToanService {
         return toResponse(qt);
     }
 
-    private QuyetToanResponse toQuyetToanPreview(TourThucTe tt) {
+    private QuyetToanResponse toQuyetToanXemTruoc(TourThucTe tt) {
         return QuyetToanResponse.builder()
                 .maTour(tt.getMaTourThucTe())
                 .tenTour(tt.getTourMau() != null ? tt.getTourMau().getTieuDe() : "")

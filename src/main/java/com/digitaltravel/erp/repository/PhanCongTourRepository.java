@@ -17,7 +17,7 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
     @Query("SELECT pc FROM PhanCongTour pc JOIN FETCH pc.nhanVien nv JOIN FETCH nv.taiKhoan WHERE pc.tourThucTe.MaTourThucTe = :maTour AND pc.TrangThai != 'HUY'")
     List<PhanCongTour> findActiveByMaTour(@Param("maTour") String maTour);
 
-    // HDV xem tour được giao (đang active)
+    // HDV xem tour được giao (đang hiệu lực)
     @Query("""
             SELECT pc FROM PhanCongTour pc
             JOIN FETCH pc.tourThucTe tt
@@ -32,7 +32,7 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
     @Query("""
             SELECT nv.MaNhanVien FROM NhanVien nv
             JOIN nv.taiKhoan tk
-            WHERE nv.TrangThaiLamViec = 'AVAILABLE'
+            WHERE nv.TrangThaiLamViec = 'SAN_SANG'
               AND tk.vaiTro.MaVaiTro = 'HDV'
               AND tk.TrangThai = 'HOAT_DONG'
               AND nv.MaNhanVien NOT IN (

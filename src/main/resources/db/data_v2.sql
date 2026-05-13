@@ -175,23 +175,23 @@ VALUES ('TK_KH06', 'khachhang06',
 -- 8. NHANVIEN — Thêm 3 nhân viên mới (2 HDV, 1 Sales)
 -- ------------------------------------------------------------
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV03', 'TK_HDV03', 'HDV', DATE '2023-08-01', 'AVAILABLE');
+VALUES ('NV_HDV03', 'TK_HDV03', 'HDV', DATE '2023-08-01', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV04', 'TK_HDV04', 'HDV', DATE '2024-01-15', 'AVAILABLE');
+VALUES ('NV_HDV04', 'TK_HDV04', 'HDV', DATE '2024-01-15', 'SAN_SANG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES02', 'TK_SALES02', 'KINHDOANH', DATE '2024-03-01', 'AVAILABLE');
+VALUES ('NV_SALES02', 'TK_SALES02', 'KINHDOANH', DATE '2024-03-01', 'SAN_SANG');
 
 -- ------------------------------------------------------------
 -- 9. HOCHIEUSO — Hồ sơ 4 khách hàng mới
 -- ------------------------------------------------------------
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH003', 'TK_KH03', 'VANG',    1200);
+VALUES ('KH003', 'TK_KH03', 'BAC', 1200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH004', 'TK_KH04', 'CO_BAN',  0);
+VALUES ('KH004', 'TK_KH04', 'THANH_VIEN', 0);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH005', 'TK_KH05', 'BAC',     480);
+VALUES ('KH005', 'TK_KH05', 'THANH_VIEN', 480);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, HangThanhVien, DiemXanh)
-VALUES ('KH006', 'TK_KH06', 'KIM_CUONG', 3500);
+VALUES ('KH006', 'TK_KH06', 'VANG', 3500);
 
 -- ------------------------------------------------------------
 -- 10. NANGLUCNHANVIEN — Năng lực 2 HDV mới
@@ -230,7 +230,7 @@ VALUES ('TTT098', 'TM002', DATE '2026-01-15', 4200000, 20, 8,  0, 'KET_THUC', 'S
 -- ------------------------------------------------------------
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
 VALUES ('VC004', 'GOLD20', 'PHAN_TRAM', 20,
-        'Ưu đãi 20% dành riêng thành viên hạng Vàng và Kim Cương. Đơn tối thiểu 5.000.000 VNĐ.',
+        'Ưu đãi 20% dành riêng thành viên hạng VANG và KIM_CUONG. Đơn tối thiểu 5.000.000 VNĐ.',
         100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
@@ -474,10 +474,10 @@ VALUES ('CPTT006', 'TTT003', 'NV_HDV01', 'Phí đưa đón khách sân bay phát
 -- ------------------------------------------------------------
 -- TTT099: Hạ Long kết thúc (doanh thu: DDT001 7tr + DDT099 7tr + DDT098 3.5tr = 17.5tr)
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('QT001', 'TTT099', 17500000, 2350000, 15150000, 'NV_KT01', 'LOCKED', 'SYSTEM');
+VALUES ('QT001', 'TTT099', 17500000, 2350000, 15150000, 'NV_KT01', 'DA_CHOT', 'SYSTEM');
 -- TTT098: Đà Nẵng kết thúc (doanh thu: DDT097 8.4tr)
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('QT002', 'TTT098', 8400000, 1800000, 6600000, 'NV_KT01', 'LOCKED', 'SYSTEM');
+VALUES ('QT002', 'TTT098', 8400000, 1800000, 6600000, 'NV_KT01', 'DA_CHOT', 'SYSTEM');
 
 -- ------------------------------------------------------------
 -- 26. NHATKYDOIDIEM — Đổi điểm xanh sang voucher

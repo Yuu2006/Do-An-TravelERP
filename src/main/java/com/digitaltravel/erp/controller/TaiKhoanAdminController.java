@@ -76,7 +76,7 @@ public class TaiKhoanAdminController {
         nhanVien.setMaNhanVien("NV_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase());
         nhanVien.setTaiKhoan(taiKhoan);
         nhanVien.setLoaiNhanVien(maVaiTro);
-        nhanVien.setTrangThaiLamViec("AVAILABLE");
+        nhanVien.setTrangThaiLamViec("SAN_SANG");
         nhanVienRepository.save(nhanVien);
 
         nhatKyBaoMatService.ghiNhan(user.getTaiKhoan().getMaTaiKhoan(), "TAO_TAI_KHOAN_NHAN_VIEN",

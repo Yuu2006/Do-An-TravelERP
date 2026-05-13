@@ -84,7 +84,7 @@ public class AuthController {
         HoChieuSo hoChieuSo = new HoChieuSo();
         hoChieuSo.setMaKhachHang("KH_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         hoChieuSo.setTaiKhoan(taiKhoan);
-        hoChieuSo.setHangThanhVien("CO_BAN");
+        hoChieuSo.setHangThanhVien("THANH_VIEN");
         hoChieuSo.setDiemXanh(0L);
         hoChieuSoRepository.save(hoChieuSo);
 

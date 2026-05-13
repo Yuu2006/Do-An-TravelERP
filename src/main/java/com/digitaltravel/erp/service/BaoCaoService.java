@@ -28,7 +28,7 @@ public class BaoCaoService {
         LocalDateTime from = tuNgay != null ? tuNgay.atStartOfDay() : LocalDateTime.MIN;
         LocalDateTime to = denNgay != null ? denNgay.plusDays(1).atStartOfDay() : LocalDateTime.now();
 
-        // Tổng doanh thu từ các quyết toán LOCKED
+        // Tổng doanh thu từ các quyết toán đã chốt
         List<Object[]> tongHop = quyetToanRepository.thongKeDoanhThu(from, to);
 
         BigDecimal tongDoanhThu = BigDecimal.ZERO;

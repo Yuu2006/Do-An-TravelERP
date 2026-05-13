@@ -41,6 +41,7 @@ public class HoChieuSo {
     @Column(name = "DiUng", length = 1000)
     String DiUng;
 
+    // Gia tri hop le: THANH_VIEN | DONG | BAC | VANG | KIM_CUONG
     @Column(name = "HangThanhVien", nullable = false, length = 20)
     String HangThanhVien;
 

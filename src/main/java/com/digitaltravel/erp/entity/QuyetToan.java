@@ -55,7 +55,7 @@ public class QuyetToan {
     @Column(name = "NgayQuyetToan", nullable = false)
     LocalDateTime NgayQuyetToan;
 
-    // Gia tri hop le: DRAFT | LOCKED (LOCKED = da chot, khong sua duoc)
+    // Gia tri hop le: BAN_NHAP | DA_CHOT (DA_CHOT = da chot, khong sua duoc)
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
 

@@ -1,4 +1,4 @@
-﻿# Digital Travel ERP — Backend API
+# Digital Travel ERP — Backend API
 
 **Công nghệ:** Java 21 · Spring Boot 3.x · Oracle 19c/21c · JWT (HS256)
 **Package gốc:** `com.digitaltravel.erp`
@@ -216,24 +216,24 @@ src/main/java/com/digitaltravel/erp/
 | GET/POST/PUT/DELETE | `/api/san-pham/dich-vu-them/**` | SANPHAM | DONE |
 | GET/POST/PUT | `/api/san-pham/hanh-dong-xanh/**` | SANPHAM | DONE |
 
-### Khách hàng (`/api/khachhang`)
+### Khách hàng (`/api/khach-hang`)
 
 | Method | Path | Auth | UC | Trạng thái |
 |--------|------|------|----|-----------|
-| GET | `/api/khachhang/ho-so` | KHACHHANG | UC21 | DONE |
-| PUT | `/api/khachhang/ho-so` | KHACHHANG | UC23 | DONE |
-| GET | `/api/khachhang/lich-su-tour` | KHACHHANG | UC22 | DONE |
-| POST | `/api/khachhang/dat-tour` | KHACHHANG | UC27 | DONE |
-| GET | `/api/khachhang/dat-tour` | KHACHHANG | -- | DONE |
-| GET | `/api/khachhang/dat-tour/{id}` | KHACHHANG | -- | DONE |
-| DELETE | `/api/khachhang/dat-tour/{id}` | KHACHHANG | UC32 | DONE (hủy CHO_XAC_NHAN) |
-| POST | `/api/khachhang/dat-tour/{id}/huy` | KHACHHANG | UC32 | DONE (yêu cầu hủy DA_XAC_NHAN) |
-| GET | `/api/khachhang/vi-voucher` | KHACHHANG | UC31 | DONE |
-| POST | `/api/khachhang/ap-voucher` | KHACHHANG | UC28 | DONE |
-| POST | `/api/khachhang/doi-diem` | KHACHHANG | UC30 | DONE |
-| POST | `/api/khachhang/danh-gia` | KHACHHANG | UC35 | DONE |
-| POST | `/api/khachhang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
-| GET | `/api/khachhang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
+| GET | `/api/khach-hang/ho-so` | KHACHHANG | UC21 | DONE |
+| PUT | `/api/khach-hang/ho-so` | KHACHHANG | UC23 | DONE |
+| GET | `/api/khach-hang/lich-su-tour` | KHACHHANG | UC22 | DONE |
+| POST | `/api/khach-hang/dat-tour` | KHACHHANG | UC27 | DONE |
+| GET | `/api/khach-hang/dat-tour` | KHACHHANG | -- | DONE |
+| GET | `/api/khach-hang/dat-tour/{id}` | KHACHHANG | -- | DONE |
+| DELETE | `/api/khach-hang/dat-tour/{id}` | KHACHHANG | UC32 | DONE (hủy CHO_XAC_NHAN) |
+| POST | `/api/khach-hang/dat-tour/{id}/huy` | KHACHHANG | UC32 | DONE (yêu cầu hủy DA_XAC_NHAN) |
+| GET | `/api/khach-hang/vi-voucher` | KHACHHANG | UC31 | DONE |
+| POST | `/api/khach-hang/ap-voucher` | KHACHHANG | UC28 | DONE |
+| POST | `/api/khach-hang/doi-diem` | KHACHHANG | UC30 | DONE |
+| POST | `/api/khach-hang/danh-gia` | KHACHHANG | UC35 | DONE |
+| POST | `/api/khach-hang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
+| GET | `/api/khach-hang/yeu-cau-ho-tro` | KHACHHANG | UC36 | DONE |
 
 ### Thanh toán (`/api/thanh-toan`)
 
@@ -308,9 +308,9 @@ src/main/java/com/digitaltravel/erp/
 | PUT | `/api/ke-toan/chi-phi/{maChiPhi}/duyet` | KETOAN | UC49 | DONE |
 | PUT | `/api/ke-toan/chi-phi/{maChiPhi}/tu-choi` | KETOAN | UC49 | DONE |
 | GET | `/api/ke-toan/tour-can-quyet-toan` | KETOAN | UC47 | DONE |
-| GET | `/api/ke-toan/tinh-toan/{maTour}` | KETOAN | UC48 | DONE (preview) |
+| GET | `/api/ke-toan/tinh-toan/{maTour}` | KETOAN | UC48 | DONE (xem trước) |
 | POST | `/api/ke-toan/quyet-toan/{maTour}` | KETOAN | UC49/50 | DONE |
-| PUT | `/api/ke-toan/quyet-toan/{id}/chot` | KETOAN | UC50 | DONE (DRAFT to LOCKED) |
+| PUT | `/api/ke-toan/quyet-toan/{id}/chot` | KETOAN | UC50 | DONE (BAN_NHAP to DA_CHOT) |
 | GET | `/api/ke-toan/quyet-toan` | KETOAN | UC51 | DONE |
 | GET | `/api/ke-toan/quyet-toan/{id}` | KETOAN | UC51 | DONE |
 | GET | `/api/ke-toan/giao-dich-hoan` | KETOAN | UC52 | DONE |
@@ -363,23 +363,23 @@ src/main/java/com/digitaltravel/erp/
 | UC30 | Đổi điểm xanh lấy voucher | Voucher |
 | UC31 | Xem ví voucher | Voucher |
 | UC32 | KH yêu cầu hủy tour | Hủy tour |
-| UC33 | SALES duyệt / từ chối hoàn tiền | Hủy tour |
-| UC34 | SALES tìm kiếm đơn đặt tour | SALES |
+| UC33 | KINHDOANH duyệt / từ chối hoàn tiền | Hủy tour |
+| UC34 | KINHDOANH tìm kiếm đơn đặt tour | Kinh doanh |
 | UC35 | Đánh giá sau tour | Khách hàng |
 | UC36 | Tạo & xem yêu cầu hỗ trợ / khiếu nại | Khách hàng |
 | UC37 | Phân công HDV vào tour | Phân công |
 | UC38 | Tìm HDV khả dụng (không trùng lịch) | Phân công |
 | UC39 | Lịch công tác HDV | HDV |
-| UC41 | SALES xử lý yêu cầu hỗ trợ / khiếu nại | SALES |
+| UC41 | KINHDOANH xử lý yêu cầu hỗ trợ / khiếu nại | Kinh doanh |
 | UC42 | Xem danh sách đoàn | Vận hành |
 | UC43 | Điểm danh khách | Vận hành |
 | UC44 | Ghi nhận hành động xanh + cộng điểm tự động | Vận hành |
 | UC45 | Báo cáo & cập nhật sự cố | Vận hành |
 | UC46 | Khai báo chi phí phát sinh | Vận hành |
 | UC47 | DS tour cần quyết toán | Quyết toán |
-| UC48 | Preview tính toán quyết toán | Quyết toán |
-| UC49 | Duyệt chi phí / tạo quyết toán DRAFT | Quyết toán |
-| UC50 | Chốt quyết toán (LOCKED, tour -> DA_QUYET_TOAN) | Quyết toán |
+| UC48 | Xem trước tính toán quyết toán | Quyết toán |
+| UC49 | Duyệt chi phí / tạo quyết toán BAN_NHAP | Quyết toán |
+| UC50 | Chốt quyết toán (DA_CHOT, tour -> DA_QUYET_TOAN) | Quyết toán |
 | UC51 | Xem danh sách & chi tiết quyết toán | Quyết toán |
 | UC52 | Kế toán xác nhận chuyển tiền hoàn | Quyết toán |
 | UC53 | Báo cáo doanh thu / top tour | Quyết toán |
@@ -407,7 +407,6 @@ src/main/java/com/digitaltravel/erp/
 | UC57 | Thanh toán MoMo thật | Chỉ có mock mode |
 | UC70 | Nhật ký hệ thống | Chưa làm |
 | -- | Dynamic Pricing tự động | Chưa làm |
-| -- | Nâng hạng thành viên tự động | Điểm cộng đúng, chưa check ngưỡng hạng |
 | -- | Seed data đầy đủ cho demo | Chưa làm |
 
 ---
@@ -448,9 +447,9 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 | `GiaoDich.TrangThai` | CHO_THANH_TOAN · THANH_CONG · THAT_BAI · DA_HOAN_TIEN |
 | `YeuCauHoTro.TrangThai` | MOI_TAO · DANG_XU_LY · DA_DONG |
 | `ChiPhiThucTe.TrangThaiDuyet` | CHO_DUYET · DA_DUYET · TU_CHOI |
-| `QuyetToan.TrangThai` | DRAFT · LOCKED |
-| `NhanVien.TrangThaiLamViec` | AVAILABLE · BUSY · OFF |
-| `HoChieuSo.HangThanhVien` | CO_BAN · BAC · VANG · PLATINUM |
+| `QuyetToan.TrangThai` | BAN_NHAP · DA_CHOT |
+| `NhanVien.TrangThaiLamViec` | SAN_SANG · BAN · NGHI |
+| `HoChieuSo.HangThanhVien` | THANH_VIEN · DONG · BAC · VANG · KIM_CUONG |
 
 ### Luồng đặt tour (business rules)
 
@@ -490,3 +489,4 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 | API Docs | Springdoc OpenAPI (Swagger UI) |
 | Build | Maven (mvnw wrapper) |
 | Scheduler | Spring @EnableScheduling |
+

@@ -80,7 +80,7 @@ public class PhanCongTourService {
         phanCongTourRepository.save(pc);
 
         // Đánh dấu HDV đang bận
-        hdv.setTrangThaiLamViec("BUSY");
+        hdv.setTrangThaiLamViec("BAN");
         nhanVienRepository.save(hdv);
 
         return toResponse(pc);
@@ -95,11 +95,11 @@ public class PhanCongTourService {
         pc.setTrangThai("HUY");
         phanCongTourRepository.save(pc);
 
-        // Nếu HDV không còn phân công active nào → về AVAILABLE
+        // Nếu HDV không còn phân công hiệu lực nào thì về SAN_SANG
         NhanVien hdv = pc.getNhanVien();
         boolean conTourKhac = !phanCongTourRepository.findByMaNhanVien(hdv.getMaNhanVien()).isEmpty();
         if (!conTourKhac) {
-            hdv.setTrangThaiLamViec("AVAILABLE");
+            hdv.setTrangThaiLamViec("SAN_SANG");
             nhanVienRepository.save(hdv);
         }
     }
