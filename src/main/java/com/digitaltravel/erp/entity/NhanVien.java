@@ -3,9 +3,6 @@ package com.digitaltravel.erp.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,11 +41,4 @@ public class NhanVien {
     @Column(name = "TrangThaiLamViec", nullable = false, length = 20)
     String TrangThaiLamViec;
 
-    @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
-
-    @UpdateTimestamp
-    @Column(name = "CapNhatVao")
-    LocalDateTime CapNhatVao;
 }

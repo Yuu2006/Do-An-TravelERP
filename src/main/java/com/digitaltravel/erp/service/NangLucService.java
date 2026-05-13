@@ -1,6 +1,5 @@
 package com.digitaltravel.erp.service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -57,8 +56,6 @@ public class NangLucService {
         if (request.getNgonNgu() != null) nl.setNgonNgu(request.getNgonNgu());
         if (request.getChungChi() != null) nl.setChungChi(request.getChungChi());
         if (request.getChuyenMon() != null) nl.setChuyenMon(request.getChuyenMon());
-        nl.setCapNhatVao(LocalDateTime.now());
-
         nangLucNhanVienRepository.save(nl);
         return toResponse(nl);
     }
@@ -73,7 +70,6 @@ public class NangLucService {
                 .chuyenMon(nl.getChuyenMon())
                 .danhGia(nl.getDanhGia() != null ? nl.getDanhGia() : java.math.BigDecimal.ZERO)
                 .soDanhGia(nl.getSoDanhGia() != null ? nl.getSoDanhGia() : 0)
-                .capNhatVao(nl.getCapNhatVao())
                 .build();
     }
 }

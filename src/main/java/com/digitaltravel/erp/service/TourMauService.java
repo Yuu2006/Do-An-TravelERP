@@ -255,8 +255,6 @@ public class TourMauService {
                 .danhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
                 .trangThai(tm.getTrangThai())
-                .thoiDiemTao(tm.getThoiDiemTao())
-                .capNhatVao(tm.getCapNhatVao())
                 .taoBoi(tm.getTaoBoi())
                 .build();
     }
@@ -275,8 +273,6 @@ public class TourMauService {
                 .danhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
                 .trangThai(tm.getTrangThai())
-                .thoiDiemTao(tm.getThoiDiemTao())
-                .capNhatVao(tm.getCapNhatVao())
                 .taoBoi(tm.getTaoBoi())
                 .lichTrinh(lichTrinhRes)
                 .build();

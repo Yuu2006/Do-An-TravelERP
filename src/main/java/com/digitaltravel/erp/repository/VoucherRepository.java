@@ -21,7 +21,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
     @Query("""
             SELECT v FROM Voucher v
             WHERE (:trangThai IS NULL OR v.TrangThai = :trangThai)
-            ORDER BY v.ThoiDiemTao DESC
+            ORDER BY v.NgayHieuLuc DESC
             """)
     Page<Voucher> timKiem(@Param("trangThai") String trangThai, Pageable pageable);
 

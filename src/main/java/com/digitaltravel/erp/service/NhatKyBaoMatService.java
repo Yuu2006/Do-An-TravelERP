@@ -30,6 +30,12 @@ public class NhatKyBaoMatService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void ghiNhan(String maTaiKhoan, String hanhDong, String ketQua, String noiDung, HttpServletRequest request) {
+        ghiNhan(maTaiKhoan, hanhDong, null, null, ketQua, request);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void ghiNhan(String maTaiKhoan, String hanhDong, String doiTuong, String maDoiTuong,
+            String ketQua, HttpServletRequest request) {
         TaiKhoan taiKhoan = maTaiKhoan != null
                 ? taiKhoanRepository.findById(maTaiKhoan).orElse(null)
                 : null;
@@ -37,34 +43,24 @@ public class NhatKyBaoMatService {
         log.setMaNhatKyBaoMat("NKBM_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         log.setTaiKhoan(taiKhoan);
         log.setHanhDong(hanhDong);
+        log.setDoiTuong(doiTuong);
+        log.setMaDoiTuong(maDoiTuong);
         log.setKetQua(ketQua);
-        log.setNoiDung(noiDung);
-        log.setDiaChiIp(layDiaChiIp(request));
-        log.setUserAgent(request != null ? request.getHeader("User-Agent") : null);
         nhatKyBaoMatRepository.save(log);
     }
 
     public Page<NhatKyBaoMatResponse> timKiem(
             String maTaiKhoan,
             String hanhDong,
+            String doiTuong,
+            String maDoiTuong,
             String ketQua,
-            LocalDateTime tuThoiDiem,
-            LocalDateTime denThoiDiem,
+            LocalDateTime tuThoiGian,
+            LocalDateTime denThoiGian,
             Pageable pageable) {
         return nhatKyBaoMatRepository
-                .timKiem(maTaiKhoan, hanhDong, ketQua, tuThoiDiem, denThoiDiem, pageable)
+                .timKiem(maTaiKhoan, hanhDong, doiTuong, maDoiTuong, ketQua, tuThoiGian, denThoiGian, pageable)
                 .map(this::toResponse);
-    }
-
-    private String layDiaChiIp(HttpServletRequest request) {
-        if (request == null) {
-            return null;
-        }
-        String forwardedFor = request.getHeader("X-Forwarded-For");
-        if (forwardedFor != null && !forwardedFor.isBlank()) {
-            return forwardedFor.split(",")[0].trim();
-        }
-        return request.getRemoteAddr();
     }
 
     private NhatKyBaoMatResponse toResponse(NhatKyBaoMat log) {
@@ -74,11 +70,10 @@ public class NhatKyBaoMatService {
                 .maTaiKhoan(tk != null ? tk.getMaTaiKhoan() : null)
                 .tenDangNhap(tk != null ? tk.getTenDangNhap() : null)
                 .hanhDong(log.getHanhDong())
-                .diaChiIp(log.getDiaChiIp())
-                .userAgent(log.getUserAgent())
+                .doiTuong(log.getDoiTuong())
+                .maDoiTuong(log.getMaDoiTuong())
                 .ketQua(log.getKetQua())
-                .noiDung(log.getNoiDung())
-                .thoiDiemTao(log.getThoiDiemTao())
+                .thoiGian(log.getThoiGian())
                 .build();
     }
 }

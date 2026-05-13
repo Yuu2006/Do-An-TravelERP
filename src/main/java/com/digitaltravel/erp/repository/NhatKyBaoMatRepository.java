@@ -18,15 +18,19 @@ public interface NhatKyBaoMatRepository extends JpaRepository<NhatKyBaoMat, Stri
             LEFT JOIN nk.taiKhoan tk
             WHERE (:maTaiKhoan IS NULL OR tk.MaTaiKhoan = :maTaiKhoan)
               AND (:hanhDong IS NULL OR nk.HanhDong = :hanhDong)
+              AND (:doiTuong IS NULL OR nk.DoiTuong = :doiTuong)
+              AND (:maDoiTuong IS NULL OR nk.MaDoiTuong = :maDoiTuong)
               AND (:ketQua IS NULL OR nk.KetQua = :ketQua)
-              AND (:tuThoiDiem IS NULL OR nk.ThoiDiemTao >= :tuThoiDiem)
-              AND (:denThoiDiem IS NULL OR nk.ThoiDiemTao <= :denThoiDiem)
+              AND (:tuThoiGian IS NULL OR nk.ThoiGian >= :tuThoiGian)
+              AND (:denThoiGian IS NULL OR nk.ThoiGian <= :denThoiGian)
             """)
     Page<NhatKyBaoMat> timKiem(
             @Param("maTaiKhoan") String maTaiKhoan,
             @Param("hanhDong") String hanhDong,
+            @Param("doiTuong") String doiTuong,
+            @Param("maDoiTuong") String maDoiTuong,
             @Param("ketQua") String ketQua,
-            @Param("tuThoiDiem") LocalDateTime tuThoiDiem,
-            @Param("denThoiDiem") LocalDateTime denThoiDiem,
+            @Param("tuThoiGian") LocalDateTime tuThoiGian,
+            @Param("denThoiGian") LocalDateTime denThoiGian,
             Pageable pageable);
 }

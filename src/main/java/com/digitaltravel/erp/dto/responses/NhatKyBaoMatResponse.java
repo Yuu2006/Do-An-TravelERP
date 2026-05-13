@@ -12,9 +12,8 @@ public class NhatKyBaoMatResponse {
     String maTaiKhoan;
     String tenDangNhap;
     String hanhDong;
-    String diaChiIp;
-    String userAgent;
+    String doiTuong;
+    String maDoiTuong;
     String ketQua;
-    String noiDung;
-    LocalDateTime thoiDiemTao;
+    LocalDateTime thoiGian;
 }

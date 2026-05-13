@@ -70,8 +70,8 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             """)
     Optional<DonDatTour> findByIdWithDetails(@Param("maDatTour") String maDatTour);
 
-    // Đếm số đơn đặt tour trong khoảng thời gian (báo cáo)
-    @Query("SELECT COUNT(d) FROM DonDatTour d WHERE d.ThoiDiemTao BETWEEN :tuNgay AND :denNgay")
+    // Dem so don dat tour trong khoang thoi gian theo ngay dat (bao cao)
+    @Query("SELECT COUNT(d) FROM DonDatTour d WHERE d.NgayDat BETWEEN :tuNgay AND :denNgay")
     long demDonDatTour(
             @Param("tuNgay") LocalDateTime tuNgay,
             @Param("denNgay") LocalDateTime denNgay

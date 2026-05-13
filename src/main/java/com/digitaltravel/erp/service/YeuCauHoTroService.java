@@ -113,7 +113,6 @@ public class YeuCauHoTroService {
                 .noiDung(yc.getNoiDung())
                 .trangThai(yc.getTrangThai())
                 .maNhanVienXuLy(yc.getNhanVienXuLy() != null ? yc.getNhanVienXuLy().getMaNhanVien() : null)
-                .thoiDiemTao(yc.getThoiDiemTao())
                 .build();
     }
 }

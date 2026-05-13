@@ -45,7 +45,7 @@ public class TourMauController {
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) Integer thoiLuongMin,
             @RequestParam(required = false) Integer thoiLuongMax,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "MaTourMau", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<TourMauResponse> result = tourMauService.danhSach(tieuDe, trangThai, thoiLuongMin, thoiLuongMax, pageable);
         return ResponseEntity.ok(ApiResponse.ok(result));

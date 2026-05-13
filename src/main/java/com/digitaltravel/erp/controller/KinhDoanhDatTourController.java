@@ -33,7 +33,7 @@ public class KinhDoanhDatTourController {
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachTatCa(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourThucTe,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "NgayDat", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachTatCa(trangThai, maTourThucTe, pageable)));
     }
 

@@ -1,8 +1,6 @@
 package com.digitaltravel.erp.dto.responses;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +22,4 @@ public class YeuCauHoTroResponse {
 
     /** Tỉ lệ hoàn % */
     Integer tiLeHoan;
-
-    LocalDateTime thoiDiemTao;
 }

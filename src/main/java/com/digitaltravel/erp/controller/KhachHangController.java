@@ -85,7 +85,7 @@ public class KhachHangController {
     @PreAuthorize("hasRole('KHACHHANG')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDatTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "NgayDat", direction = Sort.Direction.DESC) Pageable pageable) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
         return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachCuaToi(maTaiKhoan, pageable)));
     }

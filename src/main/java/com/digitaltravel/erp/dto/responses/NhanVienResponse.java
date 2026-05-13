@@ -1,7 +1,6 @@
 package com.digitaltravel.erp.dto.responses;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,5 +22,4 @@ public class NhanVienResponse {
     String trangThaiLamViec;    // SAN_SANG | BAN | NGHI
     String loaiNhanVien;
     LocalDate ngayVaoLam;
-    LocalDateTime thoiDiemTao;
 }

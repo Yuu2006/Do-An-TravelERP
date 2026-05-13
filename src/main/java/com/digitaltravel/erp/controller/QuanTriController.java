@@ -32,11 +32,14 @@ public class QuanTriController {
     public ResponseEntity<ApiResponse<Page<NhatKyBaoMatResponse>>> nhatKyBaoMat(
             @RequestParam(required = false) String maTaiKhoan,
             @RequestParam(required = false) String hanhDong,
+            @RequestParam(required = false) String doiTuong,
+            @RequestParam(required = false) String maDoiTuong,
             @RequestParam(required = false) String ketQua,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime tuThoiDiem,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime denThoiDiem,
-            @PageableDefault(size = 20, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime tuThoiGian,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime denThoiGian,
+            @PageableDefault(size = 20, sort = "ThoiGian", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
-                nhatKyBaoMatService.timKiem(maTaiKhoan, hanhDong, ketQua, tuThoiDiem, denThoiDiem, pageable)));
+                nhatKyBaoMatService.timKiem(maTaiKhoan, hanhDong, doiTuong, maDoiTuong, ketQua,
+                        tuThoiGian, denThoiGian, pageable)));
     }
 }

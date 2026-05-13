@@ -1,7 +1,6 @@
 package com.digitaltravel.erp.dto.responses;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +14,4 @@ public class LichSuTourResponse {
     LocalDate ngayKhoiHanh;
     Integer thoiLuong;
     LocalDate ngayThamGia;
-    LocalDateTime thoiDiemTao;
 }

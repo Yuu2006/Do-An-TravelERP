@@ -234,8 +234,6 @@ public class DatTourService {
                 .trangThai(don.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
-                .thoiDiemTao(don.getThoiDiemTao())
-                .capNhatVao(don.getCapNhatVao())
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
                 .chiTietDichVu(dsDichVu.stream().map(this::toDichVuResponse).toList())
                 .build();

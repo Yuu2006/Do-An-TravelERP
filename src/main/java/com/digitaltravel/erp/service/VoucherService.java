@@ -336,7 +336,6 @@ public class VoucherService {
                 .ngayHieuLuc(v.getNgayHieuLuc())
                 .ngayHetHan(v.getNgayHetHan())
                 .trangThai(v.getTrangThai())
-                .thoiDiemTao(v.getThoiDiemTao())
                 .taoBoi(v.getTaoBoi())
                 .build();
     }

@@ -1,11 +1,7 @@
 package com.digitaltravel.erp.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,14 +31,6 @@ public class VaiTro {
 
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
-
-    @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
-
-    @UpdateTimestamp
-    @Column(name = "CapNhatVao")
-    LocalDateTime CapNhatVao;
 
     @Column(name = "TaoBoi", length = 100)
     String TaoBoi;

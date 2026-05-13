@@ -1,10 +1,5 @@
 package com.digitaltravel.erp.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -55,14 +50,6 @@ public class TaiKhoan {
 
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
-
-    @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
-
-    @UpdateTimestamp
-    @Column(name = "CapNhatVao")
-    LocalDateTime CapNhatVao;
 
     @Column(name = "TaoBoi", length = 100)
     String TaoBoi;

@@ -67,8 +67,6 @@ public class KhachHangService {
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())
                 .diemXanh(hcs.getDiemXanh())
-                .thoiDiemTao(hcs.getThoiDiemTao())
-                .capNhatVao(hcs.getCapNhatVao())
                 .build();
     }
 
@@ -80,7 +78,6 @@ public class KhachHangService {
                 .ngayKhoiHanh(ls.getTourThucTe().getNgayKhoiHanh())
                 .thoiLuong(ls.getTourThucTe().getTourMau().getThoiLuong())
                 .ngayThamGia(ls.getNgayThamGia())
-                .thoiDiemTao(ls.getThoiDiemTao())
                 .build();
     }
 }

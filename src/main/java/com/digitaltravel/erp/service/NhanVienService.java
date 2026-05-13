@@ -143,7 +143,6 @@ public class NhanVienService {
                 .trangThaiLamViec(nv.getTrangThaiLamViec())
                 .loaiNhanVien(nv.getLoaiNhanVien())
                 .ngayVaoLam(nv.getNgayVaoLam())
-                .thoiDiemTao(nv.getThoiDiemTao())
                 .build();
     }
 
@@ -160,8 +159,6 @@ public class NhanVienService {
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())
                 .diemXanh(hcs.getDiemXanh())
-                .thoiDiemTao(hcs.getThoiDiemTao())
-                .capNhatVao(hcs.getCapNhatVao())
                 .build();
     }
 }

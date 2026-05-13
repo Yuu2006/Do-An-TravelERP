@@ -188,7 +188,6 @@ public class HuyTourService {
                 .maNhanVienXuLy(yc.getNhanVienXuLy() != null ? yc.getNhanVienXuLy().getMaNhanVien() : null)
                 .soTienHoan(soTienHoan)
                 .tiLeHoan(tiLeHoan)
-                .thoiDiemTao(yc.getThoiDiemTao())
                 .build();
     }
 }

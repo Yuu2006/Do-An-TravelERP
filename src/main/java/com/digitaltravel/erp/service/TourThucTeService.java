@@ -86,7 +86,6 @@ public class TourThucTeService {
                 .diemDanhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
                 .lichTrinh(lichTrinhResponses)
-                .thoiDiemTao(ttt.getThoiDiemTao())
                 .build();
     }
 
@@ -200,8 +199,6 @@ public class TourThucTeService {
                 .soKhachToiThieu(ttt.getSoKhachToiThieu())
                 .choConLai(ttt.getChoConLai())
                 .trangThai(ttt.getTrangThai())
-                .thoiDiemTao(ttt.getThoiDiemTao())
-                .capNhatVao(ttt.getCapNhatVao())
                 .taoBoi(ttt.getTaoBoi())
                 .build();
     }

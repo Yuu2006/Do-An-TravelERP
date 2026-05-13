@@ -28,7 +28,7 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             LEFT JOIN FETCH y.donDatTour
             WHERE (:loaiYeuCau IS NULL OR y.LoaiYeuCau = :loaiYeuCau)
               AND (:trangThai IS NULL OR y.TrangThai = :trangThai)
-            ORDER BY y.ThoiDiemTao DESC
+            ORDER BY y.MaYeuCauHoTro DESC
             """)
     Page<YeuCauHoTro> timKiem(
             @Param("loaiYeuCau") String loaiYeuCau,
@@ -43,7 +43,7 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             LEFT JOIN FETCH y.donDatTour
             WHERE kh.MaKhachHang = :maKhachHang
               AND (:loaiYeuCau IS NULL OR y.LoaiYeuCau = :loaiYeuCau)
-            ORDER BY y.ThoiDiemTao DESC
+            ORDER BY y.MaYeuCauHoTro DESC
             """)
     Page<YeuCauHoTro> timKiemTheoKhachHang(
             @Param("maKhachHang") String maKhachHang,

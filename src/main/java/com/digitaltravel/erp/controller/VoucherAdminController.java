@@ -44,7 +44,7 @@ public class VoucherAdminController {
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> danhSach(
             @RequestParam(required = false) String trangThai,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "NgayHieuLuc", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSach(trangThai, pageable)));
     }
 

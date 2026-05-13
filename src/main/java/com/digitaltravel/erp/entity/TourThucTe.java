@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -57,14 +54,6 @@ public class TourThucTe {
     // Gia tri hop le: CHO_KICH_HOAT | MO_BAN | SAP_DIEN_RA | DANG_DIEN_RA | KET_THUC | HUY | DA_QUYET_TOAN
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
-
-    @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
-
-    @UpdateTimestamp
-    @Column(name = "CapNhatVao")
-    LocalDateTime CapNhatVao;
 
     @Column(name = "TaoBoi", length = 100)
     String TaoBoi;

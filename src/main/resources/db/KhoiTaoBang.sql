@@ -3,7 +3,7 @@
 -- Sinh tu skill  : oracle-create-table
 -- Nguon logic    : docs_source/motaDatabase.md
 -- Naming mode    : logical-name (PascalCase Vietnamese business cols)
--- Audit columns  : ThoiDiemTao, CapNhatVao, TaoBoi, CapNhatBoi
+-- Audit columns  : TaoBoi, CapNhatBoi
 -- Cap nhat       : 2026-04-02
 -- ============================================================
 
@@ -37,8 +37,6 @@ CREATE TABLE VAITRO (
                         MaVaiTro         VARCHAR2(50)  PRIMARY KEY,
                         TenHienThi       VARCHAR2(100) NOT NULL,
                         TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                        ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                        CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                         TaoBoi           VARCHAR2(100),
                         CapNhatBoi       VARCHAR2(100),
                         CONSTRAINT CK_VAITRO_TTHAI        CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
@@ -55,8 +53,6 @@ CREATE TABLE TAIKHOAN (
                           SoDienThoai      VARCHAR2(20),
                           VaiTro           VARCHAR2(50)  NOT NULL,
                           TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                          ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                          CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                           TaoBoi           VARCHAR2(100),
                           CapNhatBoi       VARCHAR2(100),
                           CONSTRAINT UQ_TK_TenDangNhap      UNIQUE (TenDangNhap),
@@ -69,16 +65,15 @@ CREATE TABLE TAIKHOAN (
 
 -- Nhat ky bao mat va thao tac quan tri
 CREATE TABLE NHATKYBAOMAT (
-                              MaNhatKyBaoMat  VARCHAR2(50)   PRIMARY KEY,
-                              MaTaiKhoan      VARCHAR2(50),
-                              HanhDong        VARCHAR2(100)  NOT NULL,
-                              DiaChiIp        VARCHAR2(100),
-                              UserAgent       VARCHAR2(500),
-                              KetQua          VARCHAR2(20)   NOT NULL,
-                              NoiDung         VARCHAR2(1000),
-                              ThoiDiemTao     TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
-                              CONSTRAINT FK_NKBM_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
-                              CONSTRAINT CK_NKBM_KetQua CHECK (KetQua IN ('THANH_CONG','THAT_BAI'))
+                               MaNhatKyBaoMat  VARCHAR2(50)   PRIMARY KEY,
+                               MaTaiKhoan      VARCHAR2(50),
+                               HanhDong        VARCHAR2(100)  NOT NULL,
+                               DoiTuong        VARCHAR2(100),
+                               MaDoiTuong      VARCHAR2(50),
+                               KetQua          VARCHAR2(20)   NOT NULL,
+                               ThoiGian        TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
+                               CONSTRAINT FK_NKBM_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
+                               CONSTRAINT CK_NKBM_KetQua CHECK (KetQua IN ('THANH_CONG','THAT_BAI'))
 );
 
 -- Ho so nghiep vu cua khach hang (1-1 voi TAIKHOAN co VaiTro = KHACHHANG)
@@ -89,8 +84,6 @@ CREATE TABLE HOCHIEUSO (
                            DiUng            VARCHAR2(1000),
                            HangThanhVien    VARCHAR2(20)   DEFAULT 'THANH_VIEN' NOT NULL,
                            DiemXanh         NUMBER(15)     DEFAULT 0 NOT NULL,
-                           ThoiDiemTao      TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
-                           CapNhatVao       TIMESTAMP      DEFAULT SYSTIMESTAMP,
                            CONSTRAINT UQ_HCS_TaiKhoan        UNIQUE (MaTaiKhoan),
                            CONSTRAINT FK_HCS_TaiKhoan        FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
                            CONSTRAINT CK_HCS_HangTV          CHECK (HangThanhVien IN ('THANH_VIEN','DONG','BAC','VANG','KIM_CUONG')),
@@ -104,8 +97,6 @@ CREATE TABLE NHANVIEN (
                           LoaiNhanVien         VARCHAR2(50),
                           NgayVaoLam           DATE,
                           TrangThaiLamViec     VARCHAR2(20) DEFAULT 'SAN_SANG' NOT NULL,
-                          ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                          CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                           CONSTRAINT UQ_NV_TaiKhoan          UNIQUE (MaTaiKhoan),
                           CONSTRAINT FK_NV_TaiKhoan          FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
                           CONSTRAINT CK_NV_TrangThai         CHECK (TrangThaiLamViec IN ('SAN_SANG','BAN','NGHI'))
@@ -120,8 +111,6 @@ CREATE TABLE NANGLUCNHANVIEN (
                                  ChuyenMon            VARCHAR2(500),
                                  DanhGia              NUMBER(3,2)   DEFAULT 0,
                                  SoDanhGia            NUMBER(10)    DEFAULT 0,
-                                 ThoiDiemTao          TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                                 CapNhatVao           TIMESTAMP     DEFAULT SYSTIMESTAMP,
                                  CONSTRAINT FK_NLNV_NhanVien        FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                                  CONSTRAINT CK_NLNV_DanhGia         CHECK (DanhGia BETWEEN 0 AND 5),
                                  CONSTRAINT CK_NLNV_SoDanhGia       CHECK (SoDanhGia >= 0)
@@ -141,8 +130,6 @@ CREATE TABLE TOURMAU (
                          DanhGia          NUMBER(3,2)   DEFAULT 0,
                          SoDanhGia        NUMBER(10)    DEFAULT 0,
                          TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                         ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                         CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                          TaoBoi           VARCHAR2(100),
                          CapNhatBoi       VARCHAR2(100),
                          CONSTRAINT CK_TOURMAU_ThoiLuong    CHECK (ThoiLuong > 0),
@@ -160,8 +147,6 @@ CREATE TABLE LICHTRINHTOUR (
                                HoatDong         VARCHAR2(1000),
                                MoTa             CLOB,
                                ThucDon          VARCHAR2(1000),
-                               ThoiDiemTao      TIMESTAMP       DEFAULT SYSTIMESTAMP NOT NULL,
-                               CapNhatVao       TIMESTAMP       DEFAULT SYSTIMESTAMP,
                                CONSTRAINT FK_LTT_TourMau              FOREIGN KEY (MaTourMau)   REFERENCES TOURMAU(MaTourMau),
                                CONSTRAINT CK_LICHTRINHTOUR_NgayThu    CHECK (NgayThu > 0)
 );
@@ -172,8 +157,6 @@ CREATE TABLE LOAIPHONG (
                            TenLoai          VARCHAR2(200) NOT NULL,
                            MucPhuThu        NUMBER(18,2)  DEFAULT 0 NOT NULL,
                            TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                           ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                           CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                            CONSTRAINT CK_LOAIPHONG_MucPhuThu  CHECK (MucPhuThu >= 0),
                            CONSTRAINT CK_LOAIPHONG_TrangThai  CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
 );
@@ -185,8 +168,6 @@ CREATE TABLE DICHVUTHEM (
                             DonViTinh        VARCHAR2(100),
                             DonGia           NUMBER(18,2)  NOT NULL,
                             TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                            ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                            CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                             CONSTRAINT CK_DICHVUTHEM_DonGia      CHECK (DonGia >= 0),
                             CONSTRAINT CK_DICHVUTHEM_TrangThai   CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
 );
@@ -197,8 +178,6 @@ CREATE TABLE HANHDONGXANH (
                               TenHanhDong      VARCHAR2(200) NOT NULL,
                               DiemCong         NUMBER(10)    NOT NULL,
                               TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
-                              ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                               CONSTRAINT CK_HANHDONGXANH_DiemCong    CHECK (DiemCong >= 0),
                               CONSTRAINT CK_HANHDONGXANH_TrangThai   CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
 );
@@ -213,8 +192,6 @@ CREATE TABLE TOURTHUCTE (
                             SoKhachToiThieu      NUMBER(5)    DEFAULT 1 NOT NULL,
                             ChoConLai            NUMBER(5)    NOT NULL,
                             TrangThai            VARCHAR2(20) DEFAULT 'CHO_KICH_HOAT' NOT NULL,
-                            ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                            CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                             TaoBoi               VARCHAR2(100),
                             CapNhatBoi           VARCHAR2(100),
                             CONSTRAINT FK_TTT_TourMau              FOREIGN KEY (MaTourMau)   REFERENCES TOURMAU(MaTourMau),
@@ -241,8 +218,6 @@ CREATE TABLE DONDATTOUR (
                             TrangThai        VARCHAR2(30)  DEFAULT 'CHO_XAC_NHAN' NOT NULL,
                             ThoiGianHetHan   TIMESTAMP,
                             GhiChu           VARCHAR2(2000),
-                            ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                            CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                             TaoBoi           VARCHAR2(100),
                             CapNhatBoi       VARCHAR2(100),
                             CONSTRAINT FK_DDT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
@@ -261,8 +236,6 @@ CREATE TABLE CHITIETDATTOUR (
                                 MaKhachHang          VARCHAR2(50) NOT NULL,
                                 MaLoaiPhong          VARCHAR2(50),
                                 GiaTaiThoiDiemDat    NUMBER(18,2) NOT NULL,
-                                ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                                CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                                 CONSTRAINT UQ_CTDT_DatTour_KhachHang  UNIQUE (MaDatTour, MaKhachHang),
                                 CONSTRAINT FK_CTDT_DatTour             FOREIGN KEY (MaDatTour)   REFERENCES DONDATTOUR(MaDatTour),
                                 CONSTRAINT FK_CTDT_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
@@ -278,8 +251,6 @@ CREATE TABLE CHITIETDICHVU (
                                SoLuong          NUMBER(10)    NOT NULL,
                                DonGia           NUMBER(18,2)  NOT NULL,
                                ThanhTien        NUMBER(18,2)  NOT NULL,
-                               ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                               CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                                CONSTRAINT FK_CTDV_DatTour             FOREIGN KEY (MaDatTour)    REFERENCES DONDATTOUR(MaDatTour),
                                CONSTRAINT FK_CTDV_DichVuThem          FOREIGN KEY (MaDichVuThem) REFERENCES DICHVUTHEM(MaDichVuThem),
                                CONSTRAINT CK_CTDV_SoLuong             CHECK (SoLuong > 0),
@@ -300,8 +271,6 @@ CREATE TABLE VOUCHER (
                          NgayHieuLuc          DATE           NOT NULL,
                          NgayHetHan           DATE           NOT NULL,
                          TrangThai            VARCHAR2(20)   DEFAULT 'SAN_SANG' NOT NULL,
-                         ThoiDiemTao          TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
-                         CapNhatVao           TIMESTAMP      DEFAULT SYSTIMESTAMP,
                          TaoBoi               VARCHAR2(100),
                          CapNhatBoi           VARCHAR2(100),
                          CONSTRAINT UQ_VOUCHER_MaCode           UNIQUE (MaCode),
@@ -321,8 +290,6 @@ CREATE TABLE KHUYENMAI_KH (
                               TrangThai        VARCHAR2(20)  DEFAULT 'SAN_SANG' NOT NULL,
                               NgayHetHan       DATE,
                               NgayNhan         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                               CONSTRAINT PK_KHUYENMAIKH              PRIMARY KEY (MaKhachHang, MaVoucher),
                               CONSTRAINT FK_KMKH_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
                               CONSTRAINT FK_KMKH_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher),
@@ -365,7 +332,6 @@ CREATE TABLE LICHSUTOUR (
                             MaTourThucTe     VARCHAR2(50)  NOT NULL,
                             MaChiTietDat     VARCHAR2(50),
                             NgayThamGia      DATE,
-                            ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                             CONSTRAINT UQ_LST_KhachHang_TourThucTe UNIQUE (MaKhachHang, MaTourThucTe),
                             CONSTRAINT FK_LST_KhachHang            FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                             CONSTRAINT FK_LST_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
@@ -383,8 +349,6 @@ CREATE TABLE PHANCONGTOUR (
                               MaNhanVien       VARCHAR2(50)  NOT NULL,
                               NgayPhanCong     TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                               TrangThai        VARCHAR2(20)  DEFAULT 'CHO_XAC_NHAN' NOT NULL,
-                              ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                               TaoBoi           VARCHAR2(100),
                               CONSTRAINT UQ_PCT_TourThucTe_NhanVien UNIQUE (MaTourThucTe, MaNhanVien),
                               CONSTRAINT FK_PCT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
@@ -400,7 +364,6 @@ CREATE TABLE DIEMDANH (
                           MaNhanVien       VARCHAR2(50)  NOT NULL,
                           ThoiGian         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                           DiaDiem          VARCHAR2(500),
-                          ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                           CONSTRAINT FK_DIEMDANH_TourThucTe      FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                           CONSTRAINT FK_DIEMDANH_KhachHang       FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                           CONSTRAINT FK_DIEMDANH_NhanVien        FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
@@ -417,7 +380,6 @@ CREATE TABLE HANHDONG (
                           MaNhanVienXacMinh    VARCHAR2(50) NOT NULL,
                           ThoiGian             TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                           MinhChung            VARCHAR2(1000),
-                          ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                           CONSTRAINT FK_HANHDONG_TourThucTe      FOREIGN KEY (MaTourThucTe)      REFERENCES TOURTHUCTE(MaTourThucTe),
                           CONSTRAINT FK_HANHDONG_KhachHang       FOREIGN KEY (MaKhachHang)       REFERENCES HOCHIEUSO(MaKhachHang),
                           CONSTRAINT FK_HANHDONG_HanhDongXanh    FOREIGN KEY (MaHanhDongXanh)    REFERENCES HANHDONGXANH(MaHanhDongXanh),
@@ -435,8 +397,6 @@ CREATE TABLE NHATKYSUCO (
                             GiaiPhap             CLOB,
                             TrangThai            VARCHAR2(20) DEFAULT 'MOI_TAO' NOT NULL,
                             ThoiGianBaoCao       TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                            ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                            CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                             CONSTRAINT FK_NKSC_TourThucTe          FOREIGN KEY (MaTourThucTe)     REFERENCES TOURTHUCTE(MaTourThucTe),
                             CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien),
                             CONSTRAINT CK_NKSC_TrangThai           CHECK (TrangThai IN ('MOI_TAO','DANG_XU_LY','DA_DONG'))
@@ -452,8 +412,6 @@ CREATE TABLE CHIPHITHUCTE (
                               HoaDonAnh        VARCHAR2(1000),
                               TrangThaiDuyet   VARCHAR2(20)  DEFAULT 'CHO_DUYET' NOT NULL,
                               NgayKhai         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                               CONSTRAINT FK_CPTT_TourThucTe          FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                               CONSTRAINT FK_CPTT_NhanVien            FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                               CONSTRAINT CK_CPTT_ThanhTien           CHECK (ThanhTien >= 0),
@@ -475,8 +433,6 @@ CREATE TABLE QUYETTOAN (
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                            TrangThai        VARCHAR2(20)  DEFAULT 'BAN_NHAP' NOT NULL,
                            GhiChu           CLOB,
-                           ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                           CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                            TaoBoi           VARCHAR2(100),
                            CapNhatBoi       VARCHAR2(100),
                            CONSTRAINT UQ_QUYETTOAN_TourThucTe     UNIQUE (MaTourThucTe),
@@ -495,7 +451,6 @@ CREATE TABLE NHATKYDOIDIEM (
                                MaVoucher        VARCHAR2(50)  NOT NULL,
                                DiemQuyDoi       NUMBER(15)    NOT NULL,
                                NgayQuyDoi       TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                               ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                                CONSTRAINT FK_NKDD_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
                                CONSTRAINT FK_NKDD_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher),
                                CONSTRAINT CK_NKDD_DiemQuyDoi         CHECK (DiemQuyDoi > 0)
@@ -510,8 +465,6 @@ CREATE TABLE YEUCAUHOTRO (
                              NoiDung          CLOB          NOT NULL,
                              TrangThai        VARCHAR2(20)  DEFAULT 'MOI_TAO' NOT NULL,
                              MaNhanVienXuLy   VARCHAR2(50),
-                             ThoiDiemTao      TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                             CapNhatVao       TIMESTAMP     DEFAULT SYSTIMESTAMP,
                              CONSTRAINT FK_YCHT_DatTour             FOREIGN KEY (MaDatTour)      REFERENCES DONDATTOUR(MaDatTour),
                              CONSTRAINT FK_YCHT_KhachHang           FOREIGN KEY (MaKhachHang)    REFERENCES HOCHIEUSO(MaKhachHang),
                              CONSTRAINT FK_YCHT_NhanVienXL          FOREIGN KEY (MaNhanVienXuLy) REFERENCES NHANVIEN(MaNhanVien),
@@ -527,8 +480,6 @@ CREATE TABLE DANHGIAKH (
                            NhanXet              CLOB,
                            NgayDanhGia          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                            TrangThai            VARCHAR2(20) DEFAULT 'HIEU_LUC' NOT NULL,
-                           ThoiDiemTao          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                           CapNhatVao           TIMESTAMP    DEFAULT SYSTIMESTAMP,
                            CONSTRAINT FK_DGKH_TourThucTe          FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_DGKH_KhachHang           FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                            CONSTRAINT FK_DGKH_LichSuTour          FOREIGN KEY (MaKhachHang, MaTourThucTe)
@@ -553,4 +504,5 @@ CREATE INDEX IDX_CHIPHITHUCTE_TOURTT     ON CHIPHITHUCTE(MaTourThucTe);
 CREATE INDEX IDX_KMKH_VOUCHER            ON KHUYENMAI_KH(MaVoucher);
 CREATE INDEX IDX_NKBM_TAIKHOAN           ON NHATKYBAOMAT(MaTaiKhoan);
 CREATE INDEX IDX_NKBM_HANHDONG           ON NHATKYBAOMAT(HanhDong);
-CREATE INDEX IDX_NKBM_THOIDIEM           ON NHATKYBAOMAT(ThoiDiemTao);
+CREATE INDEX IDX_NKBM_DOITUONG           ON NHATKYBAOMAT(DoiTuong, MaDoiTuong);
+CREATE INDEX IDX_NKBM_THOIGIAN           ON NHATKYBAOMAT(ThoiGian);

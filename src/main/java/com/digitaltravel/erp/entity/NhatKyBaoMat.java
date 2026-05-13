@@ -33,19 +33,17 @@ public class NhatKyBaoMat {
     @Column(name = "HanhDong", nullable = false, length = 100)
     String HanhDong;
 
-    @Column(name = "DiaChiIp", length = 100)
-    String DiaChiIp;
+    @Column(name = "DoiTuong", length = 100)
+    String DoiTuong;
 
-    @Column(name = "UserAgent", length = 500)
-    String UserAgent;
+    @Column(name = "MaDoiTuong", length = 50)
+    String MaDoiTuong;
 
     @Column(name = "KetQua", nullable = false, length = 20)
     String KetQua;
 
-    @Column(name = "NoiDung", length = 1000)
-    String NoiDung;
-
     @CreationTimestamp
-    @Column(name = "ThoiDiemTao", nullable = false, updatable = false)
-    LocalDateTime ThoiDiemTao;
+    @Column(name = "ThoiGian", nullable = false, updatable = false)
+    LocalDateTime ThoiGian;
+
 }

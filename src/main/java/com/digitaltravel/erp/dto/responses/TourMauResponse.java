@@ -1,8 +1,6 @@
 package com.digitaltravel.erp.dto.responses;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +15,5 @@ public class TourMauResponse {
     BigDecimal danhGia;
     Integer soDanhGia;
     String trangThai;
-    LocalDateTime thoiDiemTao;
-    LocalDateTime capNhatVao;
     String taoBoi;
 }

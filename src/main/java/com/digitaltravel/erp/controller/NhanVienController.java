@@ -62,7 +62,7 @@ public class NhanVienController {
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String maVaiTro,
             @RequestParam(required = false) String trangThai,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "MaNhanVien", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
                 nhanVienService.timKiem(hoTen, maVaiTro, trangThai, pageable)));
     }
@@ -111,7 +111,7 @@ public class NhanVienController {
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCau(
             @RequestParam(required = false) String loaiYeuCau,
             @RequestParam(required = false) String trangThai,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "MaYeuCauHoTro", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
                 huyTourService.danhSachYeuCau(loaiYeuCau, trangThai, pageable)));
     }
@@ -196,7 +196,7 @@ public class NhanVienController {
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDonDatTour(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourThucTe,
-            @PageableDefault(size = 10, sort = "ThoiDiemTao", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 10, sort = "NgayDat", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(datTourService.danhSachTatCa(trangThai, maTourThucTe, pageable)));
     }
 
