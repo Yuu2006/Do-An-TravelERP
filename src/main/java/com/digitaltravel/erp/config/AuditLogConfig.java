@@ -17,7 +17,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.digitaltravel.erp.service.NhatKyBaoMatService;
+import com.digitaltravel.erp.service.NhatKyHeThongService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuditLogConfig implements HandlerInterceptor, WebMvcConfigurer {
 
-    private final NhatKyBaoMatService nhatKyBaoMatService;
+    private final NhatKyHeThongService nhatKyHeThongService;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -37,7 +37,8 @@ public class AuditLogConfig implements HandlerInterceptor, WebMvcConfigurer {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             org.springframework.web.servlet.ModelAndView modelAndView) {
-        if (!(handler instanceof HandlerMethod handlerMethod) || shouldSkip(request) || isReadOnly(handlerMethod)) {
+        if (response.getStatus() >= 400 || !(handler instanceof HandlerMethod handlerMethod)
+                || shouldSkip(request) || isReadOnly(handlerMethod)) {
             return;
         }
 
@@ -46,13 +47,12 @@ public class AuditLogConfig implements HandlerInterceptor, WebMvcConfigurer {
             return;
         }
         String maTaiKhoan = currentAccountId();
-        String noiDung = buildContent(request);
-        nhatKyBaoMatService.ghiNhan(maTaiKhoan, hanhDong, NhatKyBaoMatService.THANH_CONG, noiDung, request);
+        nhatKyHeThongService.ghiNhan(maTaiKhoan, hanhDong, request.getRequestURI(), primaryPathVariable(request));
     }
 
     private boolean shouldSkip(HttpServletRequest request) {
         String uri = request.getRequestURI();
-        return uri.startsWith("/api/auth/") || uri.startsWith("/api/quan-tri/nhat-ky-bao-mat");
+        return uri.startsWith("/api/auth/") || uri.startsWith("/api/quan-tri/nhat-ky-he-thong");
     }
 
     private boolean isReadOnly(HandlerMethod handlerMethod) {
@@ -61,14 +61,14 @@ public class AuditLogConfig implements HandlerInterceptor, WebMvcConfigurer {
 
     private String resolveAction(HandlerMethod handlerMethod) {
         if (handlerMethod.hasMethodAnnotation(PostMapping.class)) {
-            return "THEM";
+            return NhatKyHeThongService.THEM;
         }
         if (handlerMethod.hasMethodAnnotation(DeleteMapping.class)) {
-            return "XOA";
+            return NhatKyHeThongService.XOA;
         }
         if (handlerMethod.hasMethodAnnotation(PutMapping.class)
                 || handlerMethod.hasMethodAnnotation(PatchMapping.class)) {
-            return "CAP_NHAT";
+            return NhatKyHeThongService.CAP_NHAT;
         }
         return null;
     }
@@ -82,15 +82,12 @@ public class AuditLogConfig implements HandlerInterceptor, WebMvcConfigurer {
     }
 
     @SuppressWarnings("unchecked")
-    private String buildContent(HttpServletRequest request) {
-        String content = request.getMethod() + " " + request.getRequestURI();
+    private String primaryPathVariable(HttpServletRequest request) {
         Object variables = request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         if (variables instanceof Map<?, ?> pathVariables && !pathVariables.isEmpty()) {
-            String ids = ((Map<String, String>) pathVariables).entrySet().stream()
-                    .map(entry -> entry.getKey() + "=" + entry.getValue())
+            return ((Map<String, String>) pathVariables).values().stream()
                     .collect(Collectors.joining(", "));
-            content += " [" + ids + "]";
         }
-        return content.length() <= 1000 ? content : content.substring(0, 1000);
+        return null;
     }
 }

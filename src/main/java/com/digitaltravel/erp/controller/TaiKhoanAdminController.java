@@ -3,14 +3,12 @@ package com.digitaltravel.erp.controller;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.config.VaiTroConst;
 import com.digitaltravel.erp.dto.requests.DangKyNhanVienRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
@@ -21,9 +19,6 @@ import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
-import com.digitaltravel.erp.service.NhatKyBaoMatService;
-
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -36,15 +31,11 @@ public class TaiKhoanAdminController {
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
     private final NhanVienRepository nhanVienRepository;
-    private final NhatKyBaoMatService nhatKyBaoMatService;
 
 
 
     @PostMapping("/dang-ky-nhan-vien")
-    public ResponseEntity<ApiResponse<Void>> dangKyNhanVien(
-            @Valid @RequestBody DangKyNhanVienRequest request,
-            @AuthenticationPrincipal TaiKhoanDetails user,
-            HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<Void>> dangKyNhanVien(@Valid @RequestBody DangKyNhanVienRequest request) {
         String maVaiTro = request.getMaVaiTro().toUpperCase();
 
         if (!VaiTroConst.VAI_TRO_NHAN_VIEN.contains(maVaiTro)) {
@@ -78,9 +69,6 @@ public class TaiKhoanAdminController {
         nhanVien.setLoaiNhanVien(maVaiTro);
         nhanVien.setTrangThaiLamViec("SAN_SANG");
         nhanVienRepository.save(nhanVien);
-
-        nhatKyBaoMatService.ghiNhan(user.getTaiKhoan().getMaTaiKhoan(), "TAO_TAI_KHOAN_NHAN_VIEN",
-                NhatKyBaoMatService.THANH_CONG, "Tao tai khoan nhan vien role " + maVaiTro, httpRequest);
 
         return ResponseEntity.status(201).body(ApiResponse.noContent("Tao tai khoan nhan vien thanh cong"));
     }

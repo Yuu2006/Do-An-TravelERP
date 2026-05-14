@@ -2,8 +2,6 @@ package com.digitaltravel.erp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,9 +40,6 @@ class NhanVienServiceTest {
     @Mock
     private VaiTroRepository vaiTroRepository;
 
-    @Mock
-    private NhatKyBaoMatService nhatKyBaoMatService;
-
     @InjectMocks
     private NhanVienService nhanVienService;
 
@@ -57,7 +52,7 @@ class NhanVienServiceTest {
         when(nhanVienRepository.findById("NV_01")).thenReturn(Optional.of(nv));
         when(vaiTroRepository.findById("HDV")).thenReturn(Optional.of(vaiTroMoi));
 
-        NhanVienResponse response = nhanVienService.ganVaiTro("NV_01", request, "TK_ADMIN");
+        NhanVienResponse response = nhanVienService.ganVaiTro("NV_01", request);
 
         assertEquals("HDV", nv.getTaiKhoan().getVaiTro().getMaVaiTro());
         assertEquals("HDV", nv.getLoaiNhanVien());
@@ -65,8 +60,6 @@ class NhanVienServiceTest {
         assertEquals("HDV", response.getLoaiNhanVien());
         verify(taiKhoanRepository).save(nv.getTaiKhoan());
         verify(nhanVienRepository).save(nv);
-        verify(nhatKyBaoMatService).ghiNhan(eq("TK_ADMIN"), eq("GAN_VAI_TRO"),
-                eq(NhatKyBaoMatService.THANH_CONG), contains("HDV"), eq(null));
     }
 
     @Test
@@ -77,7 +70,7 @@ class NhanVienServiceTest {
         when(nhanVienRepository.findById("NV_01")).thenReturn(Optional.of(nv));
 
         AppException ex = assertThrows(AppException.class,
-                () -> nhanVienService.ganVaiTro("NV_01", request, "TK_ADMIN"));
+                () -> nhanVienService.ganVaiTro("NV_01", request));
 
         assertEquals("BAD_REQUEST", ex.getErrorCode());
         verify(vaiTroRepository, never()).findById(org.mockito.ArgumentMatchers.anyString());

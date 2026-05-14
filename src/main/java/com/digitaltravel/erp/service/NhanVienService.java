@@ -32,7 +32,6 @@ public class NhanVienService {
     private final TaiKhoanRepository taiKhoanRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final VaiTroRepository vaiTroRepository;
-    private final NhatKyBaoMatService nhatKyBaoMatService;
 
     // ── Tìm kiếm nhân viên (UC68) ─────────────────────────────────────────
     public Page<NhanVienResponse> timKiem(String hoTen, String maVaiTro, String trangThai, Pageable pageable) {
@@ -64,13 +63,11 @@ public class NhanVienService {
         }
         tk.setTrangThai("KHOA");
         taiKhoanRepository.save(tk);
-        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "KHOA_TAI_KHOAN", NhatKyBaoMatService.THANH_CONG,
-                "Khoa tai khoan " + tk.getMaTaiKhoan(), null);
     }
 
     // ── Mở khóa tài khoản (UC67) ──────────────────────────────────────────
     @Transactional
-    public void moKhoaTaiKhoan(String maNhanVien, String nguoiThucHien) {
+    public void moKhoaTaiKhoan(String maNhanVien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
 
@@ -80,13 +77,11 @@ public class NhanVienService {
         }
         tk.setTrangThai("HOAT_DONG");
         taiKhoanRepository.save(tk);
-        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "MO_KHOA_TAI_KHOAN", NhatKyBaoMatService.THANH_CONG,
-                "Mo khoa tai khoan " + tk.getMaTaiKhoan(), null);
     }
 
     // ── UC69: Gán vai trò cho nhân viên ──────────────────────────────────────
     @Transactional
-    public NhanVienResponse ganVaiTro(String maNhanVien, GanVaiTroRequest request, String nguoiThucHien) {
+    public NhanVienResponse ganVaiTro(String maNhanVien, GanVaiTroRequest request) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
 
@@ -105,8 +100,6 @@ public class NhanVienService {
         nv.setLoaiNhanVien(maVaiTro);
         taiKhoanRepository.save(tk);
         nhanVienRepository.save(nv);
-        nhatKyBaoMatService.ghiNhan(nguoiThucHien, "GAN_VAI_TRO", NhatKyBaoMatService.THANH_CONG,
-                "Gan vai tro " + maVaiTro + " cho tai khoan " + tk.getMaTaiKhoan(), null);
         return toResponse(nv);
     }
 

@@ -20,7 +20,7 @@ BEGIN
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
                              'DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                              'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
-                             'LOAIPHONG','TOURMAU','NHATKYBAOMAT','VAITRO','TAIKHOAN'
+                              'LOAIPHONG','TOURMAU','NHATKYBAOMAT','NHATKYHETHONG','VAITRO','TAIKHOAN'
             )
         ) LOOP
             EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS PURGE';
@@ -63,17 +63,16 @@ CREATE TABLE TAIKHOAN (
 );
 
 
--- Nhat ky bao mat va thao tac quan tri
-CREATE TABLE NHATKYBAOMAT (
-                               MaNhatKyBaoMat  VARCHAR2(50)   PRIMARY KEY,
+-- Nhat ky he thong: chi ghi nhan thao tac them, cap nhat, xoa
+CREATE TABLE NHATKYHETHONG (
+                               MaNhatKyHeThong  VARCHAR2(50)   PRIMARY KEY,
                                MaTaiKhoan      VARCHAR2(50),
                                HanhDong        VARCHAR2(100)  NOT NULL,
                                DoiTuong        VARCHAR2(100),
                                MaDoiTuong      VARCHAR2(50),
-                               KetQua          VARCHAR2(20)   NOT NULL,
                                ThoiGian        TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
-                               CONSTRAINT FK_NKBM_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
-                               CONSTRAINT CK_NKBM_KetQua CHECK (KetQua IN ('THANH_CONG','THAT_BAI'))
+                               CONSTRAINT FK_NKHT_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
+                               CONSTRAINT CK_NKHT_HanhDong CHECK (HanhDong IN ('THEM','CAP_NHAT','XOA'))
 );
 
 -- Ho so nghiep vu cua khach hang (1-1 voi TAIKHOAN co VaiTro = KHACHHANG)
@@ -502,7 +501,7 @@ CREATE INDEX IDX_HANHDONG_KHACHHANG      ON HANHDONG(MaKhachHang);
 CREATE INDEX IDX_DIEMDANH_KHACHHANG      ON DIEMDANH(MaKhachHang);
 CREATE INDEX IDX_CHIPHITHUCTE_TOURTT     ON CHIPHITHUCTE(MaTourThucTe);
 CREATE INDEX IDX_KMKH_VOUCHER            ON KHUYENMAI_KH(MaVoucher);
-CREATE INDEX IDX_NKBM_TAIKHOAN           ON NHATKYBAOMAT(MaTaiKhoan);
-CREATE INDEX IDX_NKBM_HANHDONG           ON NHATKYBAOMAT(HanhDong);
-CREATE INDEX IDX_NKBM_DOITUONG           ON NHATKYBAOMAT(DoiTuong, MaDoiTuong);
-CREATE INDEX IDX_NKBM_THOIGIAN           ON NHATKYBAOMAT(ThoiGian);
+CREATE INDEX IDX_NKHT_TAIKHOAN           ON NHATKYHETHONG(MaTaiKhoan);
+CREATE INDEX IDX_NKHT_HANHDONG           ON NHATKYHETHONG(HanhDong);
+CREATE INDEX IDX_NKHT_DOITUONG           ON NHATKYHETHONG(DoiTuong, MaDoiTuong);
+CREATE INDEX IDX_NKHT_THOIGIAN           ON NHATKYHETHONG(ThoiGian);

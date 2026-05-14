@@ -16,7 +16,7 @@ Digital Travel ERP là backend Spring Boot quản lý nghiệp vụ du lịch th
 
 | Phân hệ | Vai trò chính | Nhóm bảng liên quan | Prefix API |
 |---|---|---|---|
-| Định danh và phân quyền | `ADMIN`, tất cả người dùng | `TAIKHOAN`, `VAITRO`, `NHANVIEN`, `HOCHIEUSO`, `NHATKYBAOMAT` | `/api/auth`, `/api/quan-tri` |
+| Định danh và phân quyền | `ADMIN`, tất cả người dùng | `TAIKHOAN`, `VAITRO`, `NHANVIEN`, `HOCHIEUSO`, `NHATKYHETHONG` | `/api/auth`, `/api/quan-tri` |
 | Sản phẩm tour | `SANPHAM` | `TOURMAU`, `LICHTRINHTOUR`, `LOAIPHONG`, `DICHVUTHEM`, `HANHDONGXANH` | `/api/san-pham` |
 | Điều hành tour | `DIEUHANH` | `TOURTHUCTE`, `PHANCONGTOUR`, `NANGLUCNHANVIEN` | `/api/dieu-hanh` |
 | Bán hàng và CSKH | `KINHDOANH` | `DONDATTOUR`, `YEUCAUHOTRO`, `VOUCHER`, `KHUYENMAI_KH` | `/api/kinh-doanh` |
@@ -453,7 +453,7 @@ GET /api/ke-toan/bao-cao/doanh-thu?tuNgay=2026-01-01&denNgay=2026-12-31
 | `PUT` | `/api/quan-tri/nhan-vien/{maNhanVien}/khoa` | Khóa tài khoản nhân viên |
 | `PUT` | `/api/quan-tri/nhan-vien/{maNhanVien}/mo-khoa` | Mở khóa tài khoản nhân viên |
 | `PUT` | `/api/quan-tri/nhan-vien/{maNhanVien}/vai-tro` | Gán vai trò nhân viên |
-| `GET` | `/api/quan-tri/nhat-ky-bao-mat` | Tra cứu nhật ký đăng nhập/quản trị |
+| `GET` | `/api/quan-tri/nhat-ky-he-thong` | Tra cứu nhật ký thêm/sửa/xóa hệ thống |
 
 Vai trò nhân viên có thể gán: `SANPHAM`, `KINHDOANH`, `DIEUHANH`, `KETOAN`, `HDV`.
 

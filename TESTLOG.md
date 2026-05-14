@@ -53,10 +53,10 @@ Nhom nay tra ve `500 INTERNAL_SERVER_ERROR`, nghia la request hop le ve mat HTTP
 ### Quan tri
 
 - `POST /api/quan-tri/tham-so-he-thong` tra ve `500`.
-- `GET /api/quan-tri/nhat-ky-bao-mat` tra ve `500`.
+- `GET /api/quan-tri/nhat-ky-he-thong` tra ve `500`.
 - `GET /api/quan-tri/nhan-vien/{maNhanVien}` voi `NV_HDV02` tra ve `500`.
 - `GET /api/quan-tri/tham-so-he-thong` thanh cong nhung danh sach rong, nen loi tao tham so co the do constraint DB, ID generator, ten cot, hoac mapping entity.
-- Huong kiem tra: entity/repository `ThamSoHeThong`, entity `NhatKyBaoMat`, mapper chi tiet nhan vien va cac truong nullable trong seed.
+- Huong kiem tra: entity/repository `ThamSoHeThong`, entity `NhatKyHeThong`, mapper chi tiet nhan vien va cac truong nullable trong seed.
 
 ### Kinh doanh
 

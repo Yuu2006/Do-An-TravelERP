@@ -7,13 +7,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class NhatKyBaoMatResponse {
-    String maNhatKyBaoMat;
+public class NhatKyHeThongResponse {
+    String maNhatKyHeThong;
     String maTaiKhoan;
     String tenDangNhap;
     String hanhDong;
     String doiTuong;
     String maDoiTuong;
-    String ketQua;
     LocalDateTime thoiGian;
 }

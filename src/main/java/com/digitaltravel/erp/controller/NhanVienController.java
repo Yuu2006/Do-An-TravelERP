@@ -94,10 +94,8 @@ public class NhanVienController {
      */
     @PutMapping("/api/quan-tri/nhan-vien/{maNhanVien}/mo-khoa")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Void>> moKhoaTaiKhoan(
-            @PathVariable String maNhanVien,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
-        nhanVienService.moKhoaTaiKhoan(maNhanVien, user.getTaiKhoan().getMaTaiKhoan());
+    public ResponseEntity<ApiResponse<Void>> moKhoaTaiKhoan(@PathVariable String maNhanVien) {
+        nhanVienService.moKhoaTaiKhoan(maNhanVien);
         return ResponseEntity.ok(ApiResponse.noContent("Mo khoa tai khoan nhan vien thanh cong"));
     }
 
@@ -257,9 +255,8 @@ public class NhanVienController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> ganVaiTro(
             @PathVariable String maNhanVien,
-            @Valid @RequestBody GanVaiTroRequest request,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
+            @Valid @RequestBody GanVaiTroRequest request) {
         return ResponseEntity.ok(ApiResponse.ok("Gan vai tro thanh cong",
-                nhanVienService.ganVaiTro(maNhanVien, request, user.getTaiKhoan().getMaTaiKhoan())));
+                nhanVienService.ganVaiTro(maNhanVien, request)));
     }
 }

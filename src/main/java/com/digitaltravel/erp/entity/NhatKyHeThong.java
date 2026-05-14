@@ -17,14 +17,14 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "NHATKYBAOMAT")
+@Table(name = "NHATKYHETHONG")
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NhatKyBaoMat {
+public class NhatKyHeThong {
     @Id
-    @Column(name = "MaNhatKyBaoMat", nullable = false, length = 50)
-    String MaNhatKyBaoMat;
+    @Column(name = "MaNhatKyHeThong", nullable = false, length = 50)
+    String MaNhatKyHeThong;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan")
@@ -38,9 +38,6 @@ public class NhatKyBaoMat {
 
     @Column(name = "MaDoiTuong", length = 50)
     String MaDoiTuong;
-
-    @Column(name = "KetQua", nullable = false, length = 20)
-    String KetQua;
 
     @CreationTimestamp
     @Column(name = "ThoiGian", nullable = false, updatable = false)

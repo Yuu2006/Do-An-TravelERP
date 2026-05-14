@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.dto.responses.ApiResponse;
-import com.digitaltravel.erp.dto.responses.NhatKyBaoMatResponse;
-import com.digitaltravel.erp.service.NhatKyBaoMatService;
+import com.digitaltravel.erp.dto.responses.NhatKyHeThongResponse;
+import com.digitaltravel.erp.service.NhatKyHeThongService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,21 +25,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QuanTriController {
 
-    private final NhatKyBaoMatService nhatKyBaoMatService;
+    private final NhatKyHeThongService nhatKyHeThongService;
 
-    @GetMapping("/nhat-ky-bao-mat")
+    @GetMapping("/nhat-ky-he-thong")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<Page<NhatKyBaoMatResponse>>> nhatKyBaoMat(
+    public ResponseEntity<ApiResponse<Page<NhatKyHeThongResponse>>> nhatKyHeThong(
             @RequestParam(required = false) String maTaiKhoan,
             @RequestParam(required = false) String hanhDong,
             @RequestParam(required = false) String doiTuong,
             @RequestParam(required = false) String maDoiTuong,
-            @RequestParam(required = false) String ketQua,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime tuThoiGian,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime denThoiGian,
             @PageableDefault(size = 20, sort = "ThoiGian", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
-                nhatKyBaoMatService.timKiem(maTaiKhoan, hanhDong, doiTuong, maDoiTuong, ketQua,
-                        tuThoiGian, denThoiGian, pageable)));
+                nhatKyHeThongService.timKiem(maTaiKhoan, hanhDong, doiTuong, maDoiTuong, tuThoiGian,
+                        denThoiGian, pageable)));
     }
 }

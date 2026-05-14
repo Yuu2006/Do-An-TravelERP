@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,9 +31,6 @@ import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
-import com.digitaltravel.erp.service.NhatKyBaoMatService;
-
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +46,6 @@ public class AuthController {
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
-    private final NhatKyBaoMatService nhatKyBaoMatService;
 
     @PostMapping("/dang-ky")
     @Transactional
@@ -104,23 +99,12 @@ public class AuthController {
     }
 
     @PostMapping("/dang-nhap")
-    public ResponseEntity<ApiResponse<DangNhapResponse>> dangNhap(
-            @Valid @RequestBody DangNhapRequest request,
-            HttpServletRequest httpRequest) {
-        Authentication auth;
-        try {
-            auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
-            );
-        } catch (AuthenticationException ex) {
-            nhatKyBaoMatService.ghiNhan(null, "DANG_NHAP", NhatKyBaoMatService.THAT_BAI,
-                    "Dang nhap that bai: " + request.getTenDangNhap(), httpRequest);
-            throw ex;
-        }
+    public ResponseEntity<ApiResponse<DangNhapResponse>> dangNhap(@Valid @RequestBody DangNhapRequest request) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
+        );
         TaiKhoanDetails details = (TaiKhoanDetails) auth.getPrincipal();
         String token = jwtUtil.generateToken(details);
-        nhatKyBaoMatService.ghiNhan(details.getTaiKhoan().getMaTaiKhoan(), "DANG_NHAP",
-                NhatKyBaoMatService.THANH_CONG, "Dang nhap thanh cong", httpRequest);
         DangNhapResponse body = DangNhapResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
@@ -135,8 +119,7 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<Void>> doiMatKhau(
             @AuthenticationPrincipal TaiKhoanDetails details,
-            @Valid @RequestBody DoiMatKhauRequest request,
-            HttpServletRequest httpRequest) {
+            @Valid @RequestBody DoiMatKhauRequest request) {
         if (!request.getMatKhauMoi().equals(request.getXacNhanMatKhau())) {
             throw AppException.badRequest("Mat khau moi va xac nhan khong khop");
         }
@@ -146,8 +129,6 @@ public class AuthController {
         TaiKhoan taiKhoan = details.getTaiKhoan();
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
-        nhatKyBaoMatService.ghiNhan(taiKhoan.getMaTaiKhoan(), "DOI_MAT_KHAU",
-                NhatKyBaoMatService.THANH_CONG, "Doi mat khau thanh cong", httpRequest);
         return ResponseEntity.ok(ApiResponse.noContent("Doi mat khau thanh cong"));
     }
 
@@ -161,9 +142,7 @@ public class AuthController {
     }
 
     @PostMapping("/dat-lai-mat-khau")
-    public ResponseEntity<ApiResponse<Void>> datLaiMatKhau(
-            @Valid @RequestBody DatLaiMatKhauRequest request,
-            HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<Void>> datLaiMatKhau(@Valid @RequestBody DatLaiMatKhauRequest request) {
         if (!request.getMatKhauMoi().equals(request.getXacNhanMatKhau())) {
             throw AppException.badRequest("Mat khau moi va xac nhan khong khop");
         }
@@ -172,8 +151,6 @@ public class AuthController {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tai khoan"));
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
-        nhatKyBaoMatService.ghiNhan(taiKhoan.getMaTaiKhoan(), "DAT_LAI_MAT_KHAU",
-                NhatKyBaoMatService.THANH_CONG, "Dat lai mat khau thanh cong", httpRequest);
         return ResponseEntity.ok(ApiResponse.noContent("Dat lai mat khau thanh cong"));
     }
 
