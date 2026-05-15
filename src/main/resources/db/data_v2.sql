@@ -228,48 +228,44 @@ VALUES ('TTT098', 'TM002', DATE '2026-01-15', 4200000, 20, 8,  0, 'KET_THUC', 'S
 -- ------------------------------------------------------------
 -- 12. VOUCHER — Thêm 5 voucher mới
 -- ------------------------------------------------------------
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC004', 'GOLD20', 'PHAN_TRAM', 20,
         'Ưu đãi 20% dành riêng thành viên hạng VANG và KIM_CUONG. Đơn tối thiểu 5.000.000 VNĐ.',
-        100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
+        100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC005', 'MIENNAM300', 'SO_TIEN', 300000,
         'Giảm 300.000 VNĐ cho tour miền Nam (Cần Thơ, Phú Quốc). Đơn tối thiểu 3.000.000 VNĐ.',
-        80, 0, DATE '2026-05-01', DATE '2026-08-31', 'SAN_SANG', 'SYSTEM');
+        80, 0, DATE '2026-05-01', DATE '2026-08-31', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC006', 'LOYALTY500', 'SO_TIEN', 500000,
         'Tặng voucher đổi từ 500 điểm xanh. Không giới hạn đơn tối thiểu.',
-        500, 0, DATE '2026-01-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
+        500, 0, DATE '2026-01-01', DATE '2026-12-31', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC007', 'HOLIDAY15', 'PHAN_TRAM', 15,
         'Khuyến mãi lễ 30/4 - 1/5. Áp dụng toàn bộ tour. Đơn tối thiểu 2.000.000 VNĐ.',
-        200, 12, DATE '2026-04-25', DATE '2026-05-05', 'SAN_SANG', 'SYSTEM');
+        200, 12, DATE '2026-04-25', DATE '2026-05-05', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC008', 'CONGE10', 'PHAN_TRAM', 10,
         'Giảm 10% cho tour Côn Đảo. Đơn tối thiểu 6.000.000 VNĐ.',
-        30, 0, DATE '2026-06-01', DATE '2026-09-30', 'SAN_SANG', 'SYSTEM');
+        30, 0, DATE '2026-06-01', DATE '2026-09-30', 'SYSTEM');
 
 -- ------------------------------------------------------------
 -- 13. KHUYENMAI_KH — Phát hành voucher cho khách hàng
 -- ------------------------------------------------------------
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH001', 'VC004', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH003', 'VC004', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH003', 'VC007', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-05-05');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH004', 'VC001', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH005', 'VC003', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH006', 'VC004', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH006', 'VC006', 'DA_DUNG',  SYSTIMESTAMP - 30, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH001', 'VC004', SYSTIMESTAMP, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH003', 'VC007', SYSTIMESTAMP, DATE '2026-05-05');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH004', 'VC001', SYSTIMESTAMP, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH005', 'VC003', SYSTIMESTAMP, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH006', 'VC004', SYSTIMESTAMP, DATE '2026-12-31');
 
 -- ------------------------------------------------------------
 -- 14. DONDATTOUR — 8 đơn đặt tour mới
@@ -379,23 +375,23 @@ VALUES ('GD098', 'DDT098', 3500000, 'THANH_TOAN', 'THE_VISA',     'THANH_CONG', 
 -- ------------------------------------------------------------
 -- 19. PHANCONGTOUR — Phân công HDV vào tour
 -- ------------------------------------------------------------
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT001', 'TTT001', 'NV_HDV01', 'DA_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT002', 'TTT003', 'NV_HDV02', 'DA_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT003', 'TTT005', 'NV_HDV01', 'CHO_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT004', 'TTT008', 'NV_HDV03', 'DA_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT005', 'TTT009', 'NV_HDV04', 'DA_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT006', 'TTT010', 'NV_HDV02', 'DA_XAC_NHAN', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT001', 'TTT001', 'NV_HDV01', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT002', 'TTT003', 'NV_HDV02', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT003', 'TTT005', 'NV_HDV01', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT004', 'TTT008', 'NV_HDV03', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT005', 'TTT009', 'NV_HDV04', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT006', 'TTT010', 'NV_HDV02', 'SYSTEM');
 -- Phân công cho tour đã kết thúc để test điểm danh / hành động xanh
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT097', 'TTT098', 'NV_HDV02', 'DA_XAC_NHAN', 'SYSTEM');
-INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TrangThai, TaoBoi)
-VALUES ('PCT099', 'TTT099', 'NV_HDV01', 'DA_XAC_NHAN', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT097', 'TTT098', 'NV_HDV02', 'SYSTEM');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, TaoBoi)
+VALUES ('PCT099', 'TTT099', 'NV_HDV01', 'SYSTEM');
 
 -- ------------------------------------------------------------
 -- 20. LICHSUTOUR — Lịch sử tour đã hoàn thành

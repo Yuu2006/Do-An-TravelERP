@@ -24,4 +24,15 @@ public interface HanhDongRepository extends JpaRepository<HanhDong, String> {
             @Param("maKhachHang") String maKhachHang,
             @Param("maHanhDong") String maHanhDong
     );
+
+    @Query("""
+            SELECT CASE WHEN COUNT(h) > 0 THEN true ELSE false END
+            FROM HanhDong h
+            WHERE h.tourThucTe.MaTourThucTe = :maTour
+              AND h.nhanVienXacMinh.MaNhanVien = :maNhanVien
+            """)
+    boolean existsByMaTourAndMaNhanVien(
+            @Param("maTour") String maTour,
+            @Param("maNhanVien") String maNhanVien
+    );
 }

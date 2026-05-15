@@ -16,6 +16,8 @@ import com.digitaltravel.erp.entity.NhanVien;
 import com.digitaltravel.erp.entity.PhanCongTour;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.DiemDanhRepository;
+import com.digitaltravel.erp.repository.HanhDongRepository;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
@@ -29,6 +31,8 @@ public class PhanCongTourService {
     private final PhanCongTourRepository phanCongTourRepository;
     private final NhanVienRepository nhanVienRepository;
     private final TourThucTeRepository tourThucTeRepository;
+    private final DiemDanhRepository diemDanhRepository;
+    private final HanhDongRepository hanhDongRepository;
 
     // ── UC38: Tìm HDV khả dụng ────────────────────────────────────────────
     public List<NhanVienResponse> timHdvKhaDung(String maTourThucTe) {
@@ -75,7 +79,6 @@ public class PhanCongTourService {
         pc.setTourThucTe(tour);
         pc.setNhanVien(hdv);
         pc.setNgayPhanCong(LocalDateTime.now());
-        pc.setTrangThai("DA_XAC_NHAN");
         pc.setTaoBoi(taoBoi);
         phanCongTourRepository.save(pc);
 
@@ -92,12 +95,19 @@ public class PhanCongTourService {
         PhanCongTour pc = phanCongTourRepository.findById(maPhanCong)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay phan cong: " + maPhanCong));
 
-        pc.setTrangThai("HUY");
-        phanCongTourRepository.save(pc);
+        String maTour = pc.getTourThucTe().getMaTourThucTe();
+        String maNhanVien = pc.getNhanVien().getMaNhanVien();
+        if (diemDanhRepository.existsByMaTourAndMaNhanVien(maTour, maNhanVien)
+                || hanhDongRepository.existsByMaTourAndMaNhanVien(maTour, maNhanVien)) {
+            throw AppException.badRequest("Khong the huy phan cong da co du lieu van hanh.");
+        }
+
+        phanCongTourRepository.delete(pc);
 
         // Nếu HDV không còn phân công hiệu lực nào thì về SAN_SANG
         NhanVien hdv = pc.getNhanVien();
-        boolean conTourKhac = !phanCongTourRepository.findByMaNhanVien(hdv.getMaNhanVien()).isEmpty();
+        boolean conTourKhac = phanCongTourRepository.findByMaNhanVien(hdv.getMaNhanVien()).stream()
+                .anyMatch(other -> !other.getMaPhanCongTour().equals(maPhanCong));
         if (!conTourKhac) {
             hdv.setTrangThaiLamViec("SAN_SANG");
             nhanVienRepository.save(hdv);
@@ -123,7 +133,6 @@ public class PhanCongTourService {
                 .tenTour(tt.getTourMau() != null ? tt.getTourMau().getTieuDe() : "")
                 .maNhanVien(nv.getMaNhanVien())
                 .tenNhanVien(nv.getTaiKhoan().getHoTen())
-                .trangThai(pc.getTrangThai())
                 .ngayPhanCong(pc.getNgayPhanCong())
                 .build();
     }

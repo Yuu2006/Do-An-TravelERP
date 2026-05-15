@@ -1,6 +1,5 @@
 package com.digitaltravel.erp.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -36,14 +35,4 @@ public interface KhuyenMaiKhRepository extends JpaRepository<KhuyenMaiKh, Khuyen
             @Param("maKhachHang") String maKhachHang,
             @Param("maVoucher") String maVoucher
     );
-
-    // Tất cả voucher SAN_SANG của khách (dùng để validate trước khi áp)
-    @Query("""
-            SELECT k FROM KhuyenMaiKh k
-            JOIN FETCH k.voucher v
-            WHERE k.khachHang.MaKhachHang = :maKhachHang
-              AND k.TrangThai = 'SAN_SANG'
-            ORDER BY k.NgayNhan DESC
-            """)
-    List<KhuyenMaiKh> findSanSangByMaKhachHang(@Param("maKhachHang") String maKhachHang);
 }

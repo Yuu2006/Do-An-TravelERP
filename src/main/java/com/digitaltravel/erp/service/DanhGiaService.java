@@ -65,7 +65,6 @@ public class DanhGiaService {
         dg.setSoSao(request.getSoSao());
         dg.setNhanXet(request.getNhanXet());
         dg.setNgayDanhGia(LocalDateTime.now());
-        dg.setTrangThai("HIEU_LUC");
         danhGiaKhRepository.save(dg);
 
         // Cập nhật điểm trung bình TourMau
@@ -81,8 +80,8 @@ public class DanhGiaService {
     }
 
     // ── Tất cả đánh giá (admin quản lý) ─────────────────────────────────────
-    public Page<DanhGiaKhResponse> tatCaDanhGia(String trangThai, Pageable pageable) {
-        return danhGiaKhRepository.findAll(trangThai, pageable).map(this::toResponse);
+    public Page<DanhGiaKhResponse> tatCaDanhGia(Pageable pageable) {
+        return danhGiaKhRepository.findAllWithDetails(pageable).map(this::toResponse);
     }
 
     // ── Cập nhật điểm trung bình cho TourMau ─────────────────────────────────
@@ -90,7 +89,7 @@ public class DanhGiaService {
         TourMau tm = tourMauRepository.findById(maTourMau).orElse(null);
         if (tm == null) return;
 
-        // Lấy tất cả đánh giá hiệu lực cho tour mẫu này
+        // Lấy tất cả đánh giá cho tour mẫu này
         long total = danhGiaKhRepository.count(); // approximate
         // Tính lại từ các tour thực tế thuộc tour mẫu này (đơn giản hóa)
         // Trong thực tế cần query aggregate, nhưng để tránh phức tạp:
@@ -115,7 +114,6 @@ public class DanhGiaService {
                 .soSao(dg.getSoSao())
                 .nhanXet(dg.getNhanXet())
                 .ngayDanhGia(dg.getNgayDanhGia())
-                .trangThai(dg.getTrangThai())
                 .build();
     }
 }

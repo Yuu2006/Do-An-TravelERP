@@ -48,10 +48,6 @@ public class DanhGiaKh {
     @Column(name = "NgayDanhGia", nullable = false)
     LocalDateTime NgayDanhGia;
 
-    // Gia tri hop le: HIEU_LUC | AN
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
     // FK composite (MaKhachHang, MaTourThucTe) -> LICHSUTOUR
     // insertable/updatable=false vi da map boi khachHang va tourThucTe
     @ManyToOne(fetch = FetchType.LAZY)

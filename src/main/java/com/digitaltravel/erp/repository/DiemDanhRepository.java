@@ -14,4 +14,15 @@ public interface DiemDanhRepository extends JpaRepository<DiemDanh, String> {
 
     @Query("SELECT d FROM DiemDanh d JOIN FETCH d.khachHang WHERE d.tourThucTe.MaTourThucTe = :maTour ORDER BY d.ThoiGian DESC")
     List<DiemDanh> findByMaTour(@Param("maTour") String maTour);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END
+            FROM DiemDanh d
+            WHERE d.tourThucTe.MaTourThucTe = :maTour
+              AND d.nhanVien.MaNhanVien = :maNhanVien
+            """)
+    boolean existsByMaTourAndMaNhanVien(
+            @Param("maTour") String maTour,
+            @Param("maNhanVien") String maNhanVien
+    );
 }

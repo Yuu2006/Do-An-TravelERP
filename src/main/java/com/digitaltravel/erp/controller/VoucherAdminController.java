@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
@@ -43,9 +42,8 @@ public class VoucherAdminController {
     @GetMapping
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> danhSach(
-            @RequestParam(required = false) String trangThai,
             @PageableDefault(size = 10, sort = "NgayHieuLuc", direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSach(trangThai, pageable)));
+        return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSach(pageable)));
     }
 
     // ── Chi tiết voucher ──────────────────────────────────────────────────────
@@ -74,16 +72,6 @@ public class VoucherAdminController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok("Cap nhat voucher thanh cong",
                 voucherService.capNhatVoucher(maVoucher, request, user.getUsername())));
-    }
-
-    // ── UC55: Vô hiệu hóa voucher ────────────────────────────────────────────
-    @PutMapping("/{maVoucher}/vo-hieu")
-    @PreAuthorize("hasRole('KINHDOANH')")
-    public ResponseEntity<ApiResponse<VoucherResponse>> voHieuVoucher(
-            @PathVariable String maVoucher,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
-        return ResponseEntity.ok(ApiResponse.ok("Vo hieu voucher thanh cong",
-                voucherService.voHieu(maVoucher, user.getUsername())));
     }
 
     // ── UC56: Phát hành voucher cho khách hàng ────────────────────────────────

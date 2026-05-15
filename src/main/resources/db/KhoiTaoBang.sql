@@ -269,7 +269,6 @@ CREATE TABLE VOUCHER (
                          SoLuotDaDung         NUMBER(10)     DEFAULT 0 NOT NULL,
                          NgayHieuLuc          DATE           NOT NULL,
                          NgayHetHan           DATE           NOT NULL,
-                         TrangThai            VARCHAR2(20)   DEFAULT 'SAN_SANG' NOT NULL,
                          TaoBoi               VARCHAR2(100),
                          CapNhatBoi           VARCHAR2(100),
                          CONSTRAINT UQ_VOUCHER_MaCode           UNIQUE (MaCode),
@@ -278,21 +277,18 @@ CREATE TABLE VOUCHER (
                          CONSTRAINT CK_VOUCHER_SoLuot           CHECK (SoLuotPhatHanh > 0 AND SoLuotDaDung >= 0),
                          CONSTRAINT CK_VOUCHER_DaDung           CHECK (SoLuotDaDung <= SoLuotPhatHanh),
                          CONSTRAINT CK_VOUCHER_PhanTram         CHECK (LoaiUuDai <> 'PHAN_TRAM' OR GiaTriGiam <= 100),
-                         CONSTRAINT CK_VOUCHER_NgayHL           CHECK (NgayHieuLuc <= NgayHetHan),
-                         CONSTRAINT CK_VOUCHER_TrangThai        CHECK (TrangThai IN ('SAN_SANG','VO_HIEU'))
+                         CONSTRAINT CK_VOUCHER_NgayHL           CHECK (NgayHieuLuc <= NgayHetHan)
 );
 
 -- Vi voucher cua khach hang
 CREATE TABLE KHUYENMAI_KH (
                               MaKhachHang      VARCHAR2(50)  NOT NULL,
                               MaVoucher        VARCHAR2(50)  NOT NULL,
-                              TrangThai        VARCHAR2(20)  DEFAULT 'SAN_SANG' NOT NULL,
                               NgayHetHan       DATE,
                               NgayNhan         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                               CONSTRAINT PK_KHUYENMAIKH              PRIMARY KEY (MaKhachHang, MaVoucher),
                               CONSTRAINT FK_KMKH_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
-                              CONSTRAINT FK_KMKH_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher),
-                              CONSTRAINT CK_KMKH_TrangThai           CHECK (TrangThai IN ('SAN_SANG','DA_DUNG','HET_HAN','VO_HIEU'))
+                              CONSTRAINT FK_KMKH_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher)
 );
 
 -- Lich su ap dung voucher vao don dat
@@ -347,12 +343,10 @@ CREATE TABLE PHANCONGTOUR (
                               MaTourThucTe     VARCHAR2(50)  NOT NULL,
                               MaNhanVien       VARCHAR2(50)  NOT NULL,
                               NgayPhanCong     TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                              TrangThai        VARCHAR2(20)  DEFAULT 'CHO_XAC_NHAN' NOT NULL,
                               TaoBoi           VARCHAR2(100),
                               CONSTRAINT UQ_PCT_TourThucTe_NhanVien UNIQUE (MaTourThucTe, MaNhanVien),
                               CONSTRAINT FK_PCT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
-                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
-                              CONSTRAINT CK_PCT_TrangThai            CHECK (TrangThai IN ('CHO_XAC_NHAN','DA_XAC_NHAN','HUY'))
+                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien)
 );
 
 -- Nhat ky diem danh khach trong tour
@@ -394,11 +388,9 @@ CREATE TABLE NHATKYSUCO (
                             MaNhanVienBaoCao     VARCHAR2(50) NOT NULL,
                             MoTa                 CLOB         NOT NULL,
                             GiaiPhap             CLOB,
-                            TrangThai            VARCHAR2(20) DEFAULT 'MOI_TAO' NOT NULL,
                             ThoiGianBaoCao       TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                             CONSTRAINT FK_NKSC_TourThucTe          FOREIGN KEY (MaTourThucTe)     REFERENCES TOURTHUCTE(MaTourThucTe),
-                            CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien),
-                            CONSTRAINT CK_NKSC_TrangThai           CHECK (TrangThai IN ('MOI_TAO','DANG_XU_LY','DA_DONG'))
+                            CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien)
 );
 
 -- Chi phi thuc te do HDV khai bao
@@ -478,13 +470,11 @@ CREATE TABLE DANHGIAKH (
                            SoSao                NUMBER(1)    NOT NULL,
                            NhanXet              CLOB,
                            NgayDanhGia          TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
-                           TrangThai            VARCHAR2(20) DEFAULT 'HIEU_LUC' NOT NULL,
                            CONSTRAINT FK_DGKH_TourThucTe          FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_DGKH_KhachHang           FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                            CONSTRAINT FK_DGKH_LichSuTour          FOREIGN KEY (MaKhachHang, MaTourThucTe)
                                REFERENCES LICHSUTOUR(MaKhachHang, MaTourThucTe),
-                           CONSTRAINT CK_DANHGIAKH_SoSao          CHECK (SoSao BETWEEN 1 AND 5),
-                           CONSTRAINT CK_DANHGIAKH_TrangThai      CHECK (TrangThai IN ('HIEU_LUC','AN'))
+                           CONSTRAINT CK_DANHGIAKH_SoSao          CHECK (SoSao BETWEEN 1 AND 5)
 );
 
 

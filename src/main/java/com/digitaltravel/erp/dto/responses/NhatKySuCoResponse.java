@@ -11,6 +11,5 @@ public class NhatKySuCoResponse {
     private String maNhatKySuCo;
     private String moTa;
     private String giaiPhap;
-    private String trangThai;
     private LocalDateTime thoiGianBaoCao;
 }

@@ -367,7 +367,6 @@ Ví dụ tạo tour thực tế:
 | `GET` | `/api/kinh-doanh/voucher` | Danh sách voucher |
 | `POST` | `/api/kinh-doanh/voucher` | Tạo voucher |
 | `PUT` | `/api/kinh-doanh/voucher/{maVoucher}` | Cập nhật voucher |
-| `PUT` | `/api/kinh-doanh/voucher/{maVoucher}/vo-hieu` | Vô hiệu voucher |
 | `POST` | `/api/kinh-doanh/voucher/{maVoucher}/phat-hanh` | Phát hành voucher cho khách |
 | `GET` | `/api/kinh-doanh/danh-gia` | Xem đánh giá để moderation |
 

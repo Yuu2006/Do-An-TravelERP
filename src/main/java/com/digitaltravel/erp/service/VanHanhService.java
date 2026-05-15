@@ -121,21 +121,19 @@ public class VanHanhService {
         sc.setNhanVienBaoCao(hdv);
         sc.setMoTa(req.getMoTa());
         sc.setGiaiPhap(req.getGiaiPhap());
-        sc.setTrangThai("MOI_TAO");
         sc.setThoiGianBaoCao(LocalDateTime.now());
         nhatKySuCoRepository.save(sc);
 
         return toSuCoResponse(sc);
     }
 
-    // Cập nhật giải pháp / đóng sự cố
+    // Cập nhật mô tả / giải pháp sự cố
     @Transactional
     public NhatKySuCoResponse capNhatSuCo(String maSuCo, BaoCaoSuCoRequest req) {
         NhatKySuCo sc = nhatKySuCoRepository.findById(maSuCo)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay su co: " + maSuCo));
         if (req.getGiaiPhap() != null) sc.setGiaiPhap(req.getGiaiPhap());
         if (req.getMoTa() != null) sc.setMoTa(req.getMoTa());
-        sc.setTrangThai("DA_DONG");
         nhatKySuCoRepository.save(sc);
         return toSuCoResponse(sc);
     }
@@ -273,7 +271,6 @@ public class VanHanhService {
                 .maNhatKySuCo(sc.getMaNhatKySuCo())
                 .moTa(sc.getMoTa())
                 .giaiPhap(sc.getGiaiPhap())
-                .trangThai(sc.getTrangThai())
                 .thoiGianBaoCao(sc.getThoiGianBaoCao())
                 .build();
     }

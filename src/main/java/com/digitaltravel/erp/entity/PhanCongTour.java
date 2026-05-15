@@ -37,10 +37,6 @@ public class PhanCongTour {
     @Column(name = "NgayPhanCong", nullable = false)
     LocalDateTime NgayPhanCong;
 
-    // Gia tri hop le: CHO_XAC_NHAN | DA_XAC_NHAN | HUY
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
     @Column(name = "TaoBoi", length = 100)
     String TaoBoi;
 }

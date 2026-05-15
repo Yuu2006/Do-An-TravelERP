@@ -14,7 +14,7 @@ import com.digitaltravel.erp.entity.PhanCongTour;
 public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, String> {
 
     // Lấy tất cả phân công của 1 tour
-    @Query("SELECT pc FROM PhanCongTour pc JOIN FETCH pc.nhanVien nv JOIN FETCH nv.taiKhoan WHERE pc.tourThucTe.MaTourThucTe = :maTour AND pc.TrangThai != 'HUY'")
+    @Query("SELECT pc FROM PhanCongTour pc JOIN FETCH pc.nhanVien nv JOIN FETCH nv.taiKhoan WHERE pc.tourThucTe.MaTourThucTe = :maTour")
     List<PhanCongTour> findActiveByMaTour(@Param("maTour") String maTour);
 
     // HDV xem tour được giao (đang hiệu lực)
@@ -23,7 +23,6 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
             JOIN FETCH pc.tourThucTe tt
             JOIN FETCH tt.tourMau
             WHERE pc.nhanVien.MaNhanVien = :maNhanVien
-              AND pc.TrangThai != 'HUY'
             ORDER BY tt.NgayKhoiHanh DESC
             """)
     List<PhanCongTour> findByMaNhanVien(@Param("maNhanVien") String maNhanVien);
@@ -38,8 +37,7 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
               AND nv.MaNhanVien NOT IN (
                   SELECT pc.nhanVien.MaNhanVien FROM PhanCongTour pc
                   JOIN pc.tourThucTe tt
-                  WHERE pc.TrangThai != 'HUY'
-                    AND tt.NgayKhoiHanh <= :ngayKetThuc
+                  WHERE tt.NgayKhoiHanh <= :ngayKetThuc
                     AND tt.NgayKhoiHanh >= :ngayKhoiHanh
               )
             """)

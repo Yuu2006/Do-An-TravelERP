@@ -17,7 +17,6 @@ public interface DanhGiaKhRepository extends JpaRepository<DanhGiaKh, String> {
             JOIN FETCH d.khachHang kh
             JOIN FETCH kh.taiKhoan
             WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
-              AND d.TrangThai = 'HIEU_LUC'
             ORDER BY d.NgayDanhGia DESC
             """)
     Page<DanhGiaKh> findByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe, Pageable pageable);
@@ -40,8 +39,7 @@ public interface DanhGiaKhRepository extends JpaRepository<DanhGiaKh, String> {
             JOIN FETCH kh.taiKhoan
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
-            WHERE (:trangThai IS NULL OR d.TrangThai = :trangThai)
             ORDER BY d.NgayDanhGia DESC
             """)
-    Page<DanhGiaKh> findAll(@Param("trangThai") String trangThai, Pageable pageable);
+    Page<DanhGiaKh> findAllWithDetails(Pageable pageable);
 }

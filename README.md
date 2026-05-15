@@ -327,7 +327,6 @@ src/main/java/com/digitaltravel/erp/
 | GET | `/api/kinh-doanh/voucher/{maVoucher}` | KINHDOANH | UC54 | DONE |
 | POST | `/api/kinh-doanh/voucher` | KINHDOANH | UC54 | DONE |
 | PUT | `/api/kinh-doanh/voucher/{maVoucher}` | KINHDOANH | UC55 | DONE |
-| PUT | `/api/kinh-doanh/voucher/{maVoucher}/vo-hieu` | KINHDOANH | UC55 | DONE |
 | POST | `/api/kinh-doanh/voucher/{maVoucher}/phat-hanh` | KINHDOANH | UC56 | DONE |
 
 ---
@@ -384,7 +383,7 @@ src/main/java/com/digitaltravel/erp/
 | UC52 | Kế toán xác nhận chuyển tiền hoàn | Quyết toán |
 | UC53 | Báo cáo doanh thu / top tour | Quyết toán |
 | UC54 | Tạo voucher mới | Voucher |
-| UC55 | Cập nhật / vô hiệu voucher | Voucher |
+| UC55 | Cập nhật voucher | Voucher |
 | UC56 | Phát hành voucher cho khách hàng | Voucher |
 | UC58 | Đăng ký tài khoản khách hàng | Auth |
 | UC59 | Đăng nhập, nhận JWT | Auth |

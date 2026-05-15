@@ -38,10 +38,6 @@ public class KhuyenMaiKh {
     @JoinColumn(name = "MaVoucher")
     Voucher voucher;
 
-    // Gia tri hop le: SAN_SANG | DA_DUNG | HET_HAN | VO_HIEU
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
     // Oracle DATE -> LocalDate
     @Column(name = "NgayHetHan")
     LocalDate NgayHetHan;

@@ -15,7 +15,6 @@ public class KhuyenMaiKhResponse {
     String loaiUuDai;
     BigDecimal giaTriGiam;
     String dieuKienApDung;
-    String trangThai;
     LocalDate ngayHetHan;
     LocalDateTime ngayNhan;
 }

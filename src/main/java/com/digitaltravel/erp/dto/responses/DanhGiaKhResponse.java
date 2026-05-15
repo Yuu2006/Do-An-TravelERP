@@ -16,5 +16,4 @@ public class DanhGiaKhResponse {
     Integer soSao;
     String nhanXet;
     LocalDateTime ngayDanhGia;
-    String trangThai;
 }

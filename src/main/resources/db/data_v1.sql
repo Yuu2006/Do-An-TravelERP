@@ -236,29 +236,29 @@ VALUES ('TTT005', 'TM004', DATE '2026-05-30', 3200000, 15, 6,  15, 'MO_BAN',    
 -- ------------------------------------------------------------
 -- 11. VOUCHER — Chương trình ưu đãi mẫu
 -- ------------------------------------------------------------
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC001', 'WELCOME10', 'PHAN_TRAM', 10,
         'Giảm 10% cho khách đặt tour lần đầu. Đơn tối thiểu 3.000.000 VNĐ.',
-        100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
+        100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC002', 'SUMMER500K', 'SO_TIEN', 500000,
         'Giảm 500.000 VNĐ cho tour khởi hành tháng 5–7/2026. Đơn tối thiểu 4.000.000 VNĐ.',
-        50, 0, DATE '2026-05-01', DATE '2026-07-31', 'SAN_SANG', 'SYSTEM');
+        50, 0, DATE '2026-05-01', DATE '2026-07-31', 'SYSTEM');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
 VALUES ('VC003', 'BAC15', 'PHAN_TRAM', 15,
         'Ưu đãi 15% dành riêng thành viên hạng BAC trở lên. Đơn tối thiểu 5.000.000 VNĐ.',
-        200, 0, DATE '2026-04-01', DATE '2026-12-31', 'SAN_SANG', 'SYSTEM');
+        200, 0, DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
 
 -- ------------------------------------------------------------
 -- 12. KHUYENMAI_KH — Phát hành voucher cho khách hàng
 -- ------------------------------------------------------------
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH001', 'VC003', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH001', 'VC003', SYSTIMESTAMP, DATE '2026-12-31');
 
-INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, TrangThai, NgayNhan, NgayHetHan)
-VALUES ('KH002', 'VC001', 'SAN_SANG', SYSTIMESTAMP, DATE '2026-12-31');
+INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayNhan, NgayHetHan)
+VALUES ('KH002', 'VC001', SYSTIMESTAMP, DATE '2026-12-31');
 
 -- ------------------------------------------------------------
 -- 13. TOURTHUCTE bổ sung — 1 tour KẾT THÚC để test báo cáo
@@ -287,8 +287,8 @@ VALUES ('LS001', 'KH001', 'TTT099', DATE '2026-02-10');
 -- ------------------------------------------------------------
 -- 16. DANHGIAKH — Đánh giá tour đã hoàn thành
 -- ------------------------------------------------------------
-INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaKhachHang, MaTourThucTe, SoSao, NhanXet, TrangThai)
-VALUES ('DG001', 'KH001', 'TTT099', 5, 'Tour rất tốt, HDV nhiệt tình, dịch vụ chuẩn.', 'HIEU_LUC');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaKhachHang, MaTourThucTe, SoSao, NhanXet)
+VALUES ('DG001', 'KH001', 'TTT099', 5, 'Tour rất tốt, HDV nhiệt tình, dịch vụ chuẩn.');
 
 -- ------------------------------------------------------------
 -- 17. GIAODICH — Giao dịch thanh toán mẫu

@@ -16,6 +16,5 @@ public class PhanCongResponse {
     String tenTour;
     String maNhanVien;
     String tenNhanVien;
-    String trangThai;
     LocalDateTime ngayPhanCong;
 }

@@ -45,10 +45,6 @@ public class NhatKySuCo {
     @Column(name = "GiaiPhap")
     String GiaiPhap;
 
-    // Gia tri hop le: MOI_TAO | DANG_XU_LY | DA_DONG
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
     @Column(name = "ThoiGianBaoCao", nullable = false)
     LocalDateTime ThoiGianBaoCao;
 

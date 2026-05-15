@@ -18,6 +18,5 @@ public class VoucherResponse {
     Integer soLuotDaDung;
     LocalDate ngayHieuLuc;
     LocalDate ngayHetHan;
-    String trangThai;
     String taoBoi;
 }

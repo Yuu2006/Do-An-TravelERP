@@ -43,8 +43,7 @@ public class DanhGiaController {
     @GetMapping("/api/kinh-doanh/danh-gia")
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<Page<DanhGiaKhResponse>>> tatCaDanhGia(
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String trangThai,
             @PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(danhGiaService.tatCaDanhGia(trangThai, pageable)));
+        return ResponseEntity.ok(ApiResponse.ok(danhGiaService.tatCaDanhGia(pageable)));
     }
 }

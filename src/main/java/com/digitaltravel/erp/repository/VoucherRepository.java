@@ -17,19 +17,17 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
 
     Optional<Voucher> findByMaCode(String maCode);
 
-    // Tất cả voucher đang có hiệu lực (admin quản lý)
+    // Tất cả voucher (admin quản lý)
     @Query("""
             SELECT v FROM Voucher v
-            WHERE (:trangThai IS NULL OR v.TrangThai = :trangThai)
             ORDER BY v.NgayHieuLuc DESC
             """)
-    Page<Voucher> timKiem(@Param("trangThai") String trangThai, Pageable pageable);
+    Page<Voucher> timKiem(Pageable pageable);
 
     // Voucher còn hiệu lực và còn lượt dùng (dùng để validate khi áp vào đơn)
     @Query("""
             SELECT v FROM Voucher v
-            WHERE v.TrangThai = 'SAN_SANG'
-              AND v.NgayHieuLuc <= :today
+            WHERE v.NgayHieuLuc <= :today
               AND v.NgayHetHan >= :today
               AND v.SoLuotDaDung < v.SoLuotPhatHanh
             """)
