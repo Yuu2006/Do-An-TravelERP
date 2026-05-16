@@ -131,14 +131,14 @@ public class DatTourService {
             nguoiDongHanh.setGhiChu(nguoiReq.getGhiChu());
             dsNguoiDongHanhRepository.save(nguoiDongHanh);
 
-            ChiTietDatTour chiTietKhachDiCung = new ChiTietDatTour();
-            chiTietKhachDiCung.setMaChiTietDat("CTDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-            chiTietKhachDiCung.setDonDatTour(don);
-            chiTietKhachDiCung.setNguoiDongHanh(nguoiDongHanh);
-            chiTietKhachDiCung.setLoaiKhach("NGUOI_DONG_HANH");
-            chiTietKhachDiCung.setGiaTaiThoiDiemDat(giaPerPerson);
-            chiTietDatTourRepository.save(chiTietKhachDiCung);
-            dsChiTiet.add(chiTietKhachDiCung);
+            ChiTietDatTour chiTietNguoiDongHanh = new ChiTietDatTour();
+            chiTietNguoiDongHanh.setMaChiTietDat("CTDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+            chiTietNguoiDongHanh.setDonDatTour(don);
+            chiTietNguoiDongHanh.setNguoiDongHanh(nguoiDongHanh);
+            chiTietNguoiDongHanh.setLoaiKhach("NGUOI_DONG_HANH");
+            chiTietNguoiDongHanh.setGiaTaiThoiDiemDat(giaPerPerson);
+            chiTietDatTourRepository.save(chiTietNguoiDongHanh);
+            dsChiTiet.add(chiTietNguoiDongHanh);
         }
 
         // 7. Lưu các chi tiết dịch vụ

@@ -18,7 +18,7 @@ BEGIN
                              'CHIPHITHUCTE','NHATKYSUCO','HANHDONG','DIEMDANH',
                              'PHANCONGTOUR','LICHSUTOUR','GIAODICH','DATTOUR_UUDAI',
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
-                             'DSKHACHDITOUR','DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
+                             'DSNGUOIDONGHANH','DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                               'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
                               'TOURMAU','NHATKYBAOMAT','NHATKYHETHONG','VAITRO','TAIKHOAN'
             )
@@ -203,9 +203,9 @@ CREATE TABLE DONDATTOUR (
                                 ))
 );
 
--- Danh sach khach di cung khong co tai khoan/ho chieu so
-CREATE TABLE DSKHACHDITOUR (
-                               MaKhachDiTour    VARCHAR2(50)  PRIMARY KEY,
+-- Danh sach nguoi dong hanh khong co tai khoan/ho chieu so
+CREATE TABLE DSNGUOIDONGHANH (
+                               MaNguoiDongHanh  VARCHAR2(50)  PRIMARY KEY,
                                MaDatTour        VARCHAR2(50)  NOT NULL,
                                HoTen            VARCHAR2(200) NOT NULL,
                                CCCD             VARCHAR2(20),
@@ -213,8 +213,8 @@ CREATE TABLE DSKHACHDITOUR (
                                NgaySinh         DATE,
                                GioiTinh         VARCHAR2(20),
                                GhiChu           VARCHAR2(1000),
-                               CONSTRAINT UQ_DSKDT_DatTour_Khach      UNIQUE (MaDatTour, MaKhachDiTour),
-                               CONSTRAINT FK_DSKDT_DatTour           FOREIGN KEY (MaDatTour) REFERENCES DONDATTOUR(MaDatTour)
+                               CONSTRAINT UQ_DSNDH_DatTour_Nguoi      UNIQUE (MaDatTour, MaNguoiDongHanh),
+                               CONSTRAINT FK_DSNDH_DatTour            FOREIGN KEY (MaDatTour) REFERENCES DONDATTOUR(MaDatTour)
 );
 
 -- Danh sach hanh khach trong 1 don dat (moi hang = 1 nguoi)
@@ -222,19 +222,19 @@ CREATE TABLE CHITIETDATTOUR (
                                 MaChiTietDat         VARCHAR2(50) PRIMARY KEY,
                                 MaDatTour            VARCHAR2(50) NOT NULL,
                                 MaKhachHang          VARCHAR2(50),
-                                MaKhachDiTour        VARCHAR2(50),
+                                MaNguoiDongHanh      VARCHAR2(50),
                                 LoaiKhach            VARCHAR2(30) DEFAULT 'NGUOI_DAT' NOT NULL,
                                 GiaTaiThoiDiemDat    NUMBER(18,2) NOT NULL,
                                 CONSTRAINT UQ_CTDT_DatTour_KhachHang  UNIQUE (MaDatTour, MaKhachHang),
-                                CONSTRAINT UQ_CTDT_DatTour_KhachDiTour UNIQUE (MaDatTour, MaKhachDiTour),
+                                CONSTRAINT UQ_CTDT_DatTour_NDH        UNIQUE (MaDatTour, MaNguoiDongHanh),
                                 CONSTRAINT FK_CTDT_DatTour             FOREIGN KEY (MaDatTour)   REFERENCES DONDATTOUR(MaDatTour),
                                 CONSTRAINT FK_CTDT_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
-                                CONSTRAINT FK_CTDT_KhachDiTour         FOREIGN KEY (MaKhachDiTour) REFERENCES DSKHACHDITOUR(MaKhachDiTour),
-                                CONSTRAINT FK_CTDT_DSKhach_DatTour     FOREIGN KEY (MaDatTour, MaKhachDiTour) REFERENCES DSKHACHDITOUR(MaDatTour, MaKhachDiTour),
-                                CONSTRAINT CK_CTDT_LoaiKhach           CHECK (LoaiKhach IN ('NGUOI_DAT','KHACH_DI_CUNG')),
+                                CONSTRAINT FK_CTDT_NguoiDongHanh       FOREIGN KEY (MaNguoiDongHanh) REFERENCES DSNGUOIDONGHANH(MaNguoiDongHanh),
+                                CONSTRAINT FK_CTDT_NDH_DatTour         FOREIGN KEY (MaDatTour, MaNguoiDongHanh) REFERENCES DSNGUOIDONGHANH(MaDatTour, MaNguoiDongHanh),
+                                CONSTRAINT CK_CTDT_LoaiKhach           CHECK (LoaiKhach IN ('NGUOI_DAT','NGUOI_DONG_HANH')),
                                 CONSTRAINT CK_CTDT_Khach               CHECK (
-                                    (MaKhachHang IS NOT NULL AND MaKhachDiTour IS NULL AND LoaiKhach = 'NGUOI_DAT') OR
-                                    (MaKhachHang IS NULL AND MaKhachDiTour IS NOT NULL AND LoaiKhach = 'KHACH_DI_CUNG')
+                                    (MaKhachHang IS NOT NULL AND MaNguoiDongHanh IS NULL AND LoaiKhach = 'NGUOI_DAT') OR
+                                    (MaKhachHang IS NULL AND MaNguoiDongHanh IS NOT NULL AND LoaiKhach = 'NGUOI_DONG_HANH')
                                 ),
                                 CONSTRAINT CK_CTDT_Gia                 CHECK (GiaTaiThoiDiemDat >= 0)
 );
@@ -451,7 +451,9 @@ CREATE TABLE YEUCAUHOTRO (
                              CONSTRAINT FK_YCHT_DatTour             FOREIGN KEY (MaDatTour)      REFERENCES DONDATTOUR(MaDatTour),
                              CONSTRAINT FK_YCHT_KhachHang           FOREIGN KEY (MaKhachHang)    REFERENCES HOCHIEUSO(MaKhachHang),
                              CONSTRAINT FK_YCHT_NhanVienXL          FOREIGN KEY (MaNhanVienXuLy) REFERENCES NHANVIEN(MaNhanVien),
-                             CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN ('CHUA_XU_LY','DA_XU_LY','TU_CHOI'))
+                             CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN (
+                                                                                         'CHUA_XU_LY','CHO_BO_SUNG','CHO_GIAI_TRINH','DA_XU_LY','TU_CHOI'
+                                 ))
 );
 
 -- Danh gia sau tour cua khach hang
@@ -474,7 +476,7 @@ CREATE TABLE DANHGIAKH (
 CREATE INDEX IDX_DONDATTOUR_KHACHHANG    ON DONDATTOUR(MaKhachHang);
 CREATE INDEX IDX_DONDATTOUR_TOURTHUCTE   ON DONDATTOUR(MaTourThucTe);
 CREATE INDEX IDX_DONDATTOUR_TRANGTHAI    ON DONDATTOUR(TrangThai);
-CREATE INDEX IDX_DSKHACHDITOUR_DATTOUR   ON DSKHACHDITOUR(MaDatTour);
+CREATE INDEX IDX_DSNGUOIDONGHANH_DATTOUR ON DSNGUOIDONGHANH(MaDatTour);
 CREATE INDEX IDX_CTDATTOUR_DATTOUR       ON CHITIETDATTOUR(MaDatTour);
 CREATE INDEX IDX_CTDICHVU_DATTOUR        ON CHITIETDICHVU(MaDatTour);
 CREATE INDEX IDX_GIAODICH_DATTOUR        ON GIAODICH(MaDatTour);

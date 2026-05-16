@@ -81,8 +81,13 @@ public class YeuCauHoTroService {
         }
 
         String trangThaiMoi = request.getTrangThai();
-        if (!"CHUA_XU_LY".equals(trangThaiMoi) && !"DA_XU_LY".equals(trangThaiMoi) && !"TU_CHOI".equals(trangThaiMoi)) {
-            throw AppException.badRequest("TrangThai khong hop le. Chi chap nhan: CHUA_XU_LY, DA_XU_LY, TU_CHOI");
+        if (!"CHUA_XU_LY".equals(trangThaiMoi)
+                && !"CHO_BO_SUNG".equals(trangThaiMoi)
+                && !"CHO_GIAI_TRINH".equals(trangThaiMoi)
+                && !"DA_XU_LY".equals(trangThaiMoi)
+                && !"TU_CHOI".equals(trangThaiMoi)) {
+            throw AppException.badRequest(
+                    "TrangThai khong hop le. Chi chap nhan: CHUA_XU_LY, CHO_BO_SUNG, CHO_GIAI_TRINH, DA_XU_LY, TU_CHOI");
         }
         yc.setTrangThai(trangThaiMoi);
 
