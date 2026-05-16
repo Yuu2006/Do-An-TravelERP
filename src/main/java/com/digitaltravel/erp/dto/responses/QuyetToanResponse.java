@@ -14,6 +14,7 @@ public class QuyetToanResponse {
     private String tenTour;
     private BigDecimal tongDoanhThu;
     private BigDecimal tongChiPhi;
+    private BigDecimal giaCamKet;
     private BigDecimal loiNhuan;
     private String trangThai;
     private String ghiChu;

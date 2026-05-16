@@ -95,6 +95,7 @@ public class QuyetToanService {
         qt.setNhanVien(nv);
         qt.setTongDoanhThu(doanhThu);
         qt.setTongChiPhi(chiPhi);
+        qt.setGiaCamKet(req != null ? req.getGiaCamKet() : null);
         qt.setLoiNhuan(doanhThu.subtract(chiPhi));
         qt.setNgayQuyetToan(LocalDateTime.now());
         qt.setTrangThai("CHUA_QUYET_TOAN");
@@ -210,6 +211,7 @@ public class QuyetToanService {
         BigDecimal chiPhi = tinhChiPhi(maTour);
         qt.setTongDoanhThu(doanhThu);
         qt.setTongChiPhi(chiPhi);
+        if (req != null && req.getGiaCamKet() != null) qt.setGiaCamKet(req.getGiaCamKet());
         qt.setLoiNhuan(doanhThu.subtract(chiPhi));
         qt.setNgayQuyetToan(LocalDateTime.now());
         if (req != null && req.getGhiChu() != null) qt.setGhiChu(req.getGhiChu());
@@ -234,6 +236,7 @@ public class QuyetToanService {
                 .tenTour(tt.getTourMau() != null ? tt.getTourMau().getTieuDe() : "")
                 .tongDoanhThu(qt.getTongDoanhThu())
                 .tongChiPhi(qt.getTongChiPhi())
+                .giaCamKet(qt.getGiaCamKet())
                 .loiNhuan(qt.getLoiNhuan())
                 .trangThai(qt.getTrangThai())
                 .ghiChu(qt.getGhiChu())

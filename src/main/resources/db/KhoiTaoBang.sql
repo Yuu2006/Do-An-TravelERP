@@ -420,10 +420,11 @@ CREATE TABLE CHIPHITHUCTE (
 -- Tong hop quyet toan doanh thu - chi phi theo tour (1-1 voi TOURTHUCTE)
 CREATE TABLE QUYETTOAN (
                            MaQuyetToan      VARCHAR2(50)  PRIMARY KEY,
-                           MaTourThucTe     VARCHAR2(50)  NOT NULL,
-                           TongDoanhThu     NUMBER(18,2)  NOT NULL,
-                           TongChiPhi       NUMBER(18,2)  NOT NULL,
-                           LoiNhuan         NUMBER(18,2)  NOT NULL,
+                            MaTourThucTe     VARCHAR2(50)  NOT NULL,
+                            TongDoanhThu     NUMBER(18,2)  NOT NULL,
+                            TongChiPhi       NUMBER(18,2)  NOT NULL,
+                            GiaCamKet        NUMBER(18,2),
+                            LoiNhuan         NUMBER(18,2)  NOT NULL,
                            MaNhanVien       VARCHAR2(50)  NOT NULL,
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                            TrangThai        VARCHAR2(20)  DEFAULT 'CHUA_QUYET_TOAN' NOT NULL,
@@ -431,9 +432,10 @@ CREATE TABLE QUYETTOAN (
                            CONSTRAINT UQ_QUYETTOAN_TourThucTe     UNIQUE (MaTourThucTe),
                            CONSTRAINT FK_QT_TourThucTe            FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_QT_NhanVien              FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
-                           CONSTRAINT CK_QT_TongDoanhThu          CHECK (TongDoanhThu >= 0),
-                           CONSTRAINT CK_QT_TongChiPhi            CHECK (TongChiPhi >= 0),
-                           CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('CHUA_QUYET_TOAN', 'DA_QUYET_TOAN')),
+                            CONSTRAINT CK_QT_TongDoanhThu          CHECK (TongDoanhThu >= 0),
+                            CONSTRAINT CK_QT_TongChiPhi            CHECK (TongChiPhi >= 0),
+                            CONSTRAINT CK_QT_GiaCamKet             CHECK (GiaCamKet IS NULL OR GiaCamKet >= 0),
+                            CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('CHUA_QUYET_TOAN', 'DA_QUYET_TOAN')),
                            CONSTRAINT CK_QT_LoiNhuan CHECK (LoiNhuan = TongDoanhThu - TongChiPhi)
 );
 

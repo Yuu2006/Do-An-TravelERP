@@ -40,6 +40,10 @@ public class QuyetToan {
     @Column(name = "TongChiPhi", nullable = false, precision = 18, scale = 2)
     BigDecimal TongChiPhi;
 
+    // NUMBER(18,2): chi phi/gia tri cam ket noi bo de doi chieu khi quyet toan
+    @Column(name = "GiaCamKet", precision = 18, scale = 2)
+    BigDecimal GiaCamKet;
+
     // NUMBER(18,2): = TongDoanhThu - TongChiPhi
     @Column(name = "LoiNhuan", nullable = false, precision = 18, scale = 2)
     BigDecimal LoiNhuan;

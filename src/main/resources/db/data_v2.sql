@@ -462,11 +462,11 @@ VALUES ('CPTT006', 'TTT003', 'NV_HDV01', 'Phí đưa đón khách sân bay phát
 -- 25. QUYETTOAN — Quyết toán tài chính cho tour đã kết thúc
 -- ------------------------------------------------------------
 -- TTT099: Hạ Long kết thúc (doanh thu: DDT001 7tr + DDT099 7tr + DDT098 3.5tr = 17.5tr)
-INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai)
-VALUES ('QT001', 'TTT099', 17500000, 2350000, 15150000, 'NV_KT01', 'DA_QUYET_TOAN');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, TrangThai)
+VALUES ('QT001', 'TTT099', 17500000, 2350000, 2500000, 15150000, 'NV_KT01', 'DA_QUYET_TOAN');
 -- TTT098: Đà Nẵng kết thúc (doanh thu: DDT097 8.4tr)
-INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai)
-VALUES ('QT002', 'TTT098', 8400000, 1800000, 6600000, 'NV_KT01', 'DA_QUYET_TOAN');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, TrangThai)
+VALUES ('QT002', 'TTT098', 8400000, 1800000, 2000000, 6600000, 'NV_KT01', 'DA_QUYET_TOAN');
 
 -- ------------------------------------------------------------
 -- 26. NHATKYDOIDIEM — Đổi điểm xanh sang voucher
