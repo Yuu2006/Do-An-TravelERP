@@ -14,12 +14,15 @@ public interface ChiTietDatTourRepository extends JpaRepository<ChiTietDatTour, 
 
     @Query("""
             SELECT ct FROM ChiTietDatTour ct
-            JOIN FETCH ct.khachHang hcs
-            JOIN FETCH hcs.taiKhoan
+            LEFT JOIN FETCH ct.khachHang hcs
+            LEFT JOIN FETCH hcs.taiKhoan
+            LEFT JOIN FETCH ct.nguoiDongHanh
             WHERE ct.donDatTour.MaDatTour = :maDatTour
             """)
     List<ChiTietDatTour> findByMaDatTour(@Param("maDatTour") String maDatTour);
 
     boolean existsByDonDatTour_MaDatTourAndKhachHang_MaKhachHang(
             String maDatTour, String maKhachHang);
+
+    long countByDonDatTour_MaDatTour(String maDatTour);
 }

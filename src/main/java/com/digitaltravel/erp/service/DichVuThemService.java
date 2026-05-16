@@ -1,7 +1,6 @@
 package com.digitaltravel.erp.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class DichVuThemService {
 
     private final DichVuThemRepository dichVuThemRepository;
+    private final MaTuDongService maTuDongService;
 
     public List<DichVuThemResponse> danhSach() {
         return dichVuThemRepository.findAll().stream()
@@ -35,7 +35,7 @@ public class DichVuThemService {
     @Transactional
     public DichVuThemResponse taoMoi(DichVuThemRequest request) {
         DichVuThem dv = new DichVuThem();
-        dv.setMaDichVuThem("DV_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        dv.setMaDichVuThem(maTuDongService.taoMaDichVuThem());
         dv.setTen(request.getTen());
         dv.setDonViTinh(request.getDonViTinh());
         dv.setDonGia(request.getDonGia());

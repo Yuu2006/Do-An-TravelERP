@@ -30,12 +30,18 @@ public class KhachHangService {
         return toResponse(hcs);
     }
 
-    // ── Cập nhật hồ sơ (chỉ DiUng và GhiChuYTe) ────────────────────────────
+    // ── Cập nhật hồ sơ khách hàng ───────────────────────────────────────────
     @Transactional
     public HoChieuSoResponse capNhatHoSo(String maTaiKhoan, CapNhatHoChieuSoRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
 
+        if (request.getCccd() != null) {
+            hcs.setCccd(request.getCccd());
+        }
+        if (request.getSoDienThoai() != null) {
+            hcs.setSoDienThoai(request.getSoDienThoai());
+        }
         if (request.getDiUng() != null) {
             hcs.setDiUng(request.getDiUng());
         }
@@ -62,7 +68,8 @@ public class KhachHangService {
                 .tenDangNhap(hcs.getTaiKhoan().getTenDangNhap())
                 .hoTen(hcs.getTaiKhoan().getHoTen())
                 .email(hcs.getTaiKhoan().getEmail())
-                .soDienThoai(hcs.getTaiKhoan().getSoDienThoai())
+                .cccd(hcs.getCccd())
+                .soDienThoai(hcs.getSoDienThoai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())

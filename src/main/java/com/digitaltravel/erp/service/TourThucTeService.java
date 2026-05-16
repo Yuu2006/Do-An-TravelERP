@@ -1,7 +1,5 @@
 package com.digitaltravel.erp.service;
 
-import java.util.UUID;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +29,7 @@ public class TourThucTeService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final DonDatTourRepository donDatTourRepository;
+    private final MaTuDongService maTuDongService;
 
     // ── UC14: Danh sách tour thực tế (nội bộ - có filter) ───────────────────
     public Page<TourThucTeResponse> danhSach(String trangThai, String maTourMau,
@@ -108,7 +107,7 @@ public class TourThucTeService {
         }
 
         TourThucTe ttt = new TourThucTe();
-        ttt.setMaTourThucTe("TTT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        ttt.setMaTourThucTe(maTuDongService.taoMaTourThucTe());
         ttt.setTourMau(tourMau);
         ttt.setNgayKhoiHanh(request.getNgayKhoiHanh());
         ttt.setGiaHienHanh(request.getGiaHienHanh());

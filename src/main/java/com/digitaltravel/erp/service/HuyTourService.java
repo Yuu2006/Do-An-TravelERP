@@ -21,6 +21,7 @@ import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.entity.YeuCauHoTro;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
@@ -38,6 +39,7 @@ public class HuyTourService {
     private final YeuCauHoTroRepository yeuCauHoTroRepository;
     private final GiaoDichRepository giaoDichRepository;
     private final TourThucTeRepository tourThucTeRepository;
+    private final ChiTietDatTourRepository chiTietDatTourRepository;
 
     // ── UC32: Khách hàng gửi yêu cầu hủy tour ─────────────────────────────
     @Transactional
@@ -102,7 +104,8 @@ public class HuyTourService {
 
         // Hoàn ChoConLai vì đơn đã được thanh toán (ChoConLai đã bị trừ)
         TourThucTe tour = don.getTourThucTe();
-        tour.setChoConLai(tour.getChoConLai() + 1);
+        int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
+        tour.setChoConLai(tour.getChoConLai() + soKhach);
         tourThucTeRepository.save(tour);
 
         // Tạo giao dịch hoàn tiền (để kế toán theo dõi)

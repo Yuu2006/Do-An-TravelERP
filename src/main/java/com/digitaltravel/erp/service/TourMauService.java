@@ -1,7 +1,6 @@
 package com.digitaltravel.erp.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +29,7 @@ public class TourMauService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final TourThucTeRepository tourThucTeRepository;
+    private final MaTuDongService maTuDongService;
 
     // ── UC06: Danh sách tour mẫu (filter + phân trang) ──────────────────────
     public Page<TourMauResponse> danhSach(String tieuDe, Integer thoiLuongMin, Integer thoiLuongMax,
@@ -50,7 +50,7 @@ public class TourMauService {
     @Transactional
     public TourMauChiTietResponse taoMoi(TaoTourMauRequest request, String nguoiTao) {
         TourMau tm = new TourMau();
-        tm.setMaTourMau("TM_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        tm.setMaTourMau(maTuDongService.taoMaTourMau());
         tm.setTieuDe(request.getTieuDe());
         tm.setMoTa(request.getMoTa());
         tm.setThoiLuong(request.getThoiLuong());
@@ -61,10 +61,12 @@ public class TourMauService {
 
         // Tạo lịch trình nếu có
         if (request.getLichTrinh() != null) {
-            for (LichTrinhRequest ltReq : request.getLichTrinh()) {
+            List<String> maLichTrinh = maTuDongService.taoDanhSachMaLichTrinhTour(request.getLichTrinh().size());
+            for (int i = 0; i < request.getLichTrinh().size(); i++) {
+                LichTrinhRequest ltReq = request.getLichTrinh().get(i);
                 validateLichTrinh(tm, ltReq);
                 LichTrinhTour lt = new LichTrinhTour();
-                lt.setMaLichTrinhTour("LT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+                lt.setMaLichTrinhTour(maLichTrinh.get(i));
                 lt.setTourMau(tm);
                 lt.setNgayThu(ltReq.getNgayThu());
                 lt.setHoatDong(ltReq.getHoatDong());
@@ -113,7 +115,7 @@ public class TourMauService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour mau: " + id));
 
         TourMau banSao = new TourMau();
-        banSao.setMaTourMau("TM_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        banSao.setMaTourMau(maTuDongService.taoMaTourMau());
         banSao.setTieuDe("[Sao chep] " + goc.getTieuDe());
         banSao.setMoTa(goc.getMoTa());
         banSao.setThoiLuong(goc.getThoiLuong());
@@ -124,9 +126,11 @@ public class TourMauService {
 
         // Deep copy lịch trình
         List<LichTrinhTour> lichTrinhGoc = lichTrinhTourRepository.findByMaTourMau(id);
-        for (LichTrinhTour ltGoc : lichTrinhGoc) {
+        List<String> maLichTrinh = maTuDongService.taoDanhSachMaLichTrinhTour(lichTrinhGoc.size());
+        for (int i = 0; i < lichTrinhGoc.size(); i++) {
+            LichTrinhTour ltGoc = lichTrinhGoc.get(i);
             LichTrinhTour ltMoi = new LichTrinhTour();
-            ltMoi.setMaLichTrinhTour("LT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+            ltMoi.setMaLichTrinhTour(maLichTrinh.get(i));
             ltMoi.setTourMau(banSao);
             ltMoi.setNgayThu(ltGoc.getNgayThu());
             ltMoi.setHoatDong(ltGoc.getHoatDong());
@@ -148,7 +152,7 @@ public class TourMauService {
         validateLichTrinh(tm, request);
 
         LichTrinhTour lt = new LichTrinhTour();
-        lt.setMaLichTrinhTour("LT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        lt.setMaLichTrinhTour(maTuDongService.taoMaLichTrinhTour());
         lt.setTourMau(tm);
         lt.setNgayThu(request.getNgayThu());
         lt.setHoatDong(request.getHoatDong());

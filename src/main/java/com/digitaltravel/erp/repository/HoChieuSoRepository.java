@@ -32,7 +32,7 @@ public interface HoChieuSoRepository extends JpaRepository<HoChieuSo, String> {
             SELECT hcs FROM HoChieuSo hcs JOIN FETCH hcs.taiKhoan tk
             WHERE (:hoTen IS NULL OR LOWER(tk.HoTen) LIKE LOWER(CONCAT('%', :hoTen, '%')))
               AND (:email IS NULL OR LOWER(tk.Email) LIKE LOWER(CONCAT('%', :email, '%')))
-              AND (:soDienThoai IS NULL OR tk.SoDienThoai LIKE CONCAT('%', :soDienThoai, '%'))
+              AND (:soDienThoai IS NULL OR hcs.SoDienThoai LIKE CONCAT('%', :soDienThoai, '%'))
             ORDER BY tk.HoTen
             """)
     Page<HoChieuSo> timKiemKhachHang(

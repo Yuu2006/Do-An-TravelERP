@@ -1,7 +1,5 @@
 package com.digitaltravel.erp.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +17,8 @@ import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
+import com.digitaltravel.erp.service.MaTuDongService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -31,10 +31,12 @@ public class TaiKhoanAdminController {
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
     private final NhanVienRepository nhanVienRepository;
+    private final MaTuDongService maTuDongService;
 
 
 
     @PostMapping("/dang-ky-nhan-vien")
+    @Transactional
     public ResponseEntity<ApiResponse<Void>> dangKyNhanVien(@Valid @RequestBody DangKyNhanVienRequest request) {
         String maVaiTro = request.getMaVaiTro().toUpperCase();
 
@@ -53,7 +55,7 @@ public class TaiKhoanAdminController {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro: " + maVaiTro));
 
         TaiKhoan taiKhoan = new TaiKhoan();
-        taiKhoan.setMaTaiKhoan(UUID.randomUUID().toString());
+        taiKhoan.setMaTaiKhoan(maTuDongService.taoMaTaiKhoanTheoVaiTro(maVaiTro));
         taiKhoan.setTenDangNhap(request.getTenDangNhap());
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         taiKhoan.setHoTen(request.getHoTen());
@@ -64,7 +66,7 @@ public class TaiKhoanAdminController {
         taiKhoanRepository.save(taiKhoan);
 
         NhanVien nhanVien = new NhanVien();
-        nhanVien.setMaNhanVien("NV_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase());
+        nhanVien.setMaNhanVien(maTuDongService.taoMaNhanVien());
         nhanVien.setTaiKhoan(taiKhoan);
         nhanVien.setLoaiNhanVien(maVaiTro);
         nhanVien.setTrangThaiLamViec("HOAT_DONG");

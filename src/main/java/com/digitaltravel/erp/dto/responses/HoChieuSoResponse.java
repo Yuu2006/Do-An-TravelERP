@@ -11,6 +11,7 @@ public class HoChieuSoResponse {
     String tenDangNhap;
     String hoTen;
     String email;
+    String cccd;
     String soDienThoai;
     String diUng;
     String ghiChuYTe;

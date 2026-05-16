@@ -17,6 +17,7 @@ import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.LichSuTour;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.LichSuTourRepository;
@@ -34,6 +35,7 @@ public class ThanhToanService {
     private final GiaoDichRepository giaoDichRepository;
     private final LichSuTourRepository lichSuTourRepository;
     private final TourThucTeRepository tourThucTeRepository;
+    private final ChiTietDatTourRepository chiTietDatTourRepository;
 
     // ── Khởi tạo thanh toán ────────────────────────────────────────────────
     @Transactional
@@ -79,6 +81,13 @@ public class ThanhToanService {
         LocalDateTime now = LocalDateTime.now();
         String maGiaoDich = "GD_MOCK_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
+        TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te"));
+        int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
+        if (tour.getChoConLai() < soKhach) {
+            throw AppException.badRequest("Tour khong con du cho cho don dat nay");
+        }
+
         // Tạo bản ghi giao dịch
         GiaoDich gd = new GiaoDich();
         gd.setMaGiaoDich(maGiaoDich);
@@ -96,9 +105,7 @@ public class ThanhToanService {
         donDatTourRepository.save(don);
 
         // Trừ số chỗ còn lại
-        TourThucTe tour = don.getTourThucTe();
-        int choMoi = tour.getChoConLai() - 1;
-        if (choMoi < 0) choMoi = 0;
+        int choMoi = tour.getChoConLai() - soKhach;
         tour.setChoConLai(choMoi);
         tourThucTeRepository.save(tour);
 

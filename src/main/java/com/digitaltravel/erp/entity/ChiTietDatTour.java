@@ -30,10 +30,17 @@ public class ChiTietDatTour {
     @JoinColumn(name = "MaDatTour", nullable = false)
     DonDatTour donDatTour;
 
-    // FK -> HOCHIEUSO(MaKhachHang)
+    // Nguoi dat chinh co ho so so; nguoi dong hanh dung DsNguoiDongHanh.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaKhachHang", nullable = false)
+    @JoinColumn(name = "MaKhachHang")
     HoChieuSo khachHang;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaNguoiDongHanh")
+    DsNguoiDongHanh nguoiDongHanh;
+
+    @Column(name = "LoaiKhach", nullable = false, length = 30)
+    String LoaiKhach;
 
     // NUMBER(18,2): gia goc tai thoi diem dat, giu nguyen de doi soat
     @Column(name = "GiaTaiThoiDiemDat", nullable = false, precision = 18, scale = 2)

@@ -1,7 +1,5 @@
 package com.digitaltravel.erp.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +29,7 @@ import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
+import com.digitaltravel.erp.service.MaTuDongService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,7 @@ public class AuthController {
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
+    private final MaTuDongService maTuDongService;
 
     @PostMapping("/dang-ky")
     @Transactional
@@ -65,7 +65,7 @@ public class AuthController {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro KHACHHANG"));
 
         TaiKhoan taiKhoan = new TaiKhoan();
-        taiKhoan.setMaTaiKhoan(UUID.randomUUID().toString());
+        taiKhoan.setMaTaiKhoan(maTuDongService.taoMaTaiKhoanTheoVaiTro(VaiTroConst.KHACHHANG));
         taiKhoan.setTenDangNhap(request.getTenDangNhap());
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         taiKhoan.setHoTen(request.getHoTen());
@@ -77,8 +77,10 @@ public class AuthController {
 
         // Tự động tạo hồ sơ khách hàng (HoChieuSo)
         HoChieuSo hoChieuSo = new HoChieuSo();
-        hoChieuSo.setMaKhachHang("KH_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        hoChieuSo.setMaKhachHang(maTuDongService.taoMaHoChieuSo());
         hoChieuSo.setTaiKhoan(taiKhoan);
+        hoChieuSo.setCccd(request.getCccd());
+        hoChieuSo.setSoDienThoai(request.getSoDienThoai());
         hoChieuSo.setHangThanhVien("THANH_VIEN");
         hoChieuSo.setDiemXanh(0L);
         hoChieuSoRepository.save(hoChieuSo);

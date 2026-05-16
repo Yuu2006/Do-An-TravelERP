@@ -27,5 +27,8 @@ public class DangKyRequest {
     String email;
 
     @Size(max = 20)
+    String cccd;
+
+    @Size(max = 20)
     String soDienThoai;
 }

@@ -17,6 +17,10 @@ public class DatTourRequest {
     @Valid
     List<DichVuThemDatRequest> danhSachDichVu;
 
+    // Tuỳ chọn: người đồng hành không có tài khoản/hồ chiếu số
+    @Valid
+    List<NguoiDongHanhRequest> danhSachNguoiDongHanh;
+
     @Size(max = 2000, message = "Ghi chu khong duoc vuot qua 2000 ky tu")
     String ghiChu;
 }
