@@ -347,16 +347,24 @@ CREATE TABLE PHANCONGTOUR (
 CREATE TABLE DIEMDANH (
                           MaDiemDanh       VARCHAR2(50)  PRIMARY KEY,
                           MaTourThucTe     VARCHAR2(50)  NOT NULL,
-                          MaKhachHang      VARCHAR2(50)  NOT NULL,
+                          MaKhachHang      VARCHAR2(50),
+                          MaNguoiDongHanh  VARCHAR2(50),
+                          LoaiKhach        VARCHAR2(30)  DEFAULT 'NGUOI_DAT' NOT NULL,
                           MaNhanVien       VARCHAR2(50)  NOT NULL,
                           ThoiGian         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                           DiaDiem          VARCHAR2(500),
                           TrangThai        VARCHAR2(30)  DEFAULT 'CHUA_DIEM_DANH' NOT NULL,
                           CONSTRAINT FK_DIEMDANH_TourThucTe      FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                           CONSTRAINT FK_DIEMDANH_KhachHang       FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
+                          CONSTRAINT FK_DIEMDANH_NguoiDongHanh   FOREIGN KEY (MaNguoiDongHanh) REFERENCES DSNGUOIDONGHANH(MaNguoiDongHanh),
                           CONSTRAINT FK_DIEMDANH_NhanVien        FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                           CONSTRAINT FK_DIEMDANH_PhanCong        FOREIGN KEY (MaTourThucTe, MaNhanVien)
                               REFERENCES PHANCONGTOUR(MaTourThucTe, MaNhanVien),
+                          CONSTRAINT CK_DIEMDANH_LoaiKhach       CHECK (LoaiKhach IN ('NGUOI_DAT','NGUOI_DONG_HANH')),
+                          CONSTRAINT CK_DIEMDANH_Khach           CHECK (
+                              (MaKhachHang IS NOT NULL AND MaNguoiDongHanh IS NULL AND LoaiKhach = 'NGUOI_DAT') OR
+                              (MaKhachHang IS NULL AND MaNguoiDongHanh IS NOT NULL AND LoaiKhach = 'NGUOI_DONG_HANH')
+                          ),
                           CONSTRAINT CK_DIEMDANH_TrangThai       CHECK (TrangThai IN ('DA_DIEM_DANH','CHUA_DIEM_DANH','VANG'))
 );
 

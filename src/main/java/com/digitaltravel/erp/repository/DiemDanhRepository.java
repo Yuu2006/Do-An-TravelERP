@@ -12,7 +12,14 @@ import com.digitaltravel.erp.entity.DiemDanh;
 @Repository
 public interface DiemDanhRepository extends JpaRepository<DiemDanh, String> {
 
-    @Query("SELECT d FROM DiemDanh d JOIN FETCH d.khachHang WHERE d.tourThucTe.MaTourThucTe = :maTour ORDER BY d.ThoiGian DESC")
+    @Query("""
+            SELECT d FROM DiemDanh d
+            LEFT JOIN FETCH d.khachHang kh
+            LEFT JOIN FETCH kh.taiKhoan
+            LEFT JOIN FETCH d.nguoiDongHanh
+            WHERE d.tourThucTe.MaTourThucTe = :maTour
+            ORDER BY d.ThoiGian DESC
+            """)
     List<DiemDanh> findByMaTour(@Param("maTour") String maTour);
 
     @Query("""

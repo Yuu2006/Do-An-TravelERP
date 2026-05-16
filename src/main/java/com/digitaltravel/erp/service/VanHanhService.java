@@ -19,6 +19,7 @@ import com.digitaltravel.erp.dto.responses.HanhDongResponse;
 import com.digitaltravel.erp.dto.responses.NhatKySuCoResponse;
 import com.digitaltravel.erp.entity.ChiPhiThucTe;
 import com.digitaltravel.erp.entity.DiemDanh;
+import com.digitaltravel.erp.entity.DsNguoiDongHanh;
 import com.digitaltravel.erp.entity.HanhDong;
 import com.digitaltravel.erp.entity.HanhDongXanh;
 import com.digitaltravel.erp.entity.HoChieuSo;
@@ -28,6 +29,7 @@ import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiPhiThucTeRepository;
 import com.digitaltravel.erp.repository.DiemDanhRepository;
+import com.digitaltravel.erp.repository.DsNguoiDongHanhRepository;
 import com.digitaltravel.erp.repository.HanhDongRepository;
 import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
@@ -45,6 +47,7 @@ public class VanHanhService {
     private final NhanVienRepository nhanVienRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final DiemDanhRepository diemDanhRepository;
+    private final DsNguoiDongHanhRepository dsNguoiDongHanhRepository;
     private final HanhDongRepository hanhDongRepository;
     private final HanhDongXanhRepository hanhDongXanhRepository;
     private final NhatKySuCoRepository nhatKySuCoRepository;
@@ -61,14 +64,33 @@ public class VanHanhService {
     @Transactional
     public DiemDanhResponse diemDanh(String maTour, DiemDanhRequest req, String maTaiKhoan) {
         TourThucTe tour = getActiveTour(maTour);
-        HoChieuSo kh = hoChieuSoRepository.findById(req.getMaKhachHang())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
+        HoChieuSo kh = null;
+        DsNguoiDongHanh nguoiDongHanh = null;
+        boolean coKhachHang = req.getMaKhachHang() != null && !req.getMaKhachHang().isBlank();
+        boolean coNguoiDongHanh = req.getMaNguoiDongHanh() != null && !req.getMaNguoiDongHanh().isBlank();
+
+        if (coKhachHang == coNguoiDongHanh) {
+            throw AppException.badRequest("Chi duoc gui mot trong hai truong: maKhachHang hoac maNguoiDongHanh");
+        }
+
+        if (coKhachHang) {
+            kh = hoChieuSoRepository.findById(req.getMaKhachHang())
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
+        } else {
+            nguoiDongHanh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
+            if (!nguoiDongHanh.getDonDatTour().getTourThucTe().getMaTourThucTe().equals(maTour)) {
+                throw AppException.badRequest("Nguoi dong hanh khong thuoc tour nay");
+            }
+        }
         NhanVien hdv = getHdv(maTaiKhoan);
 
         DiemDanh dd = new DiemDanh();
         dd.setMaDiemDanh("DD_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         dd.setTourThucTe(tour);
         dd.setKhachHang(kh);
+        dd.setNguoiDongHanh(nguoiDongHanh);
+        dd.setLoaiKhach(coKhachHang ? "NGUOI_DAT" : "NGUOI_DONG_HANH");
         dd.setNhanVien(hdv);
         dd.setThoiGian(LocalDateTime.now());
         dd.setDiaDiem(req.getDiaDiem());
@@ -248,11 +270,16 @@ public class VanHanhService {
 
     // ── Mappers ───────────────────────────────────────────────────────────
     private DiemDanhResponse toDiemDanhResponse(DiemDanh dd) {
-        String hoTen = dd.getKhachHang().getTaiKhoan() != null
-                ? dd.getKhachHang().getTaiKhoan().getHoTen() : "";
+        HoChieuSo kh = dd.getKhachHang();
+        DsNguoiDongHanh nguoiDongHanh = dd.getNguoiDongHanh();
+        String hoTen = kh != null && kh.getTaiKhoan() != null
+                ? kh.getTaiKhoan().getHoTen()
+                : nguoiDongHanh != null ? nguoiDongHanh.getHoTen() : "";
         return DiemDanhResponse.builder()
                 .maDiemDanh(dd.getMaDiemDanh())
-                .maKhachHang(dd.getKhachHang().getMaKhachHang())
+                .loaiKhach(dd.getLoaiKhach())
+                .maKhachHang(kh != null ? kh.getMaKhachHang() : null)
+                .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
                 .hoTenKhachHang(hoTen)
                 .diaDiem(dd.getDiaDiem())
                 .trangThai(dd.getTrangThai())

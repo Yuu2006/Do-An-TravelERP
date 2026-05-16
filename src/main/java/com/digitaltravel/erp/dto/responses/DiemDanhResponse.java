@@ -9,7 +9,9 @@ import lombok.Data;
 @Builder
 public class DiemDanhResponse {
     private String maDiemDanh;
+    private String loaiKhach;
     private String maKhachHang;
+    private String maNguoiDongHanh;
     private String hoTenKhachHang;
     private String diaDiem;
     private String trangThai;
