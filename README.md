@@ -439,10 +439,13 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 
 | Entity | Giá trị hợp lệ |
 |--------|---------------|
+| `TaiKhoan.TrangThai` | HOAT_DONG · KHOA |
 | `TourThucTe.TrangThai` | CHO_KICH_HOAT · MO_BAN · SAP_DIEN_RA · DANG_DIEN_RA · KET_THUC · HUY · DA_QUYET_TOAN |
 | `DonDatTour.TrangThai` | CHO_XAC_NHAN · DA_XAC_NHAN · DA_HUY · HET_HAN_GIU_CHO · CHO_HUY · THANH_TOAN_THAT_BAI |
+| `GiaoDich.LoaiGiaoDich` | THANH_TOAN · HOAN_TIEN |
 | `GiaoDich.TrangThai` | CHO_THANH_TOAN · THANH_CONG · THAT_BAI · DA_HOAN_TIEN |
-| `YeuCauHoTro.TrangThai` | CHUA_XU_LY · DA_XU_LY · TU_CHOI |
+| `YeuCauHoTro/KhieuNai.TrangThai` | CHUA_XU_LY · CHO_BO_SUNG · CHO_GIAI_TRINH · DA_XU_LY · TU_CHOI |
+| `DiemDanh.TrangThai` | DA_DIEM_DANH · CHUA_DIEM_DANH · VANG |
 | `ChiPhiThucTe.TrangThaiDuyet` | CHO_DUYET · DA_DUYET · TU_CHOI |
 | `QuyetToan.TrangThai` | CHUA_QUYET_TOAN · DA_QUYET_TOAN |
 | `NhanVien.TrangThaiLamViec` | HOAT_DONG · BAN · NGHI |

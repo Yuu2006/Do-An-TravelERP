@@ -21,6 +21,7 @@ import com.digitaltravel.erp.dto.requests.DiemDanhRequest;
 import com.digitaltravel.erp.dto.requests.GhiNhanHanhDongRequest;
 import com.digitaltravel.erp.dto.requests.KhaiChiPhiRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
+import com.digitaltravel.erp.dto.responses.CanhBaoChiPhiResponse;
 import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
@@ -110,6 +111,15 @@ public class VanHanhController {
         return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiPhiCuaTour(maTour)));
     }
 
+    @PutMapping("/api/huong-dan-vien/chi-phi/{maChiPhi}/bo-sung")
+    @PreAuthorize("hasRole('HDV')")
+    public ResponseEntity<ApiResponse<ChiPhiThucTeResponse>> boSungChiPhi(
+            @PathVariable String maChiPhi,
+            @Valid @RequestBody KhaiChiPhiRequest request,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.boSungChiPhi(maChiPhi, request, user.getUsername())));
+    }
+
     // ── Kế toán: DS chi phí chờ duyệt / duyệt / từ chối ─────────────────
     @GetMapping("/api/ke-toan/chi-phi")
     @PreAuthorize("hasRole('KETOAN')")
@@ -131,5 +141,30 @@ public class VanHanhController {
     public ResponseEntity<ApiResponse<ChiPhiThucTeResponse>> tuChoiChiPhi(
             @PathVariable String maChiPhi) {
         return ResponseEntity.ok(ApiResponse.ok(vanHanhService.tuChoiChiPhi(maChiPhi)));
+    }
+
+    @PutMapping("/api/ke-toan/chi-phi/{maChiPhi}/yeu-cau-bo-sung")
+    @PreAuthorize("hasRole('KETOAN')")
+    public ResponseEntity<ApiResponse<ChiPhiThucTeResponse>> yeuCauBoSungChiPhi(
+            @PathVariable String maChiPhi) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.yeuCauBoSungChiPhi(maChiPhi)));
+    }
+
+    @GetMapping("/api/ke-toan/canh-bao-chi-phi")
+    @PreAuthorize("hasRole('KETOAN')")
+    public ResponseEntity<ApiResponse<Page<CanhBaoChiPhiResponse>>> danhSachCanhBaoChiPhi(
+            @RequestParam(required = false) String trangThai,
+            @RequestParam(required = false) String loaiCanhBao,
+            @RequestParam(required = false) String mucDo,
+            Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                vanHanhService.danhSachCanhBaoChiPhi(trangThai, loaiCanhBao, mucDo, pageable)));
+    }
+
+    @GetMapping("/api/ke-toan/canh-bao-chi-phi/{maCanhBao}")
+    @PreAuthorize("hasRole('KETOAN')")
+    public ResponseEntity<ApiResponse<CanhBaoChiPhiResponse>> chiTietCanhBaoChiPhi(
+            @PathVariable String maCanhBao) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiTietCanhBaoChiPhi(maCanhBao)));
     }
 }

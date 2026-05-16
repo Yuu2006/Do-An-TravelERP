@@ -28,4 +28,13 @@ public interface ChiPhiThucTeRepository extends JpaRepository<ChiPhiThucTe, Stri
     // Tổng chi phí đã duyệt của 1 tour (dùng cho quyết toán)
     @Query("SELECT c FROM ChiPhiThucTe c WHERE c.tourThucTe.MaTourThucTe = :maTour AND c.TrangThaiDuyet = 'DA_DUYET'")
     List<ChiPhiThucTe> findDaDuyetByMaTour(@Param("maTour") String maTour);
+
+    @Query("""
+            SELECT c FROM ChiPhiThucTe c
+            JOIN FETCH c.tourThucTe tt
+            JOIN FETCH c.nhanVien nv
+            JOIN FETCH nv.taiKhoan
+            ORDER BY c.NgayKhai DESC
+            """)
+    List<ChiPhiThucTe> findAllWithRelations();
 }

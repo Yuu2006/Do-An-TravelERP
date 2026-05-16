@@ -1,10 +1,14 @@
 package com.digitaltravel.erp.service;
 
+import java.math.BigDecimal;
+import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +17,7 @@ import com.digitaltravel.erp.dto.requests.BaoCaoSuCoRequest;
 import com.digitaltravel.erp.dto.requests.DiemDanhRequest;
 import com.digitaltravel.erp.dto.requests.GhiNhanHanhDongRequest;
 import com.digitaltravel.erp.dto.requests.KhaiChiPhiRequest;
+import com.digitaltravel.erp.dto.responses.CanhBaoChiPhiResponse;
 import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
@@ -189,6 +194,25 @@ public class VanHanhService {
                 .map(this::toChiPhiResponse).toList();
     }
 
+    @Transactional
+    public ChiPhiThucTeResponse boSungChiPhi(String maChiPhi, KhaiChiPhiRequest req, String maTaiKhoan) {
+        ChiPhiThucTe cp = chiPhiThucTeRepository.findById(maChiPhi)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay chi phi: " + maChiPhi));
+        if (!"YEU_CAU_BO_SUNG".equals(cp.getTrangThaiDuyet())) {
+            throw AppException.badRequest("Chi phi khong o trang thai YEU_CAU_BO_SUNG.");
+        }
+        if (!cp.getNhanVien().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
+            throw AppException.forbidden("Khong co quyen bo sung chi phi nay");
+        }
+
+        cp.setDanhMuc(req.getDanhMuc());
+        cp.setThanhTien(req.getThanhTien());
+        cp.setHoaDonAnh(req.getHoaDonAnh());
+        cp.setTrangThaiDuyet("CHO_DUYET");
+        chiPhiThucTeRepository.save(cp);
+        return toChiPhiResponse(cp);
+    }
+
     // ── Kế toán: DS chi phí chờ duyệt ────────────────────────────────────
     public Page<ChiPhiThucTeResponse> danhSachChiPhiChoXuLy(String trangThai, Pageable pageable) {
         return chiPhiThucTeRepository.findByTrangThai(trangThai, pageable)
@@ -205,6 +229,33 @@ public class VanHanhService {
         return setTrangThaiChiPhi(maChiPhi, "TU_CHOI");
     }
 
+    @Transactional
+    public ChiPhiThucTeResponse yeuCauBoSungChiPhi(String maChiPhi) {
+        return setTrangThaiChiPhi(maChiPhi, "YEU_CAU_BO_SUNG");
+    }
+
+    public Page<CanhBaoChiPhiResponse> danhSachCanhBaoChiPhi(String trangThai, String loaiCanhBao,
+                                                             String mucDo, Pageable pageable) {
+        List<CanhBaoChiPhiResponse> canhBao = chiPhiThucTeRepository.findAllWithRelations().stream()
+                .flatMap(cp -> taoCanhBaoDong(cp).stream())
+                .filter(cb -> trangThai == null || trangThai.equals(cb.getTrangThai()))
+                .filter(cb -> loaiCanhBao == null || loaiCanhBao.equals(cb.getLoaiCanhBao()))
+                .filter(cb -> mucDo == null || mucDo.equals(cb.getMucDo()))
+                .toList();
+
+        int start = Math.min((int) pageable.getOffset(), canhBao.size());
+        int end = Math.min(start + pageable.getPageSize(), canhBao.size());
+        return new PageImpl<>(canhBao.subList(start, end), pageable, canhBao.size());
+    }
+
+    public CanhBaoChiPhiResponse chiTietCanhBaoChiPhi(String maCanhBao) {
+        return chiPhiThucTeRepository.findAllWithRelations().stream()
+                .flatMap(cp -> taoCanhBaoDong(cp).stream())
+                .filter(cb -> cb.getMaCanhBao().equals(maCanhBao))
+                .findFirst()
+                .orElseThrow(() -> AppException.notFound("Khong tim thay canh bao chi phi: " + maCanhBao));
+    }
+
     private ChiPhiThucTeResponse setTrangThaiChiPhi(String maChiPhi, String trangThai) {
         ChiPhiThucTe cp = chiPhiThucTeRepository.findById(maChiPhi)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay chi phi: " + maChiPhi));
@@ -214,6 +265,61 @@ public class VanHanhService {
         cp.setTrangThaiDuyet(trangThai);
         chiPhiThucTeRepository.save(cp);
         return toChiPhiResponse(cp);
+    }
+
+    private List<CanhBaoChiPhiResponse> taoCanhBaoDong(ChiPhiThucTe cp) {
+        List<CanhBaoChiPhiResponse> canhBao = new ArrayList<>();
+        if (cp.getHoaDonAnh() == null || cp.getHoaDonAnh().isBlank()) {
+            canhBao.add(toCanhBaoChiPhiResponse(cp, "THIEU_CHUNG_TU", "CAO",
+                    "Chi phi chua co anh/chung tu hoa don dinh kem"));
+        }
+
+        BigDecimal dinhMuc = dinhMucTheoDanhMuc(cp.getDanhMuc());
+        if (dinhMuc != null && cp.getThanhTien().compareTo(dinhMuc) > 0) {
+            canhBao.add(toCanhBaoChiPhiResponse(cp, "VUOT_DINH_MUC", mucDoVuotNguong(cp.getThanhTien(), dinhMuc),
+                    "Chi phi " + cp.getDanhMuc() + " vuot dinh muc " + dinhMuc));
+        }
+
+        BigDecimal giaThiTruong = giaThiTruongTheoDanhMuc(cp.getDanhMuc());
+        if (giaThiTruong != null && cp.getThanhTien().compareTo(giaThiTruong.multiply(new BigDecimal("1.5"))) > 0) {
+            canhBao.add(toCanhBaoChiPhiResponse(cp, "BAT_THUONG_THI_TRUONG", mucDoVuotNguong(cp.getThanhTien(), giaThiTruong),
+                    "Chi phi " + cp.getDanhMuc() + " cao bat thuong so voi gia thi truong " + giaThiTruong));
+        }
+        return canhBao;
+    }
+
+    private BigDecimal dinhMucTheoDanhMuc(String danhMuc) {
+        String key = chuanHoaDanhMuc(danhMuc);
+        if (key.contains("khach san")) return new BigDecimal("4000000");
+        if (key.contains("ve") || key.contains("tham quan")) return new BigDecimal("1500000");
+        if (key.contains("xe") || key.contains("dua don")) return new BigDecimal("3000000");
+        if (key.contains("an uong")) return new BigDecimal("2000000");
+        return null;
+    }
+
+    private BigDecimal giaThiTruongTheoDanhMuc(String danhMuc) {
+        String key = chuanHoaDanhMuc(danhMuc);
+        if (key.contains("khach san")) return new BigDecimal("4200000");
+        if (key.contains("ve") || key.contains("tham quan")) return new BigDecimal("1600000");
+        if (key.contains("xe") || key.contains("dua don")) return new BigDecimal("2800000");
+        if (key.contains("an uong")) return new BigDecimal("2200000");
+        return null;
+    }
+
+    private String mucDoVuotNguong(BigDecimal thanhTien, BigDecimal nguong) {
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.5"))) > 0) return "NGHIEM_TRONG";
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.3"))) > 0) return "CAO";
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.1"))) > 0) return "TRUNG_BINH";
+        return "THAP";
+    }
+
+    private String chuanHoaDanhMuc(String danhMuc) {
+        if (danhMuc == null) return "";
+        return Normalizer.normalize(danhMuc, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .replace('đ', 'd')
+                .replace('Đ', 'D')
+                .toLowerCase();
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
@@ -325,5 +431,33 @@ public class VanHanhService {
                 .trangThaiDuyet(cp.getTrangThaiDuyet())
                 .ngayKhai(cp.getNgayKhai())
                 .build();
+    }
+
+    private CanhBaoChiPhiResponse toCanhBaoChiPhiResponse(ChiPhiThucTe cp, String loaiCanhBao,
+                                                          String mucDo, String noiDung) {
+        NhanVien nv = cp.getNhanVien();
+        String tenNv = nv.getTaiKhoan() != null ? nv.getTaiKhoan().getHoTen() : "";
+        return CanhBaoChiPhiResponse.builder()
+                .maCanhBao(cp.getMaChiPhiThucTe() + "_" + loaiCanhBao)
+                .maChiPhi(cp.getMaChiPhiThucTe())
+                .maTour(cp.getTourThucTe().getMaTourThucTe())
+                .maNhanVien(nv.getMaNhanVien())
+                .tenNhanVien(tenNv)
+                .danhMuc(cp.getDanhMuc())
+                .thanhTien(cp.getThanhTien())
+                .loaiCanhBao(loaiCanhBao)
+                .mucDo(mucDo)
+                .noiDung(noiDung)
+                .trangThai(trangThaiCanhBao(cp.getTrangThaiDuyet()))
+                .ngayTao(cp.getNgayKhai())
+                .build();
+    }
+
+    private String trangThaiCanhBao(String trangThaiDuyet) {
+        return switch (trangThaiDuyet) {
+            case "YEU_CAU_BO_SUNG" -> "DANG_XU_LY";
+            case "DA_DUYET", "TU_CHOI" -> "DA_XU_LY";
+            default -> "MOI";
+        };
     }
 }

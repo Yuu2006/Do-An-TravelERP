@@ -309,6 +309,7 @@ CREATE TABLE GIAODICH (
                           TrangThai        VARCHAR2(30)  DEFAULT 'CHO_THANH_TOAN' NOT NULL,
                           NgayThanhToan    TIMESTAMP,
                           CONSTRAINT FK_GIAODICH_DatTour         FOREIGN KEY (MaDatTour)  REFERENCES DONDATTOUR(MaDatTour),
+                          CONSTRAINT CK_GIAODICH_LoaiGiaoDich    CHECK (LoaiGiaoDich IN ('THANH_TOAN','HOAN_TIEN')),
                           CONSTRAINT CK_GIAODICH_SoTien          CHECK (SoTien >= 0),
                           CONSTRAINT CK_GIAODICH_TrangThai       CHECK (TrangThai IN (
                                                                                       'CHO_THANH_TOAN','THANH_CONG','THAT_BAI','DA_HOAN_TIEN'
@@ -410,7 +411,7 @@ CREATE TABLE CHIPHITHUCTE (
                               CONSTRAINT FK_CPTT_TourThucTe          FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                               CONSTRAINT FK_CPTT_NhanVien            FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                               CONSTRAINT CK_CPTT_ThanhTien           CHECK (ThanhTien >= 0),
-                              CONSTRAINT CK_CPTT_TrangThaiDuyet      CHECK (TrangThaiDuyet IN ('CHO_DUYET','DA_DUYET','TU_CHOI'))
+                              CONSTRAINT CK_CPTT_TrangThaiDuyet      CHECK (TrangThaiDuyet IN ('CHO_DUYET','DA_DUYET','TU_CHOI','YEU_CAU_BO_SUNG'))
 );
 
 -- ============================================================
