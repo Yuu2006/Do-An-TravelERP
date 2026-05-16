@@ -29,15 +29,6 @@ public class VaiTro {
     @Column(name = "TenHienThi", nullable = false, length = 100)
     String TenHienThi;
 
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
-
     // Danh sach tai khoan thuoc vai tro nay
     @JsonIgnore
     @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)

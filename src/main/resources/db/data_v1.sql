@@ -7,67 +7,63 @@
 -- ============================================================
 
 -- ------------------------------------------------------------
--- 1. LOAIPHONG — Danh mục loại phòng / phụ thu
+-- 1. DICHVUTHEM — Danh mục dịch vụ bổ sung / phụ thu phòng
 -- ------------------------------------------------------------
-INSERT INTO LOAIPHONG (MaLoaiPhong, TenLoai, MucPhuThu, TrangThai)
-VALUES ('LP001', 'Phòng đơn (Single)',             0,       'HOAT_DONG');
-INSERT INTO LOAIPHONG (MaLoaiPhong, TenLoai, MucPhuThu, TrangThai)
-VALUES ('LP002', 'Phòng đôi (Twin / Double)',      200000,  'HOAT_DONG');
-INSERT INTO LOAIPHONG (MaLoaiPhong, TenLoai, MucPhuThu, TrangThai)
-VALUES ('LP003', 'Phòng ba (Triple)',              350000,  'HOAT_DONG');
-INSERT INTO LOAIPHONG (MaLoaiPhong, TenLoai, MucPhuThu, TrangThai)
-VALUES ('LP004', 'Phòng Deluxe',                  800000,  'HOAT_DONG');
-
--- ------------------------------------------------------------
--- 2. DICHVUTHEM — Danh mục dịch vụ bổ sung
--- ------------------------------------------------------------
-INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia, TrangThai)
-VALUES ('DV001', 'Vé tham quan thêm',            'Lượt/người',  150000, 'HOAT_DONG');
-INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia, TrangThai)
-VALUES ('DV002', 'Bảo hiểm du lịch',             'Người',        80000, 'HOAT_DONG');
-INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia, TrangThai)
-VALUES ('DV003', 'Đón/trả sân bay',              'Chuyến',      250000, 'HOAT_DONG');
-INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia, TrangThai)
-VALUES ('DV004', 'Bổ sung bữa ăn tối đặc sản',   'Người',       120000, 'HOAT_DONG');
-INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia, TrangThai)
-VALUES ('DV005', 'Cho thuê máy ảnh / máy quay',  'Ngày',        200000, 'HOAT_DONG');
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV011', 'Phụ thu phòng đơn (Single)',      'Phòng',       0);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV012', 'Phụ thu phòng đôi (Twin / Double)','Phòng',  200000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV013', 'Phụ thu phòng ba (Triple)',       'Phòng',  350000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV014', 'Phụ thu phòng Deluxe',            'Phòng',  800000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV001', 'Vé tham quan thêm',            'Lượt/người',  150000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV002', 'Bảo hiểm du lịch',             'Người',        80000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV003', 'Đón/trả sân bay',              'Chuyến',      250000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV004', 'Bổ sung bữa ăn tối đặc sản',   'Người',       120000);
+INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
+VALUES ('DV005', 'Cho thuê máy ảnh / máy quay',  'Ngày',        200000);
 
 -- ------------------------------------------------------------
 -- 3. HANHDONGXANH — Cấu hình hành động xanh cộng điểm loyalty
 -- ------------------------------------------------------------
-INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong, TrangThai)
-VALUES ('HDX001', 'Mang bình nước tái sử dụng',              50,  'HOAT_DONG');
-INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong, TrangThai)
-VALUES ('HDX002', 'Không dùng đồ nhựa dùng một lần',         80,  'HOAT_DONG');
-INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong, TrangThai)
-VALUES ('HDX003', 'Tham gia dọn rác môi trường tại điểm đến',150,  'HOAT_DONG');
-INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong, TrangThai)
-VALUES ('HDX004', 'Trồng cây / phục hồi hệ sinh thái',       200,  'HOAT_DONG');
-INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong, TrangThai)
-VALUES ('HDX005', 'Mượn xe đạp thay xe máy',                 100,  'HOAT_DONG');
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX001', 'Mang bình nước tái sử dụng',              50);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX002', 'Không dùng đồ nhựa dùng một lần',         80);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX003', 'Tham gia dọn rác môi trường tại điểm đến',150);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX004', 'Trồng cây / phục hồi hệ sinh thái',       200);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX005', 'Mượn xe đạp thay xe máy',                 100);
 
 -- ------------------------------------------------------------
 -- 4. TOURMAU — Tour mẫu (template sản phẩm)
 -- ------------------------------------------------------------
-INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia, TrangThai, TaoBoi)
+INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM001', 'Khám phá Hạ Long - Cát Bà 3N2Đ',
         'Vịnh Hạ Long kỳ vĩ kết hợp đảo Cát Bà hùng vĩ. Trải nghiệm ngủ trên tàu đêm, chèo kayak qua hang động, khám phá rừng quốc gia Cát Bà.',
-        3, 3500000, 4.5, 128, 'HOAT_DONG', 'SYSTEM');
+        3, 3500000, 4.5, 128);
 
-INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia, TrangThai, TaoBoi)
+INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM002', 'Đà Nẵng - Hội An - Bà Nà Hills 4N3Đ',
         'Hành trình miền Trung: bãi biển Mỹ Khê, phố cổ Hội An lung linh ánh đèn, Bà Nà Hills với Cầu Vàng biểu tượng.',
-        4, 4200000, 4.7, 215, 'HOAT_DONG', 'SYSTEM');
+        4, 4200000, 4.7, 215);
 
-INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia, TrangThai, TaoBoi)
+INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM003', 'Phú Quốc Nghỉ Dưỡng Biển Đảo 5N4Đ',
         'Nghỉ dưỡng biển đảo Phú Quốc: bãi Trường, bãi Sao, khám phá nhà tù Phú Quốc, hòn đảo An Thới, làng chài trên biển.',
-        5, 5800000, 4.8, 302, 'HOAT_DONG', 'SYSTEM');
+        5, 5800000, 4.8, 302);
 
-INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia, TrangThai, TaoBoi)
+INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM004', 'Sapa - Bắc Hà Mây Mờ Trekking 3N2Đ',
         'Trekking bản làng người H''Mông, chợ tình Bắc Hà họp ngày chủ nhật, ngắm ruộng bậc thang Mù Cang Chải.',
-        3, 3200000, 4.4, 87, 'HOAT_DONG', 'SYSTEM');
+        3, 3200000, 4.4, 87);
 
 -- ------------------------------------------------------------
 -- 5. LICHTRINHTOUR — Lịch trình theo ngày
@@ -115,67 +111,67 @@ VALUES ('LT002_N4', 'TM002', 4,
 -- 6. TAIKHOAN — Tài khoản hệ thống (mật khẩu: password)
 -- BCrypt(cost=10,"password")=$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK
 -- ------------------------------------------------------------
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('ADMIN',      'Quản trị hệ thống',    'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('SANPHAM',    'Nhân viên sản phẩm',   'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KINHDOANH',  'Nhân viên kinh doanh', 'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('DIEUHANH',   'Nhân viên điều hành',  'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KETOAN',     'Kế toán',              'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('HDV',        'Hướng dẫn viên',       'HOAT_DONG');
-INSERT INTO VAITRO (MaVaiTro, TenHienThi, TrangThai) VALUES ('KHACHHANG',  'Khách hàng',           'HOAT_DONG');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('ADMIN',      'Quản trị hệ thống');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('SANPHAM',    'Nhân viên sản phẩm');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('KINHDOANH',  'Nhân viên kinh doanh');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('DIEUHANH',   'Nhân viên điều hành');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('KETOAN',     'Kế toán');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('HDV',        'Hướng dẫn viên');
+INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('KHACHHANG',  'Khách hàng');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_ADMIN01', 'admin',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Nguyễn Văn Admin', '079099000001', 'admin@digitaltravel.vn', '0900000001',
-        'ADMIN', 'HOAT_DONG', 'SYSTEM');
+        'ADMIN', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_MGR01', 'manager01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Trần Thị Điều Hành', '079099000002', 'dieuhanh01@digitaltravel.vn', '0900000002',
-        'DIEUHANH', 'HOAT_DONG', 'SYSTEM');
+        'DIEUHANH', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_SP01', 'sanpham01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Nguyễn Thị Sản Phẩm', '079099000099', 'sanpham01@digitaltravel.vn', '0900000099',
-        'SANPHAM', 'HOAT_DONG', 'SYSTEM');
+        'SANPHAM', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_SALES01', 'sales01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Lê Văn Kinh Doanh', '079099000003', 'kinhdoanh01@digitaltravel.vn', '0900000003',
-        'KINHDOANH', 'HOAT_DONG', 'SYSTEM');
+        'KINHDOANH', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KT01', 'ketoan01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Phạm Thị Kế Toán', '079099000004', 'ketoan01@digitaltravel.vn', '0900000004',
-        'KETOAN', 'HOAT_DONG', 'SYSTEM');
+        'KETOAN', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV01', 'hdv01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Hoàng Văn Hướng Dẫn', '079099000005', 'hdv01@digitaltravel.vn', '0900000005',
-        'HDV', 'HOAT_DONG', 'SYSTEM');
+        'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV02', 'hdv02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Nguyễn Thị Hương', '079099000006', 'hdv02@digitaltravel.vn', '0900000006',
-        'HDV', 'HOAT_DONG', 'SYSTEM');
+        'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH01', 'khachhang01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Bùi Thị Khách Hàng', '079099000007', 'kh01@gmail.com', '0900000007',
-        'KHACHHANG', 'HOAT_DONG', 'SYSTEM');
+        'KHACHHANG', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai, TaoBoi)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH02', 'khachhang02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Đinh Văn Khách Hàng', '079099000008', 'kh02@gmail.com', '0900000008',
-        'KHACHHANG', 'HOAT_DONG', 'SYSTEM');
+        'KHACHHANG', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
 -- 7. NHANVIEN — Hồ sơ nhân viên nội bộ
@@ -222,34 +218,34 @@ VALUES ('NL_HDV02', 'NV_HDV02',
 -- ------------------------------------------------------------
 -- 10. TOURTHUCTE — Đợt khởi hành cụ thể
 -- ------------------------------------------------------------
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT001', 'TM001', DATE '2026-05-10', 3500000, 25, 10, 25, 'MO_BAN',        'SYSTEM');
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT002', 'TM001', DATE '2026-06-07', 3700000, 30, 10, 30, 'MO_BAN',        'SYSTEM');
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT003', 'TM002', DATE '2026-05-20', 4200000, 20, 8,  20, 'MO_BAN',        'SYSTEM');
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT004', 'TM003', DATE '2026-07-15', 5800000, 20, 5,  20, 'CHO_KICH_HOAT', 'SYSTEM');
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT005', 'TM004', DATE '2026-05-30', 3200000, 15, 6,  15, 'MO_BAN',        'SYSTEM');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT001', 'TM001', DATE '2026-05-10', 3500000, 25, 10, 25, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT002', 'TM001', DATE '2026-06-07', 3700000, 30, 10, 30, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT003', 'TM002', DATE '2026-05-20', 4200000, 20, 8,  20, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT004', 'TM003', DATE '2026-07-15', 5800000, 20, 5,  20, 'CHO_KICH_HOAT');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT005', 'TM004', DATE '2026-05-30', 3200000, 15, 6,  15, 'MO_BAN');
 
 -- ------------------------------------------------------------
 -- 11. VOUCHER — Chương trình ưu đãi mẫu
 -- ------------------------------------------------------------
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan)
 VALUES ('VC001', 'WELCOME10', 'PHAN_TRAM', 10,
         'Giảm 10% cho khách đặt tour lần đầu. Đơn tối thiểu 3.000.000 VNĐ.',
-        100, 0, DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
+        100, 0, DATE '2026-04-01', DATE '2026-12-31');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan)
 VALUES ('VC002', 'SUMMER500K', 'SO_TIEN', 500000,
         'Giảm 500.000 VNĐ cho tour khởi hành tháng 5–7/2026. Đơn tối thiểu 4.000.000 VNĐ.',
-        50, 0, DATE '2026-05-01', DATE '2026-07-31', 'SYSTEM');
+        50, 0, DATE '2026-05-01', DATE '2026-07-31');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TaoBoi)
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan)
 VALUES ('VC003', 'BAC15', 'PHAN_TRAM', 15,
         'Ưu đãi 15% dành riêng thành viên hạng BAC trở lên. Đơn tối thiểu 5.000.000 VNĐ.',
-        200, 0, DATE '2026-04-01', DATE '2026-12-31', 'SYSTEM');
+        200, 0, DATE '2026-04-01', DATE '2026-12-31');
 
 -- ------------------------------------------------------------
 -- 12. KHUYENMAI_KH — Phát hành voucher cho khách hàng
@@ -263,20 +259,20 @@ VALUES ('KH002', 'VC001', SYSTIMESTAMP, DATE '2026-12-31');
 -- ------------------------------------------------------------
 -- 13. TOURTHUCTE bổ sung — 1 tour KẾT THÚC để test báo cáo
 -- ------------------------------------------------------------
-INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai, TaoBoi)
-VALUES ('TTT099', 'TM001', DATE '2026-02-10', 3500000, 20, 8, 0, 'KET_THUC', 'SYSTEM');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT099', 'TM001', DATE '2026-02-10', 3500000, 20, 8, 0, 'KET_THUC');
 
 -- ------------------------------------------------------------
 -- 14. DONDATTOUR — Đơn đặt tour mẫu
 -- ------------------------------------------------------------
-INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai, TaoBoi)
-VALUES ('DDT001', 'KH001', 'TTT001', 7000000, 'DA_XAC_NHAN', 'SYSTEM');
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai)
+VALUES ('DDT001', 'KH001', 'TTT001', 7000000, 'DA_XAC_NHAN');
 
-INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai, TaoBoi)
-VALUES ('DDT002', 'KH002', 'TTT003', 4200000, 'CHO_XAC_NHAN', 'SYSTEM');
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai)
+VALUES ('DDT002', 'KH002', 'TTT003', 4200000, 'CHO_XAC_NHAN');
 
-INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai, TaoBoi)
-VALUES ('DDT099', 'KH001', 'TTT099', 7000000, 'DA_XAC_NHAN', 'SYSTEM');
+INSERT INTO DONDATTOUR (MaDatTour, MaKhachHang, MaTourThucTe, TongTien, TrangThai)
+VALUES ('DDT099', 'KH001', 'TTT099', 7000000, 'DA_XAC_NHAN');
 
 -- ------------------------------------------------------------
 -- 15. LICHSUTOUR — Lịch sử tour đã hoàn thành

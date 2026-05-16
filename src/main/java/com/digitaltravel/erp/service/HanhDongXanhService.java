@@ -38,7 +38,6 @@ public class HanhDongXanhService {
         hdx.setMaHanhDongXanh("HDX_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         hdx.setTenHanhDong(request.getTenHanhDong());
         hdx.setDiemCong(request.getDiemCong());
-        hdx.setTrangThai(request.getTrangThai() != null ? request.getTrangThai() : "HOAT_DONG");
         hanhDongXanhRepository.save(hdx);
         return toResponse(hdx);
     }
@@ -50,12 +49,6 @@ public class HanhDongXanhService {
 
         if (request.getTenHanhDong() != null) hdx.setTenHanhDong(request.getTenHanhDong());
         if (request.getDiemCong() != null) hdx.setDiemCong(request.getDiemCong());
-        if (request.getTrangThai() != null) {
-            if (!"HOAT_DONG".equals(request.getTrangThai()) && !"KHOA".equals(request.getTrangThai())) {
-                throw AppException.badRequest("Trang thai khong hop le. Chi chap nhan: HOAT_DONG, KHOA");
-            }
-            hdx.setTrangThai(request.getTrangThai());
-        }
         hanhDongXanhRepository.save(hdx);
         return toResponse(hdx);
     }
@@ -64,8 +57,7 @@ public class HanhDongXanhService {
     public void xoa(String id) {
         HanhDongXanh hdx = hanhDongXanhRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + id));
-        hdx.setTrangThai("KHOA");
-        hanhDongXanhRepository.save(hdx);
+        hanhDongXanhRepository.delete(hdx);
     }
 
     private HanhDongXanhResponse toResponse(HanhDongXanh hdx) {
@@ -73,7 +65,6 @@ public class HanhDongXanhService {
                 .maHanhDongXanh(hdx.getMaHanhDongXanh())
                 .tenHanhDong(hdx.getTenHanhDong())
                 .diemCong(hdx.getDiemCong())
-                .trangThai(hdx.getTrangThai())
                 .build();
     }
 }

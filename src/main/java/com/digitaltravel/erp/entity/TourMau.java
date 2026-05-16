@@ -46,14 +46,4 @@ public class TourMau {
     // NUMBER(10): tong so luot danh gia
     @Column(name = "SoDanhGia")
     Integer SoDanhGia;
-
-    // Gia tri hop le: HOAT_DONG | KHOA
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
 }

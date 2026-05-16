@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.PhanCongHdvRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.NhanVienResponse;
@@ -47,10 +45,8 @@ public class PhanCongController {
     @PostMapping("/phan-cong")
     @PreAuthorize("hasRole('DIEUHANH')")
     public ResponseEntity<ApiResponse<PhanCongResponse>> phanCong(
-            @Valid @RequestBody PhanCongHdvRequest request,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
-        String taoBoi = user.getUsername();
-        PhanCongResponse result = phanCongTourService.phanCong(request, taoBoi);
+            @Valid @RequestBody PhanCongHdvRequest request) {
+        PhanCongResponse result = phanCongTourService.phanCong(request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 

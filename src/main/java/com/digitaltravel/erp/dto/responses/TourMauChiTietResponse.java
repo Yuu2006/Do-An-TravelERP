@@ -16,7 +16,5 @@ public class TourMauChiTietResponse {
     BigDecimal giaSan;
     BigDecimal danhGia;
     Integer soDanhGia;
-    String trangThai;
-    String taoBoi;
     List<LichTrinhResponse> lichTrinh;
 }

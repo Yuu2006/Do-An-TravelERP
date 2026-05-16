@@ -78,7 +78,6 @@ src/main/java/com/digitaltravel/erp/
 │   ├── AuthController.java
 │   ├── TourMauController.java
 │   ├── TourThucTeController.java
-│   ├── LoaiPhongController.java
 │   ├── DichVuThemController.java
 │   ├── HanhDongXanhController.java
 │   ├── KhachHangController.java
@@ -106,7 +105,7 @@ src/main/java/com/digitaltravel/erp/
 | Role | Mô tả |
 |------|-------|
 | `ADMIN` | Toàn quyền hệ thống |
-| `SANPHAM` | Quản lý sản phẩm (tour mẫu, loại phòng, dịch vụ, hành động xanh) |
+| `SANPHAM` | Quản lý sản phẩm (tour mẫu, dịch vụ/phụ thu phòng, hành động xanh) |
 | `KINHDOANH` | Xử lý đơn hàng, hủy tour, khiếu nại, voucher |
 | `DIEUHANH` | Quản lý nhân sự, phân công HDV, tour thực tế |
 | `KETOAN` | Quyết toán, chi phí, báo cáo tài chính |
@@ -212,8 +211,7 @@ src/main/java/com/digitaltravel/erp/
 
 | Method | Path | Auth | Trạng thái |
 |--------|------|------|-----------|
-| GET/POST/PUT/DELETE | `/api/san-pham/loai-phong/**` | SANPHAM | DONE |
-| GET/POST/PUT/DELETE | `/api/san-pham/dich-vu-them/**` | SANPHAM | DONE |
+| GET/POST/PUT/DELETE | `/api/san-pham/dich-vu-them/**` | SANPHAM | DONE, gồm phụ thu phòng |
 | GET/POST/PUT | `/api/san-pham/hanh-dong-xanh/**` | SANPHAM | DONE |
 
 ### Khách hàng (`/api/khach-hang`)
@@ -348,7 +346,7 @@ src/main/java/com/digitaltravel/erp/
 | UC12 | Xóa tour thực tế | Tour Thực tế |
 | UC13 | Sửa tour thực tế | Tour Thực tế |
 | UC14 | Tìm kiếm & xem chi tiết tour | Tour Thực tế |
-| UC15–17 | CRUD loại phòng, dịch vụ bổ sung | Danh mục |
+| UC15–17 | CRUD dịch vụ bổ sung/phụ thu phòng | Danh mục |
 | UC18–20 | CRUD hành động xanh | Hành động xanh |
 | UC21 | Xem hồ sơ khách hàng | Khách hàng |
 | UC22 | Lịch sử tour khách hàng | Khách hàng |

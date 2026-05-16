@@ -13,9 +13,6 @@ public class DatTourRequest {
     @NotBlank(message = "Ma tour thuc te khong duoc de trong")
     String maTourThucTe;
 
-    // Tuỳ chọn: loại phòng cho người đặt
-    String maLoaiPhong;
-
     // Tuỳ chọn: danh sách dịch vụ bổ sung
     @Valid
     List<DichVuThemDatRequest> danhSachDichVu;

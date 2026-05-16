@@ -21,7 +21,6 @@ import com.digitaltravel.erp.entity.ChiTietDichVu;
 import com.digitaltravel.erp.entity.DichVuThem;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.HoChieuSo;
-import com.digitaltravel.erp.entity.LoaiPhong;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
@@ -29,7 +28,6 @@ import com.digitaltravel.erp.repository.ChiTietDichVuRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
-import com.digitaltravel.erp.repository.LoaiPhongRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -43,7 +41,6 @@ public class DatTourService {
     private final ChiTietDichVuRepository chiTietDichVuRepository;
     private final TourThucTeRepository tourThucTeRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
-    private final LoaiPhongRepository loaiPhongRepository;
     private final DichVuThemRepository dichVuThemRepository;
 
     // ── Đặt tour ────────────────────────────────────────────────────────────
@@ -64,28 +61,13 @@ public class DatTourService {
             throw AppException.badRequest("Tour da het cho");
         }
 
-        // 3. Xử lý loại phòng (tuỳ chọn)
-        LoaiPhong loaiPhong = null;
-        BigDecimal phuThuPhong = BigDecimal.ZERO;
-        if (request.getMaLoaiPhong() != null && !request.getMaLoaiPhong().isBlank()) {
-            loaiPhong = loaiPhongRepository.findById(request.getMaLoaiPhong())
-                    .orElseThrow(() -> AppException.notFound("Khong tim thay loai phong: " + request.getMaLoaiPhong()));
-            if (!"HOAT_DONG".equals(loaiPhong.getTrangThai())) {
-                throw AppException.badRequest("Loai phong khong con hoat dong: " + request.getMaLoaiPhong());
-            }
-            phuThuPhong = loaiPhong.getMucPhuThu();
-        }
-
-        // 4. Tính tổng tiền dịch vụ bổ sung
+        // 3. Tính tổng tiền dịch vụ bổ sung
         List<ChiTietDichVu> dsDichVu = new ArrayList<>();
         BigDecimal tongTienDichVu = BigDecimal.ZERO;
         if (request.getDanhSachDichVu() != null) {
             for (DichVuThemDatRequest dvReq : request.getDanhSachDichVu()) {
                 DichVuThem dv = dichVuThemRepository.findById(dvReq.getMaDichVuThem())
                         .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu: " + dvReq.getMaDichVuThem()));
-                if (!"HOAT_DONG".equals(dv.getTrangThai())) {
-                    throw AppException.badRequest("Dich vu khong con hoat dong: " + dvReq.getMaDichVuThem());
-                }
                 BigDecimal thanhTien = dv.getDonGia().multiply(BigDecimal.valueOf(dvReq.getSoLuong()));
                 tongTienDichVu = tongTienDichVu.add(thanhTien);
 
@@ -99,11 +81,11 @@ public class DatTourService {
             }
         }
 
-        // 5. Tính tổng tiền đơn đặt
-        BigDecimal giaPerPerson = tour.getGiaHienHanh().add(phuThuPhong);
+        // 4. Tính tổng tiền đơn đặt
+        BigDecimal giaPerPerson = tour.getGiaHienHanh();
         BigDecimal tongTien = giaPerPerson.add(tongTienDichVu);
 
-        // 6. Tạo đơn đặt tour
+        // 5. Tạo đơn đặt tour
         DonDatTour don = new DonDatTour();
         don.setMaDatTour("DDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         don.setTourThucTe(tour);
@@ -114,26 +96,24 @@ public class DatTourService {
         // Giữ chỗ 15 phút, Scheduler sẽ tự hủy nếu chưa thanh toán
         don.setThoiGianHetHan(LocalDateTime.now().plusMinutes(15));
         don.setGhiChu(request.getGhiChu());
-        don.setTaoBoi(maTaiKhoan);
         donDatTourRepository.save(don);
 
-        // 7. Tạo chi tiết đặt tour (1 dòng cho người đặt chính)
+        // 6. Tạo chi tiết đặt tour (1 dòng cho người đặt chính)
         BigDecimal giaTaiThoiDiemDat = giaPerPerson;
         ChiTietDatTour chiTiet = new ChiTietDatTour();
         chiTiet.setMaChiTietDat("CTDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         chiTiet.setDonDatTour(don);
         chiTiet.setKhachHang(khachHang);
-        chiTiet.setLoaiPhong(loaiPhong);
         chiTiet.setGiaTaiThoiDiemDat(giaTaiThoiDiemDat);
         chiTietDatTourRepository.save(chiTiet);
 
-        // 8. Lưu các chi tiết dịch vụ
+        // 7. Lưu các chi tiết dịch vụ
         for (ChiTietDichVu ctdv : dsDichVu) {
             ctdv.setDonDatTour(don);
             chiTietDichVuRepository.save(ctdv);
         }
 
-        // 9. KHÔNG trừ ChoConLai ngay — chỉ trừ sau khi thanh toán thành công
+        // 8. KHÔNG trừ ChoConLai ngay — chỉ trừ sau khi thanh toán thành công
 
         return toResponse(don, List.of(chiTiet), dsDichVu);
     }
@@ -180,7 +160,6 @@ public class DatTourService {
         }
 
         don.setTrangThai("DA_HUY");
-        don.setCapNhatBoi(maTaiKhoan);
         donDatTourRepository.save(don);
         // Không cần hoàn ChoConLai vì chưa trừ (chưa thanh toán)
     }
@@ -207,7 +186,6 @@ public class DatTourService {
         }
 
         don.setTrangThai("DA_XAC_NHAN");
-        don.setCapNhatBoi(nguoiXacNhan);
         donDatTourRepository.save(don);
 
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
@@ -244,9 +222,6 @@ public class DatTourService {
                 .maChiTietDat(ct.getMaChiTietDat())
                 .maKhachHang(ct.getKhachHang().getMaKhachHang())
                 .hoTen(ct.getKhachHang().getTaiKhoan().getHoTen())
-                .maLoaiPhong(ct.getLoaiPhong() != null ? ct.getLoaiPhong().getMaLoaiPhong() : null)
-                .tenLoaiPhong(ct.getLoaiPhong() != null ? ct.getLoaiPhong().getTenLoai() : null)
-                .mucPhuThu(ct.getLoaiPhong() != null ? ct.getLoaiPhong().getMucPhuThu() : BigDecimal.ZERO)
                 .giaTaiThoiDiemDat(ct.getGiaTaiThoiDiemDat())
                 .build();
     }

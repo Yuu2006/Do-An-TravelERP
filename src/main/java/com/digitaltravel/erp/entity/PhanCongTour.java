@@ -37,6 +37,4 @@ public class PhanCongTour {
     @Column(name = "NgayPhanCong", nullable = false)
     LocalDateTime NgayPhanCong;
 
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
 }

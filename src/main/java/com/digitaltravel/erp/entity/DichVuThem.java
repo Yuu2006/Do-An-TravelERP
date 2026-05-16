@@ -30,8 +30,4 @@ public class DichVuThem {
     @Column(name = "DonGia", nullable = false, precision = 18, scale = 2)
     BigDecimal DonGia;
 
-    // Gia tri hop le: HOAT_DONG | KHOA
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
 }

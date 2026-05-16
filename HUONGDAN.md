@@ -17,7 +17,7 @@ Digital Travel ERP là backend Spring Boot quản lý nghiệp vụ du lịch th
 | Phân hệ | Vai trò chính | Nhóm bảng liên quan | Prefix API |
 |---|---|---|---|
 | Định danh và phân quyền | `ADMIN`, tất cả người dùng | `TAIKHOAN`, `VAITRO`, `NHANVIEN`, `HOCHIEUSO`, `NHATKYHETHONG` | `/api/auth`, `/api/quan-tri` |
-| Sản phẩm tour | `SANPHAM` | `TOURMAU`, `LICHTRINHTOUR`, `LOAIPHONG`, `DICHVUTHEM`, `HANHDONGXANH` | `/api/san-pham` |
+| Sản phẩm tour | `SANPHAM` | `TOURMAU`, `LICHTRINHTOUR`, `DICHVUTHEM` (gồm phụ thu phòng), `HANHDONGXANH` | `/api/san-pham` |
 | Điều hành tour | `DIEUHANH` | `TOURTHUCTE`, `PHANCONGTOUR`, `NANGLUCNHANVIEN` | `/api/dieu-hanh` |
 | Bán hàng và CSKH | `KINHDOANH` | `DONDATTOUR`, `YEUCAUHOTRO`, `VOUCHER`, `KHUYENMAI_KH` | `/api/kinh-doanh` |
 | Khách hàng | `KHACHHANG` | `HOCHIEUSO`, `DONDATTOUR`, `LICHSUTOUR`, `DANHGIAKH`, `DATTOUR_UUDAI` | `/api/khach-hang`, `/api/thanh-toan` |
@@ -165,7 +165,7 @@ Mật khẩu mặc định cho các tài khoản trong `data_v1.sql` và `data_v
 | Vai trò | Username | Mã nghiệp vụ | Ghi chú test nhanh |
 |---|---|---|---|
 | `ADMIN` | `admin` | `NV_ADMIN01` | Quản trị nhân viên, vai trò, nhật ký bảo mật |
-| `SANPHAM` | `sanpham01` | `NV_SP01` | Tour mẫu, loại phòng, dịch vụ thêm, hành động xanh |
+| `SANPHAM` | `sanpham01` | `NV_SP01` | Tour mẫu, dịch vụ thêm/phụ thu phòng, hành động xanh |
 | `DIEUHANH` | `manager01` | `NV_MGR01` | Tour thực tế, phân công HDV, năng lực HDV |
 | `KINHDOANH` | `sales01` | `NV_SALES01` | Đơn đặt tour, khách hàng, voucher, yêu cầu hỗ trợ |
 | `KINHDOANH` | `sales02` | `NV_SALES02` | Dữ liệu bổ sung từ `data_v2.sql` |
@@ -269,8 +269,8 @@ Ví dụ đặt tour:
 ```json
 {
   "maTourThucTe": "TTT001",
-  "maLoaiPhong": "LP002",
   "danhSachDichVu": [
+    { "maDichVuThem": "DV012", "soLuong": 1 },
     { "maDichVuThem": "DV002", "soLuong": 2 }
   ],
   "ghiChu": "Ưu tiên phòng tầng thấp"
@@ -300,8 +300,7 @@ Ví dụ thanh toán mock trong dev/test:
 | `POST` | `/api/san-pham/tour-mau/{id}/lich-trinh` | Thêm ngày lịch trình |
 | `PUT` | `/api/san-pham/tour-mau/{id}/lich-trinh/{maLichTrinh}` | Sửa ngày lịch trình |
 | `DELETE` | `/api/san-pham/tour-mau/{id}/lich-trinh/{maLichTrinh}` | Xóa ngày lịch trình |
-| `GET/POST/PUT/DELETE` | `/api/san-pham/loai-phong` | Quản lý loại phòng |
-| `GET/POST/PUT/DELETE` | `/api/san-pham/dich-vu-them` | Quản lý dịch vụ thêm |
+| `GET/POST/PUT/DELETE` | `/api/san-pham/dich-vu-them` | Quản lý dịch vụ thêm và phụ thu phòng |
 | `GET/POST/PUT/DELETE` | `/api/san-pham/hanh-dong-xanh` | Quản lý hành động xanh |
 
 Ví dụ tạo tour mẫu:

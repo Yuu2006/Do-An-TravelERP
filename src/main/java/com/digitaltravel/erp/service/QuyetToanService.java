@@ -99,7 +99,6 @@ public class QuyetToanService {
         qt.setNgayQuyetToan(LocalDateTime.now());
         qt.setTrangThai("BAN_NHAP");
         qt.setGhiChu(req != null ? req.getGhiChu() : null);
-        qt.setTaoBoi(maTaiKhoan);
         quyetToanRepository.save(qt);
 
         return toResponse(qt);
@@ -213,7 +212,6 @@ public class QuyetToanService {
         qt.setTongChiPhi(chiPhi);
         qt.setLoiNhuan(doanhThu.subtract(chiPhi));
         qt.setNgayQuyetToan(LocalDateTime.now());
-        qt.setCapNhatBoi(maTaiKhoan);
         if (req != null && req.getGhiChu() != null) qt.setGhiChu(req.getGhiChu());
         quyetToanRepository.save(qt);
         return toResponse(qt);

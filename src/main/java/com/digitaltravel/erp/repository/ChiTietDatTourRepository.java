@@ -14,7 +14,6 @@ public interface ChiTietDatTourRepository extends JpaRepository<ChiTietDatTour, 
 
     @Query("""
             SELECT ct FROM ChiTietDatTour ct
-            LEFT JOIN FETCH ct.loaiPhong
             JOIN FETCH ct.khachHang hcs
             JOIN FETCH hcs.taiKhoan
             WHERE ct.donDatTour.MaDatTour = :maDatTour

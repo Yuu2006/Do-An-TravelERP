@@ -19,5 +19,4 @@ public class TourThucTeResponse {
     Integer soKhachToiThieu;
     Integer choConLai;
     String trangThai;
-    String taoBoi;
 }

@@ -60,10 +60,4 @@ public class QuyetToan {
     @Lob
     @Column(name = "GhiChu")
     String GhiChu;
-
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
 }

@@ -46,7 +46,7 @@ class NhanVienServiceTest {
     @Test
     void ganVaiTro_capNhatDongBoVaiTroTaiKhoanVaLoaiNhanVien() {
         NhanVien nv = taoNhanVien("NV_01", "TK_01", "SANPHAM");
-        VaiTro vaiTroMoi = taoVaiTro("HDV", "HOAT_DONG");
+        VaiTro vaiTroMoi = taoVaiTro("HDV");
         GanVaiTroRequest request = taoRequest(" hdv ");
 
         when(nhanVienRepository.findById("NV_01")).thenReturn(Optional.of(nv));
@@ -92,7 +92,7 @@ class NhanVienServiceTest {
     private static NhanVien taoNhanVien(String maNhanVien, String maTaiKhoan, String maVaiTro) {
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setMaTaiKhoan(maTaiKhoan);
-        taiKhoan.setVaiTro(taoVaiTro(maVaiTro, "HOAT_DONG"));
+        taiKhoan.setVaiTro(taoVaiTro(maVaiTro));
 
         NhanVien nhanVien = new NhanVien();
         nhanVien.setMaNhanVien(maNhanVien);
@@ -101,10 +101,9 @@ class NhanVienServiceTest {
         return nhanVien;
     }
 
-    private static VaiTro taoVaiTro(String maVaiTro, String trangThai) {
+    private static VaiTro taoVaiTro(String maVaiTro) {
         VaiTro vaiTro = new VaiTro();
         vaiTro.setMaVaiTro(maVaiTro);
-        vaiTro.setTrangThai(trangThai);
         return vaiTro;
     }
 }

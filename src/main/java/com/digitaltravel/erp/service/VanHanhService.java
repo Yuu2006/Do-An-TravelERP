@@ -85,9 +85,6 @@ public class VanHanhService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
         HanhDongXanh hdx = hanhDongXanhRepository.findById(req.getMaHanhDongXanh())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
-        if (!"HOAT_DONG".equals(hdx.getTrangThai())) {
-            throw AppException.badRequest("Hanh dong xanh da bi khoa.");
-        }
         NhanVien hdv = getHdv(maTaiKhoan);
 
         HanhDong hd = new HanhDong();

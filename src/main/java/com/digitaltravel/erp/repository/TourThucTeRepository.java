@@ -22,6 +22,12 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
     boolean existsTourThucTeMoBanByTourMau(@Param("maTourMau") String maTourMau);
 
     @Query("""
+            SELECT COUNT(ttt) > 0 FROM TourThucTe ttt
+            WHERE ttt.tourMau.MaTourMau = :maTourMau
+            """)
+    boolean existsByMaTourMau(@Param("maTourMau") String maTourMau);
+
+    @Query("""
             SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
             WHERE ((:trangThai IS NULL AND ttt.TrangThai <> 'HUY') OR ttt.TrangThai = :trangThai)
               AND (:maTourMau IS NULL OR ttt.tourMau.MaTourMau = :maTourMau)

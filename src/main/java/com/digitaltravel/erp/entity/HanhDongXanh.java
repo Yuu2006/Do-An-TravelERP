@@ -26,8 +26,4 @@ public class HanhDongXanh {
     @Column(name = "DiemCong", nullable = false)
     Long DiemCong;
 
-    // Gia tri hop le: HOAT_DONG | KHOA
-    @Column(name = "TrangThai", nullable = false, length = 20)
-    String TrangThai;
-
 }

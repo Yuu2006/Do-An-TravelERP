@@ -200,7 +200,6 @@ public class VoucherService {
         v.setSoLuotDaDung(0);
         v.setNgayHieuLuc(request.getNgayHieuLuc());
         v.setNgayHetHan(request.getNgayHetHan());
-        v.setTaoBoi(nguoiTao);
         voucherRepository.save(v);
 
         return toVoucherResponse(v);
@@ -230,7 +229,6 @@ public class VoucherService {
         if (request.getSoLuotPhatHanh() != null) v.setSoLuotPhatHanh(request.getSoLuotPhatHanh());
         if (request.getNgayHieuLuc() != null) v.setNgayHieuLuc(request.getNgayHieuLuc());
         if (request.getNgayHetHan() != null) v.setNgayHetHan(request.getNgayHetHan());
-        v.setCapNhatBoi(nguoiCapNhat);
         voucherRepository.save(v);
 
         return toVoucherResponse(v);
@@ -307,7 +305,6 @@ public class VoucherService {
                 .soLuotDaDung(v.getSoLuotDaDung())
                 .ngayHieuLuc(v.getNgayHieuLuc())
                 .ngayHetHan(v.getNgayHetHan())
-                .taoBoi(v.getTaoBoi())
                 .build();
     }
 

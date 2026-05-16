@@ -16,6 +16,4 @@ public class HanhDongXanhRequest {
     @NotNull(message = "Diem cong khong duoc de trong")
     @Min(value = 0, message = "Diem cong khong duoc am")
     Long diemCong;
-
-    String trangThai;
 }

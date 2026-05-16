@@ -95,10 +95,6 @@ public class TourThucTeService {
         TourMau tourMau = tourMauRepository.findById(request.getMaTourMau())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour mau: " + request.getMaTourMau()));
 
-        if (!"HOAT_DONG".equals(tourMau.getTrangThai())) {
-            throw AppException.badRequest("Tour mau khong o trang thai HOAT_DONG");
-        }
-
         Integer soKhachToiThieu = request.getSoKhachToiThieu() != null
                 ? request.getSoKhachToiThieu() : 1;
 
@@ -120,7 +116,6 @@ public class TourThucTeService {
         ttt.setSoKhachToiThieu(soKhachToiThieu);
         ttt.setChoConLai(request.getSoKhachToiDa());
         ttt.setTrangThai("MO_BAN");
-        ttt.setTaoBoi(nguoiTao);
         tourThucTeRepository.save(ttt);
 
         return toResponse(ttt);
@@ -151,7 +146,6 @@ public class TourThucTeService {
             validateTrangThaiTourThucTe(request.getTrangThai());
             ttt.setTrangThai(request.getTrangThai());
         }
-        ttt.setCapNhatBoi(nguoiCapNhat);
         tourThucTeRepository.save(ttt);
 
         return toResponse(ttt);
@@ -199,7 +193,6 @@ public class TourThucTeService {
                 .soKhachToiThieu(ttt.getSoKhachToiThieu())
                 .choConLai(ttt.getChoConLai())
                 .trangThai(ttt.getTrangThai())
-                .taoBoi(ttt.getTaoBoi())
                 .build();
     }
 }

@@ -52,7 +52,7 @@ public class PhanCongTourService {
 
     // ── UC37: Phân công HDV ────────────────────────────────────────────────
     @Transactional
-    public PhanCongResponse phanCong(PhanCongHdvRequest request, String taoBoi) {
+    public PhanCongResponse phanCong(PhanCongHdvRequest request) {
         TourThucTe tour = tourThucTeRepository.findById(request.getMaTourThucTe())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + request.getMaTourThucTe()));
 
@@ -79,7 +79,6 @@ public class PhanCongTourService {
         pc.setTourThucTe(tour);
         pc.setNhanVien(hdv);
         pc.setNgayPhanCong(LocalDateTime.now());
-        pc.setTaoBoi(taoBoi);
         phanCongTourRepository.save(pc);
 
         // Đánh dấu HDV đang bận

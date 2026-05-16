@@ -16,9 +16,7 @@ import com.digitaltravel.erp.dto.responses.TourMauChiTietResponse;
 import com.digitaltravel.erp.dto.responses.TourMauResponse;
 import com.digitaltravel.erp.entity.LichTrinhTour;
 import com.digitaltravel.erp.entity.TourMau;
-import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
-import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
@@ -32,13 +30,11 @@ public class TourMauService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final TourThucTeRepository tourThucTeRepository;
-    private final DonDatTourRepository donDatTourRepository;
 
     // ── UC06: Danh sách tour mẫu (filter + phân trang) ──────────────────────
-    public Page<TourMauResponse> danhSach(String tieuDe, String trangThai,
-                                           Integer thoiLuongMin, Integer thoiLuongMax,
+    public Page<TourMauResponse> danhSach(String tieuDe, Integer thoiLuongMin, Integer thoiLuongMax,
                                            Pageable pageable) {
-        return tourMauRepository.timKiem(tieuDe, trangThai, thoiLuongMin, thoiLuongMax, pageable)
+        return tourMauRepository.timKiem(tieuDe, thoiLuongMin, thoiLuongMax, pageable)
                 .map(this::toResponse);
     }
 
@@ -59,10 +55,8 @@ public class TourMauService {
         tm.setMoTa(request.getMoTa());
         tm.setThoiLuong(request.getThoiLuong());
         tm.setGiaSan(request.getGiaSan());
-        tm.setTrangThai("HOAT_DONG");
         tm.setDanhGia(null);
         tm.setSoDanhGia(0);
-        tm.setTaoBoi(nguoiTao);
         tourMauRepository.save(tm);
 
         // Tạo lịch trình nếu có
@@ -94,13 +88,6 @@ public class TourMauService {
         if (request.getMoTa() != null) tm.setMoTa(request.getMoTa());
         if (request.getThoiLuong() != null) tm.setThoiLuong(request.getThoiLuong());
         if (request.getGiaSan() != null) tm.setGiaSan(request.getGiaSan());
-        if (request.getTrangThai() != null) {
-            if (!request.getTrangThai().equals("HOAT_DONG") && !request.getTrangThai().equals("KHOA")) {
-                throw AppException.badRequest("Trang thai khong hop le. Chi chap nhan: HOAT_DONG, KHOA");
-            }
-            tm.setTrangThai(request.getTrangThai());
-        }
-        tm.setCapNhatBoi(nguoiCapNhat);
         tourMauRepository.save(tm);
         return toResponse(tm);
     }
@@ -111,23 +98,12 @@ public class TourMauService {
         TourMau tm = tourMauRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour mau: " + id));
 
-        List<TourThucTe> tourThucTeDangDung = tourThucTeRepository.findActiveByTourMau(id);
-        for (TourThucTe ttt : tourThucTeDangDung) {
-            if (!"CHO_KICH_HOAT".equals(ttt.getTrangThai()) && !"MO_BAN".equals(ttt.getTrangThai())) {
-                throw AppException.badRequest("Khong the xoa tour mau vi co tour thuc te dang van hanh hoac da phat sinh lich su");
-            }
-            if (donDatTourRepository.countBlockingBookingsByTourThucTe(ttt.getMaTourThucTe()) > 0) {
-                throw AppException.badRequest("Khong the xoa tour mau vi co tour thuc te da phat sinh don dat tour");
-            }
+        if (tourThucTeRepository.existsByMaTourMau(id)) {
+            throw AppException.badRequest("Khong the xoa tour mau vi da co tour thuc te lien ket");
         }
 
-        for (TourThucTe ttt : tourThucTeDangDung) {
-            ttt.setTrangThai("HUY");
-            tourThucTeRepository.save(ttt);
-        }
-
-        tm.setTrangThai("KHOA");
-        tourMauRepository.save(tm);
+        lichTrinhTourRepository.deleteAll(lichTrinhTourRepository.findByMaTourMau(id));
+        tourMauRepository.delete(tm);
     }
 
     // ── UC03: Sao chép tour mẫu ─────────────────────────────────────────────
@@ -142,10 +118,8 @@ public class TourMauService {
         banSao.setMoTa(goc.getMoTa());
         banSao.setThoiLuong(goc.getThoiLuong());
         banSao.setGiaSan(goc.getGiaSan());
-        banSao.setTrangThai("HOAT_DONG");
         banSao.setDanhGia(null);
         banSao.setSoDanhGia(0);
-        banSao.setTaoBoi(nguoiTao);
         tourMauRepository.save(banSao);
 
         // Deep copy lịch trình
@@ -254,8 +228,6 @@ public class TourMauService {
                 .giaSan(tm.getGiaSan())
                 .danhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
-                .trangThai(tm.getTrangThai())
-                .taoBoi(tm.getTaoBoi())
                 .build();
     }
 
@@ -272,8 +244,6 @@ public class TourMauService {
                 .giaSan(tm.getGiaSan())
                 .danhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
-                .trangThai(tm.getTrangThai())
-                .taoBoi(tm.getTaoBoi())
                 .lichTrinh(lichTrinhRes)
                 .build();
     }

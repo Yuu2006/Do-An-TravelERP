@@ -2,7 +2,6 @@ package com.digitaltravel.erp.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,9 +51,4 @@ public class Voucher {
     @Column(name = "NgayHetHan", nullable = false)
     LocalDate NgayHetHan;
 
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
 }

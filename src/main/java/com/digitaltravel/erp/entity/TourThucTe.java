@@ -54,10 +54,4 @@ public class TourThucTe {
     // Gia tri hop le: CHO_KICH_HOAT | MO_BAN | SAP_DIEN_RA | DANG_DIEN_RA | KET_THUC | HUY | DA_QUYET_TOAN
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
-
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
 }

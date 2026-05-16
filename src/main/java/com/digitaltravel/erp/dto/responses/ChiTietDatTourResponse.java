@@ -11,8 +11,5 @@ public class ChiTietDatTourResponse {
     String maChiTietDat;
     String maKhachHang;
     String hoTen;
-    String maLoaiPhong;
-    String tenLoaiPhong;
-    BigDecimal mucPhuThu;
     BigDecimal giaTaiThoiDiemDat;
 }

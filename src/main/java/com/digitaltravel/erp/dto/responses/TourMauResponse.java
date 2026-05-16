@@ -14,6 +14,4 @@ public class TourMauResponse {
     BigDecimal giaSan;
     BigDecimal danhGia;
     Integer soDanhGia;
-    String trangThai;
-    String taoBoi;
 }

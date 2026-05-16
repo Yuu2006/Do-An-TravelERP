@@ -39,7 +39,6 @@ public class DichVuThemService {
         dv.setTen(request.getTen());
         dv.setDonViTinh(request.getDonViTinh());
         dv.setDonGia(request.getDonGia());
-        dv.setTrangThai(request.getTrangThai() != null ? request.getTrangThai() : "HOAT_DONG");
         dichVuThemRepository.save(dv);
         return toResponse(dv);
     }
@@ -52,12 +51,6 @@ public class DichVuThemService {
         if (request.getTen() != null) dv.setTen(request.getTen());
         if (request.getDonViTinh() != null) dv.setDonViTinh(request.getDonViTinh());
         if (request.getDonGia() != null) dv.setDonGia(request.getDonGia());
-        if (request.getTrangThai() != null) {
-            if (!"HOAT_DONG".equals(request.getTrangThai()) && !"KHOA".equals(request.getTrangThai())) {
-                throw AppException.badRequest("Trang thai khong hop le. Chi chap nhan: HOAT_DONG, KHOA");
-            }
-            dv.setTrangThai(request.getTrangThai());
-        }
         dichVuThemRepository.save(dv);
         return toResponse(dv);
     }
@@ -66,8 +59,7 @@ public class DichVuThemService {
     public void xoa(String id) {
         DichVuThem dv = dichVuThemRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu: " + id));
-        dv.setTrangThai("KHOA");
-        dichVuThemRepository.save(dv);
+        dichVuThemRepository.delete(dv);
     }
 
     private DichVuThemResponse toResponse(DichVuThem dv) {
@@ -76,7 +68,6 @@ public class DichVuThemService {
                 .ten(dv.getTen())
                 .donViTinh(dv.getDonViTinh())
                 .donGia(dv.getDonGia())
-                .trangThai(dv.getTrangThai())
                 .build();
     }
 }

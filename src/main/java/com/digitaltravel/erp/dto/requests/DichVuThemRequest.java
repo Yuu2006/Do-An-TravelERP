@@ -21,6 +21,4 @@ public class DichVuThemRequest {
     @NotNull(message = "Don gia khong duoc de trong")
     @DecimalMin(value = "0", message = "Don gia khong duoc am")
     BigDecimal donGia;
-
-    String trangThai;
 }

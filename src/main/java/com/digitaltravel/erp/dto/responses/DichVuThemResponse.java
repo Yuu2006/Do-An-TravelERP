@@ -12,5 +12,4 @@ public class DichVuThemResponse {
     String ten;
     String donViTinh;
     BigDecimal donGia;
-    String trangThai;
 }

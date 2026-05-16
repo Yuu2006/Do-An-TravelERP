@@ -9,5 +9,4 @@ public class HanhDongXanhResponse {
     String maHanhDongXanh;
     String tenHanhDong;
     Long diemCong;
-    String trangThai;
 }

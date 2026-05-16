@@ -51,12 +51,6 @@ public class TaiKhoan {
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
 
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
-
     @OneToOne(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     HoChieuSo hoChieuSo;
 

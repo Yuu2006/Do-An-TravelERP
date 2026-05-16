@@ -42,12 +42,11 @@ public class TourMauController {
     @PreAuthorize("hasRole('SANPHAM')")
     public ResponseEntity<ApiResponse<Page<TourMauResponse>>> danhSach(
             @RequestParam(required = false) String tieuDe,
-            @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) Integer thoiLuongMin,
             @RequestParam(required = false) Integer thoiLuongMax,
             @PageableDefault(size = 10, sort = "MaTourMau", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<TourMauResponse> result = tourMauService.danhSach(tieuDe, trangThai, thoiLuongMin, thoiLuongMax, pageable);
+        Page<TourMauResponse> result = tourMauService.danhSach(tieuDe, thoiLuongMin, thoiLuongMax, pageable);
         return ResponseEntity.ok(ApiResponse.ok(result));
     }
 

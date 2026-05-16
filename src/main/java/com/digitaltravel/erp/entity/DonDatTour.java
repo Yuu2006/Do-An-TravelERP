@@ -52,10 +52,4 @@ public class DonDatTour {
 
     @Column(name = "GhiChu", length = 2000)
     String GhiChu;
-
-    @Column(name = "TaoBoi", length = 100)
-    String TaoBoi;
-
-    @Column(name = "CapNhatBoi", length = 100)
-    String CapNhatBoi;
 }

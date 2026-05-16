@@ -20,6 +20,4 @@ public class CapNhatTourMauRequest {
 
     @DecimalMin(value = "0.01", message = "Gia san phai lon hon 0")
     BigDecimal giaSan;
-
-    String trangThai;
 }

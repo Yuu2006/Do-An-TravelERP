@@ -35,11 +35,6 @@ public class ChiTietDatTour {
     @JoinColumn(name = "MaKhachHang", nullable = false)
     HoChieuSo khachHang;
 
-    // FK -> LOAIPHONG(MaLoaiPhong) — nullable (khong bat buoc chon phong)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaLoaiPhong")
-    LoaiPhong loaiPhong;
-
     // NUMBER(18,2): gia goc tai thoi diem dat, giu nguyen de doi soat
     @Column(name = "GiaTaiThoiDiemDat", nullable = false, precision = 18, scale = 2)
     BigDecimal GiaTaiThoiDiemDat;

@@ -92,9 +92,6 @@ public class NhanVienService {
         }
         VaiTro vaiTroHopLe = vaiTroRepository.findById(maVaiTro)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro: " + maVaiTro));
-        if (!"HOAT_DONG".equals(vaiTroHopLe.getTrangThai())) {
-            throw AppException.badRequest("Vai tro dang o trang thai " + vaiTroHopLe.getTrangThai() + ", khong the gan");
-        }
 
         tk.setVaiTro(vaiTroHopLe);
         nv.setLoaiNhanVien(maVaiTro);
