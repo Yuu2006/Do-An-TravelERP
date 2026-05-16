@@ -12,5 +12,6 @@ public class DiemDanhResponse {
     private String maKhachHang;
     private String hoTenKhachHang;
     private String diaDiem;
+    private String trangThai;
     private LocalDateTime thoiGian;
 }

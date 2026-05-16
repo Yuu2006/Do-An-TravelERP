@@ -72,6 +72,7 @@ public class VanHanhService {
         dd.setNhanVien(hdv);
         dd.setThoiGian(LocalDateTime.now());
         dd.setDiaDiem(req.getDiaDiem());
+        dd.setTrangThai(chuanHoaTrangThaiDiemDanh(req.getTrangThai()));
         diemDanhRepository.save(dd);
 
         return toDiemDanhResponse(dd);
@@ -235,6 +236,16 @@ public class VanHanhService {
         };
     }
 
+    private String chuanHoaTrangThaiDiemDanh(String trangThai) {
+        if (trangThai == null || trangThai.isBlank()) {
+            return "DA_DIEM_DANH";
+        }
+        if (!java.util.Set.of("DA_DIEM_DANH", "CHUA_DIEM_DANH", "VANG").contains(trangThai)) {
+            throw AppException.badRequest("TrangThai diem danh khong hop le: " + trangThai);
+        }
+        return trangThai;
+    }
+
     // ── Mappers ───────────────────────────────────────────────────────────
     private DiemDanhResponse toDiemDanhResponse(DiemDanh dd) {
         String hoTen = dd.getKhachHang().getTaiKhoan() != null
@@ -244,6 +255,7 @@ public class VanHanhService {
                 .maKhachHang(dd.getKhachHang().getMaKhachHang())
                 .hoTenKhachHang(hoTen)
                 .diaDiem(dd.getDiaDiem())
+                .trangThai(dd.getTrangThai())
                 .thoiGian(dd.getThoiGian())
                 .build();
     }

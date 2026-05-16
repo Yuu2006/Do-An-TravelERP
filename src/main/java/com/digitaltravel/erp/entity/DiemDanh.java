@@ -46,6 +46,10 @@ public class DiemDanh {
     @Column(name = "DiaDiem", length = 500)
     String DiaDiem;
 
+    // Gia tri hop le: DA_DIEM_DANH | CHUA_DIEM_DANH | VANG
+    @Column(name = "TrangThai", nullable = false, length = 30)
+    String TrangThai;
+
     // FK composite (MaTourThucTe, MaNhanVien) -> PHANCONGTOUR
     // insertable/updatable=false vi cac column da duoc map boi tourThucTe va nhanVien
     @ManyToOne(fetch = FetchType.LAZY)
