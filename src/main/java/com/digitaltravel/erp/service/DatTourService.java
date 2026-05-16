@@ -93,8 +93,8 @@ public class DatTourService {
         don.setNgayDat(LocalDateTime.now());
         don.setTongTien(tongTien);
         don.setTrangThai("CHO_XAC_NHAN");
-        // Giữ chỗ 15 phút, Scheduler sẽ tự hủy nếu chưa thanh toán
-        don.setThoiGianHetHan(LocalDateTime.now().plusMinutes(15));
+        // Giữ chỗ 2 ngày, Scheduler sẽ tự hủy nếu chưa thanh toán
+        don.setThoiGianHetHan(LocalDateTime.now().plusDays(2));
         don.setGhiChu(request.getGhiChu());
         donDatTourRepository.save(don);
 

@@ -43,7 +43,7 @@ public class YeuCauHoTro {
     @Column(name = "NoiDung", nullable = false)
     String NoiDung;
 
-    // Gia tri hop le: MOI_TAO | DANG_XU_LY | DA_DONG
+    // Gia tri hop le: CHUA_XU_LY | DA_XU_LY | TU_CHOI
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
 

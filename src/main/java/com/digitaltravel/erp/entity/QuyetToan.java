@@ -52,7 +52,7 @@ public class QuyetToan {
     @Column(name = "NgayQuyetToan", nullable = false)
     LocalDateTime NgayQuyetToan;
 
-    // Gia tri hop le: BAN_NHAP | DA_CHOT (DA_CHOT = da chot, khong sua duoc)
+    // Gia tri hop le: CHUA_QUYET_TOAN | DA_QUYET_TOAN
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
 

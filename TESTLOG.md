@@ -109,9 +109,8 @@ Nhom nay khong nhat thiet la bug backend. Nhieu loi la do du lieu seed hien tai 
 
 ### Xu ly ho tro sai trang thai o lan dau
 
-- Lan dau gui `trangThai='DA_XU_LY'`, API tra `400 BAD_REQUEST`.
-- DTO/logic chi chap nhan `DANG_XU_LY` hoac `DA_DONG`.
-- Khi chay lai voi `DANG_XU_LY` va `DA_DONG`, API thanh cong.
+- DTO/logic chap nhan `CHUA_XU_LY`, `DA_XU_LY`, `TU_CHOI`.
+- Khi chay voi `DA_XU_LY` va `TU_CHOI`, API thanh cong.
 - Ket luan: day la loi payload test, khong phai bug backend.
 
 ### Them lich trinh vuot thoi luong tour

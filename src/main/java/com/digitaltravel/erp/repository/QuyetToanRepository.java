@@ -30,7 +30,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
     @Query("""
             SELECT SUM(qt.TongDoanhThu), COUNT(qt)
             FROM QuyetToan qt
-            WHERE qt.TrangThai = 'DA_CHOT'
+            WHERE qt.TrangThai = 'DA_QUYET_TOAN'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
             """)
     List<Object[]> thongKeDoanhThu(
@@ -45,7 +45,7 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             JOIN qt.tourThucTe tt
             JOIN tt.tourMau tm
             LEFT JOIN DonDatTour dt ON dt.tourThucTe.MaTourThucTe = qt.tourThucTe.MaTourThucTe
-            WHERE qt.TrangThai = 'DA_CHOT'
+            WHERE qt.TrangThai = 'DA_QUYET_TOAN'
               AND qt.NgayQuyetToan BETWEEN :tuNgay AND :denNgay
             GROUP BY qt.tourThucTe.MaTourThucTe, qt.tourThucTe.tourMau.TieuDe
             ORDER BY SUM(qt.TongDoanhThu) DESC

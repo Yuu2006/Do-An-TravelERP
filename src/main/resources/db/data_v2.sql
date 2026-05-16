@@ -171,11 +171,11 @@ VALUES ('TK_KH06', 'khachhang06',
 -- 8. NHANVIEN — Thêm 3 nhân viên mới (2 HDV, 1 Sales)
 -- ------------------------------------------------------------
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV03', 'TK_HDV03', 'HDV', DATE '2023-08-01', 'SAN_SANG');
+VALUES ('NV_HDV03', 'TK_HDV03', 'HDV', DATE '2023-08-01', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV04', 'TK_HDV04', 'HDV', DATE '2024-01-15', 'SAN_SANG');
+VALUES ('NV_HDV04', 'TK_HDV04', 'HDV', DATE '2024-01-15', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES02', 'TK_SALES02', 'KINHDOANH', DATE '2024-03-01', 'SAN_SANG');
+VALUES ('NV_SALES02', 'TK_SALES02', 'KINHDOANH', DATE '2024-03-01', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
 -- 9. HOCHIEUSO — Hồ sơ 4 khách hàng mới
@@ -463,10 +463,10 @@ VALUES ('CPTT006', 'TTT003', 'NV_HDV01', 'Phí đưa đón khách sân bay phát
 -- ------------------------------------------------------------
 -- TTT099: Hạ Long kết thúc (doanh thu: DDT001 7tr + DDT099 7tr + DDT098 3.5tr = 17.5tr)
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai)
-VALUES ('QT001', 'TTT099', 17500000, 2350000, 15150000, 'NV_KT01', 'DA_CHOT');
+VALUES ('QT001', 'TTT099', 17500000, 2350000, 15150000, 'NV_KT01', 'DA_QUYET_TOAN');
 -- TTT098: Đà Nẵng kết thúc (doanh thu: DDT097 8.4tr)
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai)
-VALUES ('QT002', 'TTT098', 8400000, 1800000, 6600000, 'NV_KT01', 'DA_CHOT');
+VALUES ('QT002', 'TTT098', 8400000, 1800000, 6600000, 'NV_KT01', 'DA_QUYET_TOAN');
 
 -- ------------------------------------------------------------
 -- 26. NHATKYDOIDIEM — Đổi điểm xanh sang voucher
@@ -482,23 +482,23 @@ VALUES ('NKDD002', 'KH003', 'VC006', 500, SYSTIMESTAMP - 10);
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
 VALUES ('YCHT001', 'DDT001', 'KH001', 'KHIEU_NAI',
         'Cabin trên tàu không có nước nóng buổi sáng ngày 1. Mong công ty hỗ trợ phần bồi thường.',
-        'DA_DONG', 'NV_SALES01');
+        'DA_XU_LY', 'NV_SALES01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
 VALUES ('YCHT002', 'DDT003', 'KH003', 'THONG_TIN',
         'Xin hỏi lịch trình ngày 2 tại Phong Nha có thể đổi sang hang động Thiên Đường không?',
-        'DA_DONG', 'NV_SALES01');
+        'DA_XU_LY', 'NV_SALES01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
 VALUES ('YCHT003', 'DDT005', 'KH005', 'HO_TRO_VE',
         'Cần xuất hóa đơn VAT cho công ty để thanh toán chi phí công tác.',
-        'DANG_XU_LY', 'NV_SALES02');
+        'CHUA_XU_LY', 'NV_SALES02');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
 VALUES ('YCHT004', NULL, 'KH004', 'TU_VAN_TOUR',
         'Cần tư vấn tour phù hợp cho gia đình 4 người (2 người lớn, 2 trẻ em dưới 10 tuổi) dịp hè tháng 7.',
-        'MOI_TAO', NULL);
+        'CHUA_XU_LY', NULL);
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
 VALUES ('YCHT005', 'DDT006', 'KH006', 'HUY_TOUR',
         'Yêu cầu hủy tour Đà Lạt do có việc đột xuất. Mong được hoàn tiền theo chính sách.',
-        'MOI_TAO', NULL);
+        'CHUA_XU_LY', NULL);
 
 -- ------------------------------------------------------------
 -- 28. DANHGIAKH — Đánh giá sau tour

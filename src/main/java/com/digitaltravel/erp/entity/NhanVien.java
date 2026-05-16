@@ -37,7 +37,7 @@ public class NhanVien {
     @Column(name = "NgayVaoLam")
     LocalDate NgayVaoLam;
 
-    // Gia tri hop le: SAN_SANG | BAN | NGHI
+    // Gia tri hop le: HOAT_DONG | BAN | NGHI
     @Column(name = "TrangThaiLamViec", nullable = false, length = 20)
     String TrangThaiLamViec;
 

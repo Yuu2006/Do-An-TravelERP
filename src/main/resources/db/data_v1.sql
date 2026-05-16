@@ -177,19 +177,19 @@ VALUES ('TK_KH02', 'khachhang02',
 -- 7. NHANVIEN — Hồ sơ nhân viên nội bộ
 -- ------------------------------------------------------------
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',     DATE '2022-01-01', 'SAN_SANG');
+VALUES ('NV_ADMIN01',  'TK_ADMIN01',  'ADMIN',     DATE '2022-01-01', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH',  DATE '2022-01-15', 'SAN_SANG');
+VALUES ('NV_MGR01',    'TK_MGR01',    'DIEUHANH',  DATE '2022-01-15', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SP01',     'TK_SP01',     'SANPHAM',   DATE '2022-02-01', 'SAN_SANG');
+VALUES ('NV_SP01',     'TK_SP01',     'SANPHAM',   DATE '2022-02-01', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_SALES01',  'TK_SALES01',  'KINHDOANH', DATE '2023-03-01', 'SAN_SANG');
+VALUES ('NV_SALES01',  'TK_SALES01',  'KINHDOANH', DATE '2023-03-01', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_KT01',     'TK_KT01',     'KETOAN',    DATE '2023-06-01', 'SAN_SANG');
+VALUES ('NV_KT01',     'TK_KT01',     'KETOAN',    DATE '2023-06-01', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'SAN_SANG');
+VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
-VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'SAN_SANG');
+VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
 -- 8. HOCHIEUSO — Hồ sơ khách hàng

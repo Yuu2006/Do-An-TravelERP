@@ -19,7 +19,7 @@ public class NhanVienResponse {
     String soDienThoai;
     String maVaiTro;
     String trangThaiTaiKhoan;   // HOAT_DONG | KHOA
-    String trangThaiLamViec;    // SAN_SANG | BAN | NGHI
+    String trangThaiLamViec;    // HOAT_DONG | BAN | NGHI
     String loaiNhanVien;
     LocalDate ngayVaoLam;
 }

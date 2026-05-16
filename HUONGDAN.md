@@ -473,7 +473,7 @@ Vai trò nhân viên có thể gán: `SANPHAM`, `KINHDOANH`, `DIEUHANH`, `KETOAN
 2. `GET /api/kinh-doanh/don-dat-tour?trangThai=CHO_XAC_NHAN`.
 3. `PUT /api/kinh-doanh/dat-tour/DDT004/xac-nhan`.
 4. `GET /api/kinh-doanh/yeu-cau-ho-tro`.
-5. `PUT /api/kinh-doanh/yeu-cau-ho-tro/YCHT004` với `trangThai=DANG_XU_LY` hoặc `DA_DONG`.
+5. `PUT /api/kinh-doanh/yeu-cau-ho-tro/YCHT004` với `trangThai=DA_XU_LY` hoặc `TU_CHOI`.
 
 ### Luồng điều hành phân công HDV
 

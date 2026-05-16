@@ -78,7 +78,7 @@ public class HuyTourService {
         yc.setNoiDung(String.format(
                 "Ly do: %s | Ngay con lai den khoi hanh: %d | Ti le hoan: %d%% | So tien hoan: %s",
                 request.getLyDo(), soNgayConLai, tiLeHoan, soTienHoan.toPlainString()));
-        yc.setTrangThai("MOI_TAO");
+        yc.setTrangThai("CHUA_XU_LY");
         yeuCauHoTroRepository.save(yc);
 
         // Đổi trạng thái đơn sang CHO_HUY
@@ -94,7 +94,7 @@ public class HuyTourService {
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
-        if (!"MOI_TAO".equals(yc.getTrangThai()) && !"DANG_XU_LY".equals(yc.getTrangThai())) {
+        if (!"CHUA_XU_LY".equals(yc.getTrangThai())) {
             throw AppException.badRequest("Yeu cau khong o trang thai co the duyet.");
         }
 
@@ -121,7 +121,7 @@ public class HuyTourService {
         don.setTrangThai("DA_HUY");
         donDatTourRepository.save(don);
 
-        yc.setTrangThai("DA_DONG");
+        yc.setTrangThai("DA_XU_LY");
         yeuCauHoTroRepository.save(yc);
 
         return toResponse(yc, soTienHoan, 0);
@@ -133,7 +133,7 @@ public class HuyTourService {
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
-        if (!"MOI_TAO".equals(yc.getTrangThai()) && !"DANG_XU_LY".equals(yc.getTrangThai())) {
+        if (!"CHUA_XU_LY".equals(yc.getTrangThai())) {
             throw AppException.badRequest("Yeu cau khong o trang thai co the tu choi.");
         }
 
@@ -144,7 +144,7 @@ public class HuyTourService {
 
         String noiDung = yc.getNoiDung() + " | TU_CHOI: " + (request.getGhiChu() != null ? request.getGhiChu() : "");
         yc.setNoiDung(noiDung);
-        yc.setTrangThai("DA_DONG");
+        yc.setTrangThai("TU_CHOI");
         yeuCauHoTroRepository.save(yc);
 
         return toResponse(yc, BigDecimal.ZERO, 0);

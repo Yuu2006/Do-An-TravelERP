@@ -89,10 +89,10 @@ CREATE TABLE NHANVIEN (
                           MaTaiKhoan           VARCHAR2(50) NOT NULL,
                           LoaiNhanVien         VARCHAR2(50),
                           NgayVaoLam           DATE,
-                          TrangThaiLamViec     VARCHAR2(20) DEFAULT 'SAN_SANG' NOT NULL,
+                          TrangThaiLamViec     VARCHAR2(20) DEFAULT 'HOAT_DONG' NOT NULL,
                           CONSTRAINT UQ_NV_TaiKhoan          UNIQUE (MaTaiKhoan),
                           CONSTRAINT FK_NV_TaiKhoan          FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
-                          CONSTRAINT CK_NV_TrangThai         CHECK (TrangThaiLamViec IN ('SAN_SANG','BAN','NGHI'))
+                          CONSTRAINT CK_NV_TrangThai         CHECK (TrangThaiLamViec IN ('HOAT_DONG','BAN','NGHI'))
 );
 
 -- Nang luc va chung chi huong dan vien
@@ -389,14 +389,14 @@ CREATE TABLE QUYETTOAN (
                            LoiNhuan         NUMBER(18,2)  NOT NULL,
                            MaNhanVien       VARCHAR2(50)  NOT NULL,
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
-                           TrangThai        VARCHAR2(20)  DEFAULT 'BAN_NHAP' NOT NULL,
+                           TrangThai        VARCHAR2(20)  DEFAULT 'CHUA_QUYET_TOAN' NOT NULL,
                            GhiChu           CLOB,
                            CONSTRAINT UQ_QUYETTOAN_TourThucTe     UNIQUE (MaTourThucTe),
                            CONSTRAINT FK_QT_TourThucTe            FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_QT_NhanVien              FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
                            CONSTRAINT CK_QT_TongDoanhThu          CHECK (TongDoanhThu >= 0),
                            CONSTRAINT CK_QT_TongChiPhi            CHECK (TongChiPhi >= 0),
-                           CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('BAN_NHAP','DA_CHOT')),
+                           CONSTRAINT CK_QT_TrangThai             CHECK (TrangThai IN ('CHUA_QUYET_TOAN', 'DA_QUYET_TOAN')),
                            CONSTRAINT CK_QT_LoiNhuan CHECK (LoiNhuan = TongDoanhThu - TongChiPhi)
 );
 
@@ -419,12 +419,12 @@ CREATE TABLE YEUCAUHOTRO (
                              MaKhachHang      VARCHAR2(50)  NOT NULL,
                              LoaiYeuCau       VARCHAR2(100) NOT NULL,
                              NoiDung          CLOB          NOT NULL,
-                             TrangThai        VARCHAR2(20)  DEFAULT 'MOI_TAO' NOT NULL,
+                             TrangThai        VARCHAR2(20)  DEFAULT 'CHUA_XU_LY' NOT NULL,
                              MaNhanVienXuLy   VARCHAR2(50),
                              CONSTRAINT FK_YCHT_DatTour             FOREIGN KEY (MaDatTour)      REFERENCES DONDATTOUR(MaDatTour),
                              CONSTRAINT FK_YCHT_KhachHang           FOREIGN KEY (MaKhachHang)    REFERENCES HOCHIEUSO(MaKhachHang),
                              CONSTRAINT FK_YCHT_NhanVienXL          FOREIGN KEY (MaNhanVienXuLy) REFERENCES NHANVIEN(MaNhanVien),
-                             CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN ('MOI_TAO','DANG_XU_LY','DA_DONG'))
+                             CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN ('CHUA_XU_LY','DA_XU_LY','TU_CHOI'))
 );
 
 -- Danh gia sau tour cua khach hang

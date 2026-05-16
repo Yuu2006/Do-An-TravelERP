@@ -66,7 +66,7 @@ public class QuyetToanController {
     }
 
     /**
-     * UC50 — Chốt quyết toán (BAN_NHAP -> DA_CHOT)
+     * UC50 — Chốt quyết toán (CHUA_QUYET_TOAN -> DA_QUYET_TOAN)
      */
     @PutMapping("/quyet-toan/{maQuyetToan}/chot")
     @PreAuthorize("hasRole('KETOAN')")

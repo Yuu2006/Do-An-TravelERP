@@ -42,7 +42,7 @@ public class YeuCauHoTroService {
         yc.setKhachHang(hcs);
         yc.setLoaiYeuCau(request.getLoaiYeuCau());
         yc.setNoiDung(request.getNoiDung());
-        yc.setTrangThai("MOI_TAO");
+        yc.setTrangThai("CHUA_XU_LY");
 
         // Gắn với đơn đặt tour nếu có
         if (request.getMaDatTour() != null && !request.getMaDatTour().isBlank()) {
@@ -76,13 +76,13 @@ public class YeuCauHoTroService {
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
-        if ("DA_DONG".equals(yc.getTrangThai())) {
-            throw AppException.badRequest("Yeu cau nay da dong, khong the cap nhat");
+        if ("DA_XU_LY".equals(yc.getTrangThai()) || "TU_CHOI".equals(yc.getTrangThai())) {
+            throw AppException.badRequest("Yeu cau nay da ket thuc, khong the cap nhat");
         }
 
         String trangThaiMoi = request.getTrangThai();
-        if (!"DANG_XU_LY".equals(trangThaiMoi) && !"DA_DONG".equals(trangThaiMoi)) {
-            throw AppException.badRequest("TrangThai khong hop le. Chi chap nhan: DANG_XU_LY, DA_DONG");
+        if (!"CHUA_XU_LY".equals(trangThaiMoi) && !"DA_XU_LY".equals(trangThaiMoi) && !"TU_CHOI".equals(trangThaiMoi)) {
+            throw AppException.badRequest("TrangThai khong hop le. Chi chap nhan: CHUA_XU_LY, DA_XU_LY, TU_CHOI");
         }
         yc.setTrangThai(trangThaiMoi);
 

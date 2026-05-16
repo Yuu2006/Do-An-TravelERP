@@ -67,7 +67,7 @@ public class TaiKhoanAdminController {
         nhanVien.setMaNhanVien("NV_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase());
         nhanVien.setTaiKhoan(taiKhoan);
         nhanVien.setLoaiNhanVien(maVaiTro);
-        nhanVien.setTrangThaiLamViec("SAN_SANG");
+        nhanVien.setTrangThaiLamViec("HOAT_DONG");
         nhanVienRepository.save(nhanVien);
 
         return ResponseEntity.status(201).body(ApiResponse.noContent("Tao tai khoan nhan vien thanh cong"));

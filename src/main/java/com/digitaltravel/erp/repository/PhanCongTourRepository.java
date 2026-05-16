@@ -31,7 +31,7 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
     @Query("""
             SELECT nv.MaNhanVien FROM NhanVien nv
             JOIN nv.taiKhoan tk
-            WHERE nv.TrangThaiLamViec = 'SAN_SANG'
+            WHERE nv.TrangThaiLamViec = 'HOAT_DONG'
               AND tk.vaiTro.MaVaiTro = 'HDV'
               AND tk.TrangThai = 'HOAT_DONG'
               AND nv.MaNhanVien NOT IN (

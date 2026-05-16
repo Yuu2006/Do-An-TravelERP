@@ -308,7 +308,7 @@ src/main/java/com/digitaltravel/erp/
 | GET | `/api/ke-toan/tour-can-quyet-toan` | KETOAN | UC47 | DONE |
 | GET | `/api/ke-toan/tinh-toan/{maTour}` | KETOAN | UC48 | DONE (xem trước) |
 | POST | `/api/ke-toan/quyet-toan/{maTour}` | KETOAN | UC49/50 | DONE |
-| PUT | `/api/ke-toan/quyet-toan/{id}/chot` | KETOAN | UC50 | DONE (BAN_NHAP to DA_CHOT) |
+| PUT | `/api/ke-toan/quyet-toan/{id}/chot` | KETOAN | UC50 | DONE (CHUA_QUYET_TOAN to DA_QUYET_TOAN) |
 | GET | `/api/ke-toan/quyet-toan` | KETOAN | UC51 | DONE |
 | GET | `/api/ke-toan/quyet-toan/{id}` | KETOAN | UC51 | DONE |
 | GET | `/api/ke-toan/giao-dich-hoan` | KETOAN | UC52 | DONE |
@@ -354,7 +354,7 @@ src/main/java/com/digitaltravel/erp/
 | UC24 | Tìm kiếm hồ sơ khách hàng | Nhân viên |
 | UC25 | Danh sách tour công khai | Tour Thực tế |
 | UC26 | Chi tiết tour + đánh giá (public) | Tour Thực tế |
-| UC27 | Đặt tour (giữ chỗ 15 phút) | Đặt tour |
+| UC27 | Đặt tour (giữ chỗ 2 ngày) | Đặt tour |
 | UC28 | Áp dụng voucher vào đơn | Voucher |
 | UC29 | Thanh toán mock — trừ chỗ, tạo lịch sử tour | Thanh toán |
 | UC30 | Đổi điểm xanh lấy voucher | Voucher |
@@ -375,8 +375,8 @@ src/main/java/com/digitaltravel/erp/
 | UC46 | Khai báo chi phí phát sinh | Vận hành |
 | UC47 | DS tour cần quyết toán | Quyết toán |
 | UC48 | Xem trước tính toán quyết toán | Quyết toán |
-| UC49 | Duyệt chi phí / tạo quyết toán BAN_NHAP | Quyết toán |
-| UC50 | Chốt quyết toán (DA_CHOT, tour -> DA_QUYET_TOAN) | Quyết toán |
+| UC49 | Duyệt chi phí / tạo quyết toán CHUA_QUYET_TOAN | Quyết toán |
+| UC50 | Chốt quyết toán (DA_QUYET_TOAN, tour -> DA_QUYET_TOAN) | Quyết toán |
 | UC51 | Xem danh sách & chi tiết quyết toán | Quyết toán |
 | UC52 | Kế toán xác nhận chuyển tiền hoàn | Quyết toán |
 | UC53 | Báo cáo doanh thu / top tour | Quyết toán |
@@ -442,15 +442,15 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 | `TourThucTe.TrangThai` | CHO_KICH_HOAT · MO_BAN · SAP_DIEN_RA · DANG_DIEN_RA · KET_THUC · HUY · DA_QUYET_TOAN |
 | `DonDatTour.TrangThai` | CHO_XAC_NHAN · DA_XAC_NHAN · DA_HUY · HET_HAN_GIU_CHO · CHO_HUY · THANH_TOAN_THAT_BAI |
 | `GiaoDich.TrangThai` | CHO_THANH_TOAN · THANH_CONG · THAT_BAI · DA_HOAN_TIEN |
-| `YeuCauHoTro.TrangThai` | MOI_TAO · DANG_XU_LY · DA_DONG |
+| `YeuCauHoTro.TrangThai` | CHUA_XU_LY · DA_XU_LY · TU_CHOI |
 | `ChiPhiThucTe.TrangThaiDuyet` | CHO_DUYET · DA_DUYET · TU_CHOI |
-| `QuyetToan.TrangThai` | BAN_NHAP · DA_CHOT |
-| `NhanVien.TrangThaiLamViec` | SAN_SANG · BAN · NGHI |
+| `QuyetToan.TrangThai` | CHUA_QUYET_TOAN · DA_QUYET_TOAN |
+| `NhanVien.TrangThaiLamViec` | HOAT_DONG · BAN · NGHI |
 | `HoChieuSo.HangThanhVien` | THANH_VIEN · DONG · BAC · VANG · KIM_CUONG |
 
 ### Luồng đặt tour (business rules)
 
-1. `datTour()` — Tạo `DonDatTour` (CHO_XAC_NHAN), `ThoiGianHetHan = NOW() + 15 phút`, KHÔNG trừ `ChoConLai`
+1. `datTour()` — Tạo `DonDatTour` (CHO_XAC_NHAN), `ThoiGianHetHan = NOW() + 2 ngày`, KHÔNG trừ `ChoConLai`
 2. Scheduler chạy mỗi 60 giây — chuyển đơn hết hạn sang HET_HAN_GIU_CHO
 3. `khoiTaoThanhToan(mock=true)` — Tạo GiaoDich (THANH_CONG), đơn → DA_XAC_NHAN, trừ `ChoConLai`, tạo `LichSuTour`
 4. `yeuCauHuyTour()` — chỉ cho đơn DA_XAC_NHAN; tính tỉ lệ hoàn theo ngày trước khởi hành

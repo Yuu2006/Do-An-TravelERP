@@ -9,7 +9,7 @@ public class XuLyHoTroRequest {
     String maNhanVienXuLy;
 
     @NotBlank(message = "TrangThai khong duoc trong")
-    // DANG_XU_LY | DA_DONG
+    // CHUA_XU_LY | DA_XU_LY | TU_CHOI
     String trangThai;
 
     String ghiChu;

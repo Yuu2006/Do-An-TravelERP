@@ -103,12 +103,12 @@ public class PhanCongTourService {
 
         phanCongTourRepository.delete(pc);
 
-        // Nếu HDV không còn phân công hiệu lực nào thì về SAN_SANG
+        // Nếu HDV không còn phân công hiệu lực nào thì về HOAT_DONG
         NhanVien hdv = pc.getNhanVien();
         boolean conTourKhac = phanCongTourRepository.findByMaNhanVien(hdv.getMaNhanVien()).stream()
                 .anyMatch(other -> !other.getMaPhanCongTour().equals(maPhanCong));
         if (!conTourKhac) {
-            hdv.setTrangThaiLamViec("SAN_SANG");
+            hdv.setTrangThaiLamViec("HOAT_DONG");
             nhanVienRepository.save(hdv);
         }
     }
