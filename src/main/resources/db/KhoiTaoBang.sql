@@ -397,9 +397,11 @@ CREATE TABLE NHATKYSUCO (
                             MaNhanVienBaoCao     VARCHAR2(50) NOT NULL,
                             MoTa                 CLOB         NOT NULL,
                             GiaiPhap             CLOB,
+                            MucDo                VARCHAR2(20) DEFAULT 'TRUNG_BINH' NOT NULL,
                             ThoiGianBaoCao       TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                             CONSTRAINT FK_NKSC_TourThucTe          FOREIGN KEY (MaTourThucTe)     REFERENCES TOURTHUCTE(MaTourThucTe),
-                            CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien)
+                            CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien),
+                            CONSTRAINT CK_NKSC_MucDo               CHECK (MucDo IN ('THAP','TRUNG_BINH','CAO'))
 );
 
 -- Chi phi thuc te do HDV khai bao

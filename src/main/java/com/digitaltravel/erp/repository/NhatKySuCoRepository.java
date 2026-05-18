@@ -12,6 +12,14 @@ import com.digitaltravel.erp.entity.NhatKySuCo;
 @Repository
 public interface NhatKySuCoRepository extends JpaRepository<NhatKySuCo, String> {
 
-    @Query("SELECT n FROM NhatKySuCo n WHERE n.tourThucTe.MaTourThucTe = :maTour ORDER BY n.ThoiGianBaoCao DESC")
-    List<NhatKySuCo> findByMaTour(@Param("maTour") String maTour);
+    @Query("""
+            SELECT n FROM NhatKySuCo n
+            WHERE n.tourThucTe.MaTourThucTe = :maTour
+              AND (:mucDo IS NULL OR n.MucDo = :mucDo)
+            ORDER BY n.ThoiGianBaoCao DESC
+            """)
+    List<NhatKySuCo> findByMaTour(
+            @Param("maTour") String maTour,
+            @Param("mucDo") String mucDo
+    );
 }

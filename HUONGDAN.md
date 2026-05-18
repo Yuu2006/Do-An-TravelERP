@@ -334,7 +334,7 @@ Ví dụ tạo tour mẫu:
 | `GET` | `/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc` | Xem năng lực HDV |
 | `PUT` | `/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc` | Cập nhật năng lực HDV |
 | `GET` | `/api/dieu-hanh/tour/{maTour}/doan` | Xem danh sách đoàn |
-| `GET` | `/api/dieu-hanh/tour/{maTour}/su-co` | Xem sự cố tour |
+| `GET` | `/api/dieu-hanh/tour/{maTour}/su-co?mucDo=CAO` | Xem sự cố tour, có thể lọc mức độ |
 | `GET` | `/api/dieu-hanh/tour/{maTour}/chi-phi` | Xem chi phí tour |
 
 Ví dụ tạo tour thực tế:
@@ -397,9 +397,11 @@ Ví dụ tạo voucher:
 | `GET` | `/api/huong-dan-vien/tour/{maTour}/doan` | Danh sách đoàn |
 | `POST` | `/api/huong-dan-vien/tour/{maTour}/diem-danh` | Điểm danh khách |
 | `POST` | `/api/huong-dan-vien/tour/{maTour}/hanh-dong-xanh` | Ghi nhận hành động xanh |
-| `GET` | `/api/huong-dan-vien/tour/{maTour}/su-co` | Danh sách sự cố |
-| `POST` | `/api/huong-dan-vien/tour/{maTour}/su-co` | Báo cáo sự cố |
-| `PUT` | `/api/huong-dan-vien/su-co/{maSuCo}` | Cập nhật sự cố |
+| `GET` | `/api/huong-dan-vien/tour/{maTour}/su-co?mucDo=CAO` | Danh sách sự cố, có thể lọc mức độ |
+| `POST` | `/api/huong-dan-vien/tour/{maTour}/su-co` | Báo cáo sự cố, `mucDo`: `THAP`, `TRUNG_BINH`, `CAO` |
+| `PUT` | `/api/huong-dan-vien/su-co/{maSuCo}` | Cập nhật sự cố, gồm mô tả/giải pháp/mức độ |
+
+`mucDo` mặc định là `TRUNG_BINH`. Các tình huống cụ thể như tai nạn, y tế, mất giấy tờ hoặc thay đổi lịch trình nên ghi chi tiết trong `moTa`.
 | `POST` | `/api/huong-dan-vien/tour/{maTour}/chi-phi` | Khai chi phí phát sinh |
 | `GET` | `/api/huong-dan-vien/tour/{maTour}/chi-phi` | Chi phí của tour |
 

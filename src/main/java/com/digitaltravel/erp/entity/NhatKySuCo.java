@@ -45,6 +45,10 @@ public class NhatKySuCo {
     @Column(name = "GiaiPhap")
     String GiaiPhap;
 
+    // Gia tri hop le: THAP | TRUNG_BINH | CAO
+    @Column(name = "MucDo", nullable = false, length = 20)
+    String MucDo;
+
     @Column(name = "ThoiGianBaoCao", nullable = false)
     LocalDateTime ThoiGianBaoCao;
 

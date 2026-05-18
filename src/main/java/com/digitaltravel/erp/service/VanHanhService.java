@@ -146,6 +146,7 @@ public class VanHanhService {
         sc.setNhanVienBaoCao(hdv);
         sc.setMoTa(req.getMoTa());
         sc.setGiaiPhap(req.getGiaiPhap());
+        sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
         sc.setThoiGianBaoCao(LocalDateTime.now());
         nhatKySuCoRepository.save(sc);
 
@@ -159,12 +160,13 @@ public class VanHanhService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay su co: " + maSuCo));
         if (req.getGiaiPhap() != null) sc.setGiaiPhap(req.getGiaiPhap());
         if (req.getMoTa() != null) sc.setMoTa(req.getMoTa());
+        if (req.getMucDo() != null) sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
         nhatKySuCoRepository.save(sc);
         return toSuCoResponse(sc);
     }
 
-    public List<NhatKySuCoResponse> danhSachSuCo(String maTour) {
-        return nhatKySuCoRepository.findByMaTour(maTour).stream()
+    public List<NhatKySuCoResponse> danhSachSuCo(String maTour, String mucDo) {
+        return nhatKySuCoRepository.findByMaTour(maTour, chuanHoaMucDoSuCoFilter(mucDo)).stream()
                 .map(this::toSuCoResponse).toList();
     }
 
@@ -413,8 +415,22 @@ public class VanHanhService {
                 .maNhatKySuCo(sc.getMaNhatKySuCo())
                 .moTa(sc.getMoTa())
                 .giaiPhap(sc.getGiaiPhap())
+                .mucDo(sc.getMucDo())
                 .thoiGianBaoCao(sc.getThoiGianBaoCao())
                 .build();
+    }
+
+    private String chuanHoaMucDoSuCo(String mucDo) {
+        String normalized = mucDo == null || mucDo.isBlank() ? "TRUNG_BINH" : mucDo.trim().toUpperCase();
+        if (!java.util.Set.of("THAP", "TRUNG_BINH", "CAO").contains(normalized)) {
+            throw AppException.badRequest("MucDo su co khong hop le. Chi chap nhan: THAP, TRUNG_BINH, CAO");
+        }
+        return normalized;
+    }
+
+    private String chuanHoaMucDoSuCoFilter(String mucDo) {
+        if (mucDo == null || mucDo.isBlank()) return null;
+        return chuanHoaMucDoSuCo(mucDo);
     }
 
     private ChiPhiThucTeResponse toChiPhiResponse(ChiPhiThucTe cp) {

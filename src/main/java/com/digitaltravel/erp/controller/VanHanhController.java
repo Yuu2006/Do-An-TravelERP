@@ -71,8 +71,9 @@ public class VanHanhController {
     @GetMapping({"/api/huong-dan-vien/tour/{maTour}/su-co", "/api/dieu-hanh/tour/{maTour}/su-co"})
     @PreAuthorize("hasAnyRole('DIEUHANH', 'HDV')")
     public ResponseEntity<ApiResponse<List<NhatKySuCoResponse>>> danhSachSuCo(
-            @PathVariable String maTour) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachSuCo(maTour)));
+            @PathVariable String maTour,
+            @RequestParam(required = false) String mucDo) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachSuCo(maTour, mucDo)));
     }
 
     @PostMapping("/api/huong-dan-vien/tour/{maTour}/su-co")

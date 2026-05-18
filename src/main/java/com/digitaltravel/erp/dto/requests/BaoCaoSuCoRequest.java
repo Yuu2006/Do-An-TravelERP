@@ -11,4 +11,5 @@ public class BaoCaoSuCoRequest {
     private String moTa;
     @Size(max = 4000)
     private String giaiPhap;
+    private String mucDo;
 }
