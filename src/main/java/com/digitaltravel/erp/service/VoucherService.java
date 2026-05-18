@@ -46,15 +46,17 @@ public class VoucherService {
     private final NhatKyDoiDiemRepository nhatKyDoiDiemRepository;
 
     // ── UC31: Xem ví voucher của khách hàng ─────────────────────────────────
+    @Transactional
     public Page<KhuyenMaiKhResponse> viVoucher(String maTaiKhoan, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
         return khuyenMaiKhRepository.findByMaKhachHang(hcs.getMaKhachHang(), pageable)
+                .map(this::capNhatHetHanNeuCan)
                 .map(this::toKhuyenMaiKhResponse);
     }
 
     // ── UC28: Áp dụng voucher vào đơn đặt tour ──────────────────────────────
-    @Transactional
+    @Transactional(noRollbackFor = AppException.class)
     public VoucherResponse apVoucher(String maTaiKhoan, ApVoucherRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
@@ -73,14 +75,22 @@ public class VoucherService {
         }
 
         // Lấy voucher từ ví của KH
-        KhuyenMaiKh kmkh = khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), request.getMaVoucher())
-                .orElseThrow(() -> AppException.notFound("Voucher khong ton tai trong vi cua ban"));
+        KhuyenMaiKh kmkh = khuyenMaiKhRepository.findHieuLucByKhachHangAndVoucher(hcs.getMaKhachHang(), request.getMaVoucher())
+                .orElseThrow(() -> AppException.notFound("Voucher khong ton tai hoac khong con hieu luc trong vi cua ban"));
 
         Voucher voucher = kmkh.getVoucher();
 
         // Kiểm tra hạn của voucher
         LocalDate today = LocalDate.now();
-        if (voucher.getNgayHetHan().isBefore(today)) {
+        if (!"SAN_SANG".equals(voucher.getTrangThai())) {
+            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+        }
+        if (voucher.getNgayHieuLuc().isAfter(today)) {
+            throw AppException.badRequest("Voucher chua den ngay hieu luc");
+        }
+        if (voucher.getNgayHetHan().isBefore(today) || (kmkh.getNgayHetHan() != null && kmkh.getNgayHetHan().isBefore(today))) {
+            kmkh.setTrangThai("HET_HAN");
+            khuyenMaiKhRepository.save(kmkh);
             throw AppException.badRequest("Voucher da het han");
         }
 
@@ -105,8 +115,9 @@ public class VoucherService {
         dtud.setNgayApDung(LocalDateTime.now());
         datTourUuDaiRepository.save(dtud);
 
-        // Xóa khỏi ví KH sau khi áp để voucher trong ví không bị dùng lại.
-        khuyenMaiKhRepository.delete(kmkh);
+        // Giữ lịch sử voucher trong ví và đánh dấu đã sử dụng.
+        kmkh.setTrangThai("DA_SU_DUNG");
+        khuyenMaiKhRepository.save(kmkh);
 
         // Tăng đếm lượt đã dùng trên master voucher
         voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
@@ -125,6 +136,9 @@ public class VoucherService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + request.getMaVoucher()));
 
         LocalDate today = LocalDate.now();
+        if (!"SAN_SANG".equals(voucher.getTrangThai())) {
+            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+        }
         if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
             throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
         }
@@ -158,6 +172,7 @@ public class VoucherService {
         kmkh.setVoucher(voucher);
         kmkh.setNgayHetHan(voucher.getNgayHetHan());
         kmkh.setNgayNhan(LocalDateTime.now());
+        kmkh.setTrangThai("CO_HIEU_LUC");
         khuyenMaiKhRepository.save(kmkh);
 
         // Ghi nhật ký đổi điểm
@@ -172,7 +187,7 @@ public class VoucherService {
         return toKhuyenMaiKhResponse(kmkh);
     }
 
-    // ── UC54: Admin tạo voucher mới ─────────────────────────────────────────
+    // ── UC53: Admin tạo voucher mới ─────────────────────────────────────────
     @Transactional
     public VoucherResponse taoVoucher(VoucherRequest request, String nguoiTao) {
         // Kiểm tra mã code trùng
@@ -200,12 +215,13 @@ public class VoucherService {
         v.setSoLuotDaDung(0);
         v.setNgayHieuLuc(request.getNgayHieuLuc());
         v.setNgayHetHan(request.getNgayHetHan());
+        v.setTrangThai("SAN_SANG");
         voucherRepository.save(v);
 
         return toVoucherResponse(v);
     }
 
-    // ── UC55: Admin cập nhật voucher ────────────────────────────────────────
+    // ── UC52: Admin cập nhật voucher ────────────────────────────────────────
     @Transactional
     public VoucherResponse capNhatVoucher(String maVoucher, VoucherRequest request, String nguoiCapNhat) {
         Voucher v = voucherRepository.findById(maVoucher)
@@ -234,11 +250,20 @@ public class VoucherService {
         return toVoucherResponse(v);
     }
 
-    // ── UC56: Admin phát hành voucher cho khách hàng ────────────────────────
+    // ── UC54: Admin phát hành voucher cho khách hàng ────────────────────────
     @Transactional
     public KhuyenMaiKhResponse phatHanhChoKhachHang(String maVoucher, PhatHanhVoucherRequest request, String nguoiTao) {
         Voucher voucher = voucherRepository.findById(maVoucher)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
+
+        if (!"SAN_SANG".equals(voucher.getTrangThai())) {
+            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+        }
+
+        LocalDate today = LocalDate.now();
+        if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
+            throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
+        }
 
         HoChieuSo hcs = hoChieuSoRepository.findById(request.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + request.getMaKhachHang()));
@@ -257,8 +282,31 @@ public class VoucherService {
         kmkh.setVoucher(voucher);
         kmkh.setNgayHetHan(voucher.getNgayHetHan());
         kmkh.setNgayNhan(LocalDateTime.now());
+        kmkh.setTrangThai("CO_HIEU_LUC");
         khuyenMaiKhRepository.save(kmkh);
 
+        return toKhuyenMaiKhResponse(kmkh);
+    }
+
+    @Transactional
+    public VoucherResponse voHieuHoaVoucher(String maVoucher, String nguoiCapNhat) {
+        Voucher voucher = voucherRepository.findById(maVoucher)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
+        voucher.setTrangThai("VO_HIEU_HOA");
+        voucherRepository.save(voucher);
+        return toVoucherResponse(voucher);
+    }
+
+    @Transactional
+    public KhuyenMaiKhResponse thuHoiVoucher(String maVoucher, String maKhachHang, String nguoiCapNhat) {
+        KhuyenMaiKh kmkh = khuyenMaiKhRepository.findByKhachHangAndVoucher(maKhachHang, maVoucher)
+                .orElseThrow(() -> AppException.notFound("Khach hang khong co voucher nay trong vi"));
+        capNhatHetHanNeuCan(kmkh);
+        if (!"CO_HIEU_LUC".equals(kmkh.getTrangThai())) {
+            throw AppException.badRequest("Chi co the thu hoi voucher dang CO_HIEU_LUC");
+        }
+        kmkh.setTrangThai("DA_THU_HOI");
+        khuyenMaiKhRepository.save(kmkh);
         return toKhuyenMaiKhResponse(kmkh);
     }
 
@@ -305,6 +353,7 @@ public class VoucherService {
                 .soLuotDaDung(v.getSoLuotDaDung())
                 .ngayHieuLuc(v.getNgayHieuLuc())
                 .ngayHetHan(v.getNgayHetHan())
+                .trangThai(v.getTrangThai())
                 .build();
     }
 
@@ -318,6 +367,18 @@ public class VoucherService {
                 .dieuKienApDung(v.getDieuKienApDung())
                 .ngayHetHan(k.getNgayHetHan())
                 .ngayNhan(k.getNgayNhan())
+                .trangThai(k.getTrangThai())
+                .trangThaiVoucher(v.getTrangThai())
                 .build();
+    }
+
+    private KhuyenMaiKh capNhatHetHanNeuCan(KhuyenMaiKh kmkh) {
+        if ("CO_HIEU_LUC".equals(kmkh.getTrangThai())
+                && kmkh.getNgayHetHan() != null
+                && kmkh.getNgayHetHan().isBefore(LocalDate.now())) {
+            kmkh.setTrangThai("HET_HAN");
+            return khuyenMaiKhRepository.save(kmkh);
+        }
+        return kmkh;
     }
 }

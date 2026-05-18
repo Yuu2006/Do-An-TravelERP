@@ -18,14 +18,11 @@ import com.digitaltravel.erp.dto.responses.YeuCauHoTroResponse;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.entity.HoChieuSo;
-import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.entity.YeuCauHoTro;
 import com.digitaltravel.erp.exception.AppException;
-import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
-import com.digitaltravel.erp.repository.TourThucTeRepository;
 import com.digitaltravel.erp.repository.YeuCauHoTroRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,8 +35,6 @@ public class HuyTourService {
     private final HoChieuSoRepository hoChieuSoRepository;
     private final YeuCauHoTroRepository yeuCauHoTroRepository;
     private final GiaoDichRepository giaoDichRepository;
-    private final TourThucTeRepository tourThucTeRepository;
-    private final ChiTietDatTourRepository chiTietDatTourRepository;
 
     // ── UC32: Khách hàng gửi yêu cầu hủy tour ─────────────────────────────
     @Transactional
@@ -65,7 +60,13 @@ public class HuyTourService {
 
         // Tính tỉ lệ hoàn tiền
         LocalDate ngayKhoiHanh = don.getTourThucTe().getNgayKhoiHanh();
+        if (ngayKhoiHanh == null) {
+            throw AppException.badRequest("Tour chua co ngay khoi hanh, khong the yeu cau hoan tien");
+        }
         long soNgayConLai = ChronoUnit.DAYS.between(LocalDate.now(), ngayKhoiHanh);
+        if (soNgayConLai <= 2) {
+            throw AppException.badRequest("Khong the yeu cau hoan tien trong vong 2 ngay truoc ngay khoi hanh tour");
+        }
         int tiLeHoan = tinhTiLeHoan((int) soNgayConLai);
         BigDecimal soTienHoan = don.getTongTien()
                 .multiply(BigDecimal.valueOf(tiLeHoan))
@@ -102,13 +103,7 @@ public class HuyTourService {
 
         DonDatTour don = yc.getDonDatTour();
 
-        // Hoàn ChoConLai vì đơn đã được thanh toán (ChoConLai đã bị trừ)
-        TourThucTe tour = don.getTourThucTe();
-        int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
-        tour.setChoConLai(tour.getChoConLai() + soKhach);
-        tourThucTeRepository.save(tour);
-
-        // Tạo giao dịch hoàn tiền (để kế toán theo dõi)
+        // Tạo giao dịch hoàn tiền chờ kế toán xác nhận; đơn vẫn giữ chỗ ở CHO_HUY.
         BigDecimal soTienHoan = tinhSoTienHoanTuNoiDung(yc.getNoiDung(), don.getTongTien());
         GiaoDich gdHoan = new GiaoDich();
         gdHoan.setMaGiaoDich("GD_HOAN_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
@@ -116,12 +111,12 @@ public class HuyTourService {
         gdHoan.setLoaiGiaoDich("HOAN_TIEN");
         gdHoan.setPhuongThuc("CHUYEN_KHOAN");
         gdHoan.setSoTien(soTienHoan);
-        gdHoan.setTrangThai("DA_HOAN_TIEN");
+        gdHoan.setTrangThai("CHO_THANH_TOAN");
         gdHoan.setNgayThanhToan(LocalDateTime.now());
         giaoDichRepository.save(gdHoan);
 
-        // Cập nhật đơn và yêu cầu
-        don.setTrangThai("DA_HUY");
+        // Cập nhật yêu cầu; đơn chỉ thành DA_HUY khi kế toán xác nhận hoàn tiền.
+        don.setTrangThai("CHO_HUY");
         donDatTourRepository.save(don);
 
         yc.setTrangThai("DA_XU_LY");
@@ -140,7 +135,7 @@ public class HuyTourService {
             throw AppException.badRequest("Yeu cau khong o trang thai co the tu choi.");
         }
 
-        // Hoàn đơn về DA_XAC_NHAN
+        // Kinh doanh từ chối yêu cầu hủy: đơn quay lại trạng thái đã xác nhận.
         DonDatTour don = yc.getDonDatTour();
         don.setTrangThai("DA_XAC_NHAN");
         donDatTourRepository.save(don);

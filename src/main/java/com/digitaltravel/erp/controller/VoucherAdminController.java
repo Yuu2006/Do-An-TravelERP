@@ -27,9 +27,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 /**
- * UC54 — Tạo voucher mới
- * UC55 — Cập nhật voucher
- * UC56 — Phát hành voucher cho khách hàng
+ * UC52 — Quản lý voucher
+ * UC53 — Tạo voucher mới
+ * UC54 — Phát hành voucher cho khách hàng
  */
 @RestController
 @RequestMapping("/api/kinh-doanh/voucher")
@@ -53,7 +53,7 @@ public class VoucherAdminController {
         return ResponseEntity.ok(ApiResponse.ok(voucherService.chiTiet(maVoucher)));
     }
 
-    // ── UC54: Tạo voucher mới ─────────────────────────────────────────────────
+    // ── UC53: Tạo voucher mới ─────────────────────────────────────────────────
     @PostMapping
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<VoucherResponse>> taoVoucher(
@@ -63,7 +63,7 @@ public class VoucherAdminController {
                 voucherService.taoVoucher(request, user.getUsername())));
     }
 
-    // ── UC55: Cập nhật voucher ────────────────────────────────────────────────
+    // ── UC52: Cập nhật / vô hiệu hóa voucher ──────────────────────────────────
     @PutMapping("/{maVoucher}")
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<VoucherResponse>> capNhatVoucher(
@@ -74,7 +74,16 @@ public class VoucherAdminController {
                 voucherService.capNhatVoucher(maVoucher, request, user.getUsername())));
     }
 
-    // ── UC56: Phát hành voucher cho khách hàng ────────────────────────────────
+    @PutMapping("/{maVoucher}/vo-hieu-hoa")
+    @PreAuthorize("hasRole('KINHDOANH')")
+    public ResponseEntity<ApiResponse<VoucherResponse>> voHieuHoaVoucher(
+            @PathVariable String maVoucher,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Vo hieu hoa voucher thanh cong",
+                voucherService.voHieuHoaVoucher(maVoucher, user.getUsername())));
+    }
+
+    // ── UC54: Phát hành / thu hồi voucher cho khách hàng ──────────────────────
     @PostMapping("/{maVoucher}/phat-hanh")
     @PreAuthorize("hasRole('KINHDOANH')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> phatHanh(
@@ -83,5 +92,15 @@ public class VoucherAdminController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.status(201).body(ApiResponse.created(
                 voucherService.phatHanhChoKhachHang(maVoucher, request, user.getUsername())));
+    }
+
+    @PutMapping("/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi")
+    @PreAuthorize("hasRole('KINHDOANH')")
+    public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> thuHoi(
+            @PathVariable String maVoucher,
+            @PathVariable String maKhachHang,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Thu hoi voucher thanh cong",
+                voucherService.thuHoiVoucher(maVoucher, maKhachHang, user.getUsername())));
     }
 }

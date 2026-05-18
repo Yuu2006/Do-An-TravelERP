@@ -51,4 +51,8 @@ public class Voucher {
     @Column(name = "NgayHetHan", nullable = false)
     LocalDate NgayHetHan;
 
+    // Gia tri hop le: SAN_SANG | VO_HIEU_HOA
+    @Column(name = "TrangThai", nullable = false, length = 20)
+    String TrangThai;
+
 }

@@ -17,4 +17,6 @@ public class KhuyenMaiKhResponse {
     String dieuKienApDung;
     LocalDate ngayHetHan;
     LocalDateTime ngayNhan;
+    String trangThai;
+    String trangThaiVoucher;
 }

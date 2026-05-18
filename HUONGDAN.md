@@ -257,9 +257,9 @@ Các prefix có bảo vệ bởi `SecurityConfig`:
 | `GET` | `/api/khach-hang/lich-su-tour` | Lịch sử tour đã tham gia |
 | `POST` | `/api/khach-hang/yeu-cau-ho-tro` | Gửi ticket hỗ trợ/khiếu nại |
 | `GET` | `/api/khach-hang/yeu-cau-ho-tro` | Ticket của tôi |
-| `GET` | `/api/khach-hang/vi-voucher` | Ví voucher |
-| `POST` | `/api/khach-hang/ap-voucher` | Áp voucher cho đơn |
-| `POST` | `/api/khach-hang/doi-diem` | Đổi điểm xanh lấy voucher |
+| `GET` | `/api/khach-hang/vi-voucher` | Ví voucher, gồm trạng thái `CO_HIEU_LUC`, `DA_SU_DUNG`, `DA_THU_HOI`, `HET_HAN` |
+| `POST` | `/api/khach-hang/ap-voucher` | Áp voucher `SAN_SANG` và còn `CO_HIEU_LUC` cho đơn |
+| `POST` | `/api/khach-hang/doi-diem` | Đổi điểm xanh lấy voucher `SAN_SANG` |
 | `POST` | `/api/khach-hang/danh-gia` | Đánh giá tour đã có lịch sử |
 | `POST` | `/api/thanh-toan/khoi-tao` | Tạo giao dịch thanh toán |
 | `GET` | `/api/thanh-toan/{maDatTour}/ket-qua` | Kiểm tra kết quả thanh toán |
@@ -366,8 +366,12 @@ Ví dụ tạo tour thực tế:
 | `GET` | `/api/kinh-doanh/voucher` | Danh sách voucher |
 | `POST` | `/api/kinh-doanh/voucher` | Tạo voucher |
 | `PUT` | `/api/kinh-doanh/voucher/{maVoucher}` | Cập nhật voucher |
+| `PUT` | `/api/kinh-doanh/voucher/{maVoucher}/vo-hieu-hoa` | Vô hiệu hóa voucher đang chạy |
 | `POST` | `/api/kinh-doanh/voucher/{maVoucher}/phat-hanh` | Phát hành voucher cho khách |
+| `PUT` | `/api/kinh-doanh/voucher/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi` | Thu hồi voucher còn hiệu lực trong ví khách |
 | `GET` | `/api/kinh-doanh/danh-gia` | Xem đánh giá để moderation |
+
+Lưu ý: `KHUYENMAI_KH` dùng khóa chính `(MaKhachHang, MaVoucher)`, nên mỗi khách chỉ có một bản ghi cho một voucher. Voucher đã dùng, đã thu hồi hoặc hết hạn được giữ làm lịch sử và không phát hành lại cùng mã đó cho cùng khách.
 
 Ví dụ tạo voucher:
 

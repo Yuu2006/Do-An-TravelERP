@@ -45,4 +45,8 @@ public class KhuyenMaiKh {
     @Column(name = "NgayNhan", nullable = false)
     LocalDateTime NgayNhan;
 
+    // Gia tri hop le: CO_HIEU_LUC | DA_SU_DUNG | DA_THU_HOI | HET_HAN
+    @Column(name = "TrangThai", nullable = false, length = 20)
+    String TrangThai;
+
 }

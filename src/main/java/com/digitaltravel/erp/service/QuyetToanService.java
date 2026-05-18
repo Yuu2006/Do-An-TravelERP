@@ -21,6 +21,7 @@ import com.digitaltravel.erp.entity.QuyetToan;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiPhiThucTeRepository;
+import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.NhanVienRepository;
@@ -39,6 +40,7 @@ public class QuyetToanService {
     private final DonDatTourRepository donDatTourRepository;
     private final ChiPhiThucTeRepository chiPhiThucTeRepository;
     private final GiaoDichRepository giaoDichRepository;
+    private final ChiTietDatTourRepository chiTietDatTourRepository;
 
     // ── UC47: Danh sách tour cần quyết toán (đã kết thúc, chưa quyết toán)
     public Page<QuyetToanResponse> tourCanQuyetToan(Pageable pageable) {
@@ -136,7 +138,7 @@ public class QuyetToanService {
         return toResponse(qt);
     }
 
-    // ── UC52: KeToan xác nhận đã hoàn tiền cho KH ────────────────────────
+    // ── UC50: KeToan xác nhận đã hoàn tiền cho KH ────────────────────────
     @Transactional
     public ThanhToanResponse xacNhanHoanTien(String maGiaoDich, String nguoiXacNhan) {
         GiaoDich gd = giaoDichRepository.findById(maGiaoDich)
@@ -152,9 +154,22 @@ public class QuyetToanService {
             throw AppException.badRequest("Chi co the xac nhan giao dich o trang thai CHO_THANH_TOAN");
         }
 
+        DonDatTour don = gd.getDonDatTour();
+        if (!"CHO_HUY".equals(don.getTrangThai())) {
+            throw AppException.badRequest("Chi co the xac nhan hoan tien cho don o trang thai CHO_HUY");
+        }
+
         gd.setTrangThai("DA_HOAN_TIEN");
         gd.setNgayThanhToan(LocalDateTime.now());
         giaoDichRepository.save(gd);
+
+        TourThucTe tour = don.getTourThucTe();
+        int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
+        tour.setChoConLai(tour.getChoConLai() + soKhach);
+        tourThucTeRepository.save(tour);
+
+        don.setTrangThai("DA_HUY");
+        donDatTourRepository.save(don);
 
         return ThanhToanResponse.builder()
                 .maGiaoDich(gd.getMaGiaoDich())
@@ -167,7 +182,42 @@ public class QuyetToanService {
                 .build();
     }
 
-    // ── UC52: Danh sách giao dịch chờ hoàn tiền ──────────────────────────
+    @Transactional
+    public ThanhToanResponse tuChoiHoanTien(String maGiaoDich, String nguoiXacNhan) {
+        GiaoDich gd = giaoDichRepository.findById(maGiaoDich)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay giao dich: " + maGiaoDich));
+
+        if (!"HOAN_TIEN".equals(gd.getLoaiGiaoDich())) {
+            throw AppException.badRequest("Giao dich nay khong phai hoan tien");
+        }
+        if (!"CHO_THANH_TOAN".equals(gd.getTrangThai())) {
+            throw AppException.badRequest("Chi co the tu choi giao dich hoan tien o trang thai CHO_THANH_TOAN");
+        }
+
+        DonDatTour don = gd.getDonDatTour();
+        if (!"CHO_HUY".equals(don.getTrangThai())) {
+            throw AppException.badRequest("Chi co the tu choi hoan tien cho don o trang thai CHO_HUY");
+        }
+
+        gd.setTrangThai("THAT_BAI");
+        gd.setNgayThanhToan(LocalDateTime.now());
+        giaoDichRepository.save(gd);
+
+        don.setTrangThai("TU_CHOI_HOAN_TIEN");
+        donDatTourRepository.save(don);
+
+        return ThanhToanResponse.builder()
+                .maGiaoDich(gd.getMaGiaoDich())
+                .maDatTour(don.getMaDatTour())
+                .soTien(gd.getSoTien())
+                .phuongThuc(gd.getPhuongThuc())
+                .trangThai(gd.getTrangThai())
+                .ngayThanhToan(gd.getNgayThanhToan())
+                .thongBao("Tu choi hoan tien thanh cong")
+                .build();
+    }
+
+    // ── UC50: Danh sách giao dịch chờ hoàn tiền ──────────────────────────
     public Page<ThanhToanResponse> danhSachChoHoanTien(Pageable pageable) {
         return giaoDichRepository.findChoHoanTien(pageable)
                 .map(gd -> ThanhToanResponse.builder()
@@ -191,10 +241,12 @@ public class QuyetToanService {
     }
 
     private BigDecimal tinhDoanhThu(String maTour) {
-        // Tổng TongTien của các đơn DA_XAC_NHAN của tour
+        // Tổng TongTien của các đơn còn hiệu lực của tour
         return donDatTourRepository.findAll().stream()
                 .filter(d -> d.getTourThucTe().getMaTourThucTe().equals(maTour))
-                .filter(d -> "DA_XAC_NHAN".equals(d.getTrangThai()))
+                .filter(d -> "DA_XAC_NHAN".equals(d.getTrangThai())
+                        || "CHO_HUY".equals(d.getTrangThai())
+                        || "TU_CHOI_HOAN_TIEN".equals(d.getTrangThai()))
                 .map(DonDatTour::getTongTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

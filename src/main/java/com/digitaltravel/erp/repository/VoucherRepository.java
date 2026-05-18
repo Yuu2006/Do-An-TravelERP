@@ -29,6 +29,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
             SELECT v FROM Voucher v
             WHERE v.NgayHieuLuc <= :today
               AND v.NgayHetHan >= :today
+              AND v.TrangThai = 'SAN_SANG'
               AND v.SoLuotDaDung < v.SoLuotPhatHanh
             """)
     Page<Voucher> findAllActive(@Param("today") LocalDate today, Pageable pageable);

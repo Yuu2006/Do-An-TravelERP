@@ -117,6 +117,18 @@ public class QuyetToanController {
                 quyetToanService.xacNhanHoanTien(maGiaoDich, user.getUsername())));
     }
 
+    /**
+     * UC50 — KeToan từ chối hoàn tiền, đơn vẫn còn hiệu lực.
+     */
+    @PutMapping("/giao-dich-hoan/{maGiaoDich}/tu-choi")
+    @PreAuthorize("hasRole('KETOAN')")
+    public ResponseEntity<ApiResponse<ThanhToanResponse>> tuChoiHoanTien(
+            @PathVariable String maGiaoDich,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Tu choi hoan tien thanh cong",
+                quyetToanService.tuChoiHoanTien(maGiaoDich, user.getUsername())));
+    }
+
     // ── UC53: Báo cáo doanh thu ───────────────────────────────────────────────
 
     /**

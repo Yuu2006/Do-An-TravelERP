@@ -199,7 +199,7 @@ CREATE TABLE DONDATTOUR (
                             CONSTRAINT CK_DDT_TongTien             CHECK (TongTien >= 0),
                             CONSTRAINT CK_DDT_TrangThai            CHECK (TrangThai IN (
                                                                                         'CHO_XAC_NHAN','DA_XAC_NHAN','DA_HUY','HET_HAN_GIU_CHO',
-                                                                                        'CHO_HUY','THANH_TOAN_THAT_BAI'
+                                                                                        'CHO_HUY','TU_CHOI_HOAN_TIEN','THANH_TOAN_THAT_BAI'
                                 ))
 );
 
@@ -266,13 +266,15 @@ CREATE TABLE VOUCHER (
                           SoLuotDaDung         NUMBER(10)     DEFAULT 0 NOT NULL,
                           NgayHieuLuc          DATE           NOT NULL,
                           NgayHetHan           DATE           NOT NULL,
+                          TrangThai            VARCHAR2(20)   DEFAULT 'SAN_SANG' NOT NULL,
                           CONSTRAINT UQ_VOUCHER_MaCode           UNIQUE (MaCode),
                           CONSTRAINT CK_VOUCHER_LoaiUuDai        CHECK (LoaiUuDai IN ('PHAN_TRAM','SO_TIEN')),
                           CONSTRAINT CK_VOUCHER_GiaTriGiam       CHECK (GiaTriGiam >= 0),
                           CONSTRAINT CK_VOUCHER_SoLuot           CHECK (SoLuotPhatHanh > 0 AND SoLuotDaDung >= 0),
                           CONSTRAINT CK_VOUCHER_DaDung           CHECK (SoLuotDaDung <= SoLuotPhatHanh),
                           CONSTRAINT CK_VOUCHER_PhanTram         CHECK (LoaiUuDai <> 'PHAN_TRAM' OR GiaTriGiam <= 100),
-                          CONSTRAINT CK_VOUCHER_NgayHL           CHECK (NgayHieuLuc <= NgayHetHan)
+                          CONSTRAINT CK_VOUCHER_NgayHL           CHECK (NgayHieuLuc <= NgayHetHan),
+                          CONSTRAINT CK_VOUCHER_TrangThai        CHECK (TrangThai IN ('SAN_SANG','VO_HIEU_HOA'))
 );
 
 -- Vi voucher cua khach hang
@@ -281,9 +283,11 @@ CREATE TABLE KHUYENMAI_KH (
                               MaVoucher        VARCHAR2(50)  NOT NULL,
                               NgayHetHan       DATE,
                               NgayNhan         TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
+                              TrangThai        VARCHAR2(20)  DEFAULT 'CO_HIEU_LUC' NOT NULL,
                               CONSTRAINT PK_KHUYENMAIKH              PRIMARY KEY (MaKhachHang, MaVoucher),
                               CONSTRAINT FK_KMKH_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
-                              CONSTRAINT FK_KMKH_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher)
+                              CONSTRAINT FK_KMKH_Voucher             FOREIGN KEY (MaVoucher)   REFERENCES VOUCHER(MaVoucher),
+                              CONSTRAINT CK_KMKH_TrangThai           CHECK (TrangThai IN ('CO_HIEU_LUC','DA_SU_DUNG','DA_THU_HOI','HET_HAN'))
 );
 
 -- Lich su ap dung voucher vao don dat

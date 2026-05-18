@@ -42,7 +42,7 @@ public class DonDatTour {
     @Column(name = "TongTien", nullable = false, precision = 18, scale = 2)
     BigDecimal TongTien;
 
-    // Gia tri hop le: CHO_XAC_NHAN | DA_XAC_NHAN | DA_HUY | HET_HAN_GIU_CHO
+    // Gia tri hop le: CHO_XAC_NHAN | DA_XAC_NHAN | CHO_HUY | DA_HUY | TU_CHOI_HOAN_TIEN | HET_HAN_GIU_CHO | THANH_TOAN_THAT_BAI
     @Column(name = "TrangThai", nullable = false, length = 30)
     String TrangThai;
 

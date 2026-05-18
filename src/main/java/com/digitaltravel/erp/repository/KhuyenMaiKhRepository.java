@@ -35,4 +35,16 @@ public interface KhuyenMaiKhRepository extends JpaRepository<KhuyenMaiKh, Khuyen
             @Param("maKhachHang") String maKhachHang,
             @Param("maVoucher") String maVoucher
     );
+
+    @Query("""
+            SELECT k FROM KhuyenMaiKh k
+            JOIN FETCH k.voucher
+            WHERE k.khachHang.MaKhachHang = :maKhachHang
+              AND k.voucher.MaVoucher = :maVoucher
+              AND k.TrangThai = 'CO_HIEU_LUC'
+            """)
+    Optional<KhuyenMaiKh> findHieuLucByKhachHangAndVoucher(
+            @Param("maKhachHang") String maKhachHang,
+            @Param("maVoucher") String maVoucher
+    );
 }
