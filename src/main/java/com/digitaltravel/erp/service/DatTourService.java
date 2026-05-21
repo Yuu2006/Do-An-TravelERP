@@ -150,6 +150,7 @@ public class DatTourService {
     }
 
     // ── Nhân viên Sales: xem tất cả đơn ────────────────────────────────────
+    @Transactional(readOnly = true)
     public Page<DonDatTourResponse> danhSachTatCa(String trangThai, String maTourThucTe, Pageable pageable) {
         return donDatTourRepository.timKiem(trangThai, maTourThucTe, pageable)
                 .map(don -> {

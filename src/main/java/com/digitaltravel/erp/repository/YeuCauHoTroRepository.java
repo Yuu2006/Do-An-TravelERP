@@ -15,7 +15,7 @@ import com.digitaltravel.erp.entity.YeuCauHoTro;
 public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String> {
 
     // Lấy yêu cầu hoàn tiền của 1 đơn đặt tour
-    @Query("SELECT y FROM YeuCauHoTro y WHERE y.donDatTour.MaDatTour = :maDatTour AND y.LoaiYeuCau = :loaiYeuCau")
+    @Query("SELECT y FROM YeuCauHoTro y WHERE y.donDatTour.maDatTour = :maDatTour AND y.LoaiYeuCau = :loaiYeuCau")
     List<YeuCauHoTro> findByMaDatTourAndLoaiYeuCau(
             @Param("maDatTour") String maDatTour,
             @Param("loaiYeuCau") String loaiYeuCau

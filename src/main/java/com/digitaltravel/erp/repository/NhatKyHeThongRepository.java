@@ -17,11 +17,11 @@ public interface NhatKyHeThongRepository extends JpaRepository<NhatKyHeThong, St
             SELECT nk FROM NhatKyHeThong nk
             LEFT JOIN nk.taiKhoan tk
             WHERE (:maTaiKhoan IS NULL OR tk.MaTaiKhoan = :maTaiKhoan)
-              AND (:hanhDong IS NULL OR nk.HanhDong = :hanhDong)
-              AND (:doiTuong IS NULL OR nk.DoiTuong = :doiTuong)
-              AND (:maDoiTuong IS NULL OR nk.MaDoiTuong = :maDoiTuong)
-              AND (:tuThoiGian IS NULL OR nk.ThoiGian >= :tuThoiGian)
-              AND (:denThoiGian IS NULL OR nk.ThoiGian <= :denThoiGian)
+              AND (:hanhDong IS NULL OR nk.hanhDong = :hanhDong)
+              AND (:doiTuong IS NULL OR nk.doiTuong = :doiTuong)
+              AND (:maDoiTuong IS NULL OR nk.maDoiTuong = :maDoiTuong)
+              AND (:tuThoiGian IS NULL OR nk.thoiGian >= :tuThoiGian)
+              AND (:denThoiGian IS NULL OR nk.thoiGian <= :denThoiGian)
             """)
     Page<NhatKyHeThong> timKiem(
             @Param("maTaiKhoan") String maTaiKhoan,
