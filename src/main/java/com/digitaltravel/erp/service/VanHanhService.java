@@ -136,10 +136,25 @@ public class VanHanhService {
     // ── UC45: Báo cáo sự cố ──────────────────────────────────────────────
     @Transactional
     public NhatKySuCoResponse baoCaoSuCo(String maTour, BaoCaoSuCoRequest req, String maTaiKhoan) {
-        TourThucTe tour = tourThucTeRepository.findById(maTour)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
+        TourThucTe tour = kiemTraHopLeDuLieuSuCo(maTour, req);
         NhanVien hdv = getHdv(maTaiKhoan);
 
+        NhatKySuCo sc = xuLyTaoSuCoMoi(tour, hdv, req);
+        guiCanhBaoDenQuanLyNeuCan(sc);
+
+        return toSuCoResponse(sc);
+    }
+
+    private TourThucTe kiemTraHopLeDuLieuSuCo(String maTour, BaoCaoSuCoRequest req) {
+        if (req.getMoTa() == null || req.getMoTa().isBlank()) {
+            throw AppException.badRequest("Mo ta su co khong duoc de trong");
+        }
+        chuanHoaMucDoSuCo(req.getMucDo());
+        return tourThucTeRepository.findById(maTour)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
+    }
+
+    private NhatKySuCo xuLyTaoSuCoMoi(TourThucTe tour, NhanVien hdv, BaoCaoSuCoRequest req) {
         NhatKySuCo sc = new NhatKySuCo();
         sc.setMaNhatKySuCo("SC_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         sc.setTourThucTe(tour);
@@ -148,9 +163,14 @@ public class VanHanhService {
         sc.setGiaiPhap(req.getGiaiPhap());
         sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
         sc.setThoiGianBaoCao(LocalDateTime.now());
-        nhatKySuCoRepository.save(sc);
+        return nhatKySuCoRepository.save(sc);
+    }
 
-        return toSuCoResponse(sc);
+    private void guiCanhBaoDenQuanLyNeuCan(NhatKySuCo sc) {
+        // Do an hien chua co kenh thong bao rieng; tach method de the hien buoc thiet ke.
+        if ("SOS".equals(sc.getMucDo())) {
+            // TODO: gui canh bao den Dieu hanh/Quan ly khi bo sung module thong bao.
+        }
     }
 
     // Cập nhật mô tả / giải pháp sự cố
@@ -421,9 +441,9 @@ public class VanHanhService {
     }
 
     private String chuanHoaMucDoSuCo(String mucDo) {
-        String normalized = mucDo == null || mucDo.isBlank() ? "TRUNG_BINH" : mucDo.trim().toUpperCase();
-        if (!java.util.Set.of("THAP", "TRUNG_BINH", "CAO").contains(normalized)) {
-            throw AppException.badRequest("MucDo su co khong hop le. Chi chap nhan: THAP, TRUNG_BINH, CAO");
+        String normalized = mucDo == null || mucDo.isBlank() ? "THAP" : mucDo.trim().toUpperCase();
+        if (!java.util.Set.of("THAP", "SOS").contains(normalized)) {
+            throw AppException.badRequest("MucDo su co khong hop le. Chi chap nhan: THAP, SOS");
         }
         return normalized;
     }

@@ -135,54 +135,13 @@ public class VoucherService {
         Voucher voucher = voucherRepository.findById(request.getMaVoucher())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + request.getMaVoucher()));
 
-        LocalDate today = LocalDate.now();
-        if (!"SAN_SANG".equals(voucher.getTrangThai())) {
-            throw AppException.badRequest("Voucher da bi vo hieu hoa");
-        }
-        if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
-        }
-
-        if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
-            throw AppException.badRequest("Voucher da het luot doi");
-        }
-
-        // Kiểm tra KH đã có voucher này chưa
-        if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), voucher.getMaVoucher()).isPresent()) {
-            throw AppException.badRequest("Ban da co voucher nay trong vi roi");
-        }
-
-        // Quy tắc: 1 điểm xanh = 100 VND → số điểm cần = giaTriGiam / 100 (nếu SO_TIEN)
-        // Nếu PHAN_TRAM: quy ước mỗi 1% giảm cần 50 điểm
+        kiemTraVoucherCoTheDoi(hcs, voucher);
         long diemCanDung = tinhDiemCanDung(voucher);
+        kiemTraDuDiemDoiVoucher(hcs, diemCanDung);
 
-        if (hcs.getDiemXanh() < diemCanDung) {
-            throw AppException.badRequest(
-                    "Khong du diem xanh. Can: " + diemCanDung + ", Hien co: " + hcs.getDiemXanh());
-        }
-
-        // Trừ điểm
-        hcs.setDiemXanh(hcs.getDiemXanh() - diemCanDung);
-        hoChieuSoRepository.save(hcs);
-
-        // Thêm vào ví KH
-        KhuyenMaiKh kmkh = new KhuyenMaiKh();
-        kmkh.setId(new KhuyenMaiKhId(hcs.getMaKhachHang(), voucher.getMaVoucher()));
-        kmkh.setKhachHang(hcs);
-        kmkh.setVoucher(voucher);
-        kmkh.setNgayHetHan(voucher.getNgayHetHan());
-        kmkh.setNgayNhan(LocalDateTime.now());
-        kmkh.setTrangThai("CO_HIEU_LUC");
-        khuyenMaiKhRepository.save(kmkh);
-
-        // Ghi nhật ký đổi điểm
-        NhatKyDoiDiem nkdd = new NhatKyDoiDiem();
-        nkdd.setMaNhatKyDoiDiem("NKDD_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        nkdd.setKhachHang(hcs);
-        nkdd.setVoucher(voucher);
-        nkdd.setDiemQuyDoi(diemCanDung);
-        nkdd.setNgayQuyDoi(LocalDateTime.now());
-        nhatKyDoiDiemRepository.save(nkdd);
+        capNhatDiemXanhSauKhiDoi(hcs, diemCanDung);
+        KhuyenMaiKh kmkh = themVoucherVaoViKhachHang(hcs, voucher);
+        ghiNhatKyDoiDiem(hcs, voucher, diemCanDung);
 
         return toKhuyenMaiKhResponse(kmkh);
     }
@@ -340,6 +299,55 @@ public class VoucherService {
         }
         // PHAN_TRAM: 50 điểm / 1%
         return voucher.getGiaTriGiam().multiply(BigDecimal.valueOf(50)).longValue();
+    }
+
+    private void kiemTraVoucherCoTheDoi(HoChieuSo hcs, Voucher voucher) {
+        LocalDate today = LocalDate.now();
+        if (!"SAN_SANG".equals(voucher.getTrangThai())) {
+            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+        }
+        if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
+            throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
+        }
+        if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
+            throw AppException.badRequest("Voucher da het luot doi");
+        }
+        if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), voucher.getMaVoucher()).isPresent()) {
+            throw AppException.badRequest("Ban da co voucher nay trong vi roi");
+        }
+    }
+
+    private void kiemTraDuDiemDoiVoucher(HoChieuSo hcs, long diemCanDung) {
+        if (hcs.getDiemXanh() < diemCanDung) {
+            throw AppException.badRequest(
+                    "Khong du diem xanh. Can: " + diemCanDung + ", Hien co: " + hcs.getDiemXanh());
+        }
+    }
+
+    private void capNhatDiemXanhSauKhiDoi(HoChieuSo hcs, long diemCanDung) {
+        hcs.setDiemXanh(hcs.getDiemXanh() - diemCanDung);
+        hoChieuSoRepository.save(hcs);
+    }
+
+    private KhuyenMaiKh themVoucherVaoViKhachHang(HoChieuSo hcs, Voucher voucher) {
+        KhuyenMaiKh kmkh = new KhuyenMaiKh();
+        kmkh.setId(new KhuyenMaiKhId(hcs.getMaKhachHang(), voucher.getMaVoucher()));
+        kmkh.setKhachHang(hcs);
+        kmkh.setVoucher(voucher);
+        kmkh.setNgayHetHan(voucher.getNgayHetHan());
+        kmkh.setNgayNhan(LocalDateTime.now());
+        kmkh.setTrangThai("CO_HIEU_LUC");
+        return khuyenMaiKhRepository.save(kmkh);
+    }
+
+    private void ghiNhatKyDoiDiem(HoChieuSo hcs, Voucher voucher, long diemCanDung) {
+        NhatKyDoiDiem nkdd = new NhatKyDoiDiem();
+        nkdd.setMaNhatKyDoiDiem("NKDD_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        nkdd.setKhachHang(hcs);
+        nkdd.setVoucher(voucher);
+        nkdd.setDiemQuyDoi(diemCanDung);
+        nkdd.setNgayQuyDoi(LocalDateTime.now());
+        nhatKyDoiDiemRepository.save(nkdd);
     }
 
     private VoucherResponse toVoucherResponse(Voucher v) {

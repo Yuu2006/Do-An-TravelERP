@@ -4,9 +4,9 @@ spring:
   application:
     name: digital-travel-erp
   datasource:
-    url: ${DB_URL:jdbc:oracle:thin:@localhost:1521/orcl}
-    username: ${DB_USERNAME:backend}
-    password: ${DB_PASSWORD:abcd}
+    url: ${DB_URL:jdbc:oracle:thin:@//${DB_HOST}:${DB_PORT}/${DB_SERVICE}}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 10
@@ -45,6 +45,10 @@ server:
       enabled: true
       force: true
 
+server:
+  address: 0.0.0.0
+  port: ${SERVER_PORT:8080}
+
 logging:
   level:
     org.hibernate.SQL: info
@@ -55,6 +59,5 @@ app:
   jwt:
     secret: ${JWT_SECRET:ZGlnaXRhbC10cmF2ZWwtZXJwLXNlY3JldC1rZXktbXVzdC1iZS00Mi1jaGFycy1sb25nLW1pbg==}
     expiration: ${JWT_EXPIRATION:86400000}
-
 
 
