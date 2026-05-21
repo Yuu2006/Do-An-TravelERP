@@ -3,6 +3,8 @@ package com.digitaltravel.erp.dto.responses;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 public class HoChieuSoResponse {
@@ -12,6 +14,7 @@ public class HoChieuSoResponse {
     String hoTen;
     String email;
     String cccd;
+    LocalDate ngaySinh;
     String soDienThoai;
     String diUng;
     String ghiChuYTe;

@@ -150,6 +150,8 @@ public class NhanVienService {
                 .tenDangNhap(tk.getTenDangNhap())
                 .hoTen(tk.getHoTen())
                 .email(tk.getEmail())
+                .cccd(tk.getCccd())
+                .ngaySinh(tk.getNgaySinh())
                 .soDienThoai(tk.getSoDienThoai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())

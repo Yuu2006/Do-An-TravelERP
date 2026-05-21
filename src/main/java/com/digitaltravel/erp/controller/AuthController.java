@@ -60,6 +60,10 @@ public class AuthController {
                 && taiKhoanRepository.existsByEmail(request.getEmail())) {
             throw AppException.badRequest("Email da duoc su dung");
         }
+        if (request.getCccd() != null && !request.getCccd().isBlank()
+                && taiKhoanRepository.existsByCccd(request.getCccd())) {
+            throw AppException.badRequest("CCCD da duoc su dung");
+        }
 
         VaiTro vaiTroKhach = vaiTroRepository.findById(VaiTroConst.KHACHHANG)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro KHACHHANG"));
@@ -69,6 +73,8 @@ public class AuthController {
         taiKhoan.setTenDangNhap(request.getTenDangNhap());
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhau()));
         taiKhoan.setHoTen(request.getHoTen());
+        taiKhoan.setCccd(request.getCccd());
+        taiKhoan.setNgaySinh(request.getNgaySinh());
         taiKhoan.setEmail(request.getEmail());
         taiKhoan.setSoDienThoai(request.getSoDienThoai());
         taiKhoan.setVaiTro(vaiTroKhach);
@@ -79,7 +85,6 @@ public class AuthController {
         HoChieuSo hoChieuSo = new HoChieuSo();
         hoChieuSo.setMaKhachHang(maTuDongService.taoMaHoChieuSo());
         hoChieuSo.setTaiKhoan(taiKhoan);
-        hoChieuSo.setCccd(request.getCccd());
         hoChieuSo.setSoDienThoai(request.getSoDienThoai());
         hoChieuSo.setHangThanhVien("THANH_VIEN");
         hoChieuSo.setDiemXanh(0L);

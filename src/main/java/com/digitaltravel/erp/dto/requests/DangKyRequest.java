@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 public class DangKyRequest {
 
@@ -28,6 +30,8 @@ public class DangKyRequest {
 
     @Size(max = 20)
     String cccd;
+
+    LocalDate ngaySinh;
 
     @Size(max = 20)
     String soDienThoai;

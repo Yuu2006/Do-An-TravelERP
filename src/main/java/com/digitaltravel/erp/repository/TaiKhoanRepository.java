@@ -26,6 +26,20 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String>{
             """)
     boolean existsByTenDangNhap(@Param("tenDangNhap") String tenDangNhap);
 
+    @Query("""
+            SELECT CASE WHEN COUNT(tk) > 0 THEN true ELSE false END
+            FROM TaiKhoan tk
+            WHERE tk.Cccd = :cccd
+            """)
+    boolean existsByCccd(@Param("cccd") String cccd);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(tk) > 0 THEN true ELSE false END
+            FROM TaiKhoan tk
+            WHERE tk.Cccd = :cccd AND tk.MaTaiKhoan <> :maTaiKhoan
+            """)
+    boolean existsByCccdAndMaTaiKhoanNot(@Param("cccd") String cccd, @Param("maTaiKhoan") String maTaiKhoan);
+
     default boolean TonTaiTaiKhoan(String email) {
         return existsByEmail(email);
     }

@@ -46,7 +46,7 @@ VALUES ('HDX005', 'Mượn xe đạp thay xe máy',                 100);
 -- 4. TOURMAU — Tour mẫu (template sản phẩm)
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM001', 'Khám phá Hạ Long - Cát Bà 3N2Đ',
+VALUES ('TM001', 'Hạ Long - Cát Bà',
         'Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Vịnh Hạ Long và Cát Bà
@@ -60,7 +60,7 @@ Không bao gồm:
         3, 3500000, 4.5, 128);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM002', 'Đà Nẵng - Hội An - Bà Nà Hills 4N3Đ',
+VALUES ('TM002', 'Đà Nẵng - Hội An - Bà Nà Hills',
         'Bao gồm:
 - Xe đưa đón sân bay và điểm tham quan
 - Vé tham quan Hội An và Bà Nà Hills
@@ -74,7 +74,7 @@ Không bao gồm:
         4, 4200000, 4.7, 215);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM003', 'Phú Quốc Nghỉ Dưỡng Biển Đảo 5N4Đ',
+VALUES ('TM003', 'Phú Quốc - Nghỉ dưỡng biển đảo',
         'Bao gồm:
 - Xe đưa đón sân bay Phú Quốc
 - Lưu trú resort/khách sạn theo chương trình
@@ -88,7 +88,7 @@ Không bao gồm:
         5, 5800000, 4.8, 302);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM004', 'Sapa - Bắc Hà Mây Mờ Trekking 3N2Đ',
+VALUES ('TM004', 'Sapa - Bắc Hà trekking',
         'Bao gồm:
 - Xe đưa đón Hà Nội - Sapa - Bắc Hà
 - Lưu trú theo chương trình
@@ -104,7 +104,7 @@ Không bao gồm:
 -- ------------------------------------------------------------
 -- 5. LICHTRINHTOUR — Lịch trình theo ngày
 -- ------------------------------------------------------------
--- TM001: Hạ Long - Cát Bà 3N2Đ
+-- TM001: Hạ Long - Cát Bà
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LT001_N1', 'TM001', 1,
         'Hà Nội → Hạ Long → Lên tàu → Hang Đầu Gỗ → Hang Thiên Cung',
@@ -121,7 +121,7 @@ VALUES ('LT001_N3', 'TM001', 3,
         'Dùng cà phê sáng ngắm bầu trời Hạ Long. Trả phòng, xe đưa về Hà Nội.',
         'Sáng: Bánh bao, cháo, hoa quả | Trưa: Cơm nhà hàng tại cảng');
 
--- TM002: Đà Nẵng - Hội An - Bà Nà Hills 4N3Đ
+-- TM002: Đà Nẵng - Hội An - Bà Nà Hills
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LT002_N1', 'TM002', 1,
         'Sân bay Đà Nẵng → Nhận phòng → Bà Nà Hills → Cầu Vàng',
@@ -155,58 +155,58 @@ INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('KETOAN',     'Kế toán');
 INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('HDV',        'Hướng dẫn viên');
 INSERT INTO VAITRO (MaVaiTro, TenHienThi) VALUES ('KHACHHANG',  'Khách hàng');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_ADMIN01', 'admin',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyễn Văn Admin', '079099000001', 'admin@digitaltravel.vn', '0900000001',
+        'Nguyễn Văn Admin', '079099000001', DATE '1988-01-12', 'admin@digitaltravel.vn', '0900000001',
         'ADMIN', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_MGR01', 'manager01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Trần Thị Điều Hành', '079099000002', 'dieuhanh01@digitaltravel.vn', '0900000002',
+        'Trần Thị Điều Hành', '079099000002', DATE '1990-03-08', 'dieuhanh01@digitaltravel.vn', '0900000002',
         'DIEUHANH', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_SP01', 'sanpham01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyễn Thị Sản Phẩm', '079099000099', 'sanpham01@digitaltravel.vn', '0900000099',
+        'Nguyễn Thị Sản Phẩm', '079099000099', DATE '1992-06-18', 'sanpham01@digitaltravel.vn', '0900000099',
         'SANPHAM', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_SALES01', 'sales01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Lê Văn Kinh Doanh', '079099000003', 'kinhdoanh01@digitaltravel.vn', '0900000003',
+        'Lê Văn Kinh Doanh', '079099000003', DATE '1989-09-21', 'kinhdoanh01@digitaltravel.vn', '0900000003',
         'KINHDOANH', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KT01', 'ketoan01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Phạm Thị Kế Toán', '079099000004', 'ketoan01@digitaltravel.vn', '0900000004',
+        'Phạm Thị Kế Toán', '079099000004', DATE '1991-12-02', 'ketoan01@digitaltravel.vn', '0900000004',
         'KETOAN', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV01', 'hdv01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Hoàng Văn Hướng Dẫn', '079099000005', 'hdv01@digitaltravel.vn', '0900000005',
+        'Hoàng Văn Hướng Dẫn', '079099000005', DATE '1987-04-15', 'hdv01@digitaltravel.vn', '0900000005',
         'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV02', 'hdv02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyễn Thị Hương', '079099000006', 'hdv02@digitaltravel.vn', '0900000006',
+        'Nguyễn Thị Hương', '079099000006', DATE '1993-07-27', 'hdv02@digitaltravel.vn', '0900000006',
         'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH01', 'khachhang01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Bùi Thị Khách Hàng', '079099000007', 'kh01@gmail.com', '0900000007',
+        'Bùi Thị Khách Hàng', '079099000007', DATE '1995-02-10', 'kh01@gmail.com', '0900000007',
         'KHACHHANG', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH02', 'khachhang02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Đinh Văn Khách Hàng', '079099000008', 'kh02@gmail.com', '0900000008',
+        'Đinh Văn Khách Hàng', '079099000008', DATE '1994-11-25', 'kh02@gmail.com', '0900000008',
         'KHACHHANG', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
