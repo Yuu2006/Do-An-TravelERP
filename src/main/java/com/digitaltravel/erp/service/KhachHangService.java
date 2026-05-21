@@ -41,12 +41,19 @@ public class KhachHangService {
         }
         if (request.getSoDienThoai() != null) {
             hcs.setSoDienThoai(request.getSoDienThoai());
+            hcs.getTaiKhoan().setSoDienThoai(request.getSoDienThoai());
         }
         if (request.getDiUng() != null) {
             hcs.setDiUng(request.getDiUng());
         }
         if (request.getGhiChuYTe() != null) {
             hcs.setGhiChuYTe(request.getGhiChuYTe());
+        }
+        if (request.getTenDangNhap() != null) {
+            hcs.getTaiKhoan().setTenDangNhap(request.getTenDangNhap());
+        }
+        if (request.getEmail() != null) {
+            hcs.getTaiKhoan().setEmail(request.getEmail());
         }
         hoChieuSoRepository.save(hcs);
         return toResponse(hcs);
