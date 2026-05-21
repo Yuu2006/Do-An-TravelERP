@@ -38,7 +38,7 @@ public class VoucherController {
 
     // ── UC31: Xem ví voucher của tôi ─────────────────────────────────────────
     @GetMapping("/vi-voucher")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<KhuyenMaiKhResponse>>> viVoucher(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PageableDefault(size = 10, sort = "NgayNhan", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -48,7 +48,7 @@ public class VoucherController {
 
     // ── UC28: Áp dụng voucher vào đơn ────────────────────────────────────────
     @PostMapping("/ap-voucher")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> apVoucher(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody ApVoucherRequest request) {
@@ -58,7 +58,7 @@ public class VoucherController {
 
     // ── UC30: Đổi điểm xanh lấy voucher ─────────────────────────────────────
     @PostMapping("/doi-diem")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> doiDiem(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody DoiDiemVoucherRequest request) {

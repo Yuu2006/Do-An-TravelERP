@@ -1,13 +1,5 @@
 package com.digitaltravel.erp.config;
 
-import static com.digitaltravel.erp.config.VaiTroConst.ADMIN;
-import static com.digitaltravel.erp.config.VaiTroConst.DIEUHANH;
-import static com.digitaltravel.erp.config.VaiTroConst.HDV;
-import static com.digitaltravel.erp.config.VaiTroConst.KETOAN;
-import static com.digitaltravel.erp.config.VaiTroConst.KHACHHANG;
-import static com.digitaltravel.erp.config.VaiTroConst.KINHDOANH;
-import static com.digitaltravel.erp.config.VaiTroConst.SANPHAM;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -24,13 +16,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.digitaltravel.erp.config.VaiTroConst.ADMIN;
+import static com.digitaltravel.erp.config.VaiTroConst.DIEUHANH;
+import static com.digitaltravel.erp.config.VaiTroConst.HDV;
+import static com.digitaltravel.erp.config.VaiTroConst.KETOAN;
+import static com.digitaltravel.erp.config.VaiTroConst.KHACHHANG;
+import static com.digitaltravel.erp.config.VaiTroConst.KINHDOANH;
+import static com.digitaltravel.erp.config.VaiTroConst.SANPHAM;
 import com.digitaltravel.erp.service.TaiKhoanDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -50,13 +49,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/quan-tri/**").hasRole(ADMIN)
-                        .requestMatchers("/api/san-pham/**").hasRole(SANPHAM)
-                        .requestMatchers("/api/kinh-doanh/**").hasRole(KINHDOANH)
-                        .requestMatchers("/api/dieu-hanh/**").hasRole(DIEUHANH)
-                        .requestMatchers("/api/huong-dan-vien/**").hasAnyRole(DIEUHANH, HDV)
-                        .requestMatchers("/api/ke-toan/**").hasRole(KETOAN)
-                        .requestMatchers("/api/khach-hang/**").hasRole(KHACHHANG)
-                        .requestMatchers("/api/thanh-toan/**").hasRole(KHACHHANG)
+                        .requestMatchers("/api/san-pham/**").hasAnyRole(ADMIN, SANPHAM)
+                        .requestMatchers("/api/kinh-doanh/**").hasAnyRole(ADMIN, KINHDOANH)
+                        .requestMatchers("/api/dieu-hanh/**").hasAnyRole(ADMIN, DIEUHANH)
+                        .requestMatchers("/api/huong-dan-vien/**").hasAnyRole(ADMIN, DIEUHANH, HDV)
+                        .requestMatchers("/api/ke-toan/**").hasAnyRole(ADMIN, KETOAN)
+                        .requestMatchers("/api/khach-hang/**").hasAnyRole(ADMIN, KHACHHANG)
+                        .requestMatchers("/api/thanh-toan/**").hasAnyRole(ADMIN, KHACHHANG)
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

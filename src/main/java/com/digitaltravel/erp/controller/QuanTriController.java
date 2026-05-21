@@ -28,7 +28,7 @@ public class QuanTriController {
     private final NhatKyHeThongService nhatKyHeThongService;
 
     @GetMapping("/nhat-ky-he-thong")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<NhatKyHeThongResponse>>> nhatKyHeThong(
             @RequestParam(required = false) String maTaiKhoan,
             @RequestParam(required = false) String hanhDong,

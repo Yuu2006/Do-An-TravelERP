@@ -39,14 +39,14 @@ public class DichVuThemController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<DichVuThemResponse>> taoMoi(@Valid @RequestBody DichVuThemRequest request) {
         DichVuThemResponse result = dichVuThemService.taoMoi(request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<DichVuThemResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody DichVuThemRequest request
@@ -55,7 +55,7 @@ public class DichVuThemController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         dichVuThemService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa dich vu thanh cong"));

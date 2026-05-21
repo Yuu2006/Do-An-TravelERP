@@ -20,7 +20,7 @@ BEGIN
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
                              'DSNGUOIDONGHANH','DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                               'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
-                              'TOURMAU','NHATKYBAOMAT','NHATKYHETHONG','VAITRO','TAIKHOAN'
+                              'TOURMAU','NHATKYHETHONG','VAITRO','TAIKHOAN'
             )
         ) LOOP
             EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS PURGE';

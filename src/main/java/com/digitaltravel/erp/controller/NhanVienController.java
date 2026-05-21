@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,7 +56,7 @@ public class NhanVienController {
      * UC68 — Danh sách nhân viên (filter + phân trang)
      */
     @GetMapping("/api/quan-tri/nhan-vien")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<NhanVienResponse>>> danhSachNhanVien(
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String maVaiTro,
@@ -71,7 +70,7 @@ public class NhanVienController {
      * UC68 — Chi tiết nhân viên
      */
     @GetMapping("/api/quan-tri/nhan-vien/{maNhanVien}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> chiTietNhanVien(
             @PathVariable String maNhanVien) {
         return ResponseEntity.ok(ApiResponse.ok(nhanVienService.chiTiet(maNhanVien)));
@@ -81,7 +80,7 @@ public class NhanVienController {
      * UC66 — Khóa tài khoản nhân viên
      */
     @PutMapping("/api/quan-tri/nhan-vien/{maNhanVien}/khoa")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> khoaTaiKhoan(
             @PathVariable String maNhanVien,
             @AuthenticationPrincipal TaiKhoanDetails user) {
@@ -93,7 +92,7 @@ public class NhanVienController {
      * UC67 — Mở khóa tài khoản nhân viên
      */
     @PutMapping("/api/quan-tri/nhan-vien/{maNhanVien}/mo-khoa")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> moKhoaTaiKhoan(@PathVariable String maNhanVien) {
         nhanVienService.moKhoaTaiKhoan(maNhanVien);
         return ResponseEntity.ok(ApiResponse.noContent("Mo khoa tai khoan nhan vien thanh cong"));
@@ -105,7 +104,7 @@ public class NhanVienController {
      * UC33 — Danh sách yêu cầu hủy/hoàn tiền
      */
     @GetMapping("/api/kinh-doanh/yeu-cau-huy")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCau(
             @RequestParam(required = false) String loaiYeuCau,
             @RequestParam(required = false) String trangThai,
@@ -118,7 +117,7 @@ public class NhanVienController {
      * UC33 — SALES duyệt yêu cầu hủy tour
      */
     @PostMapping("/api/kinh-doanh/yeu-cau-huy/{maYeuCau}/duyet")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> duyetHuyTour(
             @PathVariable String maYeuCau,
             @AuthenticationPrincipal TaiKhoanDetails user,
@@ -133,7 +132,7 @@ public class NhanVienController {
      * UC33 — SALES từ chối yêu cầu hủy tour
      */
     @PostMapping("/api/kinh-doanh/yeu-cau-huy/{maYeuCau}/tu-choi")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> tuChoiHuyTour(
             @PathVariable String maYeuCau,
             @AuthenticationPrincipal TaiKhoanDetails user,
@@ -150,7 +149,7 @@ public class NhanVienController {
      * HDV xem danh sách tour được phân công
      */
     @GetMapping("/api/huong-dan-vien/tour-cua-toi")
-    @PreAuthorize("hasRole('HDV')")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<PhanCongResponse>>> tourCuaToi(
             @AuthenticationPrincipal TaiKhoanDetails user) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
@@ -160,7 +159,7 @@ public class NhanVienController {
     // ──────────────── UC39: HDV xem lịch công tác ─────────────────────────
 
     @GetMapping({"/api/huong-dan-vien/lich-cong-tac", "/api/dieu-hanh/lich-cong-tac"})
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'HDV')")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<PhanCongResponse>>> lichCongTac(
             @AuthenticationPrincipal TaiKhoanDetails user) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
@@ -170,7 +169,7 @@ public class NhanVienController {
     // ──────────────── UC24: Tìm kiếm khách hàng ──────────────────────────
 
     @GetMapping("/api/kinh-doanh/khach-hang")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<HoChieuSoResponse>>> timKiemKhachHang(
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String email,
@@ -181,7 +180,7 @@ public class NhanVienController {
     }
 
     @GetMapping("/api/kinh-doanh/khach-hang/{maKhachHang}")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<HoChieuSoResponse>> chiTietKhachHang(
             @PathVariable String maKhachHang) {
         return ResponseEntity.ok(ApiResponse.ok(nhanVienService.chiTietKhachHang(maKhachHang)));
@@ -190,7 +189,7 @@ public class NhanVienController {
     // ──────────────── UC34: SALES xem đơn đặt tour ───────────────────────
 
     @GetMapping("/api/kinh-doanh/don-dat-tour")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDonDatTour(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourThucTe,
@@ -201,7 +200,7 @@ public class NhanVienController {
     // ──────────────── UC41: SALES xử lý yêu cầu hỗ trợ / khiếu nại ─────────
 
     @GetMapping("/api/kinh-doanh/yeu-cau-ho-tro")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCauHoTro(
             @RequestParam(required = false) String loaiYeuCau,
             @RequestParam(required = false) String trangThai,
@@ -211,7 +210,7 @@ public class NhanVienController {
     }
 
     @PutMapping("/api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> xuLyYeuCauHoTro(
             @PathVariable String maYeuCau,
             @Valid @RequestBody XuLyHoTroRequest request,
@@ -223,7 +222,7 @@ public class NhanVienController {
     // ──────────────── UC63: Năng lực HDV ─────────────────────────────────
 
     @GetMapping("/api/huong-dan-vien/nang-luc")
-    @PreAuthorize("hasRole('HDV')")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> nangLucCuaToi(
             @AuthenticationPrincipal TaiKhoanDetails user) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
@@ -233,14 +232,14 @@ public class NhanVienController {
     }
 
     @GetMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc")
-    @PreAuthorize("hasRole('DIEUHANH')")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> nangLucNhanVien(
             @PathVariable String maNhanVien) {
         return ResponseEntity.ok(ApiResponse.ok(nangLucService.layNangLuc(maNhanVien)));
     }
 
     @PutMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc")
-    @PreAuthorize("hasRole('DIEUHANH')")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> capNhatNangLuc(
             @PathVariable String maNhanVien,
             @Valid @RequestBody NangLucRequest request,
@@ -252,7 +251,7 @@ public class NhanVienController {
     // ──────────────── UC69: Gán vai trò ──────────────────────────────────
 
     @PutMapping("/api/quan-tri/nhan-vien/{maNhanVien}/vai-tro")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> ganVaiTro(
             @PathVariable String maNhanVien,
             @Valid @RequestBody GanVaiTroRequest request) {

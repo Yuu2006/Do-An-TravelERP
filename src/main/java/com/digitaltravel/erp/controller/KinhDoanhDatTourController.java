@@ -29,7 +29,7 @@ public class KinhDoanhDatTourController {
     private final DatTourService datTourService;
 
     @GetMapping("/dat-tour")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachTatCa(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourThucTe,
@@ -38,7 +38,7 @@ public class KinhDoanhDatTourController {
     }
 
     @PutMapping("/dat-tour/{maDatTour}/xac-nhan")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> xacNhanDon(
             @PathVariable String maDatTour,
             @AuthenticationPrincipal TaiKhoanDetails user) {
