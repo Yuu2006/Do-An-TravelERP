@@ -13,8 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "HOCHIEUSO")
 @Getter
@@ -29,9 +27,6 @@ public class HoChieuSo {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan", nullable = false, unique = true)
     TaiKhoan taiKhoan;
-
-    @Column(name = "CCCD", length = 20, unique = true)
-    String Cccd;
 
     @Column(name = "SoDienThoai", length = 20)
     String SoDienThoai;

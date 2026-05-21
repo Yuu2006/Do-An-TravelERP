@@ -44,14 +44,15 @@ CREATE TABLE TAIKHOAN (
                           TenDangNhap      VARCHAR2(100) NOT NULL,
                           MatKhau          VARCHAR2(255) NOT NULL,
                           HoTen            VARCHAR2(200) NOT NULL,
-                          SoDinhDanh       VARCHAR2(20),
+                          CCCD             VARCHAR2(20),
+                          NgaySinh         DATE,
                           Email            VARCHAR2(200),
                           SoDienThoai      VARCHAR2(20),
                           VaiTro           VARCHAR2(50)  NOT NULL,
                           TrangThai        VARCHAR2(20)  DEFAULT 'HOAT_DONG' NOT NULL,
                           CONSTRAINT UQ_TK_TenDangNhap      UNIQUE (TenDangNhap),
                           CONSTRAINT UQ_TK_Email            UNIQUE (Email),
-                          CONSTRAINT UQ_TK_SoDinhDanh       UNIQUE (SoDinhDanh),
+                          CONSTRAINT UQ_TK_CCCD             UNIQUE (CCCD),
                           CONSTRAINT FK_TK_VaiTro           FOREIGN KEY (VaiTro) REFERENCES VAITRO(MaVaiTro),
     CONSTRAINT CK_TAIKHOAN_TTHAI      CHECK (TrangThai IN ('HOAT_DONG','KHOA'))
 );
@@ -73,14 +74,12 @@ CREATE TABLE NHATKYHETHONG (
 CREATE TABLE HOCHIEUSO (
                            MaKhachHang      VARCHAR2(50)   PRIMARY KEY,
                            MaTaiKhoan       VARCHAR2(50)   NOT NULL,
-                           CCCD             VARCHAR2(20),
                            SoDienThoai      VARCHAR2(20),
                            GhiChuYTe        CLOB,
                            DiUng            VARCHAR2(1000),
                            HangThanhVien    VARCHAR2(20)   DEFAULT 'THANH_VIEN' NOT NULL,
                            DiemXanh         NUMBER(15)     DEFAULT 0 NOT NULL,
                            CONSTRAINT UQ_HCS_TaiKhoan        UNIQUE (MaTaiKhoan),
-                           CONSTRAINT UQ_HCS_CCCD            UNIQUE (CCCD),
                            CONSTRAINT FK_HCS_TaiKhoan        FOREIGN KEY (MaTaiKhoan)   REFERENCES TAIKHOAN(MaTaiKhoan),
                            CONSTRAINT CK_HCS_HangTV          CHECK (HangThanhVien IN ('THANH_VIEN','DONG','BAC','VANG','KIM_CUONG')),
                            CONSTRAINT CK_HCS_DiemXanh        CHECK (DiemXanh >= 0)

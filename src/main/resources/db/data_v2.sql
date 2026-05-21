@@ -45,7 +45,7 @@ VALUES ('HDX010', 'Mua sản phẩm thủ công địa phương thay hàng nhậ
 -- 4. TOURMAU — Thêm 4 tour mẫu mới
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM005', 'Huế - Phong Nha Di Sản UNESCO 4N3Đ',
+VALUES ('TM005', 'Huế - Phong Nha di sản UNESCO',
         'Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan cố đô Huế và động Phong Nha
@@ -59,7 +59,7 @@ Không bao gồm:
         4, 4500000, 4.6, 74);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM006', 'Cần Thơ - Miền Tây Sông Nước 3N2Đ',
+VALUES ('TM006', 'Cần Thơ - Miền Tây sông nước',
         'Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan chợ nổi, vườn trái cây và rừng tràm
@@ -73,7 +73,7 @@ Không bao gồm:
         3, 2900000, 4.3, 55);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM007', 'Đà Lạt Thành Phố Ngàn Hoa 2N1Đ',
+VALUES ('TM007', 'Đà Lạt - Thành phố ngàn hoa',
         'Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan vườn hoa, thung lũng và thác Datanla
@@ -87,7 +87,7 @@ Không bao gồm:
         2, 1800000, 4.5, 112);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
-VALUES ('TM008', 'Côn Đảo Thiên Đường Biển Đảo 4N3Đ',
+VALUES ('TM008', 'Côn Đảo - Thiên đường biển đảo',
         'Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan vườn quốc gia và di tích lịch sử
@@ -103,7 +103,7 @@ Không bao gồm:
 -- ------------------------------------------------------------
 -- 5. LICHTRINHTOUR — Thêm lịch trình cho TM005, TM006, TM007
 -- ------------------------------------------------------------
--- TM005: Huế - Phong Nha 4N3Đ
+-- TM005: Huế - Phong Nha di sản UNESCO
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LT005_N1', 'TM005', 1,
         'Máy bay / xe Hà Nội → Huế → Đại Nội → Lăng Minh Mạng',
@@ -125,7 +125,7 @@ VALUES ('LT005_N4', 'TM005', 4,
         'Sáng mua đặc sản: mứt gừng, nước mắm Quý Đức, bánh lọc khô. Ra sân bay.',
         'Sáng: Bánh mì que Đồng Hới');
 
--- TM006: Cần Thơ - Miền Tây 3N2Đ
+-- TM006: Cần Thơ - Miền Tây sông nước
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LT006_N1', 'TM006', 1,
         'TP HCM → Cần Thơ → Chợ nổi Cái Răng → Vườn trái cây',
@@ -142,7 +142,7 @@ VALUES ('LT006_N3', 'TM006', 3,
         'Thăm làng nghề dệ chè Ngói truyền thống. Mua đặc sản mang về, lên xe trả lại TP HCM.',
         'Sáng: Cơm tấm sườn bì chả | Trưa: Cơm nhà hàng Cần Thơ');
 
--- TM007: Đà Lạt 2N1Đ
+-- TM007: Đà Lạt - Thành phố ngàn hoa
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LT007_N1', 'TM007', 1,
         'Sân bay Đà Lạt → Vườn hoa → Thung lũng Tình Yêu → Thác Datanla',
@@ -161,46 +161,46 @@ VALUES ('LT007_N2', 'TM007', 2,
 -- ------------------------------------------------------------
 -- 7. TAIKHOAN — Thêm 7 tài khoản mới (2 HDV, 1 Sales, 4 KH)
 -- ------------------------------------------------------------
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV03', 'hdv03',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Trần Minh Tuấn', '079099000009', 'hdv03@digitaltravel.vn', '0900000009',
+        'Trần Minh Tuấn', '079099000009', DATE '1990-05-04', 'hdv03@digitaltravel.vn', '0900000009',
         'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_HDV04', 'hdv04',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Lý Thị Mai Phương', '079099000010', 'hdv04@digitaltravel.vn', '0900000010',
+        'Lý Thị Mai Phương', '079099000010', DATE '1996-08-19', 'hdv04@digitaltravel.vn', '0900000010',
         'HDV', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_SALES02', 'sales02',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Võ Văn Nam', '079099000011', 'sales02@digitaltravel.vn', '0900000011',
+        'Võ Văn Nam', '079099000011', DATE '1991-10-13', 'sales02@digitaltravel.vn', '0900000011',
         'KINHDOANH', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH03', 'khachhang03',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyễn Thị Thu Hà', '079099000012', 'kh03@gmail.com', '0900000012',
+        'Nguyễn Thị Thu Hà', '079099000012', DATE '1997-01-30', 'kh03@gmail.com', '0900000012',
         'KHACHHANG', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH04', 'khachhang04',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Phạm Quốc Bảo', '079099000013', 'kh04@gmail.com', '0900000013',
+        'Phạm Quốc Bảo', '079099000013', DATE '1992-09-09', 'kh04@gmail.com', '0900000013',
         'KHACHHANG', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH05', 'khachhang05',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Lê Thị Bích Ngọc', '079099000014', 'kh05@gmail.com', '0900000014',
+        'Lê Thị Bích Ngọc', '079099000014', DATE '1998-12-17', 'kh05@gmail.com', '0900000014',
         'KHACHHANG', 'HOAT_DONG');
 
-INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, SoDinhDanh, Email, SoDienThoai, VaiTro, TrangThai)
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH06', 'khachhang06',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Trần Văn Hùng', '079099000015', 'kh06@gmail.com', '0900000015',
+        'Trần Văn Hùng', '079099000015', DATE '1989-03-23', 'kh06@gmail.com', '0900000015',
         'KHACHHANG', 'HOAT_DONG');
 
 -- ------------------------------------------------------------

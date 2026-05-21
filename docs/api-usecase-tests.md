@@ -114,6 +114,7 @@ Body mẫu:
   "hoTen": "Khach Test 01",
   "email": "khachtest01@example.com",
   "cccd": "099999999999",
+  "ngaySinh": "1995-01-01",
   "soDienThoai": "0909999999"
 }
 ```
@@ -598,6 +599,7 @@ Body mẫu:
 ```json
 {
   "cccd": "012345678901",
+  "ngaySinh": "1995-01-01",
   "soDienThoai": "0900000004",
   "diUng": "Khong",
   "ghiChuYTe": "Can tu van lich trinh nhe"

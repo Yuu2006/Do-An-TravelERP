@@ -3,11 +3,15 @@ package com.digitaltravel.erp.dto.requests;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 public class CapNhatHoChieuSoRequest {
 
     @Size(max = 20, message = "CCCD khong duoc vuot qua 20 ky tu")
     String cccd;
+
+    LocalDate ngaySinh;
 
     @Size(max = 100, message = "Ten dang nhap khong duoc vuot qua 100 ky tu")
     String tenDangNhap;

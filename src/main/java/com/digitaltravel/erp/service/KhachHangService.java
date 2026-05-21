@@ -13,6 +13,7 @@ import com.digitaltravel.erp.entity.LichSuTour;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.LichSuTourRepository;
+import com.digitaltravel.erp.repository.TaiKhoanRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,7 @@ public class KhachHangService {
 
     private final HoChieuSoRepository hoChieuSoRepository;
     private final LichSuTourRepository lichSuTourRepository;
+    private final TaiKhoanRepository taiKhoanRepository;
 
     // ── Xem hồ sơ của bản thân ──────────────────────────────────────────────
     public HoChieuSoResponse layHoSo(String maTaiKhoan) {
@@ -37,7 +39,14 @@ public class KhachHangService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
 
         if (request.getCccd() != null) {
-            hcs.setCccd(request.getCccd());
+            if (!request.getCccd().isBlank()
+                    && taiKhoanRepository.existsByCccdAndMaTaiKhoanNot(request.getCccd(), hcs.getTaiKhoan().getMaTaiKhoan())) {
+                throw AppException.badRequest("CCCD da duoc su dung");
+            }
+            hcs.getTaiKhoan().setCccd(request.getCccd());
+        }
+        if (request.getNgaySinh() != null) {
+            hcs.getTaiKhoan().setNgaySinh(request.getNgaySinh());
         }
         if (request.getSoDienThoai() != null) {
             hcs.setSoDienThoai(request.getSoDienThoai());
@@ -75,7 +84,8 @@ public class KhachHangService {
                 .tenDangNhap(hcs.getTaiKhoan().getTenDangNhap())
                 .hoTen(hcs.getTaiKhoan().getHoTen())
                 .email(hcs.getTaiKhoan().getEmail())
-                .cccd(hcs.getCccd())
+                .cccd(hcs.getTaiKhoan().getCccd())
+                .ngaySinh(hcs.getTaiKhoan().getNgaySinh())
                 .soDienThoai(hcs.getSoDienThoai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())

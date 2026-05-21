@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "TAIKHOAN")
 @Getter
@@ -35,8 +37,11 @@ public class TaiKhoan {
     @Column(name = "HoTen", nullable = false, length = 200)
     String HoTen;
 
-    @Column(name = "SoDinhDanh", length = 20, unique = true)
-    String SoDinhDanh;
+    @Column(name = "CCCD", length = 20, unique = true)
+    String Cccd;
+
+    @Column(name = "NgaySinh")
+    LocalDate NgaySinh;
 
     @Column(name = "Email", length = 200, unique = true)
     String Email;
