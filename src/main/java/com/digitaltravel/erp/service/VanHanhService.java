@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.digitaltravel.erp.config.VaiTroConst;
 import com.digitaltravel.erp.dto.requests.BaoCaoSuCoRequest;
 import com.digitaltravel.erp.dto.requests.DiemDanhRequest;
 import com.digitaltravel.erp.dto.requests.GhiNhanHanhDongRequest;
@@ -34,12 +35,14 @@ import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiPhiThucTeRepository;
 import com.digitaltravel.erp.repository.DiemDanhRepository;
+import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.DsNguoiDongHanhRepository;
 import com.digitaltravel.erp.repository.HanhDongRepository;
 import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.NhatKySuCoRepository;
+import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -57,9 +60,12 @@ public class VanHanhService {
     private final HanhDongXanhRepository hanhDongXanhRepository;
     private final NhatKySuCoRepository nhatKySuCoRepository;
     private final ChiPhiThucTeRepository chiPhiThucTeRepository;
+    private final PhanCongTourRepository phanCongTourRepository;
+    private final DonDatTourRepository donDatTourRepository;
 
     // ── UC42: Xem danh sách đoàn ─────────────────────────────────────────
-    public List<DiemDanhResponse> danhSachDoan(String maTour) {
+    public List<DiemDanhResponse> danhSachDoan(String maTour, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         return diemDanhRepository.findByMaTour(maTour).stream()
                 .map(this::toDiemDanhResponse)
                 .toList();
@@ -67,7 +73,8 @@ public class VanHanhService {
 
     // ── UC43: Điểm danh khách ─────────────────────────────────────────────
     @Transactional
-    public DiemDanhResponse diemDanh(String maTour, DiemDanhRequest req, String maTaiKhoan) {
+    public DiemDanhResponse diemDanh(String maTour, DiemDanhRequest req, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = getActiveTour(maTour);
         HoChieuSo kh = null;
         DsNguoiDongHanh nguoiDongHanh = null;
@@ -81,6 +88,7 @@ public class VanHanhService {
         if (coKhachHang) {
             kh = hoChieuSoRepository.findById(req.getMaKhachHang())
                     .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
+            kiemTraKhachThuocTourDaXacNhan(maTour, kh.getMaKhachHang());
         } else {
             nguoiDongHanh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
                     .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
@@ -107,10 +115,12 @@ public class VanHanhService {
 
     // ── UC44: Ghi nhận hành động xanh ────────────────────────────────────
     @Transactional
-    public HanhDongResponse ghiNhanHanhDong(String maTour, GhiNhanHanhDongRequest req, String maTaiKhoan) {
+    public HanhDongResponse ghiNhanHanhDong(String maTour, GhiNhanHanhDongRequest req, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = getActiveTour(maTour);
         HoChieuSo kh = hoChieuSoRepository.findById(req.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
+        kiemTraKhachThuocTourDaXacNhan(maTour, kh.getMaKhachHang());
         HanhDongXanh hdx = hanhDongXanhRepository.findById(req.getMaHanhDongXanh())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
         if (hdx.getTourThucTe() != null && !maTour.equals(hdx.getTourThucTe().getMaTourThucTe())) {
@@ -138,7 +148,8 @@ public class VanHanhService {
 
     // ── UC45: Báo cáo sự cố ──────────────────────────────────────────────
     @Transactional
-    public NhatKySuCoResponse baoCaoSuCo(String maTour, BaoCaoSuCoRequest req, String maTaiKhoan) {
+    public NhatKySuCoResponse baoCaoSuCo(String maTour, BaoCaoSuCoRequest req, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = kiemTraHopLeDuLieuSuCo(maTour, req);
         NhanVien hdv = getHdv(maTaiKhoan);
 
@@ -180,9 +191,14 @@ public class VanHanhService {
 
     // Cập nhật mô tả / giải pháp sự cố
     @Transactional
-    public NhatKySuCoResponse capNhatSuCo(String maSuCo, BaoCaoSuCoRequest req) {
+    public NhatKySuCoResponse capNhatSuCo(
+            String maSuCo,
+            BaoCaoSuCoRequest req,
+            String maTaiKhoan,
+            String maVaiTro) {
         NhatKySuCo sc = nhatKySuCoRepository.findById(maSuCo)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay su co: " + maSuCo));
+        kiemTraQuyenVanHanhTour(sc.getTourThucTe().getMaTourThucTe(), maTaiKhoan, maVaiTro);
         if (req.getGiaiPhap() != null) sc.setGiaiPhap(req.getGiaiPhap());
         if (req.getMoTa() != null) sc.setMoTa(req.getMoTa());
         if (req.getMucDo() != null) sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
@@ -191,14 +207,20 @@ public class VanHanhService {
         return toSuCoResponse(sc);
     }
 
-    public List<NhatKySuCoResponse> danhSachSuCo(String maTour, String mucDo) {
+    public List<NhatKySuCoResponse> danhSachSuCo(
+            String maTour,
+            String mucDo,
+            String maTaiKhoan,
+            String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         return nhatKySuCoRepository.findByMaTour(maTour, chuanHoaMucDoSuCoFilter(mucDo)).stream()
                 .map(this::toSuCoResponse).toList();
     }
 
     // ── UC46: Khai báo chi phí phát sinh ─────────────────────────────────
     @Transactional
-    public ChiPhiThucTeResponse khaiChiPhi(String maTour, KhaiChiPhiRequest req, String maTaiKhoan) {
+    public ChiPhiThucTeResponse khaiChiPhi(String maTour, KhaiChiPhiRequest req, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = tourThucTeRepository.findById(maTour)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
         NhanVien hdv = getHdv(maTaiKhoan);
@@ -217,7 +239,8 @@ public class VanHanhService {
         return toChiPhiResponse(cp);
     }
 
-    public List<ChiPhiThucTeResponse> chiPhiCuaTour(String maTour) {
+    public List<ChiPhiThucTeResponse> chiPhiCuaTour(String maTour, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         return chiPhiThucTeRepository.findByMaTour(maTour).stream()
                 .map(this::toChiPhiResponse).toList();
     }
@@ -359,6 +382,23 @@ public class VanHanhService {
     private NhanVien getHdv(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+    }
+
+    private void kiemTraQuyenVanHanhTour(String maTour, String maTaiKhoan, String maVaiTro) {
+        if (VaiTroConst.ADMIN.equals(maVaiTro) || VaiTroConst.DIEUHANH.equals(maVaiTro)) {
+            return;
+        }
+        if (VaiTroConst.HDV.equals(maVaiTro)
+                && phanCongTourRepository.existsByMaTourAndMaTaiKhoan(maTour, maTaiKhoan)) {
+            return;
+        }
+        throw AppException.forbidden("Ban khong co quyen van hanh tour nay");
+    }
+
+    private void kiemTraKhachThuocTourDaXacNhan(String maTour, String maKhachHang) {
+        if (!donDatTourRepository.existsConfirmedKhachHangInTour(maTour, maKhachHang)) {
+            throw AppException.badRequest("Khach hang khong thuoc tour da xac nhan nay");
+        }
     }
 
     // Nâng hạng thành viên tự động theo ngưỡng điểm xanh

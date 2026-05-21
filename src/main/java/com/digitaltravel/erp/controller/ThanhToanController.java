@@ -31,7 +31,7 @@ public class ThanhToanController {
      * Truyền mock=true để bypass MoMo trong dev/test.
      */
     @PostMapping("/khoi-tao")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<ThanhToanResponse>> khoiTaoThanhToan(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody KhoiTaoThanhToanRequest request) {
@@ -44,7 +44,7 @@ public class ThanhToanController {
      * Kiểm tra kết quả giao dịch chủ động (polling).
      */
     @GetMapping("/{maDatTour}/ket-qua")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<ThanhToanResponse>> ketQua(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PathVariable String maDatTour) {

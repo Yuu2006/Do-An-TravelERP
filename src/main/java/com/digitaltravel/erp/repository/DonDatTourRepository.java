@@ -83,4 +83,15 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
               AND d.TrangThai NOT IN ('DA_HUY', 'HET_HAN_GIU_CHO', 'THANH_TOAN_THAT_BAI')
             """)
     long countBlockingBookingsByTourThucTe(@Param("maTourThucTe") String maTourThucTe);
+
+    @Query("""
+            SELECT COUNT(d) > 0 FROM DonDatTour d
+            WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.khachHang.MaKhachHang = :maKhachHang
+              AND d.trangThai = 'DA_XAC_NHAN'
+            """)
+    boolean existsConfirmedKhachHangInTour(
+            @Param("maTourThucTe") String maTourThucTe,
+            @Param("maKhachHang") String maKhachHang
+    );
 }

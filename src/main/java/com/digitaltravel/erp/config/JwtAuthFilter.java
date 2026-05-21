@@ -1,12 +1,8 @@
 package com.digitaltravel.erp.config;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -42,11 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         String username;
-        String role;
 
         try {
             username = jwtUtil.extractUsername(token);
-            role = jwtUtil.extractRole(token);
         } catch (Exception e) {
             filterChain.doFilter(request, response);
             return;
@@ -55,23 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = taiKhoanDetailsService.loadUserByUsername(username);
             if (jwtUtil.isTokenValid(token, userDetails)) {
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                if (role != null && !role.isEmpty()) {
-                    authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                    if ("ADMIN".equals(role)) {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_SANPHAM"));
-                        authorities.add(new SimpleGrantedAuthority("ROLE_KINHDOANH"));
-                        authorities.add(new SimpleGrantedAuthority("ROLE_DIEUHANH"));
-                        authorities.add(new SimpleGrantedAuthority("ROLE_KETOAN"));
-                    }
-                } else {
-                    authorities.addAll(userDetails.getAuthorities());
-                }
-                
-                System.out.println("Assigned Authorities: " + authorities);
-
                 UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }

@@ -80,7 +80,6 @@ public class JwtUtil {
             normalizedRole = normalizedRole.substring(5);
         }
 
-        System.out.println("Normalized Role from JWT: " + normalizedRole);
         return normalizedRole;
     }
 

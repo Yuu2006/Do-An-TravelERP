@@ -40,7 +40,7 @@ public class TaiKhoanDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !"BI_KHOA".equals(taiKhoan.getTrangThai());
+        return !"BI_KHOA".equals(taiKhoan.getTrangThai()) && !"KHOA".equals(taiKhoan.getTrangThai());
     }
 
     @Override

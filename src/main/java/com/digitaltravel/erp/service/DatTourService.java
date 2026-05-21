@@ -1,6 +1,7 @@
 package com.digitaltravel.erp.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.digitaltravel.erp.dto.requests.DatTourRequest;
 import com.digitaltravel.erp.dto.requests.DichVuThemDatRequest;
 import com.digitaltravel.erp.dto.requests.NguoiDongHanhRequest;
+import com.digitaltravel.erp.dto.requests.XacNhanThanhToanOfflineRequest;
 import com.digitaltravel.erp.dto.responses.ChiTietDatTourResponse;
 import com.digitaltravel.erp.dto.responses.ChiTietDichVuResponse;
 import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
@@ -22,8 +24,10 @@ import com.digitaltravel.erp.entity.ChiTietDichVu;
 import com.digitaltravel.erp.entity.DichVuThem;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.DsNguoiDongHanh;
+import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.entity.HanhDongXanh;
 import com.digitaltravel.erp.entity.HoChieuSo;
+import com.digitaltravel.erp.entity.LichSuTour;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
@@ -31,8 +35,10 @@ import com.digitaltravel.erp.repository.ChiTietDichVuRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.DsNguoiDongHanhRepository;
+import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
+import com.digitaltravel.erp.repository.LichSuTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +55,8 @@ public class DatTourService {
     private final DichVuThemRepository dichVuThemRepository;
     private final DsNguoiDongHanhRepository dsNguoiDongHanhRepository;
     private final HanhDongXanhRepository hanhDongXanhRepository;
+    private final GiaoDichRepository giaoDichRepository;
+    private final LichSuTourRepository lichSuTourRepository;
 
     // ── Đặt tour ────────────────────────────────────────────────────────────
     @Transactional
@@ -161,21 +169,96 @@ public class DatTourService {
 
     // ── Nhân viên Sales: xác nhận đơn ──────────────────────────────────────
     @Transactional
-    public DonDatTourResponse xacNhanDon(String maDatTour, String nguoiXacNhan) {
-        DonDatTour don = donDatTourRepository.findById(maDatTour)
+    public DonDatTourResponse xacNhanDon(
+            String maDatTour,
+            String nguoiXacNhan,
+            XacNhanThanhToanOfflineRequest request) {
+        DonDatTour don = donDatTourRepository.findByIdWithDetails(maDatTour)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
         if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
             throw AppException.badRequest(
                     "Chi co the xac nhan don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + don.getTrangThai());
         }
+        if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
+            throw AppException.badRequest("Don dat tour da het han giu cho. Vui long dat lai.");
+        }
+        if (giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent()) {
+            throw AppException.badRequest("Don nay da co giao dich thanh cong truoc do.");
+        }
+
+        TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te"));
+        List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
+        int soKhach = dsChiTiet.size();
+        if (tour.getChoConLai() < soKhach) {
+            throw AppException.badRequest("Tour khong con du cho cho don dat nay");
+        }
+
+        GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
+        giaoDichRepository.save(giaoDich);
 
         don.setTrangThai("DA_XAC_NHAN");
         donDatTourRepository.save(don);
 
-        List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
+        tour.setChoConLai(tour.getChoConLai() - soKhach);
+        tourThucTeRepository.save(tour);
+
+        taoLichSuTourNeuChuaCo(don, tour);
+
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         return toResponse(don, dsChiTiet, dsDichVu);
+    }
+
+    public DonDatTourResponse xacNhanDon(String maDatTour, String nguoiXacNhan) {
+        return xacNhanDon(maDatTour, nguoiXacNhan, null);
+    }
+
+    private GiaoDich taoGiaoDichOffline(
+            DonDatTour don,
+            String nguoiXacNhan,
+            XacNhanThanhToanOfflineRequest request) {
+        String maGdNganHang = request != null ? request.getMaGiaoDichNganHang() : null;
+        if (maGdNganHang != null && !maGdNganHang.isBlank()
+                && giaoDichRepository.findByMaGDNH(maGdNganHang).isPresent()) {
+            throw AppException.badRequest("Ma giao dich ngan hang da ton tai: " + maGdNganHang);
+        }
+
+        String phuongThuc = request != null ? request.getPhuongThuc() : null;
+        if (phuongThuc == null || phuongThuc.isBlank()) {
+            phuongThuc = "CHUYEN_KHOAN";
+        }
+        if (maGdNganHang == null || maGdNganHang.isBlank()) {
+            maGdNganHang = "OFFLINE_" + UUID.randomUUID().toString().substring(0, 12).toUpperCase();
+        }
+
+        GiaoDich giaoDich = new GiaoDich();
+        giaoDich.setMaGiaoDich("GD_OFFLINE_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        giaoDich.setDonDatTour(don);
+        giaoDich.setLoaiGiaoDich("THANH_TOAN");
+        giaoDich.setPhuongThuc(phuongThuc);
+        giaoDich.setSoTien(don.getTongTien());
+        giaoDich.setMaGDNH(maGdNganHang);
+        giaoDich.setTrangThai("THANH_CONG");
+        giaoDich.setNgayThanhToan(LocalDateTime.now());
+        return giaoDich;
+    }
+
+    private void taoLichSuTourNeuChuaCo(DonDatTour don, TourThucTe tour) {
+        HoChieuSo kh = don.getKhachHang();
+        boolean daCoLich = lichSuTourRepository
+                .findByMaKhachHangAndMaTourThucTe(kh.getMaKhachHang(), tour.getMaTourThucTe())
+                .isPresent();
+        if (daCoLich) {
+            return;
+        }
+
+        LichSuTour lichSu = new LichSuTour();
+        lichSu.setMaLichSuTour("LST_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        lichSu.setKhachHang(kh);
+        lichSu.setTourThucTe(tour);
+        lichSu.setNgayThamGia(tour.getNgayKhoiHanh() != null ? tour.getNgayKhoiHanh() : LocalDate.now());
+        lichSuTourRepository.save(lichSu);
     }
 
     private TourThucTe kiemTraDieuKienDatTour(String maTourThucTe, int soKhach) {
