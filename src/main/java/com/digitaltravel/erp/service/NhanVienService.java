@@ -118,6 +118,12 @@ public class NhanVienService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
     }
 
+    // ── Lấy Hồ sơ cá nhân (Dành cho HDV tự xem) ──────────────────────────────
+    public NhanVienResponse layHoSoCaNhan(String maTaiKhoan) {
+        NhanVien nv = findNhanVienByTaiKhoan(maTaiKhoan);
+        return toResponse(nv);
+    }
+
     // ── Mapper ────────────────────────────────────────────────────────────
     private NhanVienResponse toResponse(NhanVien nv) {
         TaiKhoan tk = nv.getTaiKhoan();

@@ -48,6 +48,7 @@ public class TourThucTeService {
     }
 
     // ── UC14: Chi tiết tour thực tế ─────────────────────────────────────────
+    @Transactional(readOnly = true)
     public TourThucTeResponse chiTiet(String id) {
         TourThucTe ttt = tourThucTeRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + id));
@@ -55,6 +56,7 @@ public class TourThucTeService {
     }
 
     // ── UC26: Chi tiết tour công khai kèm lịch trình ────────────────────────
+    @Transactional(readOnly = true)
     public TourCongKhaiResponse chiTietCongKhai(String id) {
         TourThucTe ttt = tourThucTeRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + id));
