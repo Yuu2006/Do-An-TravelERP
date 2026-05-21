@@ -114,6 +114,7 @@ public class PhanCongTourService {
     }
 
     // ── HDV xem tour của mình ─────────────────────────────────────────────
+    @Transactional(readOnly = true)
     public List<PhanCongResponse> tourCuaToi(String maTaiKhoan) {
         NhanVien hdv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
@@ -133,6 +134,8 @@ public class PhanCongTourService {
                 .maNhanVien(nv.getMaNhanVien())
                 .tenNhanVien(nv.getTaiKhoan().getHoTen())
                 .ngayPhanCong(pc.getNgayPhanCong())
+                .ngayKhoiHanh(tt.getNgayKhoiHanh())
+                .trangThaiTour(tt.getTrangThai())
                 .build();
     }
 

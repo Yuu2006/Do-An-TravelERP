@@ -35,6 +35,7 @@ import com.digitaltravel.erp.service.NangLucService;
 import com.digitaltravel.erp.service.NhanVienService;
 import com.digitaltravel.erp.service.PhanCongTourService;
 import com.digitaltravel.erp.service.YeuCauHoTroService;
+import com.digitaltravel.erp.service.HanhDongXanhService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class NhanVienController {
     private final DatTourService datTourService;
     private final YeuCauHoTroService yeuCauHoTroService;
     private final NangLucService nangLucService;
+    private final HanhDongXanhService hanhDongXanhService;
 
     // ──────────────── QUẢN LÝ NHÂN VIÊN (ADMIN/MANAGER) ──────────────────
 
@@ -156,6 +158,15 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.tourCuaToi(maTaiKhoan)));
     }
 
+    /**
+     * HDV xem danh sách hành động xanh (danh mục)
+     */
+    @GetMapping("/api/huong-dan-vien/hanh-dong-xanh")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<com.digitaltravel.erp.dto.responses.HanhDongXanhResponse>>> danhSachHanhDongXanh() {
+        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(null)));
+    }
+
     // ──────────────── UC39: HDV xem lịch công tác ─────────────────────────
 
     @GetMapping({"/api/huong-dan-vien/lich-cong-tac", "/api/dieu-hanh/lich-cong-tac"})
@@ -219,7 +230,15 @@ public class NhanVienController {
                 yeuCauHoTroService.xuLy(maYeuCau, request, user.getTaiKhoan().getMaTaiKhoan())));
     }
 
-    // ──────────────── UC63: Năng lực HDV ─────────────────────────────────
+    // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────
+
+    @GetMapping("/api/huong-dan-vien/ho-so")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<NhanVienResponse>> hoSoCaNhan(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok(nhanVienService.layHoSoCaNhan(maTaiKhoan)));
+    }
 
     @GetMapping("/api/huong-dan-vien/nang-luc")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")

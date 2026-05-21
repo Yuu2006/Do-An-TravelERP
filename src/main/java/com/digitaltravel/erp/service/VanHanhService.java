@@ -418,6 +418,10 @@ public class VanHanhService {
                 .diaDiem(dd.getDiaDiem())
                 .trangThai(dd.getTrangThai())
                 .thoiGian(dd.getThoiGian())
+                .soDienThoai(kh != null ? kh.getSoDienThoai() : (nguoiDongHanh != null ? nguoiDongHanh.getSoDienThoai() : null))
+                .hangThanhVien(kh != null ? kh.getHangThanhVien() : "THANH_VIEN")
+                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null))
+                .diemXanh(kh != null ? kh.getDiemXanh() : 0L)
                 .build();
     }
 
