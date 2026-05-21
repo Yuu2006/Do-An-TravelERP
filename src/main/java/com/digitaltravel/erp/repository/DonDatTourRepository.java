@@ -30,7 +30,7 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             SELECT d FROM DonDatTour d
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
-            WHERE d.MaDatTour = :maDatTour
+            WHERE d.maDatTour = :maDatTour
               AND d.khachHang.MaKhachHang = :maKhachHang
             """)
     Optional<DonDatTour> findByIdAndMaKhachHang(
@@ -44,7 +44,7 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
             JOIN FETCH d.khachHang
-            WHERE (:trangThai IS NULL OR d.TrangThai = :trangThai)
+            WHERE (:trangThai IS NULL OR d.trangThai = :trangThai)
               AND (:maTourThucTe IS NULL OR d.tourThucTe.MaTourThucTe = :maTourThucTe)
             """)
     Page<DonDatTour> timKiem(
@@ -54,7 +54,7 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
     );
 
     // Dùng cho Scheduler: lấy đơn CHO_XAC_NHAN đã hết hạn giữ chỗ
-    @Query("SELECT d FROM DonDatTour d WHERE d.TrangThai = :trangThai AND d.ThoiGianHetHan < :thoiGian")
+    @Query("SELECT d FROM DonDatTour d WHERE d.trangThai = :trangThai AND d.thoiGianHetHan < :thoiGian")
     List<DonDatTour> findAllByTrangThaiAndThoiGianHetHanBefore(
             @Param("trangThai") String trangThai,
             @Param("thoiGian") LocalDateTime thoiGian
@@ -66,12 +66,12 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
             JOIN FETCH d.khachHang
-            WHERE d.MaDatTour = :maDatTour
+            WHERE d.maDatTour = :maDatTour
             """)
     Optional<DonDatTour> findByIdWithDetails(@Param("maDatTour") String maDatTour);
 
     // Dem so don dat tour trong khoang thoi gian theo ngay dat (bao cao)
-    @Query("SELECT COUNT(d) FROM DonDatTour d WHERE d.NgayDat BETWEEN :tuNgay AND :denNgay")
+    @Query("SELECT COUNT(d) FROM DonDatTour d WHERE d.ngayDat BETWEEN :tuNgay AND :denNgay")
     long demDonDatTour(
             @Param("tuNgay") LocalDateTime tuNgay,
             @Param("denNgay") LocalDateTime denNgay
@@ -80,7 +80,7 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
     @Query("""
             SELECT COUNT(d) FROM DonDatTour d
             WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
-              AND d.TrangThai NOT IN ('DA_HUY', 'HET_HAN_GIU_CHO', 'THANH_TOAN_THAT_BAI')
+              AND d.trangThai NOT IN ('DA_HUY', 'HET_HAN_GIU_CHO', 'THANH_TOAN_THAT_BAI')
             """)
     long countBlockingBookingsByTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 }

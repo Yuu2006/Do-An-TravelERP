@@ -14,14 +14,14 @@ import com.digitaltravel.erp.entity.GiaoDich;
 public interface GiaoDichRepository extends JpaRepository<GiaoDich, String> {
 
     // Tìm giao dịch thanh toán đang chờ/đã hoàn thành của 1 đơn
-    @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.MaDatTour = :maDatTour AND g.loaiGiaoDich = 'THANH_TOAN' ORDER BY g.ngayThanhToan DESC")
+    @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.maDatTour = :maDatTour AND g.loaiGiaoDich = 'THANH_TOAN' ORDER BY g.ngayThanhToan DESC")
     List<GiaoDich> findByMaDatTour(@Param("maDatTour") String maDatTour);
 
     // Kiểm tra idempotency: transId đã xử lý chưa
     Optional<GiaoDich> findByMaGDNH(String maGDNH);
 
     // Lấy giao dịch thanh toán thành công của 1 đơn
-    @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.MaDatTour = :maDatTour AND g.trangThai = 'THANH_CONG'")
+    @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.maDatTour = :maDatTour AND g.trangThai = 'THANH_CONG'")
     Optional<GiaoDich> findThanhCongByMaDatTour(@Param("maDatTour") String maDatTour);
 
     // UC50: Lấy giao dịch chờ hoàn tiền

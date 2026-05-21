@@ -36,7 +36,7 @@ public class QuanTriController {
             @RequestParam(required = false) String maDoiTuong,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime tuThoiGian,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime denThoiGian,
-            @PageableDefault(size = 20, sort = "ThoiGian", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 20, sort = "thoiGian", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
                 nhatKyHeThongService.timKiem(maTaiKhoan, hanhDong, doiTuong, maDoiTuong, tuThoiGian,
                         denThoiGian, pageable)));

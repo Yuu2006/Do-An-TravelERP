@@ -41,6 +41,7 @@ public class NhatKyHeThongService {
         nhatKyHeThongRepository.save(log);
     }
 
+    @Transactional(readOnly = true)
     public Page<NhatKyHeThongResponse> timKiem(
             String maTaiKhoan,
             String hanhDong,

@@ -15,7 +15,7 @@ public interface ChiTietDichVuRepository extends JpaRepository<ChiTietDichVu, St
     @Query("""
             SELECT cv FROM ChiTietDichVu cv
             JOIN FETCH cv.dichVuThem
-            WHERE cv.donDatTour.MaDatTour = :maDatTour
+            WHERE cv.donDatTour.maDatTour = :maDatTour
             """)
     List<ChiTietDichVu> findByMaDatTour(@Param("maDatTour") String maDatTour);
 }

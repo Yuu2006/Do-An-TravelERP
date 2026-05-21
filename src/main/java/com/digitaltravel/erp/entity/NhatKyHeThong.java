@@ -24,23 +24,23 @@ import lombok.experimental.FieldDefaults;
 public class NhatKyHeThong {
     @Id
     @Column(name = "MaNhatKyHeThong", nullable = false, length = 50)
-    String MaNhatKyHeThong;
+    String maNhatKyHeThong;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan")
     TaiKhoan taiKhoan;
 
     @Column(name = "HanhDong", nullable = false, length = 100)
-    String HanhDong;
+    String hanhDong;
 
     @Column(name = "DoiTuong", length = 100)
-    String DoiTuong;
+    String doiTuong;
 
     @Column(name = "MaDoiTuong", length = 50)
-    String MaDoiTuong;
+    String maDoiTuong;
 
     @CreationTimestamp
     @Column(name = "ThoiGian", nullable = false, updatable = false)
-    LocalDateTime ThoiGian;
+    LocalDateTime thoiGian;
 
 }

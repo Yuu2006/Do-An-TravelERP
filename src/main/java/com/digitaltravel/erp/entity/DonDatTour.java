@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 public class DonDatTour {
     @Id
     @Column(name = "MaDatTour", nullable = false, length = 50)
-    String MaDatTour;
+    String maDatTour;
 
     // FK -> TOURTHUCTE(MaTourThucTe)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,19 +36,19 @@ public class DonDatTour {
     HoChieuSo khachHang;
 
     @Column(name = "NgayDat", nullable = false)
-    LocalDateTime NgayDat;
+    LocalDateTime ngayDat;
 
     // NUMBER(18,2): tong tien da tinh bao gom dich vu, phong, uu dai
     @Column(name = "TongTien", nullable = false, precision = 18, scale = 2)
-    BigDecimal TongTien;
+    BigDecimal tongTien;
 
     // Gia tri hop le: CHO_XAC_NHAN | DA_XAC_NHAN | CHO_HUY | DA_HUY | TU_CHOI_HOAN_TIEN | HET_HAN_GIU_CHO | THANH_TOAN_THAT_BAI
     @Column(name = "TrangThai", nullable = false, length = 30)
-    String TrangThai;
+    String trangThai;
 
     // Thoi gian het han giu cho (null = khong gioi han)
     @Column(name = "ThoiGianHetHan")
-    LocalDateTime ThoiGianHetHan;
+    LocalDateTime thoiGianHetHan;
 
     @Column(name = "GhiChu", length = 2000)
     String GhiChu;

@@ -13,13 +13,13 @@ import com.digitaltravel.erp.entity.DatTourUuDaiId;
 @Repository
 public interface DatTourUuDaiRepository extends JpaRepository<DatTourUuDai, DatTourUuDaiId> {
 
-    @Query("SELECT d FROM DatTourUuDai d JOIN FETCH d.voucher WHERE d.donDatTour.MaDatTour = :maDatTour")
+    @Query("SELECT d FROM DatTourUuDai d JOIN FETCH d.voucher WHERE d.donDatTour.maDatTour = :maDatTour")
     List<DatTourUuDai> findByMaDatTour(@Param("maDatTour") String maDatTour);
 
     @Query("""
             SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END
             FROM DatTourUuDai d
-            WHERE d.donDatTour.MaDatTour = :maDatTour
+            WHERE d.donDatTour.maDatTour = :maDatTour
               AND d.voucher.MaVoucher = :maVoucher
             """)
     boolean existsByDatTourAndVoucher(
