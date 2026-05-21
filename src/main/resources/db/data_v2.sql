@@ -429,18 +429,21 @@ VALUES ('HD004', 'TTT098', 'KH003', 'HDX005', 'NV_HDV02',
 -- ------------------------------------------------------------
 -- 23. NHATKYSUCO — Nhật ký sự cố trong tour
 -- ------------------------------------------------------------
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC001', 'TTT099', 'NV_HDV01',
         'Một khách bị say sóng nhẹ khi đi thuyền qua vùng nước lớn.',
-        'Đã cấp thuốc say sóng dự phòng cho khách. Khách hồi phục sau 30 phút nghỉ ngơi.');
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+        'Đã cấp thuốc say sóng dự phòng cho khách. Khách hồi phục sau 30 phút nghỉ ngơi.',
+        'Y_TE');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC002', 'TTT098', 'NV_HDV02',
         'Xe du lịch bị thủng bánh giữa đường trên cự Sân Bay Đà Nẵng.',
-        'Liên hệ hãng xe cấp xe thay thế. Hành trình bị trễ 45 phút.');
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+        'Liên hệ hãng xe cấp xe thay thế. Hành trình bị trễ 45 phút.',
+        'PHUONG_TIEN');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC003', 'TTT008', 'NV_HDV03',
         'Nhà hàng đổi bữa ăn tối từ lẩu nướng sang cơm bình thường do có sự cố bếp.',
-        'Đã bồi thường phần chênh lệch chi phí, xin lỗi khách, ghi nhận phản ánh với đối tác.');
+        'Đã bồi thường phần chênh lệch chi phí, xin lỗi khách, ghi nhận phản ánh với đối tác.',
+        'AN_UONG');
 
 -- ------------------------------------------------------------
 -- 24. CHIPHITHUCTE — Chi phí thực tế HDV khai báo

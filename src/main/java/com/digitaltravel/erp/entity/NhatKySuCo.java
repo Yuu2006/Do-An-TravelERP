@@ -49,6 +49,10 @@ public class NhatKySuCo {
     @Column(name = "MucDo", nullable = false, length = 20)
     String MucDo;
 
+    // Gia tri hop le: Y_TE | THOI_TIET | PHUONG_TIEN | AN_UONG | KHAC
+    @Column(name = "LoaiSuCo", nullable = false, length = 30)
+    String LoaiSuCo;
+
     @Column(name = "ThoiGianBaoCao", nullable = false)
     LocalDateTime ThoiGianBaoCao;
 
