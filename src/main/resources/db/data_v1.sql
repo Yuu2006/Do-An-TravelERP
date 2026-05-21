@@ -47,22 +47,58 @@ VALUES ('HDX005', 'Mượn xe đạp thay xe máy',                 100);
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM001', 'Khám phá Hạ Long - Cát Bà 3N2Đ',
-        'Vịnh Hạ Long kỳ vĩ kết hợp đảo Cát Bà hùng vĩ. Trải nghiệm ngủ trên tàu đêm, chèo kayak qua hang động, khám phá rừng quốc gia Cát Bà.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan Vịnh Hạ Long và Cát Bà
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         3, 3500000, 4.5, 128);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM002', 'Đà Nẵng - Hội An - Bà Nà Hills 4N3Đ',
-        'Hành trình miền Trung: bãi biển Mỹ Khê, phố cổ Hội An lung linh ánh đèn, Bà Nà Hills với Cầu Vàng biểu tượng.',
+        'Bao gồm:
+- Xe đưa đón sân bay và điểm tham quan
+- Vé tham quan Hội An và Bà Nà Hills
+- Lưu trú khách sạn theo chương trình
+- Các bữa ăn theo lịch trình
+Không bao gồm:
+- Chi phí cá nhân
+- Vé/dịch vụ phát sinh ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         4, 4200000, 4.7, 215);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM003', 'Phú Quốc Nghỉ Dưỡng Biển Đảo 5N4Đ',
-        'Nghỉ dưỡng biển đảo Phú Quốc: bãi Trường, bãi Sao, khám phá nhà tù Phú Quốc, hòn đảo An Thới, làng chài trên biển.',
+        'Bao gồm:
+- Xe đưa đón sân bay Phú Quốc
+- Lưu trú resort/khách sạn theo chương trình
+- Vé tham quan các điểm trong lịch trình
+- Các bữa ăn theo chương trình
+Không bao gồm:
+- Chi phí cá nhân
+- Dịch vụ vui chơi, spa ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         5, 5800000, 4.8, 302);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM004', 'Sapa - Bắc Hà Mây Mờ Trekking 3N2Đ',
-        'Trekking bản làng người H''Mông, chợ tình Bắc Hà họp ngày chủ nhật, ngắm ruộng bậc thang Mù Cang Chải.',
+        'Bao gồm:
+- Xe đưa đón Hà Nội - Sapa - Bắc Hà
+- Lưu trú theo chương trình
+- Vé tham quan bản làng và điểm du lịch
+- Hướng dẫn viên địa phương
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         3, 3200000, 4.4, 87);
 
 -- ------------------------------------------------------------

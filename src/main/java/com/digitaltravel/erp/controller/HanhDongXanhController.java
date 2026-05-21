@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.dto.requests.HanhDongXanhRequest;
@@ -29,8 +30,10 @@ public class HanhDongXanhController {
     private final HanhDongXanhService hanhDongXanhService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<HanhDongXanhResponse>>> danhSach() {
-        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach()));
+    public ResponseEntity<ApiResponse<List<HanhDongXanhResponse>>> danhSach(
+            @RequestParam(required = false) String maTourThucTe
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(maTourThucTe)));
     }
 
     @GetMapping("/{id}")

@@ -24,6 +24,7 @@ public class DonDatTourResponse {
     String trangThai;
     LocalDateTime thoiGianHetHan;
     String ghiChu;
+    List<String> danhSachHanhDongXanh;
     List<ChiTietDatTourResponse> chiTietKhach;
     List<ChiTietDichVuResponse> chiTietDichVu;
 }

@@ -46,22 +46,58 @@ VALUES ('HDX010', 'Mua sản phẩm thủ công địa phương thay hàng nhậ
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM005', 'Huế - Phong Nha Di Sản UNESCO 4N3Đ',
-        'Khám phá cố đô Huế với lăng tẩm, chùa chiền; Động Phong Nha huyền bí; bãi biển Nhật Lệ.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan cố đô Huế và động Phong Nha
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         4, 4500000, 4.6, 74);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM006', 'Cần Thơ - Miền Tây Sông Nước 3N2Đ',
-        'Chợ nổi Cái Răng sáng sớm, vườn trái cây Lai Vung, rừng tràm Trà Sư, làng bội cá Cái Bè.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan chợ nổi, vườn trái cây và rừng tràm
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên địa phương
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         3, 2900000, 4.3, 55);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM007', 'Đà Lạt Thành Phố Ngàn Hoa 2N1Đ',
-        'Thành phố tĩnh lặng giữa cao nguyên: vườn hoa Đà Lạt, thung lũng tình yêu, thác Datanla, du thuyền hồ Xuân Hương.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan vườn hoa, thung lũng và thác Datanla
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Vé/dịch vụ phát sinh ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         2, 1800000, 4.5, 112);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM008', 'Côn Đảo Thiên Đường Biển Đảo 4N3Đ',
-        'Biển Côn Đảo xanh trong vắt, vườn quốc gia, khu bảo tồn rùa biển, di tích lịch sử Phú Hải.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan vườn quốc gia và di tích lịch sử
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Dịch vụ vui chơi ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         4, 6500000, 4.9, 43);
 
 -- ------------------------------------------------------------

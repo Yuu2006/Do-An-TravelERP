@@ -9,6 +9,9 @@ import lombok.Getter;
 @Getter
 public class HanhDongXanhRequest {
 
+    @Size(max = 50, message = "Ma tour thuc te toi da 50 ky tu")
+    String maTourThucTe;
+
     @NotBlank(message = "Ten hanh dong khong duoc de trong")
     @Size(max = 200, message = "Ten hanh dong toi da 200 ky tu")
     String tenHanhDong;

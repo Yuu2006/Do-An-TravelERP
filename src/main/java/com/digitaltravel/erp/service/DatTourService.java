@@ -22,6 +22,7 @@ import com.digitaltravel.erp.entity.ChiTietDichVu;
 import com.digitaltravel.erp.entity.DichVuThem;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.DsNguoiDongHanh;
+import com.digitaltravel.erp.entity.HanhDongXanh;
 import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
@@ -30,6 +31,7 @@ import com.digitaltravel.erp.repository.ChiTietDichVuRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.DsNguoiDongHanhRepository;
+import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
@@ -46,6 +48,7 @@ public class DatTourService {
     private final HoChieuSoRepository hoChieuSoRepository;
     private final DichVuThemRepository dichVuThemRepository;
     private final DsNguoiDongHanhRepository dsNguoiDongHanhRepository;
+    private final HanhDongXanhRepository hanhDongXanhRepository;
 
     // ── Đặt tour ────────────────────────────────────────────────────────────
     @Transactional
@@ -58,9 +61,10 @@ public class DatTourService {
         int soKhach = 1 + dsNguoiDongHanh.size();
 
         TourThucTe tour = kiemTraDieuKienDatTour(request.getMaTourThucTe(), soKhach);
+        List<String> dsHanhDongXanh = kiemTraHanhDongXanh(tour, request.getDanhSachHanhDongXanh());
         List<ChiTietDichVu> dsDichVu = taoChiTietDichVuTam(request);
         BigDecimal tongTien = tinhTongTienDonHang(tour, soKhach, dsDichVu);
-        DonDatTour don = taoDonDatTour(khachHang, tour, tongTien, request.getGhiChu());
+        DonDatTour don = taoDonDatTour(khachHang, tour, tongTien, request.getGhiChu(), dsHanhDongXanh);
         List<ChiTietDatTour> dsChiTiet = new ArrayList<>();
 
         ChiTietDatTour chiTietNguoiDat = new ChiTietDatTour();
@@ -186,6 +190,26 @@ public class DatTourService {
         return tour;
     }
 
+    private List<String> kiemTraHanhDongXanh(TourThucTe tour, List<String> dsMaHanhDongXanh) {
+        if (dsMaHanhDongXanh == null || dsMaHanhDongXanh.isEmpty()) {
+            return List.of();
+        }
+        List<String> dsMaHopLe = dsMaHanhDongXanh.stream()
+                .filter(ma -> ma != null && !ma.isBlank())
+                .distinct()
+                .toList();
+        for (String maHanhDongXanh : dsMaHopLe) {
+            HanhDongXanh hdx = hanhDongXanhRepository.findById(maHanhDongXanh)
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + maHanhDongXanh));
+            TourThucTe tourGanVoiHanhDong = hdx.getTourThucTe();
+            if (tourGanVoiHanhDong != null
+                    && !tour.getMaTourThucTe().equals(tourGanVoiHanhDong.getMaTourThucTe())) {
+                throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + maHanhDongXanh);
+            }
+        }
+        return dsMaHopLe;
+    }
+
     private List<ChiTietDichVu> taoChiTietDichVuTam(DatTourRequest request) {
         List<ChiTietDichVu> dsDichVu = new ArrayList<>();
         if (request.getDanhSachDichVu() == null) {
@@ -215,7 +239,11 @@ public class DatTourService {
         return tongTienTour.add(tongTienDichVu);
     }
 
-    private DonDatTour taoDonDatTour(HoChieuSo khachHang, TourThucTe tour, BigDecimal tongTien, String ghiChu) {
+    private DonDatTour taoDonDatTour(HoChieuSo khachHang,
+                                     TourThucTe tour,
+                                     BigDecimal tongTien,
+                                     String ghiChu,
+                                     List<String> dsHanhDongXanh) {
         DonDatTour don = new DonDatTour();
         don.setMaDatTour("DDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         don.setTourThucTe(tour);
@@ -225,6 +253,7 @@ public class DatTourService {
         don.setTrangThai("CHO_XAC_NHAN");
         don.setThoiGianHetHan(LocalDateTime.now().plusDays(2));
         don.setGhiChu(ghiChu);
+        don.setHanhDongXanh(String.join(",", dsHanhDongXanh));
         return donDatTourRepository.save(don);
     }
 
@@ -254,9 +283,17 @@ public class DatTourService {
                 .trangThai(don.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
+                .danhSachHanhDongXanh(parseHanhDongXanh(don.getHanhDongXanh()))
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
                 .chiTietDichVu(dsDichVu.stream().map(this::toDichVuResponse).toList())
                 .build();
+    }
+
+    private List<String> parseHanhDongXanh(String value) {
+        if (value == null || value.isBlank()) {
+            return List.of();
+        }
+        return List.of(value.split(","));
     }
 
     private ChiTietDatTourResponse toChiTietResponse(ChiTietDatTour ct) {

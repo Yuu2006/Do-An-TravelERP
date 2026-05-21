@@ -154,10 +154,11 @@ CREATE TABLE DICHVUTHEM (
 
 -- Danh muc hanh dong xanh duoc cong diem loyalty
 CREATE TABLE HANHDONGXANH (
-                              MaHanhDongXanh   VARCHAR2(50)  PRIMARY KEY,
-                              TenHanhDong      VARCHAR2(200) NOT NULL,
-                              DiemCong         NUMBER(10)    NOT NULL,
-                              CONSTRAINT CK_HANHDONGXANH_DiemCong    CHECK (DiemCong >= 0)
+                               MaHanhDongXanh   VARCHAR2(50)  PRIMARY KEY,
+                              MaTourThucTe      VARCHAR2(50),
+                               TenHanhDong      VARCHAR2(200) NOT NULL,
+                               DiemCong         NUMBER(10)    NOT NULL,
+                               CONSTRAINT CK_HANHDONGXANH_DiemCong    CHECK (DiemCong >= 0)
 );
 
 -- Dot khoi hanh cu the duoc tao tu tour mau
@@ -180,6 +181,9 @@ CREATE TABLE TOURTHUCTE (
                                 ))
 );
 
+ALTER TABLE HANHDONGXANH ADD CONSTRAINT FK_HDX_TourThucTe
+    FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe);
+
 -- ============================================================
 -- PHAN HE: DAT TOUR VA THANH TOAN
 -- ============================================================
@@ -194,6 +198,7 @@ CREATE TABLE DONDATTOUR (
                             TrangThai        VARCHAR2(30)  DEFAULT 'CHO_XAC_NHAN' NOT NULL,
                             ThoiGianHetHan   TIMESTAMP,
                             GhiChu           VARCHAR2(2000),
+                            HanhDongXanh     VARCHAR2(1000),
                             CONSTRAINT FK_DDT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                             CONSTRAINT FK_DDT_KhachHang            FOREIGN KEY (MaKhachHang)  REFERENCES HOCHIEUSO(MaKhachHang),
                             CONSTRAINT CK_DDT_TongTien             CHECK (TongTien >= 0),
