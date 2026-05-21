@@ -9,6 +9,12 @@ public class CapNhatHoChieuSoRequest {
     @Size(max = 20, message = "CCCD khong duoc vuot qua 20 ky tu")
     String cccd;
 
+    @Size(max = 100, message = "Ten dang nhap khong duoc vuot qua 100 ky tu")
+    String tenDangNhap;
+
+    @Size(max = 200, message = "Email khong duoc vuot qua 200 ky tu")
+    String email;
+
     @Size(max = 20, message = "So dien thoai khong duoc vuot qua 20 ky tu")
     String soDienThoai;
 
