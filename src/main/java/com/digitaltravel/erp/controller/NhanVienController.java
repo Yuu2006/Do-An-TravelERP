@@ -219,7 +219,15 @@ public class NhanVienController {
                 yeuCauHoTroService.xuLy(maYeuCau, request, user.getTaiKhoan().getMaTaiKhoan())));
     }
 
-    // ──────────────── UC63: Năng lực HDV ─────────────────────────────────
+    // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────
+
+    @GetMapping("/api/huong-dan-vien/ho-so")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<NhanVienResponse>> hoSoCaNhan(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok(nhanVienService.layHoSoCaNhan(maTaiKhoan)));
+    }
 
     @GetMapping("/api/huong-dan-vien/nang-luc")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
