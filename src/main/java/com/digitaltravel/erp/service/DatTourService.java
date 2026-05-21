@@ -50,72 +50,25 @@ public class DatTourService {
     // ── Đặt tour ────────────────────────────────────────────────────────────
     @Transactional
     public DonDatTourResponse datTour(String maTaiKhoan, DatTourRequest request) {
-        // 1. Tìm hồ sơ khách hàng
         HoChieuSo khachHang = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Khach hang chua co ho so. Vui long lien he ho tro."));
-
-        // 2. Kiểm tra tour thực tế
-        TourThucTe tour = tourThucTeRepository.findById(request.getMaTourThucTe())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + request.getMaTourThucTe()));
-
-        if (!"MO_BAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Tour khong o trang thai MO_BAN, khong the dat");
-        }
         List<NguoiDongHanhRequest> dsNguoiDongHanh = request.getDanhSachNguoiDongHanh() != null
                 ? request.getDanhSachNguoiDongHanh()
                 : List.of();
         int soKhach = 1 + dsNguoiDongHanh.size();
 
-        if (tour.getChoConLai() < soKhach) {
-            throw AppException.badRequest("Tour da het cho");
-        }
-
-        // 3. Tính tổng tiền dịch vụ bổ sung
-        List<ChiTietDichVu> dsDichVu = new ArrayList<>();
-        BigDecimal tongTienDichVu = BigDecimal.ZERO;
-        if (request.getDanhSachDichVu() != null) {
-            for (DichVuThemDatRequest dvReq : request.getDanhSachDichVu()) {
-                DichVuThem dv = dichVuThemRepository.findById(dvReq.getMaDichVuThem())
-                        .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu: " + dvReq.getMaDichVuThem()));
-                BigDecimal thanhTien = dv.getDonGia().multiply(BigDecimal.valueOf(dvReq.getSoLuong()));
-                tongTienDichVu = tongTienDichVu.add(thanhTien);
-
-                ChiTietDichVu ct = new ChiTietDichVu();
-                ct.setMaChiTietDichVu("CTDV_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-                ct.setDichVuThem(dv);
-                ct.setSoLuong(dvReq.getSoLuong());
-                ct.setDonGia(dv.getDonGia());
-                ct.setThanhTien(thanhTien);
-                dsDichVu.add(ct);
-            }
-        }
-
-        // 4. Tính tổng tiền đơn đặt
-        BigDecimal giaPerPerson = tour.getGiaHienHanh();
-        BigDecimal tongTienTour = giaPerPerson.multiply(BigDecimal.valueOf(soKhach));
-        BigDecimal tongTien = tongTienTour.add(tongTienDichVu);
-
-        // 5. Tạo đơn đặt tour
-        DonDatTour don = new DonDatTour();
-        don.setMaDatTour("DDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        don.setTourThucTe(tour);
-        don.setKhachHang(khachHang);
-        don.setNgayDat(LocalDateTime.now());
-        don.setTongTien(tongTien);
-        don.setTrangThai("CHO_XAC_NHAN");
-        // Giữ chỗ 2 ngày, Scheduler sẽ tự hủy nếu chưa thanh toán
-        don.setThoiGianHetHan(LocalDateTime.now().plusDays(2));
-        don.setGhiChu(request.getGhiChu());
-        donDatTourRepository.save(don);
-
-        // 6. Tạo chi tiết đặt tour: người đặt chính + khách đi cùng
+        TourThucTe tour = kiemTraDieuKienDatTour(request.getMaTourThucTe(), soKhach);
+        List<ChiTietDichVu> dsDichVu = taoChiTietDichVuTam(request);
+        BigDecimal tongTien = tinhTongTienDonHang(tour, soKhach, dsDichVu);
+        DonDatTour don = taoDonDatTour(khachHang, tour, tongTien, request.getGhiChu());
         List<ChiTietDatTour> dsChiTiet = new ArrayList<>();
+
         ChiTietDatTour chiTietNguoiDat = new ChiTietDatTour();
         chiTietNguoiDat.setMaChiTietDat("CTDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         chiTietNguoiDat.setDonDatTour(don);
         chiTietNguoiDat.setKhachHang(khachHang);
         chiTietNguoiDat.setLoaiKhach("NGUOI_DAT");
-        chiTietNguoiDat.setGiaTaiThoiDiemDat(giaPerPerson);
+        chiTietNguoiDat.setGiaTaiThoiDiemDat(tour.getGiaHienHanh());
         chiTietDatTourRepository.save(chiTietNguoiDat);
         dsChiTiet.add(chiTietNguoiDat);
 
@@ -136,18 +89,12 @@ public class DatTourService {
             chiTietNguoiDongHanh.setDonDatTour(don);
             chiTietNguoiDongHanh.setNguoiDongHanh(nguoiDongHanh);
             chiTietNguoiDongHanh.setLoaiKhach("NGUOI_DONG_HANH");
-            chiTietNguoiDongHanh.setGiaTaiThoiDiemDat(giaPerPerson);
+            chiTietNguoiDongHanh.setGiaTaiThoiDiemDat(tour.getGiaHienHanh());
             chiTietDatTourRepository.save(chiTietNguoiDongHanh);
             dsChiTiet.add(chiTietNguoiDongHanh);
         }
 
-        // 7. Lưu các chi tiết dịch vụ
-        for (ChiTietDichVu ctdv : dsDichVu) {
-            ctdv.setDonDatTour(don);
-            chiTietDichVuRepository.save(ctdv);
-        }
-
-        // 8. KHÔNG trừ ChoConLai ngay — chỉ trừ sau khi thanh toán thành công
+        luuChiTietDichVu(don, dsDichVu);
 
         return toResponse(don, dsChiTiet, dsDichVu);
     }
@@ -225,6 +172,67 @@ public class DatTourService {
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         return toResponse(don, dsChiTiet, dsDichVu);
+    }
+
+    private TourThucTe kiemTraDieuKienDatTour(String maTourThucTe, int soKhach) {
+        TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + maTourThucTe));
+        if (!"MO_BAN".equals(tour.getTrangThai())) {
+            throw AppException.badRequest("Tour khong o trang thai MO_BAN, khong the dat");
+        }
+        if (tour.getChoConLai() < soKhach) {
+            throw AppException.badRequest("Tour da het cho");
+        }
+        return tour;
+    }
+
+    private List<ChiTietDichVu> taoChiTietDichVuTam(DatTourRequest request) {
+        List<ChiTietDichVu> dsDichVu = new ArrayList<>();
+        if (request.getDanhSachDichVu() == null) {
+            return dsDichVu;
+        }
+        for (DichVuThemDatRequest dvReq : request.getDanhSachDichVu()) {
+            DichVuThem dv = dichVuThemRepository.findById(dvReq.getMaDichVuThem())
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu: " + dvReq.getMaDichVuThem()));
+            BigDecimal thanhTien = dv.getDonGia().multiply(BigDecimal.valueOf(dvReq.getSoLuong()));
+
+            ChiTietDichVu ct = new ChiTietDichVu();
+            ct.setMaChiTietDichVu("CTDV_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+            ct.setDichVuThem(dv);
+            ct.setSoLuong(dvReq.getSoLuong());
+            ct.setDonGia(dv.getDonGia());
+            ct.setThanhTien(thanhTien);
+            dsDichVu.add(ct);
+        }
+        return dsDichVu;
+    }
+
+    private BigDecimal tinhTongTienDonHang(TourThucTe tour, int soKhach, List<ChiTietDichVu> dsDichVu) {
+        BigDecimal tongTienTour = tour.getGiaHienHanh().multiply(BigDecimal.valueOf(soKhach));
+        BigDecimal tongTienDichVu = dsDichVu.stream()
+                .map(ChiTietDichVu::getThanhTien)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return tongTienTour.add(tongTienDichVu);
+    }
+
+    private DonDatTour taoDonDatTour(HoChieuSo khachHang, TourThucTe tour, BigDecimal tongTien, String ghiChu) {
+        DonDatTour don = new DonDatTour();
+        don.setMaDatTour("DDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+        don.setTourThucTe(tour);
+        don.setKhachHang(khachHang);
+        don.setNgayDat(LocalDateTime.now());
+        don.setTongTien(tongTien);
+        don.setTrangThai("CHO_XAC_NHAN");
+        don.setThoiGianHetHan(LocalDateTime.now().plusDays(2));
+        don.setGhiChu(ghiChu);
+        return donDatTourRepository.save(don);
+    }
+
+    private void luuChiTietDichVu(DonDatTour don, List<ChiTietDichVu> dsDichVu) {
+        for (ChiTietDichVu ctdv : dsDichVu) {
+            ctdv.setDonDatTour(don);
+            chiTietDichVuRepository.save(ctdv);
+        }
     }
 
     // ── Mapper ────────────────────────────────────────────────────────────────

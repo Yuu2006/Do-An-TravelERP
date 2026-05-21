@@ -20,7 +20,7 @@ BEGIN
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
                              'DSNGUOIDONGHANH','DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
                               'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
-                              'TOURMAU','NHATKYBAOMAT','NHATKYHETHONG','VAITRO','TAIKHOAN'
+                              'TOURMAU','NHATKYHETHONG','VAITRO','TAIKHOAN'
             )
         ) LOOP
             EXECUTE IMMEDIATE 'DROP TABLE ' || t.table_name || ' CASCADE CONSTRAINTS PURGE';
@@ -397,11 +397,11 @@ CREATE TABLE NHATKYSUCO (
                             MaNhanVienBaoCao     VARCHAR2(50) NOT NULL,
                             MoTa                 CLOB         NOT NULL,
                             GiaiPhap             CLOB,
-                            MucDo                VARCHAR2(20) DEFAULT 'TRUNG_BINH' NOT NULL,
+                            MucDo                VARCHAR2(20) DEFAULT 'THAP' NOT NULL,
                             ThoiGianBaoCao       TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                             CONSTRAINT FK_NKSC_TourThucTe          FOREIGN KEY (MaTourThucTe)     REFERENCES TOURTHUCTE(MaTourThucTe),
                             CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien),
-                            CONSTRAINT CK_NKSC_MucDo               CHECK (MucDo IN ('THAP','TRUNG_BINH','CAO'))
+                            CONSTRAINT CK_NKSC_MucDo               CHECK (MucDo IN ('THAP','SOS'))
 );
 
 -- Chi phi thuc te do HDV khai bao

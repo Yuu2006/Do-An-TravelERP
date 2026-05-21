@@ -27,6 +27,10 @@ spring:
     init:
       mode: never
 
+server:
+  address: 0.0.0.0
+  port: ${SERVER_PORT:8080}
+
 logging:
   level:
     org.hibernate.SQL: info
@@ -37,5 +41,4 @@ app:
   jwt:
     secret: ${JWT_SECRET:ZGlnaXRhbC10cmF2ZWwtZXJwLXNlY3JldC1rZXktbXVzdC1iZS00Mi1jaGFycy1sb25nLW1pbg==}
     expiration: ${JWT_EXPIRATION:86400000}
-
 

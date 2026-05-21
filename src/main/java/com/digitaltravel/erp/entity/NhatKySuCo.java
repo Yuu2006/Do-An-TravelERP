@@ -45,7 +45,7 @@ public class NhatKySuCo {
     @Column(name = "GiaiPhap")
     String GiaiPhap;
 
-    // Gia tri hop le: THAP | TRUNG_BINH | CAO
+    // Gia tri hop le: THAP | SOS
     @Column(name = "MucDo", nullable = false, length = 20)
     String MucDo;
 
