@@ -46,22 +46,58 @@ VALUES ('HDX010', 'Mua sản phẩm thủ công địa phương thay hàng nhậ
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM005', 'Huế - Phong Nha Di Sản UNESCO 4N3Đ',
-        'Khám phá cố đô Huế với lăng tẩm, chùa chiền; Động Phong Nha huyền bí; bãi biển Nhật Lệ.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan cố đô Huế và động Phong Nha
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         4, 4500000, 4.6, 74);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM006', 'Cần Thơ - Miền Tây Sông Nước 3N2Đ',
-        'Chợ nổi Cái Răng sáng sớm, vườn trái cây Lai Vung, rừng tràm Trà Sư, làng bội cá Cái Bè.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan chợ nổi, vườn trái cây và rừng tràm
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên địa phương
+Không bao gồm:
+- Chi phí cá nhân
+- Đồ uống ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         3, 2900000, 4.3, 55);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM007', 'Đà Lạt Thành Phố Ngàn Hoa 2N1Đ',
-        'Thành phố tĩnh lặng giữa cao nguyên: vườn hoa Đà Lạt, thung lũng tình yêu, thác Datanla, du thuyền hồ Xuân Hương.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan vườn hoa, thung lũng và thác Datanla
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Vé/dịch vụ phát sinh ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         2, 1800000, 4.5, 112);
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM008', 'Côn Đảo Thiên Đường Biển Đảo 4N3Đ',
-        'Biển Côn Đảo xanh trong vắt, vườn quốc gia, khu bảo tồn rùa biển, di tích lịch sử Phú Hải.',
+        'Bao gồm:
+- Xe đưa đón theo chương trình
+- Vé tham quan vườn quốc gia và di tích lịch sử
+- Lưu trú và bữa ăn theo lịch trình
+- Hướng dẫn viên du lịch
+Không bao gồm:
+- Chi phí cá nhân
+- Dịch vụ vui chơi ngoài chương trình
+- VAT
+- Tips cho hướng dẫn viên và tài xế',
         4, 6500000, 4.9, 43);
 
 -- ------------------------------------------------------------
@@ -429,18 +465,21 @@ VALUES ('HD004', 'TTT098', 'KH003', 'HDX005', 'NV_HDV02',
 -- ------------------------------------------------------------
 -- 23. NHATKYSUCO — Nhật ký sự cố trong tour
 -- ------------------------------------------------------------
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC001', 'TTT099', 'NV_HDV01',
         'Một khách bị say sóng nhẹ khi đi thuyền qua vùng nước lớn.',
-        'Đã cấp thuốc say sóng dự phòng cho khách. Khách hồi phục sau 30 phút nghỉ ngơi.');
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+        'Đã cấp thuốc say sóng dự phòng cho khách. Khách hồi phục sau 30 phút nghỉ ngơi.',
+        'Y_TE');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC002', 'TTT098', 'NV_HDV02',
         'Xe du lịch bị thủng bánh giữa đường trên cự Sân Bay Đà Nẵng.',
-        'Liên hệ hãng xe cấp xe thay thế. Hành trình bị trễ 45 phút.');
-INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap)
+        'Liên hệ hãng xe cấp xe thay thế. Hành trình bị trễ 45 phút.',
+        'PHUONG_TIEN');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, LoaiSuCo)
 VALUES ('NKSC003', 'TTT008', 'NV_HDV03',
         'Nhà hàng đổi bữa ăn tối từ lẩu nướng sang cơm bình thường do có sự cố bếp.',
-        'Đã bồi thường phần chênh lệch chi phí, xin lỗi khách, ghi nhận phản ánh với đối tác.');
+        'Đã bồi thường phần chênh lệch chi phí, xin lỗi khách, ghi nhận phản ánh với đối tác.',
+        'AN_UONG');
 
 -- ------------------------------------------------------------
 -- 24. CHIPHITHUCTE — Chi phí thực tế HDV khai báo

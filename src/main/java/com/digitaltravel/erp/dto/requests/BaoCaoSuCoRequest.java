@@ -12,4 +12,5 @@ public class BaoCaoSuCoRequest {
     @Size(max = 4000)
     private String giaiPhap;
     private String mucDo;
+    private String loaiSuCo;
 }

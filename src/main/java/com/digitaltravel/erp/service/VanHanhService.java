@@ -113,6 +113,9 @@ public class VanHanhService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
         HanhDongXanh hdx = hanhDongXanhRepository.findById(req.getMaHanhDongXanh())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
+        if (hdx.getTourThucTe() != null && !maTour.equals(hdx.getTourThucTe().getMaTourThucTe())) {
+            throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + req.getMaHanhDongXanh());
+        }
         NhanVien hdv = getHdv(maTaiKhoan);
 
         HanhDong hd = new HanhDong();
@@ -150,6 +153,7 @@ public class VanHanhService {
             throw AppException.badRequest("Mo ta su co khong duoc de trong");
         }
         chuanHoaMucDoSuCo(req.getMucDo());
+        chuanHoaLoaiSuCo(req.getLoaiSuCo());
         return tourThucTeRepository.findById(maTour)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
     }
@@ -162,6 +166,7 @@ public class VanHanhService {
         sc.setMoTa(req.getMoTa());
         sc.setGiaiPhap(req.getGiaiPhap());
         sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
+        sc.setLoaiSuCo(chuanHoaLoaiSuCo(req.getLoaiSuCo()));
         sc.setThoiGianBaoCao(LocalDateTime.now());
         return nhatKySuCoRepository.save(sc);
     }
@@ -181,6 +186,7 @@ public class VanHanhService {
         if (req.getGiaiPhap() != null) sc.setGiaiPhap(req.getGiaiPhap());
         if (req.getMoTa() != null) sc.setMoTa(req.getMoTa());
         if (req.getMucDo() != null) sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
+        if (req.getLoaiSuCo() != null) sc.setLoaiSuCo(chuanHoaLoaiSuCo(req.getLoaiSuCo()));
         nhatKySuCoRepository.save(sc);
         return toSuCoResponse(sc);
     }
@@ -436,6 +442,7 @@ public class VanHanhService {
                 .moTa(sc.getMoTa())
                 .giaiPhap(sc.getGiaiPhap())
                 .mucDo(sc.getMucDo())
+                .loaiSuCo(sc.getLoaiSuCo())
                 .thoiGianBaoCao(sc.getThoiGianBaoCao())
                 .build();
     }
@@ -451,6 +458,20 @@ public class VanHanhService {
     private String chuanHoaMucDoSuCoFilter(String mucDo) {
         if (mucDo == null || mucDo.isBlank()) return null;
         return chuanHoaMucDoSuCo(mucDo);
+    }
+
+    private String chuanHoaLoaiSuCo(String loaiSuCo) {
+        String normalized = "KHAC";
+        if (loaiSuCo != null && !loaiSuCo.isBlank()) {
+            normalized = Normalizer.normalize(loaiSuCo.trim().toUpperCase(), Normalizer.Form.NFD)
+                    .replaceAll("\\p{M}", "")
+                    .replace('Đ', 'D')
+                    .replace(' ', '_');
+        }
+        if (!java.util.Set.of("Y_TE", "THOI_TIET", "PHUONG_TIEN", "AN_UONG", "KHAC").contains(normalized)) {
+            throw AppException.badRequest("LoaiSuCo khong hop le. Chi chap nhan: Y_TE, THOI_TIET, PHUONG_TIEN, AN_UONG, KHAC");
+        }
+        return normalized;
     }
 
     private ChiPhiThucTeResponse toChiPhiResponse(ChiPhiThucTe cp) {

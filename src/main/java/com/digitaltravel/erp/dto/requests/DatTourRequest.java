@@ -21,6 +21,10 @@ public class DatTourRequest {
     @Valid
     List<NguoiDongHanhRequest> danhSachNguoiDongHanh;
 
+    // Tuỳ chọn: hành động xanh khách chọn trước khi tham gia tour
+    @Size(max = 20, message = "Chi duoc chon toi da 20 hanh dong xanh")
+    List<String> danhSachHanhDongXanh;
+
     @Size(max = 2000, message = "Ghi chu khong duoc vuot qua 2000 ky tu")
     String ghiChu;
 }

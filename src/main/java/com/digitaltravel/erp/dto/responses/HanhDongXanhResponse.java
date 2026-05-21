@@ -7,6 +7,7 @@ import lombok.Getter;
 @Builder
 public class HanhDongXanhResponse {
     String maHanhDongXanh;
+    String maTourThucTe;
     String tenHanhDong;
     Long diemCong;
 }

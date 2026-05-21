@@ -12,5 +12,6 @@ public class NhatKySuCoResponse {
     private String moTa;
     private String giaiPhap;
     private String mucDo;
+    private String loaiSuCo;
     private LocalDateTime thoiGianBaoCao;
 }
