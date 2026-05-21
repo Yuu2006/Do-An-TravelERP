@@ -14,6 +14,9 @@ spring:
       connection-timeout: 30000
       validation-timeout: 5000
       connection-test-query: SELECT 1 FROM DUAL
+      data-source-properties:
+        useUnicode: true
+        characterEncoding: UTF-8
   jpa:
     open-in-view: false
     hibernate:
@@ -23,9 +26,24 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        connection:
+          characterEncoding: utf-8
+          useUnicode: true
   sql:
     init:
       mode: never
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 server:
   address: 0.0.0.0
@@ -41,4 +59,5 @@ app:
   jwt:
     secret: ${JWT_SECRET:ZGlnaXRhbC10cmF2ZWwtZXJwLXNlY3JldC1rZXktbXVzdC1iZS00Mi1jaGFycy1sb25nLW1pbg==}
     expiration: ${JWT_EXPIRATION:86400000}
+
 

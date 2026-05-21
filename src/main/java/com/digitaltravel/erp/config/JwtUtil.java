@@ -56,6 +56,34 @@ public class JwtUtil {
         return parseClaims(token).getSubject();
     }
 
+    public String extractRole(String token) {
+        Claims claims = parseClaims(token);
+        String roleStr = null;
+
+        if (claims.containsKey("maVaiTro")) {
+            roleStr = claims.get("maVaiTro", String.class);
+        } else if (claims.containsKey("roles")) {
+            Object rolesObj = claims.get("roles");
+            if (rolesObj instanceof List<?> list && !list.isEmpty()) {
+                roleStr = list.get(0).toString();
+            }
+        } else if (claims.containsKey("role")) {
+            roleStr = claims.get("role", String.class);
+        }
+
+        if (roleStr == null) {
+            roleStr = "";
+        }
+
+        String normalizedRole = roleStr.trim().toUpperCase();
+        if (normalizedRole.startsWith("ROLE_")) {
+            normalizedRole = normalizedRole.substring(5);
+        }
+
+        System.out.println("Normalized Role from JWT: " + normalizedRole);
+        return normalizedRole;
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);

@@ -49,7 +49,7 @@ public class KhachHangController {
 
     // Xem hồ sơ của bản thân
     @GetMapping("/ho-so")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<HoChieuSoResponse>> layHoSo(
             @AuthenticationPrincipal TaiKhoanDetails user) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
@@ -58,7 +58,7 @@ public class KhachHangController {
 
     // Cập nhật hồ sơ (chỉ DiUng và GhiChuYTe)
     @PutMapping("/ho-so")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<HoChieuSoResponse>> capNhatHoSo(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody CapNhatHoChieuSoRequest request) {
@@ -71,7 +71,7 @@ public class KhachHangController {
 
     // Tạo đơn đặt tour
     @PostMapping("/dat-tour")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> datTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody DatTourRequest request) {
@@ -82,7 +82,7 @@ public class KhachHangController {
 
     // Danh sách đơn đặt tour của tôi
     @GetMapping("/dat-tour")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDatTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PageableDefault(size = 10, sort = "NgayDat", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -92,7 +92,7 @@ public class KhachHangController {
 
     // Chi tiết đơn đặt tour của tôi
     @GetMapping("/dat-tour/{maDatTour}")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> chiTietDatTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PathVariable String maDatTour) {
@@ -102,7 +102,7 @@ public class KhachHangController {
 
     // Hủy đơn đặt tour (chỉ khi ở trạng thái CHO_XAC_NHAN)
     @DeleteMapping("/dat-tour/{maDatTour}")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Void>> huyDatTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PathVariable String maDatTour) {
@@ -113,7 +113,7 @@ public class KhachHangController {
 
     // UC32 — Yêu cầu hủy tour đã thanh toán (DA_XAC_NHAN) → tạo yêu cầu hoàn tiền
     @PostMapping("/dat-tour/{maDatTour}/huy")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> yeuCauHuyTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PathVariable String maDatTour,
@@ -126,7 +126,7 @@ public class KhachHangController {
     // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
     // Sales: xem tất cả đơn đặt (có filter)
     @GetMapping("/lich-su-tour")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<LichSuTourResponse>>> lichSuTour(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @PageableDefault(size = 10) Pageable pageable) {
@@ -137,7 +137,7 @@ public class KhachHangController {
     // ──────────────────────── YÊU CẦU HỖ TRỢ (UC36) ─────────────────────────
 
     @PostMapping("/yeu-cau-ho-tro")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> taoYeuCau(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody YeuCauHoTroRequest request) {
@@ -146,7 +146,7 @@ public class KhachHangController {
     }
 
     @GetMapping("/yeu-cau-ho-tro")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCauCuaToi(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @RequestParam(required = false) String loaiYeuCau,

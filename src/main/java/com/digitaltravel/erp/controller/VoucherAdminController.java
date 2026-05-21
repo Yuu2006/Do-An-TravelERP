@@ -40,7 +40,7 @@ public class VoucherAdminController {
 
     // ── Danh sách voucher ─────────────────────────────────────────────────────
     @GetMapping
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> danhSach(
             @PageableDefault(size = 10, sort = "NgayHieuLuc", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSach(pageable)));
@@ -48,14 +48,14 @@ public class VoucherAdminController {
 
     // ── Chi tiết voucher ──────────────────────────────────────────────────────
     @GetMapping("/{maVoucher}")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> chiTiet(@PathVariable String maVoucher) {
         return ResponseEntity.ok(ApiResponse.ok(voucherService.chiTiet(maVoucher)));
     }
 
     // ── UC53: Tạo voucher mới ─────────────────────────────────────────────────
     @PostMapping
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> taoVoucher(
             @Valid @RequestBody VoucherRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
@@ -65,7 +65,7 @@ public class VoucherAdminController {
 
     // ── UC52: Cập nhật / vô hiệu hóa voucher ──────────────────────────────────
     @PutMapping("/{maVoucher}")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> capNhatVoucher(
             @PathVariable String maVoucher,
             @Valid @RequestBody VoucherRequest request,
@@ -75,7 +75,7 @@ public class VoucherAdminController {
     }
 
     @PutMapping("/{maVoucher}/vo-hieu-hoa")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> voHieuHoaVoucher(
             @PathVariable String maVoucher,
             @AuthenticationPrincipal TaiKhoanDetails user) {
@@ -85,7 +85,7 @@ public class VoucherAdminController {
 
     // ── UC54: Phát hành / thu hồi voucher cho khách hàng ──────────────────────
     @PostMapping("/{maVoucher}/phat-hanh")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> phatHanh(
             @PathVariable String maVoucher,
             @Valid @RequestBody PhatHanhVoucherRequest request,
@@ -95,7 +95,7 @@ public class VoucherAdminController {
     }
 
     @PutMapping("/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> thuHoi(
             @PathVariable String maVoucher,
             @PathVariable String maKhachHang,

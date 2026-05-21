@@ -39,7 +39,7 @@ public class TourMauController {
 
     // UC06: Danh sách tour mẫu (filter + phân trang)
     @GetMapping
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<TourMauResponse>>> danhSach(
             @RequestParam(required = false) String tieuDe,
             @RequestParam(required = false) Integer thoiLuongMin,
@@ -52,14 +52,14 @@ public class TourMauController {
 
     // UC06: Chi tiết 1 tour mẫu + lịch trình
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourMauService.chiTiet(id)));
     }
 
     // UC02: Thêm tour mẫu
     @PostMapping
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> taoMoi(
             @Valid @RequestBody TaoTourMauRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user
@@ -70,7 +70,7 @@ public class TourMauController {
 
     // UC04: Sửa tour mẫu
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody CapNhatTourMauRequest request,
@@ -81,7 +81,7 @@ public class TourMauController {
 
     // UC05: Xóa mềm tour mẫu
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         tourMauService.xoaMem(id);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa tour mau thanh cong (soft delete)"));
@@ -89,7 +89,7 @@ public class TourMauController {
 
     // UC03: Sao chép tour mẫu
     @PostMapping("/{id}/sao-chep")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> saoChep(
             @PathVariable String id,
             @AuthenticationPrincipal TaiKhoanDetails user
@@ -100,7 +100,7 @@ public class TourMauController {
 
     // UC08: Thêm ngày lịch trình
     @PostMapping("/{id}/lich-trinh")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<LichTrinhResponse>> themLichTrinh(
             @PathVariable String id,
             @Valid @RequestBody LichTrinhRequest request
@@ -111,7 +111,7 @@ public class TourMauController {
 
     // UC09: Sửa lịch trình
     @PutMapping("/{id}/lich-trinh/{maLichTrinh}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<LichTrinhResponse>> suaLichTrinh(
             @PathVariable String id,
             @PathVariable String maLichTrinh,
@@ -123,7 +123,7 @@ public class TourMauController {
 
     // UC09: Xóa ngày lịch trình
     @DeleteMapping("/{id}/lich-trinh/{maLichTrinh}")
-    @PreAuthorize("hasRole('SANPHAM')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> xoaLichTrinh(
             @PathVariable String id,
             @PathVariable String maLichTrinh

@@ -31,7 +31,7 @@ public class DanhGiaController {
 
     // ── UC35: KH gửi đánh giá ────────────────────────────────────────────────
     @PostMapping("/api/khach-hang/danh-gia")
-    @PreAuthorize("hasRole('KHACHHANG')")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<DanhGiaKhResponse>> guiDanhGia(
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody DanhGiaRequest request) {
@@ -41,9 +41,10 @@ public class DanhGiaController {
 
     // ── Admin: Xem tất cả đánh giá (moderation) ───────────────────────────────
     @GetMapping("/api/kinh-doanh/danh-gia")
-    @PreAuthorize("hasRole('KINHDOANH')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<DanhGiaKhResponse>>> tatCaDanhGia(
             @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(danhGiaService.tatCaDanhGia(pageable)));
     }
 }
+
