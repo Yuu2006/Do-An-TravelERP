@@ -154,6 +154,10 @@ public class VoucherService {
             throw AppException.badRequest("MaCode da ton tai: " + request.getMaCode());
         }
 
+        if (!laLoaiUuDaiHopLe(request.getLoaiUuDai())) {
+            throw AppException.badRequest("LoaiUuDai chi chap nhan PHAN_TRAM hoac SO_TIEN");
+        }
+
         // Validate PHAN_TRAM không vượt 100
         if ("PHAN_TRAM".equals(request.getLoaiUuDai())
                 && request.getGiaTriGiam().compareTo(BigDecimal.valueOf(100)) > 0) {
@@ -186,10 +190,21 @@ public class VoucherService {
         Voucher v = voucherRepository.findById(maVoucher)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
 
-        if ("PHAN_TRAM".equals(request.getLoaiUuDai())
-                && request.getGiaTriGiam() != null
-                && request.getGiaTriGiam().compareTo(BigDecimal.valueOf(100)) > 0) {
+        if (request.getLoaiUuDai() != null && !laLoaiUuDaiHopLe(request.getLoaiUuDai())) {
+            throw AppException.badRequest("LoaiUuDai chi chap nhan PHAN_TRAM hoac SO_TIEN");
+        }
+
+        String loaiUuDaiSauCapNhat = request.getLoaiUuDai() != null ? request.getLoaiUuDai() : v.getLoaiUuDai();
+        BigDecimal giaTriGiamSauCapNhat = request.getGiaTriGiam() != null ? request.getGiaTriGiam() : v.getGiaTriGiam();
+        if ("PHAN_TRAM".equals(loaiUuDaiSauCapNhat)
+                && giaTriGiamSauCapNhat.compareTo(BigDecimal.valueOf(100)) > 0) {
             throw AppException.badRequest("Giam PHAN_TRAM khong duoc vuot qua 100%");
+        }
+
+        LocalDate ngayHieuLucSauCapNhat = request.getNgayHieuLuc() != null ? request.getNgayHieuLuc() : v.getNgayHieuLuc();
+        LocalDate ngayHetHanSauCapNhat = request.getNgayHetHan() != null ? request.getNgayHetHan() : v.getNgayHetHan();
+        if (ngayHieuLucSauCapNhat.isAfter(ngayHetHanSauCapNhat)) {
+            throw AppException.badRequest("NgayHieuLuc phai truoc NgayHetHan");
         }
 
         if (request.getMaCode() != null && !request.getMaCode().equals(v.getMaCode())) {
@@ -303,6 +318,10 @@ public class VoucherService {
         }
         // PHAN_TRAM: 50 điểm / 1%
         return voucher.getGiaTriGiam().multiply(BigDecimal.valueOf(50)).longValue();
+    }
+
+    private boolean laLoaiUuDaiHopLe(String loaiUuDai) {
+        return "PHAN_TRAM".equals(loaiUuDai) || "SO_TIEN".equals(loaiUuDai);
     }
 
     private void kiemTraVoucherCoTheDoi(HoChieuSo hcs, Voucher voucher) {
