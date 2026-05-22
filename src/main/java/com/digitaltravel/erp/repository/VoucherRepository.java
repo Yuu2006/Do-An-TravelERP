@@ -15,7 +15,15 @@ import com.digitaltravel.erp.entity.Voucher;
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, String> {
 
-    Optional<Voucher> findByMaCode(String maCode);
+    @Query("SELECT v FROM Voucher v WHERE v.MaCode = :maCode")
+    Optional<Voucher> findByMaCode(@Param("maCode") String maCode);
+
+    @Query(value = """
+            SELECT COALESCE(MAX(TO_NUMBER(SUBSTR(MaVoucher, 3))), 0)
+            FROM VOUCHER
+            WHERE REGEXP_LIKE(MaVoucher, '^VC[0-9]+$')
+            """, nativeQuery = true)
+    Integer findMaxVoucherNumber();
 
     // Tất cả voucher (admin quản lý)
     @Query("""

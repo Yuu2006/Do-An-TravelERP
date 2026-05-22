@@ -69,11 +69,12 @@ public class ThanhToanService {
         String phuongThuc = (request.getPhuongThuc() == null || request.getPhuongThuc().isBlank())
                 ? "MOMO_WALLET" : request.getPhuongThuc();
 
-        if (request.isMock()) {
-            if (!mockEnabled) {
-                throw AppException.forbidden("Thanh toan mock dang bi tat tren moi truong hien tai");
-            }
+        if (mockEnabled) {
             return xuLyMock(don, phuongThuc);
+        }
+
+        if (request.isMock()) {
+            throw AppException.forbidden("Thanh toan mock dang bi tat tren moi truong hien tai");
         }
 
         // TODO: Tích hợp MoMo thực — xem README phần UC29

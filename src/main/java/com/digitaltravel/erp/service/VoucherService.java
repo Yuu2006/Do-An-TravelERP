@@ -149,9 +149,11 @@ public class VoucherService {
     // ── UC53: Admin tạo voucher mới ─────────────────────────────────────────
     @Transactional
     public VoucherResponse taoVoucher(VoucherRequest request, String nguoiTao) {
+        String maCode = request.getMaCode().trim();
+
         // Kiểm tra mã code trùng
-        if (voucherRepository.findByMaCode(request.getMaCode()).isPresent()) {
-            throw AppException.badRequest("MaCode da ton tai: " + request.getMaCode());
+        if (voucherRepository.findByMaCode(maCode).isPresent()) {
+            throw AppException.badRequest("MaCode da ton tai: " + maCode);
         }
 
         if (!laLoaiUuDaiHopLe(request.getLoaiUuDai())) {
@@ -169,8 +171,8 @@ public class VoucherService {
         }
 
         Voucher v = new Voucher();
-        v.setMaVoucher("V_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
-        v.setMaCode(request.getMaCode());
+        v.setMaVoucher(taoMaVoucherKeTiep());
+        v.setMaCode(maCode);
         v.setLoaiUuDai(request.getLoaiUuDai());
         v.setGiaTriGiam(request.getGiaTriGiam());
         v.setDieuKienApDung(request.getDieuKienApDung());
@@ -182,6 +184,11 @@ public class VoucherService {
         voucherRepository.save(v);
 
         return toVoucherResponse(v);
+    }
+
+    private String taoMaVoucherKeTiep() {
+        Integer maxVoucherNumber = voucherRepository.findMaxVoucherNumber();
+        return "VC" + ((maxVoucherNumber != null ? maxVoucherNumber : 0) + 1);
     }
 
     // ── UC52: Admin cập nhật voucher ────────────────────────────────────────

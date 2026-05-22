@@ -1,9 +1,7 @@
 package com.digitaltravel.erp.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -61,6 +59,7 @@ class VoucherServiceTest {
                 "Ap dung cho don hang tu 1 trieu", 100,
                 LocalDate.of(2026, 6, 1), LocalDate.of(2026, 6, 30));
         when(voucherRepository.findByMaCode("SUMMER10")).thenReturn(Optional.empty());
+        when(voucherRepository.findMaxVoucherNumber()).thenReturn(0);
         when(voucherRepository.save(any(Voucher.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         VoucherResponse response = voucherService.taoVoucher(request, "admin");
@@ -69,8 +68,7 @@ class VoucherServiceTest {
         verify(voucherRepository).save(captor.capture());
         Voucher saved = captor.getValue();
 
-        assertNotNull(response.getMaVoucher());
-        assertTrue(response.getMaVoucher().startsWith("V_"));
+        assertEquals("VC1", response.getMaVoucher());
         assertEquals("SUMMER10", saved.getMaCode());
         assertEquals("PHAN_TRAM", response.getLoaiUuDai());
         assertEquals(BigDecimal.TEN, response.getGiaTriGiam());

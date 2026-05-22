@@ -74,7 +74,6 @@ CREATE TABLE NHATKYHETHONG (
 CREATE TABLE HOCHIEUSO (
                            MaKhachHang      VARCHAR2(50)   PRIMARY KEY,
                            MaTaiKhoan       VARCHAR2(50)   NOT NULL,
-                           SoDienThoai      VARCHAR2(20),
                            GhiChuYTe        CLOB,
                            DiUng            VARCHAR2(1000),
                            HangThanhVien    VARCHAR2(20)   DEFAULT 'THANH_VIEN' NOT NULL,

@@ -85,7 +85,6 @@ public class AuthController {
         HoChieuSo hoChieuSo = new HoChieuSo();
         hoChieuSo.setMaKhachHang(maTuDongService.taoMaHoChieuSo());
         hoChieuSo.setTaiKhoan(taiKhoan);
-        hoChieuSo.setSoDienThoai(request.getSoDienThoai());
         hoChieuSo.setHangThanhVien("THANH_VIEN");
         hoChieuSo.setDiemXanh(0L);
         hoChieuSoRepository.save(hoChieuSo);

@@ -49,7 +49,6 @@ public class KhachHangService {
             hcs.getTaiKhoan().setNgaySinh(request.getNgaySinh());
         }
         if (request.getSoDienThoai() != null) {
-            hcs.setSoDienThoai(request.getSoDienThoai());
             hcs.getTaiKhoan().setSoDienThoai(request.getSoDienThoai());
         }
         if (request.getDiUng() != null) {
@@ -86,7 +85,7 @@ public class KhachHangService {
                 .email(hcs.getTaiKhoan().getEmail())
                 .cccd(hcs.getTaiKhoan().getCccd())
                 .ngaySinh(hcs.getTaiKhoan().getNgaySinh())
-                .soDienThoai(hcs.getSoDienThoai())
+                .soDienThoai(hcs.getTaiKhoan().getSoDienThoai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())

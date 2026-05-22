@@ -28,9 +28,6 @@ public class HoChieuSo {
     @JoinColumn(name = "MaTaiKhoan", nullable = false, unique = true)
     TaiKhoan taiKhoan;
 
-    @Column(name = "SoDienThoai", length = 20)
-    String SoDienThoai;
-
     // CLOB — thong tin y te nhay cam
     @Lob
     @Column(name = "GhiChuYTe")
