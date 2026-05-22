@@ -88,7 +88,7 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             SELECT COUNT(d) > 0 FROM DonDatTour d
             WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
               AND d.khachHang.MaKhachHang = :maKhachHang
-              AND d.trangThai = 'DA_XAC_NHAN'
+              AND d.TrangThai = 'DA_XAC_NHAN'
             """)
     boolean existsConfirmedKhachHangInTour(
             @Param("maTourThucTe") String maTourThucTe,
