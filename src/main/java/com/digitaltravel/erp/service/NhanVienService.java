@@ -54,12 +54,12 @@ public class NhanVienService {
 
         TaiKhoan tkNguoiThucHien = taiKhoanRepository.findById(nguoiThucHien).orElse(null);
         if (tkNguoiThucHien != null && nv.getTaiKhoan().getMaTaiKhoan().equals(nguoiThucHien)) {
-            throw AppException.badRequest("Khong the tu khoa chinh tai khoan cua ban.");
+            throw AppException.badRequest("Không thể tự khóa chính tài khoản của bạn.");
         }
 
         TaiKhoan tk = nv.getTaiKhoan();
         if ("KHOA".equals(tk.getTrangThai())) {
-            throw AppException.badRequest("Tai khoan da o trang thai KHOA.");
+            throw AppException.badRequest("Tài khoản đã ở trạng thái KHOA.");
         }
         tk.setTrangThai("KHOA");
         taiKhoanRepository.save(tk);
@@ -73,7 +73,7 @@ public class NhanVienService {
 
         TaiKhoan tk = nv.getTaiKhoan();
         if ("HOAT_DONG".equals(tk.getTrangThai())) {
-            throw AppException.badRequest("Tai khoan da o trang thai HOAT_DONG.");
+            throw AppException.badRequest("Tài khoản đã ở trạng thái HOAT_DONG.");
         }
         tk.setTrangThai("HOAT_DONG");
         taiKhoanRepository.save(tk);
@@ -115,7 +115,7 @@ public class NhanVienService {
     // ── Lấy NhanVien theo maTaiKhoan (dùng cho controller) ───────────────────
     public NhanVien findNhanVienByTaiKhoan(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
     }
 
     // ── Lấy Hồ sơ cá nhân (Dành cho HDV tự xem) ──────────────────────────────

@@ -100,7 +100,7 @@ public class TourThucTeService {
                 ? request.getSoKhachToiThieu() : 1;
 
         if (soKhachToiThieu > request.getSoKhachToiDa()) {
-            throw AppException.badRequest("So khach toi thieu khong duoc lon hon so khach toi da");
+            throw AppException.badRequest("Số khách tối thiểu không được lớn hơn số khách tối đa");
         }
 
         if (request.getGiaHienHanh().compareTo(tourMau.getGiaSan()) < 0) {
@@ -133,13 +133,13 @@ public class TourThucTeService {
         }
         if (request.getSoKhachToiDa() != null) {
             if (request.getSoKhachToiDa() < ttt.getSoKhachToiThieu()) {
-                throw AppException.badRequest("So khach toi da khong duoc nho hon so khach toi thieu");
+                throw AppException.badRequest("Số khách tối đa không được nhỏ hơn số khách tối thiểu");
             }
             ttt.setSoKhachToiDa(request.getSoKhachToiDa());
         }
         if (request.getSoKhachToiThieu() != null) {
             if (request.getSoKhachToiThieu() > ttt.getSoKhachToiDa()) {
-                throw AppException.badRequest("So khach toi thieu khong duoc lon hon so khach toi da");
+                throw AppException.badRequest("Số khách tối thiểu không được lớn hơn số khách tối đa");
             }
             ttt.setSoKhachToiThieu(request.getSoKhachToiThieu());
         }
@@ -160,10 +160,10 @@ public class TourThucTeService {
 
         // Chỉ cho xóa khi ở trạng thái CHO_KICH_HOAT hoặc MO_BAN (chưa có đơn xác nhận)
         if (!"CHO_KICH_HOAT".equals(ttt.getTrangThai()) && !"MO_BAN".equals(ttt.getTrangThai())) {
-            throw AppException.badRequest("Chi co the xoa tour thuc te o trang thai CHO_KICH_HOAT hoac MO_BAN");
+            throw AppException.badRequest("Chỉ có thể xóa tour thực tế ở trạng thái CHO_KICH_HOAT hoặc MO_BAN");
         }
         if (donDatTourRepository.countBlockingBookingsByTourThucTe(id) > 0) {
-            throw AppException.badRequest("Khong the xoa tour thuc te da phat sinh don dat tour");
+            throw AppException.badRequest("Không thể xóa tour thực tế đã phát sinh đơn đặt tour");
         }
 
         ttt.setTrangThai("HUY");

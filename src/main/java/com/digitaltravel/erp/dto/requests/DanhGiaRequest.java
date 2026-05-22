@@ -8,12 +8,12 @@ import lombok.Getter;
 
 @Getter
 public class DanhGiaRequest {
-    @NotBlank(message = "MaTourThucTe khong duoc trong")
+    @NotBlank(message = "Mã tour thực tế không được trống")
     String maTourThucTe;
 
-    @NotNull(message = "SoSao khong duoc trong")
-    @Min(value = 1, message = "So sao toi thieu la 1")
-    @Max(value = 5, message = "So sao toi da la 5")
+    @NotNull(message = "Số sao không được trống")
+    @Min(value = 1, message = "Số sao tối thiểu là 1")
+    @Max(value = 5, message = "Số sao tối đa là 5")
     Integer soSao;
 
     String nhanXet;

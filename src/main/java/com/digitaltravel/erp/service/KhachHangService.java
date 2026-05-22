@@ -28,7 +28,7 @@ public class KhachHangService {
     // ── Xem hồ sơ của bản thân ──────────────────────────────────────────────
     public HoChieuSoResponse layHoSo(String maTaiKhoan) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
         return toResponse(hcs);
     }
 
@@ -36,12 +36,12 @@ public class KhachHangService {
     @Transactional
     public HoChieuSoResponse capNhatHoSo(String maTaiKhoan, CapNhatHoChieuSoRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         if (request.getCccd() != null) {
             if (!request.getCccd().isBlank()
                     && taiKhoanRepository.existsByCccdAndMaTaiKhoanNot(request.getCccd(), hcs.getTaiKhoan().getMaTaiKhoan())) {
-                throw AppException.badRequest("CCCD da duoc su dung");
+                throw AppException.badRequest("CCCD đã được sử dụng");
             }
             hcs.getTaiKhoan().setCccd(request.getCccd());
         }
@@ -71,7 +71,7 @@ public class KhachHangService {
     // ── UC22: Lịch sử tour đã tham gia ──────────────────────────────────────
     public Page<LichSuTourResponse> lichSuTour(String maTaiKhoan, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
         return lichSuTourRepository.findByMaKhachHang(hcs.getMaKhachHang(), pageable)
                 .map(this::tolichSuTourResponse);
     }
@@ -86,12 +86,20 @@ public class KhachHangService {
                 .email(hcs.getTaiKhoan().getEmail())
                 .cccd(hcs.getTaiKhoan().getCccd())
                 .ngaySinh(hcs.getTaiKhoan().getNgaySinh())
-                .soDienThoai(hcs.getSoDienThoai())
+                .soDienThoai(laySoDienThoai(hcs))
+                .trangThaiTaiKhoan(hcs.getTaiKhoan().getTrangThai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())
                 .diemXanh(hcs.getDiemXanh())
                 .build();
+    }
+
+    private String laySoDienThoai(HoChieuSo hcs) {
+        if (hcs.getSoDienThoai() != null && !hcs.getSoDienThoai().isBlank()) {
+            return hcs.getSoDienThoai();
+        }
+        return hcs.getTaiKhoan().getSoDienThoai();
     }
 
     private LichSuTourResponse tolichSuTourResponse(LichSuTour ls) {

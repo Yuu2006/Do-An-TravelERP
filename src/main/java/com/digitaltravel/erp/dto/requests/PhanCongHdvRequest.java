@@ -11,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PhanCongHdvRequest {
 
-    @NotBlank(message = "Ma tour thuc te khong duoc de trong")
+    @NotBlank(message = "Mã tour thực tế không được để trống")
     String maTourThucTe;
 
-    @NotBlank(message = "Ma nhan vien khong duoc de trong")
+    @NotBlank(message = "Mã nhân viên không được để trống")
     String maNhanVien;
 
     String ghiChu;

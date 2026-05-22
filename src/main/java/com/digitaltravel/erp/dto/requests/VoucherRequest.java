@@ -11,26 +11,26 @@ import lombok.Getter;
 
 @Getter
 public class VoucherRequest {
-    @NotBlank(message = "MaCode khong duoc trong")
+    @NotBlank(message = "Mã code không được trống")
     String maCode;
 
-    @NotBlank(message = "LoaiUuDai khong duoc trong")
+    @NotBlank(message = "Loại ưu đãi không được trống")
     // PHAN_TRAM | SO_TIEN
     String loaiUuDai;
 
-    @NotNull(message = "GiaTriGiam khong duoc trong")
-    @DecimalMin(value = "0", message = "GiaTriGiam phai >= 0")
+    @NotNull(message = "Giá trị giảm không được trống")
+    @DecimalMin(value = "0", message = "Giá trị giảm phải >= 0")
     BigDecimal giaTriGiam;
 
     String dieuKienApDung;
 
-    @NotNull(message = "SoLuotPhatHanh khong duoc trong")
-    @Min(value = 1, message = "SoLuotPhatHanh phai >= 1")
+    @NotNull(message = "Số lượt phát hành không được trống")
+    @Min(value = 1, message = "Số lượt phát hành phải >= 1")
     Integer soLuotPhatHanh;
 
-    @NotNull(message = "NgayHieuLuc khong duoc trong")
+    @NotNull(message = "Ngày hiệu lực không được trống")
     LocalDate ngayHieuLuc;
 
-    @NotNull(message = "NgayHetHan khong duoc trong")
+    @NotNull(message = "Ngày hết hạn không được trống")
     LocalDate ngayHetHan;
 }

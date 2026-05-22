@@ -29,7 +29,7 @@ public class MaTuDongService {
             case VaiTroConst.DIEUHANH -> "TK_DH";
             case VaiTroConst.KETOAN -> "TK_KT";
             case VaiTroConst.ADMIN -> "TK_AD";
-            default -> throw AppException.badRequest("Vai tro khong hop le");
+            default -> throw AppException.badRequest("Vai trò không hợp lệ");
         };
 
         return taoMa("TAIKHOAN", "MaTaiKhoan", prefix);

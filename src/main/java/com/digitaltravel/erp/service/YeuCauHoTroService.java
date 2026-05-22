@@ -35,7 +35,7 @@ public class YeuCauHoTroService {
     @Transactional
     public YeuCauHoTroResponse taoYeuCau(String maTaiKhoan, YeuCauHoTroRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         YeuCauHoTro yc = new YeuCauHoTro();
         yc.setMaYeuCauHoTro("YCHTR_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
@@ -58,10 +58,35 @@ public class YeuCauHoTroService {
     // ── UC36: KH xem danh sách yêu cầu của mình ─────────────────────────────
     public Page<YeuCauHoTroResponse> danhSachCuaKhachHang(String maTaiKhoan, String loaiYeuCau, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
         // Dùng lại query có sẵn, filter thêm theo khách hàng
         return yeuCauHoTroRepository.timKiemTheoKhachHang(hcs.getMaKhachHang(), loaiYeuCau, pageable)
                 .map(this::toResponse);
+    }
+
+    // ── Bổ sung bằng chứng ───────────────────────────────────────────────────
+    @Transactional
+    public YeuCauHoTroResponse boSung(String maTaiKhoan, String maYeuCau, String noiDungBoSung) {
+        HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
+
+        YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
+
+        if (!yc.getKhachHang().getMaKhachHang().equals(hcs.getMaKhachHang())) {
+            throw AppException.forbidden("Không có quyền truy cập yêu cầu này");
+        }
+
+        if (!"CHO_BO_SUNG".equals(yc.getTrangThai()) && !"CHUA_XU_LY".equals(yc.getTrangThai())) {
+            throw AppException.badRequest("Yeu cau nay dang o trang thai " + yc.getTrangThai() + ", khong the bo sung");
+        }
+
+        String ngayBoSung = java.time.LocalDate.now().toString();
+        yc.setNoiDung(yc.getNoiDung() + "\n\n[Bổ sung ngày " + ngayBoSung + "]: " + noiDungBoSung);
+        yc.setTrangThai("CHUA_XU_LY"); // Đưa lại hàng chờ
+
+        yeuCauHoTroRepository.save(yc);
+        return toResponse(yc);
     }
 
     // ── UC41: SALES xem tất cả yêu cầu ──────────────────────────────────────
@@ -77,7 +102,7 @@ public class YeuCauHoTroService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
         if ("DA_XU_LY".equals(yc.getTrangThai()) || "TU_CHOI".equals(yc.getTrangThai())) {
-            throw AppException.badRequest("Yeu cau nay da ket thuc, khong the cap nhat");
+            throw AppException.badRequest("Yêu cầu này đã kết thúc, không thể cập nhật");
         }
 
         String trangThaiMoi = request.getTrangThai();

@@ -39,23 +39,23 @@ public class DanhGiaService {
     @Transactional
     public DanhGiaKhResponse guiDanhGia(String maTaiKhoan, DanhGiaRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         TourThucTe tour = tourThucTeRepository.findById(request.getMaTourThucTe())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + request.getMaTourThucTe()));
 
         // Chỉ đánh giá tour đã kết thúc
         if (!"KET_THUC".equals(tour.getTrangThai()) && !"DA_QUYET_TOAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Chi co the danh gia tour da ket thuc");
+            throw AppException.badRequest("Chỉ có thể đánh giá tour đã kết thúc");
         }
 
         // Kiểm tra KH đã tham gia tour chưa (có trong LichSuTour)
         lichSuTourRepository.findByMaKhachHangAndMaTourThucTe(hcs.getMaKhachHang(), tour.getMaTourThucTe())
-                .orElseThrow(() -> AppException.badRequest("Ban chua tham gia tour nay nen khong the danh gia"));
+                .orElseThrow(() -> AppException.badRequest("Bạn chưa tham gia tour này nên không thể đánh giá"));
 
         // Một KH chỉ đánh giá mỗi tour 1 lần
         if (danhGiaKhRepository.existsByKhachHangAndTour(hcs.getMaKhachHang(), tour.getMaTourThucTe())) {
-            throw AppException.badRequest("Ban da danh gia tour nay roi");
+            throw AppException.badRequest("Bạn đã đánh giá tour này rồi");
         }
 
         DanhGiaKh dg = new DanhGiaKh();

@@ -44,11 +44,11 @@ public class TaiKhoanAdminController {
             throw AppException.badRequest(VaiTroConst.VAI_TRO_NHAN_VIEN_MSG);
         }
         if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) {
-            throw AppException.badRequest("Ten dang nhap da ton tai");
+            throw AppException.badRequest("Tên đăng nhập đã tồn tại");
         }
         if (request.getEmail() != null && !request.getEmail().isBlank()
                 && taiKhoanRepository.existsByEmail(request.getEmail())) {
-            throw AppException.badRequest("Email da duoc su dung");
+            throw AppException.badRequest("Email đã được sử dụng");
         }
 
         VaiTro vaiTro = vaiTroRepository.findById(maVaiTro)

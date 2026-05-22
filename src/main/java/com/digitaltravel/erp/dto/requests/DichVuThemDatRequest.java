@@ -8,10 +8,10 @@ import lombok.Getter;
 @Getter
 public class DichVuThemDatRequest {
 
-    @NotBlank(message = "Ma dich vu them khong duoc de trong")
+    @NotBlank(message = "Mã dịch vụ thêm không được để trống")
     String maDichVuThem;
 
-    @NotNull(message = "So luong khong duoc de trong")
-    @Min(value = 1, message = "So luong phai it nhat la 1")
+    @NotNull(message = "Số lượng không được để trống")
+    @Min(value = 1, message = "Số lượng phải ít nhất là 1")
     Long soLuong;
 }

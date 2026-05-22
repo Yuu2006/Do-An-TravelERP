@@ -10,11 +10,11 @@ import lombok.Setter;
 @Setter
 public class LichTrinhRequest {
 
-    @NotNull(message = "Ngay thu khong duoc de trong")
-    @Min(value = 1, message = "Ngay thu phai lon hon 0")
+    @NotNull(message = "Ngày thứ không được để trống")
+    @Min(value = 1, message = "Ngày thứ phải lớn hơn 0")
     Integer ngayThu;
 
-    @NotBlank(message = "Hoat dong khong duoc de trong")
+    @NotBlank(message = "Hoạt động không được để trống")
     String hoatDong;
 
     String moTa;

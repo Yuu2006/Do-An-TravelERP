@@ -17,10 +17,14 @@ import com.digitaltravel.erp.entity.DonDatTour;
 public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> {
 
     // Lấy tất cả đơn đặt tour của một khách hàng (theo maKhachHang của HoChieuSo)
-    @Query("""
+    @Query(value = """
             SELECT d FROM DonDatTour d
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
+            WHERE d.khachHang.MaKhachHang = :maKhachHang
+            """,
+            countQuery = """
+            SELECT COUNT(d) FROM DonDatTour d
             WHERE d.khachHang.MaKhachHang = :maKhachHang
             """)
     Page<DonDatTour> findByMaKhachHang(@Param("maKhachHang") String maKhachHang, Pageable pageable);
@@ -39,11 +43,16 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
     );
 
     // Dành cho nhân viên: tất cả đơn (filter theo trạng thái)
-    @Query("""
+    @Query(value = """
             SELECT d FROM DonDatTour d
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
             JOIN FETCH d.khachHang
+            WHERE (:trangThai IS NULL OR d.trangThai = :trangThai)
+              AND (:maTourThucTe IS NULL OR d.tourThucTe.MaTourThucTe = :maTourThucTe)
+            """,
+            countQuery = """
+            SELECT COUNT(d) FROM DonDatTour d
             WHERE (:trangThai IS NULL OR d.trangThai = :trangThai)
               AND (:maTourThucTe IS NULL OR d.tourThucTe.MaTourThucTe = :maTourThucTe)
             """)

@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class XuLyYeuCauRequest {
 
-    @Size(max = 2000, message = "Ghi chu khong qua 2000 ky tu")
+    @Size(max = 2000, message = "Ghi chú không quá 2000 ký tự")
     String ghiChu;
 }

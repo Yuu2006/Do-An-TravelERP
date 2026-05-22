@@ -40,7 +40,7 @@ public class HuyTourService {
     @Transactional
     public YeuCauHoTroResponse yeuCauHuyTour(String maTaiKhoan, String maDatTour, HuyTourRequest request) {
         HoChieuSo kh = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, kh.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
@@ -55,17 +55,17 @@ public class HuyTourService {
         boolean daCoYeuCau = !yeuCauHoTroRepository
                 .findByMaDatTourAndLoaiYeuCau(maDatTour, "HUY_TOUR").isEmpty();
         if (daCoYeuCau) {
-            throw AppException.badRequest("Da co yeu cau huy tour dang cho xu ly cho don nay.");
+            throw AppException.badRequest("Đã có yêu cầu hủy tour đang chờ xử lý cho đơn này.");
         }
 
         // Tính tỉ lệ hoàn tiền
         LocalDate ngayKhoiHanh = don.getTourThucTe().getNgayKhoiHanh();
         if (ngayKhoiHanh == null) {
-            throw AppException.badRequest("Tour chua co ngay khoi hanh, khong the yeu cau hoan tien");
+            throw AppException.badRequest("Tour chưa có ngày khởi hành, không thể yêu cầu hoàn tiền");
         }
         long soNgayConLai = ChronoUnit.DAYS.between(LocalDate.now(), ngayKhoiHanh);
         if (soNgayConLai <= 2) {
-            throw AppException.badRequest("Khong the yeu cau hoan tien trong vong 2 ngay truoc ngay khoi hanh tour");
+            throw AppException.badRequest("Không thể yêu cầu hoàn tiền trong vòng 2 ngày trước ngày khởi hành tour");
         }
         int tiLeHoan = tinhTiLeHoan((int) soNgayConLai);
         BigDecimal soTienHoan = don.getTongTien()
@@ -98,7 +98,7 @@ public class HuyTourService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
         if (!"CHUA_XU_LY".equals(yc.getTrangThai())) {
-            throw AppException.badRequest("Yeu cau khong o trang thai co the duyet.");
+            throw AppException.badRequest("Yêu cầu không ở trạng thái có thể duyệt.");
         }
 
         DonDatTour don = yc.getDonDatTour();
@@ -132,7 +132,7 @@ public class HuyTourService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
 
         if (!"CHUA_XU_LY".equals(yc.getTrangThai())) {
-            throw AppException.badRequest("Yeu cau khong o trang thai co the tu choi.");
+            throw AppException.badRequest("Yêu cầu không ở trạng thái có thể từ chối.");
         }
 
         // Kinh doanh từ chối yêu cầu hủy: đơn quay lại trạng thái đã xác nhận.

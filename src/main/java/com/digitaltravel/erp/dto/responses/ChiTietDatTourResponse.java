@@ -17,6 +17,8 @@ public class ChiTietDatTourResponse {
     String cccd;
     String soDienThoai;
     LocalDate ngaySinh;
+    Integer tuoi;
+    String nhomTuoi;
     String gioiTinh;
     String ghiChu;
     BigDecimal giaTaiThoiDiemDat;

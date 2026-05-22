@@ -80,13 +80,13 @@ public class QuyetToanService {
             // Nếu chưa quyết toán thì cập nhật
             QuyetToan existing = quyetToanRepository.findByTourThucTe_MaTourThucTe(maTour).get();
             if ("DA_QUYET_TOAN".equals(existing.getTrangThai())) {
-                throw AppException.badRequest("Quyet toan da bi chot, khong the sua.");
+                throw AppException.badRequest("Quyết toán đã bị chốt, không thể sửa.");
             }
             return capNhatQT(existing, maTour, req, maTaiKhoan);
         }
 
         NhanVien nv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
 
         BigDecimal doanhThu = tinhDoanhThu(maTour);
         BigDecimal chiPhi = tinhChiPhi(maTour);
@@ -113,7 +113,7 @@ public class QuyetToanService {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));
         if (!"CHUA_QUYET_TOAN".equals(qt.getTrangThai())) {
-            throw AppException.badRequest("Chi co the chot quyet toan o trang thai CHUA_QUYET_TOAN.");
+            throw AppException.badRequest("Chỉ có thể chốt quyết toán ở trạng thái CHUA_QUYET_TOAN.");
         }
         qt.setTrangThai("DA_QUYET_TOAN");
 
@@ -147,18 +147,18 @@ public class QuyetToanService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay giao dich: " + maGiaoDich));
 
         if (!"HOAN_TIEN".equals(gd.getLoaiGiaoDich())) {
-            throw AppException.badRequest("Giao dich nay khong phai hoan tien");
+            throw AppException.badRequest("Giao dịch này không phải hoàn tiền");
         }
         if ("DA_HOAN_TIEN".equals(gd.getTrangThai())) {
-            throw AppException.badRequest("Giao dich nay da duoc xac nhan hoan tien roi");
+            throw AppException.badRequest("Giao dịch này đã được xác nhận hoàn tiền rồi");
         }
         if (!"CHO_THANH_TOAN".equals(gd.getTrangThai())) {
-            throw AppException.badRequest("Chi co the xac nhan giao dich o trang thai CHO_THANH_TOAN");
+            throw AppException.badRequest("Chỉ có thể xác nhận giao dịch ở trạng thái CHO_THANH_TOAN");
         }
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chi co the xac nhan hoan tien cho don o trang thai CHO_HUY");
+            throw AppException.badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY");
         }
 
         gd.setTrangThai("DA_HOAN_TIEN");
@@ -190,15 +190,15 @@ public class QuyetToanService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay giao dich: " + maGiaoDich));
 
         if (!"HOAN_TIEN".equals(gd.getLoaiGiaoDich())) {
-            throw AppException.badRequest("Giao dich nay khong phai hoan tien");
+            throw AppException.badRequest("Giao dịch này không phải hoàn tiền");
         }
         if (!"CHO_THANH_TOAN".equals(gd.getTrangThai())) {
-            throw AppException.badRequest("Chi co the tu choi giao dich hoan tien o trang thai CHO_THANH_TOAN");
+            throw AppException.badRequest("Chỉ có thể từ chối giao dịch hoàn tiền ở trạng thái CHO_THANH_TOAN");
         }
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chi co the tu choi hoan tien cho don o trang thai CHO_HUY");
+            throw AppException.badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY");
         }
 
         gd.setTrangThai("THAT_BAI");
@@ -237,7 +237,7 @@ public class QuyetToanService {
         TourThucTe tour = tourThucTeRepository.findById(maTour)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
         if (!"KET_THUC".equals(tour.getTrangThai()) && !"DA_QUYET_TOAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Tour chua ket thuc, khong the quyet toan.");
+            throw AppException.badRequest("Tour chưa kết thúc, không thể quyết toán.");
         }
         return tour;
     }
