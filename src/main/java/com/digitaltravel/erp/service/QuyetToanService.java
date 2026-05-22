@@ -127,11 +127,13 @@ public class QuyetToanService {
     }
 
     // ── UC51-53: Xem danh sách / chi tiết ────────────────────────────────
+    @Transactional(readOnly = true)
     public Page<QuyetToanResponse> danhSach(String trangThai, Pageable pageable) {
         return quyetToanRepository.findByTrangThai(trangThai, pageable)
                 .map(this::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public QuyetToanResponse chiTiet(String maQuyetToan) {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));

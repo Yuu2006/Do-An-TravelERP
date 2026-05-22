@@ -69,9 +69,9 @@ public class VoucherService {
             throw AppException.forbidden("Ban khong co quyen ap voucher cho don nay");
         }
 
-        // Đơn phải đang CHO_XAC_NHAN hoặc DA_XAC_NHAN
-        if (!"CHO_XAC_NHAN".equals(don.getTrangThai()) && !"DA_XAC_NHAN".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chi co the ap voucher cho don o trang thai CHO_XAC_NHAN hoac DA_XAC_NHAN");
+        // Voucher chi ap dung truoc khi thanh toan/xac nhan don.
+        if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
+            throw AppException.badRequest("Chi co the ap voucher cho don o trang thai CHO_XAC_NHAN");
         }
 
         // Lấy voucher từ ví của KH
@@ -272,6 +272,10 @@ public class VoucherService {
     // ── Danh sách voucher (Admin) ────────────────────────────────────────────
     public Page<VoucherResponse> danhSach(Pageable pageable) {
         return voucherRepository.timKiem(pageable).map(this::toVoucherResponse);
+    }
+
+    public Page<VoucherResponse> danhSachCoTheDoi(Pageable pageable) {
+        return voucherRepository.findAllActive(LocalDate.now(), pageable).map(this::toVoucherResponse);
     }
 
     // ── Chi tiết voucher ────────────────────────────────────────────────────

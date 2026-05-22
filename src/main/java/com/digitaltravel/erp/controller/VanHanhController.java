@@ -41,8 +41,12 @@ public class VanHanhController {
     @GetMapping({"/api/huong-dan-vien/tour/{maTour}/doan", "/api/dieu-hanh/tour/{maTour}/doan"})
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<DiemDanhResponse>>> danhSachDoan(
-            @PathVariable String maTour) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachDoan(maTour)));
+            @PathVariable String maTour,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachDoan(
+                maTour,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
 
     // ── UC43: Điểm danh khách ─────────────────────────────────────────────
@@ -52,7 +56,11 @@ public class VanHanhController {
             @PathVariable String maTour,
             @Valid @RequestBody DiemDanhRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        DiemDanhResponse resp = vanHanhService.diemDanh(maTour, request, user.getUsername());
+        DiemDanhResponse resp = vanHanhService.diemDanh(
+                maTour,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro());
         return ResponseEntity.status(201).body(ApiResponse.created(resp));
     }
 
@@ -63,7 +71,11 @@ public class VanHanhController {
             @PathVariable String maTour,
             @Valid @RequestBody GhiNhanHanhDongRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        HanhDongResponse resp = vanHanhService.ghiNhanHanhDong(maTour, request, user.getUsername());
+        HanhDongResponse resp = vanHanhService.ghiNhanHanhDong(
+                maTour,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro());
         return ResponseEntity.status(201).body(ApiResponse.created(resp));
     }
 
@@ -72,8 +84,13 @@ public class VanHanhController {
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<NhatKySuCoResponse>>> danhSachSuCo(
             @PathVariable String maTour,
-            @RequestParam(required = false) String mucDo) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachSuCo(maTour, mucDo)));
+            @RequestParam(required = false) String mucDo,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachSuCo(
+                maTour,
+                mucDo,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
 
     @PostMapping("/api/huong-dan-vien/tour/{maTour}/su-co")
@@ -82,7 +99,11 @@ public class VanHanhController {
             @PathVariable String maTour,
             @Valid @RequestBody BaoCaoSuCoRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        NhatKySuCoResponse resp = vanHanhService.baoCaoSuCo(maTour, request, user.getUsername());
+        NhatKySuCoResponse resp = vanHanhService.baoCaoSuCo(
+                maTour,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro());
         return ResponseEntity.status(201).body(ApiResponse.created(resp));
     }
 
@@ -90,8 +111,13 @@ public class VanHanhController {
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NhatKySuCoResponse>> capNhatSuCo(
             @PathVariable String maSuCo,
-            @Valid @RequestBody BaoCaoSuCoRequest request) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.capNhatSuCo(maSuCo, request)));
+            @Valid @RequestBody BaoCaoSuCoRequest request,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.capNhatSuCo(
+                maSuCo,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
 
     // ── UC46: Chi phí phát sinh ───────────────────────────────────────────
@@ -101,15 +127,23 @@ public class VanHanhController {
             @PathVariable String maTour,
             @Valid @RequestBody KhaiChiPhiRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        ChiPhiThucTeResponse resp = vanHanhService.khaiChiPhi(maTour, request, user.getUsername());
+        ChiPhiThucTeResponse resp = vanHanhService.khaiChiPhi(
+                maTour,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro());
         return ResponseEntity.status(201).body(ApiResponse.created(resp));
     }
 
     @GetMapping({"/api/huong-dan-vien/tour/{maTour}/chi-phi", "/api/dieu-hanh/tour/{maTour}/chi-phi"})
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<ChiPhiThucTeResponse>>> chiPhiCuaTour(
-            @PathVariable String maTour) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiPhiCuaTour(maTour)));
+            @PathVariable String maTour,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiPhiCuaTour(
+                maTour,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
 
     @PutMapping("/api/huong-dan-vien/chi-phi/{maChiPhi}/bo-sung")
@@ -118,7 +152,10 @@ public class VanHanhController {
             @PathVariable String maChiPhi,
             @Valid @RequestBody KhaiChiPhiRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.boSungChiPhi(maChiPhi, request, user.getUsername())));
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.boSungChiPhi(
+                maChiPhi,
+                request,
+                user.getTaiKhoan().getMaTaiKhoan())));
     }
 
     // ── Kế toán: DS chi phí chờ duyệt / duyệt / từ chối ─────────────────

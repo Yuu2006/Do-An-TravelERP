@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class ThanhToanService {
     private final TourThucTeRepository tourThucTeRepository;
     private final ChiTietDatTourRepository chiTietDatTourRepository;
 
+    @Value("${app.payment.mock-enabled:false}")
+    private boolean mockEnabled;
+
     // ── Khởi tạo thanh toán ────────────────────────────────────────────────
     @Transactional
     public ThanhToanResponse khoiTaoThanhToan(String maTaiKhoan, KhoiTaoThanhToanRequest request) {
@@ -66,6 +70,9 @@ public class ThanhToanService {
                 ? "MOMO_WALLET" : request.getPhuongThuc();
 
         if (request.isMock()) {
+            if (!mockEnabled) {
+                throw AppException.forbidden("Thanh toan mock dang bi tat tren moi truong hien tai");
+            }
             return xuLyMock(don, phuongThuc);
         }
 

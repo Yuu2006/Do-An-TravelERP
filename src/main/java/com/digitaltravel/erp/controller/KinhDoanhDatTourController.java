@@ -10,15 +10,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
+import com.digitaltravel.erp.dto.requests.XacNhanThanhToanOfflineRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
 import com.digitaltravel.erp.service.DatTourService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,8 +44,9 @@ public class KinhDoanhDatTourController {
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> xacNhanDon(
             @PathVariable String maDatTour,
-            @AuthenticationPrincipal TaiKhoanDetails user) {
-        return ResponseEntity.ok(ApiResponse.ok("Xac nhan don dat tour thanh cong",
-                datTourService.xacNhanDon(maDatTour, user.getUsername())));
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @Valid @RequestBody(required = false) XacNhanThanhToanOfflineRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok("Xac nhan thanh toan offline thanh cong",
+                datTourService.xacNhanDon(maDatTour, user.getTaiKhoan().getMaTaiKhoan(), request)));
     }
 }
