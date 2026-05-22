@@ -1,6 +1,8 @@
 -- ============================================================
 -- SEED DATA v3 DEMO - Bo du lieu demo nghiep vu day du hon
 -- Chay sau: KhoiTaoBang.sql -> data_v1.sql -> data_v2.sql
+-- Neu schema da tao truoc khi sua unique key CHITIETDATTOUR,
+-- chay FixChiTietDatTourUnique.sql truoc file nay.
 -- Oracle SQL, chi INSERT, khong trung PK voi data_v1/v2
 -- Mat khau mac dinh cho tai khoan moi: password
 -- BCrypt(cost=10): $2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK

@@ -229,8 +229,6 @@ CREATE TABLE CHITIETDATTOUR (
                                 MaNguoiDongHanh      VARCHAR2(50),
                                 LoaiKhach            VARCHAR2(30) DEFAULT 'NGUOI_DAT' NOT NULL,
                                 GiaTaiThoiDiemDat    NUMBER(18,2) NOT NULL,
-                                CONSTRAINT UQ_CTDT_DatTour_KhachHang  UNIQUE (MaDatTour, MaKhachHang),
-                                CONSTRAINT UQ_CTDT_DatTour_NDH        UNIQUE (MaDatTour, MaNguoiDongHanh),
                                 CONSTRAINT FK_CTDT_DatTour             FOREIGN KEY (MaDatTour)   REFERENCES DONDATTOUR(MaDatTour),
                                 CONSTRAINT FK_CTDT_KhachHang           FOREIGN KEY (MaKhachHang) REFERENCES HOCHIEUSO(MaKhachHang),
                                 CONSTRAINT FK_CTDT_NguoiDongHanh       FOREIGN KEY (MaNguoiDongHanh) REFERENCES DSNGUOIDONGHANH(MaNguoiDongHanh),
@@ -242,6 +240,18 @@ CREATE TABLE CHITIETDATTOUR (
                                 ),
                                 CONSTRAINT CK_CTDT_Gia                 CHECK (GiaTaiThoiDiemDat >= 0)
 );
+
+CREATE UNIQUE INDEX UQ_CTDT_DATTOUR_KHACHHANG
+    ON CHITIETDATTOUR (
+        CASE WHEN MaKhachHang IS NOT NULL THEN MaDatTour END,
+        CASE WHEN MaKhachHang IS NOT NULL THEN MaKhachHang END
+    );
+
+CREATE UNIQUE INDEX UQ_CTDT_DATTOUR_NDH
+    ON CHITIETDATTOUR (
+        CASE WHEN MaNguoiDongHanh IS NOT NULL THEN MaDatTour END,
+        CASE WHEN MaNguoiDongHanh IS NOT NULL THEN MaNguoiDongHanh END
+    );
 
 -- Dich vu bo sung trong 1 don dat
 CREATE TABLE CHITIETDICHVU (
