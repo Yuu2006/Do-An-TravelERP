@@ -34,12 +34,14 @@ public class NhanVienService {
     private final VaiTroRepository vaiTroRepository;
 
     // ── Tìm kiếm nhân viên (UC68) ─────────────────────────────────────────
+    @Transactional(readOnly = true)
     public Page<NhanVienResponse> timKiem(String hoTen, String maVaiTro, String trangThai, Pageable pageable) {
         return nhanVienRepository.timKiem(hoTen, maVaiTro, trangThai, pageable)
                 .map(this::toResponse);
     }
 
     // ── Chi tiết nhân viên (UC68) ─────────────────────────────────────────
+    @Transactional(readOnly = true)
     public NhanVienResponse chiTiet(String maNhanVien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
@@ -119,6 +121,7 @@ public class NhanVienService {
     }
 
     // ── Lấy Hồ sơ cá nhân (Dành cho HDV tự xem) ──────────────────────────────
+    @Transactional(readOnly = true)
     public NhanVienResponse layHoSoCaNhan(String maTaiKhoan) {
         NhanVien nv = findNhanVienByTaiKhoan(maTaiKhoan);
         return toResponse(nv);
@@ -127,6 +130,14 @@ public class NhanVienService {
     // ── Mapper ────────────────────────────────────────────────────────────
     private NhanVienResponse toResponse(NhanVien nv) {
         TaiKhoan tk = nv.getTaiKhoan();
+        if (tk == null) {
+            return NhanVienResponse.builder()
+                    .maNhanVien(nv.getMaNhanVien())
+                    .trangThaiLamViec(nv.getTrangThaiLamViec())
+                    .loaiNhanVien(nv.getLoaiNhanVien())
+                    .ngayVaoLam(nv.getNgayVaoLam())
+                    .build();
+        }
         return NhanVienResponse.builder()
                 .maNhanVien(nv.getMaNhanVien())
                 .maTaiKhoan(tk.getMaTaiKhoan())
@@ -139,6 +150,8 @@ public class NhanVienService {
                 .trangThaiLamViec(nv.getTrangThaiLamViec())
                 .loaiNhanVien(nv.getLoaiNhanVien())
                 .ngayVaoLam(nv.getNgayVaoLam())
+                .cccd(tk.getCccd())
+                .ngaySinh(tk.getNgaySinh())
                 .build();
     }
 

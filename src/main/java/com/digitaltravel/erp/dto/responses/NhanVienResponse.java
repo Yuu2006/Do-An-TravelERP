@@ -22,4 +22,6 @@ public class NhanVienResponse {
     String trangThaiLamViec;    // HOAT_DONG | BAN | NGHI
     String loaiNhanVien;
     LocalDate ngayVaoLam;
+    String cccd;
+    LocalDate ngaySinh;
 }
