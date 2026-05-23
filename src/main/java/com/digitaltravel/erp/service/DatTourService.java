@@ -327,9 +327,7 @@ public class DatTourService {
             String maHanhDongXanh = entry.getKey();
             HanhDongXanh hdx = hanhDongXanhRepository.findById(maHanhDongXanh)
                     .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + maHanhDongXanh));
-            TourThucTe tourGanVoiHanhDong = hdx.getTourThucTe();
-            if (tourGanVoiHanhDong != null
-                    && !tour.getMaTourThucTe().equals(tourGanVoiHanhDong.getMaTourThucTe())) {
+            if (!hanhDongXanhRepository.existsAvailableForTour(maHanhDongXanh, tour.getMaTourThucTe())) {
                 throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + maHanhDongXanh);
             }
             dsHopLe.add(new HanhDongXanhDaChon(maHanhDongXanh, entry.getValue()));

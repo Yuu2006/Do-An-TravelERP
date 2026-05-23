@@ -14,8 +14,34 @@ public interface HanhDongXanhRepository extends JpaRepository<HanhDongXanh, Stri
 
     @Query("""
             select hdx from HanhDongXanh hdx
-            where hdx.tourThucTe is null
-               or hdx.tourThucTe.MaTourThucTe = :maTourThucTe
+            where not exists (
+                select 1 from HdxTourThucTe link
+                where link.hanhDongXanh = hdx
+            )
+               or exists (
+                select 1 from HdxTourThucTe link
+                where link.hanhDongXanh = hdx
+                  and link.tourThucTe.MaTourThucTe = :maTourThucTe
+            )
             """)
     List<HanhDongXanh> findAvailableForTour(@Param("maTourThucTe") String maTourThucTe);
+
+    @Query("""
+            select count(hdx) > 0 from HanhDongXanh hdx
+            where hdx.MaHanhDongXanh = :maHanhDongXanh
+              and (
+                not exists (
+                    select 1 from HdxTourThucTe link
+                    where link.hanhDongXanh = hdx
+                )
+                or exists (
+                    select 1 from HdxTourThucTe link
+                    where link.hanhDongXanh = hdx
+                      and link.tourThucTe.MaTourThucTe = :maTourThucTe
+                )
+              )
+            """)
+    boolean existsAvailableForTour(
+            @Param("maHanhDongXanh") String maHanhDongXanh,
+            @Param("maTourThucTe") String maTourThucTe);
 }

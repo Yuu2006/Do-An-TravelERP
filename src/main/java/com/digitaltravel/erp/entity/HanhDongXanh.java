@@ -2,10 +2,7 @@ package com.digitaltravel.erp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,10 +18,6 @@ public class HanhDongXanh {
     @Id
     @Column(name = "MaHanhDongXanh", nullable = false, length = 50)
     String MaHanhDongXanh;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MaTourThucTe")
-    TourThucTe tourThucTe;
 
     @Column(name = "TenHanhDong", nullable = false, length = 200)
     String TenHanhDong;

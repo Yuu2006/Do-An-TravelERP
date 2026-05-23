@@ -18,8 +18,9 @@ BEGIN
                              'CHIPHITHUCTE','NHATKYSUCO','HANHDONG','DIEMDANH',
                              'PHANCONGTOUR','LICHSUTOUR','GIAODICH','DATTOUR_UUDAI',
                              'KHUYENMAI_KH','VOUCHER','CHITIETDICHVU','CHITIETDATTOUR',
-                             'DSNGUOIDONGHANH','DONDATTOUR','TOURTHUCTE','LICHTRINHTOUR','NANGLUCNHANVIEN',
-                              'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
+                              'DSNGUOIDONGHANH','DONDATTOUR','HDX_TOURTHUCTE','DICHVU_TOURTHUCTE','TOURTHUCTE',
+                              'LICHTRINHTOUR','NANGLUCNHANVIEN',
+                               'NHANVIEN','HOCHIEUSO','HANHDONGXANH','DICHVUTHEM',
                               'TOURMAU','NHATKYHETHONG','VAITRO','TAIKHOAN'
             )
         ) LOOP
@@ -143,17 +144,16 @@ CREATE TABLE LICHTRINHTOUR (
 
 -- Danh muc dich vu bo sung, bao gom phu thu phong
 CREATE TABLE DICHVUTHEM (
-                            MaDichVuThem     VARCHAR2(50)  PRIMARY KEY,
-                            Ten              VARCHAR2(200) NOT NULL,
-                            DonViTinh        VARCHAR2(100),
-                            DonGia           NUMBER(18,2)  NOT NULL,
-                            CONSTRAINT CK_DICHVUTHEM_DonGia      CHECK (DonGia >= 0)
+                             MaDichVuThem     VARCHAR2(50)  PRIMARY KEY,
+                             Ten              VARCHAR2(200) NOT NULL,
+                             DonViTinh        VARCHAR2(100),
+                             DonGia           NUMBER(18,2)  NOT NULL,
+                             CONSTRAINT CK_DICHVUTHEM_DonGia      CHECK (DonGia >= 0)
 );
 
 -- Danh muc hanh dong xanh duoc cong diem loyalty
 CREATE TABLE HANHDONGXANH (
                                MaHanhDongXanh   VARCHAR2(50)  PRIMARY KEY,
-                              MaTourThucTe      VARCHAR2(50),
                                TenHanhDong      VARCHAR2(200) NOT NULL,
                                DiemCong         NUMBER(10)    NOT NULL,
                                CONSTRAINT CK_HANHDONGXANH_DiemCong    CHECK (DiemCong >= 0)
@@ -179,8 +179,23 @@ CREATE TABLE TOURTHUCTE (
                                 ))
 );
 
-ALTER TABLE HANHDONGXANH ADD CONSTRAINT FK_HDX_TourThucTe
-    FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe);
+-- Dich vu bo sung ap dung cho tour thuc te
+CREATE TABLE DICHVU_TOURTHUCTE (
+                                    MaTourThucTe     VARCHAR2(50) NOT NULL,
+                                    MaDichVuThem     VARCHAR2(50) NOT NULL,
+                                    CONSTRAINT PK_DICHVU_TOURTHUCTE     PRIMARY KEY (MaTourThucTe, MaDichVuThem),
+                                    CONSTRAINT FK_DVTTT_TourThucTe      FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
+                                    CONSTRAINT FK_DVTTT_DichVuThem      FOREIGN KEY (MaDichVuThem) REFERENCES DICHVUTHEM(MaDichVuThem)
+);
+
+-- Hanh dong xanh ap dung cho tour thuc te
+CREATE TABLE HDX_TOURTHUCTE (
+                                MaTourThucTe     VARCHAR2(50) NOT NULL,
+                                MaHanhDongXanh   VARCHAR2(50) NOT NULL,
+                                CONSTRAINT PK_HDX_TOURTHUCTE        PRIMARY KEY (MaTourThucTe, MaHanhDongXanh),
+                                CONSTRAINT FK_HDTTT_TourThucTe      FOREIGN KEY (MaTourThucTe)   REFERENCES TOURTHUCTE(MaTourThucTe),
+                                CONSTRAINT FK_HDTTT_HanhDongXanh    FOREIGN KEY (MaHanhDongXanh) REFERENCES HANHDONGXANH(MaHanhDongXanh)
+);
 
 -- ============================================================
 -- PHAN HE: DAT TOUR VA THANH TOAN
@@ -513,6 +528,8 @@ CREATE INDEX IDX_DONDATTOUR_TRANGTHAI    ON DONDATTOUR(TrangThai);
 CREATE INDEX IDX_DSNGUOIDONGHANH_DATTOUR ON DSNGUOIDONGHANH(MaDatTour);
 CREATE INDEX IDX_CTDATTOUR_DATTOUR       ON CHITIETDATTOUR(MaDatTour);
 CREATE INDEX IDX_CTDICHVU_DATTOUR        ON CHITIETDICHVU(MaDatTour);
+CREATE INDEX IDX_DVTTT_DICHVUTHEM        ON DICHVU_TOURTHUCTE(MaDichVuThem);
+CREATE INDEX IDX_HDTTT_HANHDONGXANH      ON HDX_TOURTHUCTE(MaHanhDongXanh);
 CREATE INDEX IDX_GIAODICH_DATTOUR        ON GIAODICH(MaDatTour);
 CREATE INDEX IDX_PHANCONGTOUR_NHANVIEN   ON PHANCONGTOUR(MaNhanVien);
 CREATE INDEX IDX_LICHSUTOUR_KHACHHANG    ON LICHSUTOUR(MaKhachHang);
