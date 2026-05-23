@@ -322,7 +322,7 @@ public class DatTourService {
         TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế: " + maTourThucTe));
         if (!"MO_BAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Tour không ở trạng thái "Mở bán", không thể đặt");
+            throw AppException.badRequest("Tour không ở trạng thái \"Mở bán\", không thể đặt");
         }
         if (tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour đã hết chỗ");
