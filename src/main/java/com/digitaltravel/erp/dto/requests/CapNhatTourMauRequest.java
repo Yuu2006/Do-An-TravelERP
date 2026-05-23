@@ -10,14 +10,14 @@ import lombok.Getter;
 @Getter
 public class CapNhatTourMauRequest {
 
-    @Size(max = 500, message = "Tieu de toi da 500 ky tu")
+    @Size(max = 500, message = "Tiêu đề tối đa 500 ký tự")
     String tieuDe;
 
     String moTa;
 
-    @Min(value = 1, message = "Thoi luong phai it nhat 1 ngay")
+    @Min(value = 1, message = "Thời lượng phải ít nhất 1 ngày")
     Integer thoiLuong;
 
-    @DecimalMin(value = "0.01", message = "Gia san phai lon hon 0")
+    @DecimalMin(value = "0.01", message = "Giá sàn phải lớn hơn 0")
     BigDecimal giaSan;
 }

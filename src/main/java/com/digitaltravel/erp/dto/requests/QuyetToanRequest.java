@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class QuyetToanRequest {
-    @DecimalMin(value = "0", message = "Gia cam ket khong duoc am")
+    @DecimalMin(value = "0", message = "Giá cam kết không được âm")
     private BigDecimal giaCamKet;
 
     @Size(max = 4000)

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.CapNhatHoChieuSoRequest;
 import com.digitaltravel.erp.dto.requests.DatTourRequest;
+import com.digitaltravel.erp.dto.requests.BoSungRequest;
 import com.digitaltravel.erp.dto.requests.HuyTourRequest;
 import com.digitaltravel.erp.dto.requests.YeuCauHoTroRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
@@ -161,6 +162,16 @@ public class KhachHangController {
             @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
                 yeuCauHoTroService.danhSachCuaKhachHang(user.getTaiKhoan().getMaTaiKhoan(), loaiYeuCau, pageable)));
+    }
+
+    @PutMapping("/yeu-cau-ho-tro/{maYeuCau}/bo-sung")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> boSungYeuCau(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maYeuCau,
+            @Valid @RequestBody BoSungRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                yeuCauHoTroService.boSung(user.getTaiKhoan().getMaTaiKhoan(), maYeuCau, request.getNoiDung())));
     }
 
     // ──────────────────────── DANH MỤC DỊCH VỤ & HÀNH ĐỘNG XANH (Cho Form Đặt Tour) ─────────

@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DanhGiaKhResponse;
 import com.digitaltravel.erp.dto.responses.TourCongKhaiResponse;
 import com.digitaltravel.erp.dto.responses.TourThucTeResponse;
+import com.digitaltravel.erp.dto.responses.HanhDongXanhResponse;
 import com.digitaltravel.erp.service.DanhGiaService;
 import com.digitaltravel.erp.service.TourThucTeService;
+import com.digitaltravel.erp.service.HanhDongXanhService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +34,7 @@ public class TourCongKhaiController {
 
     private final TourThucTeService tourThucTeService;
     private final DanhGiaService danhGiaService;
+    private final HanhDongXanhService hanhDongXanhService;
 
     // ── UC25: Danh sách tour đang mở bán ─────────────────────────────────────
     @GetMapping("/tour")
@@ -56,5 +61,12 @@ public class TourCongKhaiController {
             @PathVariable String maTourThucTe,
             @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(danhGiaService.danhSachDanhGia(maTourThucTe, pageable)));
+    }
+
+    // ── UC26: Hành động xanh của tour ─────────────────────────────────────────
+    @GetMapping("/tour/{maTourThucTe}/hanh-dong-xanh")
+    public ResponseEntity<ApiResponse<List<HanhDongXanhResponse>>> hanhDongXanhTour(
+            @PathVariable String maTourThucTe) {
+        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(maTourThucTe)));
     }
 }

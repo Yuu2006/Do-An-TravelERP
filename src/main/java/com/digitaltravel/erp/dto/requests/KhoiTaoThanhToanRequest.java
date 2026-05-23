@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class KhoiTaoThanhToanRequest {
 
-    @NotBlank(message = "Ma don dat tour khong duoc de trong")
+    @NotBlank(message = "Mã đơn đặt tour không được để trống")
     String maDonDatTour;
 
     /**

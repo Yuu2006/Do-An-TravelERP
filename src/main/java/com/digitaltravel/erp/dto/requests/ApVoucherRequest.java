@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class ApVoucherRequest {
-    @NotBlank(message = "MaDatTour khong duoc trong")
+    @NotBlank(message = "Mã đặt tour không được trống")
     String maDatTour;
 
-    @NotBlank(message = "MaVoucher khong duoc trong")
+    @NotBlank(message = "Mã voucher không được trống")
     String maVoucher;
 }

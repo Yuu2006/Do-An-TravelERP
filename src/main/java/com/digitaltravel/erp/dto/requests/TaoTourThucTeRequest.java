@@ -13,21 +13,21 @@ import lombok.Getter;
 @Getter
 public class TaoTourThucTeRequest {
 
-    @NotBlank(message = "Ma tour mau khong duoc de trong")
+    @NotBlank(message = "Mã tour mẫu không được để trống")
     String maTourMau;
 
-    @NotNull(message = "Ngay khoi hanh khong duoc de trong")
-    @Future(message = "Ngay khoi hanh phai o tuong lai")
+    @NotNull(message = "Ngày khởi hành không được để trống")
+    @Future(message = "Ngày khởi hành phải ở tương lai")
     LocalDate ngayKhoiHanh;
 
-    @NotNull(message = "So khach toi da khong duoc de trong")
-    @Min(value = 1, message = "So khach toi da phai it nhat 1")
+    @NotNull(message = "Số khách tối đa không được để trống")
+    @Min(value = 1, message = "Số khách tối đa phải ít nhất 1")
     Integer soKhachToiDa;
 
-    @Min(value = 1, message = "So khach toi thieu phai it nhat 1")
+    @Min(value = 1, message = "Số khách tối thiểu phải ít nhất 1")
     Integer soKhachToiThieu;
 
-    @NotNull(message = "Gia hien hanh khong duoc de trong")
-    @DecimalMin(value = "0.01", message = "Gia hien hanh phai lon hon 0")
+    @NotNull(message = "Giá hiện hành không được để trống")
+    @DecimalMin(value = "0.01", message = "Giá hiện hành phải lớn hơn 0")
     BigDecimal giaHienHanh;
 }

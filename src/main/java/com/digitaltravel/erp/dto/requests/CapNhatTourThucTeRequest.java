@@ -9,13 +9,13 @@ import lombok.Getter;
 @Getter
 public class CapNhatTourThucTeRequest {
 
-    @DecimalMin(value = "0.01", message = "Gia hien hanh phai lon hon 0")
+    @DecimalMin(value = "0.01", message = "Giá hiện hành phải lớn hơn 0")
     BigDecimal giaHienHanh;
 
-    @Min(value = 1, message = "So khach toi da phai it nhat 1")
+    @Min(value = 1, message = "Số khách tối đa phải ít nhất 1")
     Integer soKhachToiDa;
 
-    @Min(value = 1, message = "So khach toi thieu phai it nhat 1")
+    @Min(value = 1, message = "Số khách tối thiểu phải ít nhất 1")
     Integer soKhachToiThieu;
 
     String trangThai;

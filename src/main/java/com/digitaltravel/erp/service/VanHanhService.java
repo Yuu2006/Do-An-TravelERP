@@ -82,7 +82,7 @@ public class VanHanhService {
         boolean coNguoiDongHanh = req.getMaNguoiDongHanh() != null && !req.getMaNguoiDongHanh().isBlank();
 
         if (coKhachHang == coNguoiDongHanh) {
-            throw AppException.badRequest("Chi duoc gui mot trong hai truong: maKhachHang hoac maNguoiDongHanh");
+            throw AppException.badRequest("Chỉ được gửi một trong hai trường: mã khách hàng hoặc mã người đồng hành");
         }
 
         if (coKhachHang) {
@@ -93,7 +93,7 @@ public class VanHanhService {
             nguoiDongHanh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
                     .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
             if (!nguoiDongHanh.getDonDatTour().getTourThucTe().getMaTourThucTe().equals(maTour)) {
-                throw AppException.badRequest("Nguoi dong hanh khong thuoc tour nay");
+                throw AppException.badRequest("Người đồng hành không thuộc tour này");
             }
         }
         NhanVien hdv = getHdv(maTaiKhoan);
@@ -161,7 +161,7 @@ public class VanHanhService {
 
     private TourThucTe kiemTraHopLeDuLieuSuCo(String maTour, BaoCaoSuCoRequest req) {
         if (req.getMoTa() == null || req.getMoTa().isBlank()) {
-            throw AppException.badRequest("Mo ta su co khong duoc de trong");
+            throw AppException.badRequest("Mô tả sự cố không được để trống");
         }
         chuanHoaMucDoSuCo(req.getMucDo());
         chuanHoaLoaiSuCo(req.getLoaiSuCo());
@@ -250,10 +250,10 @@ public class VanHanhService {
         ChiPhiThucTe cp = chiPhiThucTeRepository.findById(maChiPhi)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay chi phi: " + maChiPhi));
         if (!"YEU_CAU_BO_SUNG".equals(cp.getTrangThaiDuyet())) {
-            throw AppException.badRequest("Chi phi khong o trang thai YEU_CAU_BO_SUNG.");
+            throw AppException.badRequest("Chi phí không ở trạng thái YEU_CAU_BO_SUNG.");
         }
         if (!cp.getNhanVien().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
-            throw AppException.forbidden("Khong co quyen bo sung chi phi nay");
+            throw AppException.forbidden("Không có quyền bổ sung chi phí này");
         }
 
         cp.setDanhMuc(req.getDanhMuc());
@@ -311,7 +311,7 @@ public class VanHanhService {
         ChiPhiThucTe cp = chiPhiThucTeRepository.findById(maChiPhi)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay chi phi: " + maChiPhi));
         if (!"CHO_DUYET".equals(cp.getTrangThaiDuyet())) {
-            throw AppException.badRequest("Chi phi da duoc xu ly roi.");
+            throw AppException.badRequest("Chi phí đã được xử lý rồi.");
         }
         cp.setTrangThaiDuyet(trangThai);
         chiPhiThucTeRepository.save(cp);
@@ -381,7 +381,7 @@ public class VanHanhService {
 
     private NhanVien getHdv(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
     }
 
     private void kiemTraQuyenVanHanhTour(String maTour, String maTaiKhoan, String maVaiTro) {
@@ -392,12 +392,12 @@ public class VanHanhService {
                 && phanCongTourRepository.existsByMaTourAndMaTaiKhoan(maTour, maTaiKhoan)) {
             return;
         }
-        throw AppException.forbidden("Ban khong co quyen van hanh tour nay");
+        throw AppException.forbidden("Bạn không có quyền vận hành tour này");
     }
 
     private void kiemTraKhachThuocTourDaXacNhan(String maTour, String maKhachHang) {
         if (!donDatTourRepository.existsConfirmedKhachHangInTour(maTour, maKhachHang)) {
-            throw AppException.badRequest("Khach hang khong thuoc tour da xac nhan nay");
+            throw AppException.badRequest("Khách hàng không thuộc tour đã xác nhận này");
         }
     }
 
@@ -494,7 +494,7 @@ public class VanHanhService {
     private String chuanHoaMucDoSuCo(String mucDo) {
         String normalized = mucDo == null || mucDo.isBlank() ? "THAP" : mucDo.trim().toUpperCase();
         if (!java.util.Set.of("THAP", "SOS").contains(normalized)) {
-            throw AppException.badRequest("MucDo su co khong hop le. Chi chap nhan: THAP, SOS");
+            throw AppException.badRequest("Mức độ sự cố không hợp lệ. Chỉ chấp nhận: THAP, SOS");
         }
         return normalized;
     }
@@ -513,7 +513,7 @@ public class VanHanhService {
                     .replace(' ', '_');
         }
         if (!java.util.Set.of("Y_TE", "THOI_TIET", "PHUONG_TIEN", "AN_UONG", "KHAC").contains(normalized)) {
-            throw AppException.badRequest("LoaiSuCo khong hop le. Chi chap nhan: Y_TE, THOI_TIET, PHUONG_TIEN, AN_UONG, KHAC");
+            throw AppException.badRequest("Loại sự cố không hợp lệ. Chỉ chấp nhận: Y_TE, THOI_TIET, PHUONG_TIEN, AN_UONG, KHAC");
         }
         return normalized;
     }

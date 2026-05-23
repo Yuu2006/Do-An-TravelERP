@@ -25,6 +25,8 @@ public class DonDatTourResponse {
     LocalDateTime thoiGianHetHan;
     String ghiChu;
     List<String> danhSachHanhDongXanh;
+    Integer soNguoiLon;
+    Integer soTreEm;
     List<ChiTietDatTourResponse> chiTietKhach;
     List<ChiTietDichVuResponse> chiTietDichVu;
 }

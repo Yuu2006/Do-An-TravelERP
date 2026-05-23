@@ -3,8 +3,11 @@ package com.digitaltravel.erp.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.digitaltravel.erp.dto.requests.DatTourRequest;
 import com.digitaltravel.erp.dto.requests.DichVuThemDatRequest;
+import com.digitaltravel.erp.dto.requests.HanhDongXanhDatRequest;
 import com.digitaltravel.erp.dto.requests.NguoiDongHanhRequest;
 import com.digitaltravel.erp.dto.requests.XacNhanThanhToanOfflineRequest;
 import com.digitaltravel.erp.dto.responses.ChiTietDatTourResponse;
@@ -47,6 +51,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DatTourService {
 
+    private static final int TUOI_TOI_DA_TRE_EM = 11;
+
     private final DonDatTourRepository donDatTourRepository;
     private final ChiTietDatTourRepository chiTietDatTourRepository;
     private final ChiTietDichVuRepository chiTietDichVuRepository;
@@ -62,16 +68,16 @@ public class DatTourService {
     @Transactional
     public DonDatTourResponse datTour(String maTaiKhoan, DatTourRequest request) {
         HoChieuSo khachHang = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khach hang chua co ho so. Vui long lien he ho tro."));
+                .orElseThrow(() -> AppException.notFound("Khách hàng chưa có hồ sơ. Vui lòng liên hệ hỗ trợ."));
         List<NguoiDongHanhRequest> dsNguoiDongHanh = request.getDanhSachNguoiDongHanh() != null
                 ? request.getDanhSachNguoiDongHanh()
                 : List.of();
         int soKhach = 1 + dsNguoiDongHanh.size();
 
         TourThucTe tour = kiemTraDieuKienDatTour(request.getMaTourThucTe(), soKhach);
-        List<String> dsHanhDongXanh = kiemTraHanhDongXanh(tour, request.getDanhSachHanhDongXanh());
+        List<HanhDongXanhDaChon> dsHanhDongXanh = kiemTraHanhDongXanh(tour, request);
         List<ChiTietDichVu> dsDichVu = taoChiTietDichVuTam(request);
-        BigDecimal tongTien = tinhTongTienDonHang(tour, soKhach, dsDichVu);
+        BigDecimal tongTien = tinhTongTienDonHang(tour, khachHang, dsNguoiDongHanh, dsDichVu);
         DonDatTour don = taoDonDatTour(khachHang, tour, tongTien, request.getGhiChu(), dsHanhDongXanh);
         List<ChiTietDatTour> dsChiTiet = new ArrayList<>();
 
@@ -80,7 +86,10 @@ public class DatTourService {
         chiTietNguoiDat.setDonDatTour(don);
         chiTietNguoiDat.setKhachHang(khachHang);
         chiTietNguoiDat.setLoaiKhach("NGUOI_DAT");
-        chiTietNguoiDat.setGiaTaiThoiDiemDat(tour.getGiaHienHanh());
+        chiTietNguoiDat.setGiaTaiThoiDiemDat(tinhGiaVeTheoNgaySinh(
+                tour.getGiaHienHanh(),
+                khachHang.getTaiKhoan().getNgaySinh(),
+                tour));
         chiTietDatTourRepository.save(chiTietNguoiDat);
         dsChiTiet.add(chiTietNguoiDat);
 
@@ -101,7 +110,7 @@ public class DatTourService {
             chiTietNguoiDongHanh.setDonDatTour(don);
             chiTietNguoiDongHanh.setNguoiDongHanh(nguoiDongHanh);
             chiTietNguoiDongHanh.setLoaiKhach("NGUOI_DONG_HANH");
-            chiTietNguoiDongHanh.setGiaTaiThoiDiemDat(tour.getGiaHienHanh());
+            chiTietNguoiDongHanh.setGiaTaiThoiDiemDat(tinhGiaVeTheoNgaySinh(tour.getGiaHienHanh(), nguoiReq.getNgaySinh(), tour));
             chiTietDatTourRepository.save(chiTietNguoiDongHanh);
             dsChiTiet.add(chiTietNguoiDongHanh);
         }
@@ -112,9 +121,10 @@ public class DatTourService {
     }
 
     // ── Danh sách đơn đặt tour của tôi ─────────────────────────────────────
+    @Transactional(readOnly = true)
     public Page<DonDatTourResponse> danhSachCuaToi(String maTaiKhoan, Pageable pageable) {
         HoChieuSo khachHang = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         return donDatTourRepository.findByMaKhachHang(khachHang.getMaKhachHang(), pageable)
                 .map(don -> {
@@ -125,9 +135,10 @@ public class DatTourService {
     }
 
     // ── Chi tiết đơn đặt tour của tôi ──────────────────────────────────────
+    @Transactional(readOnly = true)
     public DonDatTourResponse chiTietCuaToi(String maTaiKhoan, String maDatTour) {
         HoChieuSo khachHang = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, khachHang.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
@@ -141,7 +152,7 @@ public class DatTourService {
     @Transactional
     public void huyDatTour(String maTaiKhoan, String maDatTour) {
         HoChieuSo khachHang = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, khachHang.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
@@ -182,18 +193,18 @@ public class DatTourService {
                     "Chi co the xac nhan don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + don.getTrangThai());
         }
         if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
-            throw AppException.badRequest("Don dat tour da het han giu cho. Vui long dat lai.");
+            throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
         }
         if (giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent()) {
-            throw AppException.badRequest("Don nay da co giao dich thanh cong truoc do.");
+            throw AppException.badRequest("Đơn này đã có giao dịch thành công trước đó.");
         }
 
         TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế"));
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
         int soKhach = dsChiTiet.size();
         if (tour.getChoConLai() < soKhach) {
-            throw AppException.badRequest("Tour khong con du cho cho don dat nay");
+            throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
 
         GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
@@ -266,23 +277,41 @@ public class DatTourService {
         TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + maTourThucTe));
         if (!"MO_BAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Tour khong o trang thai MO_BAN, khong the dat");
+            throw AppException.badRequest("Tour không ở trạng thái MO_BAN, không thể đặt");
         }
         if (tour.getChoConLai() < soKhach) {
-            throw AppException.badRequest("Tour da het cho");
+            throw AppException.badRequest("Tour đã hết chỗ");
         }
         return tour;
     }
 
-    private List<String> kiemTraHanhDongXanh(TourThucTe tour, List<String> dsMaHanhDongXanh) {
-        if (dsMaHanhDongXanh == null || dsMaHanhDongXanh.isEmpty()) {
+    private List<HanhDongXanhDaChon> kiemTraHanhDongXanh(TourThucTe tour, DatTourRequest request) {
+        Map<String, Long> soLuongTheoMa = new LinkedHashMap<>();
+
+        if (request.getDanhSachHanhDongXanhChiTiet() != null) {
+            for (HanhDongXanhDatRequest hdxReq : request.getDanhSachHanhDongXanhChiTiet()) {
+                if (hdxReq.getMaHanhDongXanh() == null || hdxReq.getMaHanhDongXanh().isBlank()) {
+                    continue;
+                }
+                long soLuong = hdxReq.getSoLuong() != null ? hdxReq.getSoLuong() : 1L;
+                String ma = hdxReq.getMaHanhDongXanh().trim();
+                soLuongTheoMa.merge(ma, soLuong, Long::sum);
+            }
+        }
+
+        if (soLuongTheoMa.isEmpty() && request.getDanhSachHanhDongXanh() != null) {
+            request.getDanhSachHanhDongXanh().stream()
+                    .filter(ma -> ma != null && !ma.isBlank())
+                    .map(String::trim)
+                    .forEach(ma -> soLuongTheoMa.merge(ma, 1L, Long::sum));
+        }
+
+        if (soLuongTheoMa.isEmpty()) {
             return List.of();
         }
-        List<String> dsMaHopLe = dsMaHanhDongXanh.stream()
-                .filter(ma -> ma != null && !ma.isBlank())
-                .distinct()
-                .toList();
-        for (String maHanhDongXanh : dsMaHopLe) {
+        List<HanhDongXanhDaChon> dsHopLe = new ArrayList<>();
+        for (Map.Entry<String, Long> entry : soLuongTheoMa.entrySet()) {
+            String maHanhDongXanh = entry.getKey();
             HanhDongXanh hdx = hanhDongXanhRepository.findById(maHanhDongXanh)
                     .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + maHanhDongXanh));
             TourThucTe tourGanVoiHanhDong = hdx.getTourThucTe();
@@ -290,8 +319,9 @@ public class DatTourService {
                     && !tour.getMaTourThucTe().equals(tourGanVoiHanhDong.getMaTourThucTe())) {
                 throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + maHanhDongXanh);
             }
+            dsHopLe.add(new HanhDongXanhDaChon(maHanhDongXanh, entry.getValue()));
         }
-        return dsMaHopLe;
+        return dsHopLe;
     }
 
     private List<ChiTietDichVu> taoChiTietDichVuTam(DatTourRequest request) {
@@ -315,19 +345,50 @@ public class DatTourService {
         return dsDichVu;
     }
 
-    private BigDecimal tinhTongTienDonHang(TourThucTe tour, int soKhach, List<ChiTietDichVu> dsDichVu) {
-        BigDecimal tongTienTour = tour.getGiaHienHanh().multiply(BigDecimal.valueOf(soKhach));
+    private BigDecimal tinhTongTienDonHang(TourThucTe tour,
+                                           HoChieuSo khachHang,
+                                           List<NguoiDongHanhRequest> dsNguoiDongHanh,
+                                           List<ChiTietDichVu> dsDichVu) {
+        BigDecimal tongTienTour = tinhGiaVeTheoNgaySinh(
+                tour.getGiaHienHanh(),
+                khachHang.getTaiKhoan().getNgaySinh(),
+                tour);
+        for (NguoiDongHanhRequest nguoiDongHanh : dsNguoiDongHanh) {
+            tongTienTour = tongTienTour.add(tinhGiaVeTheoNgaySinh(tour.getGiaHienHanh(), nguoiDongHanh.getNgaySinh(), tour));
+        }
         BigDecimal tongTienDichVu = dsDichVu.stream()
                 .map(ChiTietDichVu::getThanhTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return tongTienTour.add(tongTienDichVu);
     }
 
+    private BigDecimal tinhGiaVeTheoNgaySinh(BigDecimal giaNguoiLon, LocalDate ngaySinh, TourThucTe tour) {
+        if (laTreEm(ngaySinh, ngayTinhTuoi(tour))) {
+            return giaNguoiLon.divide(BigDecimal.valueOf(2));
+        }
+        return giaNguoiLon;
+    }
+
+    private boolean laTreEm(LocalDate ngaySinh, LocalDate ngayTinhTuoi) {
+        if (ngaySinh == null) {
+            return false;
+        }
+        return Period.between(ngaySinh, ngayTinhTuoi).getYears() <= TUOI_TOI_DA_TRE_EM;
+    }
+
+    private Integer tinhTuoi(LocalDate ngaySinh, LocalDate ngayTinhTuoi) {
+        return ngaySinh == null ? null : Period.between(ngaySinh, ngayTinhTuoi).getYears();
+    }
+
+    private LocalDate ngayTinhTuoi(TourThucTe tour) {
+        return tour.getNgayKhoiHanh() != null ? tour.getNgayKhoiHanh() : LocalDate.now();
+    }
+
     private DonDatTour taoDonDatTour(HoChieuSo khachHang,
                                      TourThucTe tour,
                                      BigDecimal tongTien,
                                      String ghiChu,
-                                     List<String> dsHanhDongXanh) {
+                                     List<HanhDongXanhDaChon> dsHanhDongXanh) {
         DonDatTour don = new DonDatTour();
         don.setMaDatTour("DDT_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         don.setTourThucTe(tour);
@@ -337,8 +398,14 @@ public class DatTourService {
         don.setTrangThai("CHO_XAC_NHAN");
         don.setThoiGianHetHan(LocalDateTime.now().plusDays(2));
         don.setGhiChu(ghiChu);
-        don.setHanhDongXanh(String.join(",", dsHanhDongXanh));
+        don.setHanhDongXanh(maHoaHanhDongXanh(dsHanhDongXanh));
         return donDatTourRepository.save(don);
+    }
+
+    private String maHoaHanhDongXanh(List<HanhDongXanhDaChon> dsHanhDongXanh) {
+        return String.join(",", dsHanhDongXanh.stream()
+                .map(item -> item.maHanhDongXanh() + ":" + item.soLuong())
+                .toList());
     }
 
     private void luuChiTietDichVu(DonDatTour don, List<ChiTietDichVu> dsDichVu) {
@@ -353,6 +420,11 @@ public class DatTourService {
                                           List<ChiTietDatTour> dsChiTiet,
                                           List<ChiTietDichVu> dsDichVu) {
         TourThucTe ttt = don.getTourThucTe();
+        LocalDate ngayTinhTuoi = ngayTinhTuoi(ttt);
+        int soTreEm = (int) dsChiTiet.stream()
+                .filter(ct -> laTreEm(layNgaySinh(ct), ngayTinhTuoi))
+                .count();
+        int soNguoiLon = dsChiTiet.size() - soTreEm;
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -368,6 +440,8 @@ public class DatTourService {
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
                 .danhSachHanhDongXanh(parseHanhDongXanh(don.getHanhDongXanh()))
+                .soNguoiLon(soNguoiLon)
+                .soTreEm(soTreEm)
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
                 .chiTietDichVu(dsDichVu.stream().map(this::toDichVuResponse).toList())
                 .build();
@@ -383,6 +457,9 @@ public class DatTourService {
     private ChiTietDatTourResponse toChiTietResponse(ChiTietDatTour ct) {
         HoChieuSo khachHang = ct.getKhachHang();
         DsNguoiDongHanh nguoiDongHanh = ct.getNguoiDongHanh();
+        LocalDate ngaySinh = layNgaySinh(ct);
+        LocalDate ngayTinhTuoi = ngayTinhTuoi(ct.getDonDatTour().getTourThucTe());
+        boolean treEm = laTreEm(ngaySinh, ngayTinhTuoi);
 
         return ChiTietDatTourResponse.builder()
                 .maChiTietDat(ct.getMaChiTietDat())
@@ -391,12 +468,24 @@ public class DatTourService {
                 .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
                 .hoTen(khachHang != null ? khachHang.getTaiKhoan().getHoTen() : nguoiDongHanh.getHoTen())
                 .cccd(khachHang != null ? khachHang.getTaiKhoan().getCccd() : nguoiDongHanh.getCccd())
-                .soDienThoai(khachHang != null ? khachHang.getTaiKhoan().getSoDienThoai() : nguoiDongHanh.getSoDienThoai())
-                .ngaySinh(khachHang != null ? khachHang.getTaiKhoan().getNgaySinh() : nguoiDongHanh.getNgaySinh())
+                .soDienThoai(khachHang != null ? khachHang.getSoDienThoai() : nguoiDongHanh.getSoDienThoai())
+                .ngaySinh(ngaySinh)
+                .tuoi(tinhTuoi(ngaySinh, ngayTinhTuoi))
+                .nhomTuoi(treEm ? "TRE_EM" : "NGUOI_LON")
                 .gioiTinh(nguoiDongHanh != null ? nguoiDongHanh.getGioiTinh() : null)
                 .ghiChu(nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null)
                 .giaTaiThoiDiemDat(ct.getGiaTaiThoiDiemDat())
                 .build();
+    }
+
+    private LocalDate layNgaySinh(ChiTietDatTour ct) {
+        if (ct.getNguoiDongHanh() != null) {
+            return ct.getNguoiDongHanh().getNgaySinh();
+        }
+        if (ct.getKhachHang() != null) {
+            return ct.getKhachHang().getTaiKhoan().getNgaySinh();
+        }
+        return null;
     }
 
     private ChiTietDichVuResponse toDichVuResponse(ChiTietDichVu cv) {
@@ -409,5 +498,8 @@ public class DatTourService {
                 .donGia(cv.getDonGia())
                 .thanhTien(cv.getThanhTien())
                 .build();
+    }
+
+    private record HanhDongXanhDaChon(String maHanhDongXanh, long soLuong) {
     }
 }

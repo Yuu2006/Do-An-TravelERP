@@ -9,21 +9,21 @@ import lombok.Getter;
 @Getter
 public class NguoiDongHanhRequest {
 
-    @NotBlank(message = "Ho ten khach di cung khong duoc de trong")
-    @Size(max = 200, message = "Ho ten khong duoc vuot qua 200 ky tu")
+    @NotBlank(message = "Họ tên khách đi cùng không được để trống")
+    @Size(max = 200, message = "Họ tên không được vượt qua 200 ký tự")
     String hoTen;
 
-    @Size(max = 20, message = "CCCD khong duoc vuot qua 20 ky tu")
+    @Size(max = 20, message = "CCCD không được vượt qua 20 ký tự")
     String cccd;
 
-    @Size(max = 20, message = "So dien thoai khong duoc vuot qua 20 ky tu")
+    @Size(max = 20, message = "Số điện thoại không được vượt qua 20 ký tự")
     String soDienThoai;
 
     LocalDate ngaySinh;
 
-    @Size(max = 20, message = "Gioi tinh khong duoc vuot qua 20 ky tu")
+    @Size(max = 20, message = "Giới tính không được vượt qua 20 ký tự")
     String gioiTinh;
 
-    @Size(max = 1000, message = "Ghi chu khong duoc vuot qua 1000 ky tu")
+    @Size(max = 1000, message = "Ghi chú không được vượt qua 1000 ký tự")
     String ghiChu;
 }

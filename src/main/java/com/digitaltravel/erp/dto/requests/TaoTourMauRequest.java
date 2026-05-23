@@ -14,18 +14,18 @@ import lombok.Getter;
 @Getter
 public class TaoTourMauRequest {
 
-    @NotBlank(message = "Tieu de khong duoc de trong")
-    @Size(max = 500, message = "Tieu de toi da 500 ky tu")
+    @NotBlank(message = "Tiêu đề không được để trống")
+    @Size(max = 500, message = "Tiêu đề tối đa 500 ký tự")
     String tieuDe;
 
     String moTa;
 
-    @NotNull(message = "Thoi luong khong duoc de trong")
-    @Min(value = 1, message = "Thoi luong phai it nhat 1 ngay")
+    @NotNull(message = "Thời lượng không được để trống")
+    @Min(value = 1, message = "Thời lượng phải ít nhất 1 ngày")
     Integer thoiLuong;
 
-    @NotNull(message = "Gia san khong duoc de trong")
-    @DecimalMin(value = "0.01", message = "Gia san phai lon hon 0")
+    @NotNull(message = "Giá sàn không được để trống")
+    @DecimalMin(value = "0.01", message = "Giá sàn phải lớn hơn 0")
     BigDecimal giaSan;
 
     @Valid

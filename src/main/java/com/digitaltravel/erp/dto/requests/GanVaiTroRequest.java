@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class GanVaiTroRequest {
-    @NotBlank(message = "MaVaiTro khong duoc trong")
+    @NotBlank(message = "Mã vai trò không được trống")
     String maVaiTro;
 }

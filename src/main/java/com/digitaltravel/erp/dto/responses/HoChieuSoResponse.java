@@ -16,6 +16,7 @@ public class HoChieuSoResponse {
     String cccd;
     LocalDate ngaySinh;
     String soDienThoai;
+    String trangThaiTaiKhoan;
     String diUng;
     String ghiChuYTe;
     String hangThanhVien;

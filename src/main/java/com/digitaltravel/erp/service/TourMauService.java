@@ -101,7 +101,7 @@ public class TourMauService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour mau: " + id));
 
         if (tourThucTeRepository.existsByMaTourMau(id)) {
-            throw AppException.badRequest("Khong the xoa tour mau vi da co tour thuc te lien ket");
+            throw AppException.badRequest("Không thể xóa tour mẫu vì đã có tour thực tế liên kết");
         }
 
         lichTrinhTourRepository.deleteAll(lichTrinhTourRepository.findByMaTourMau(id));
@@ -173,7 +173,7 @@ public class TourMauService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay lich trinh: " + maLichTrinh));
 
         if (!lt.getTourMau().getMaTourMau().equals(maTourMau)) {
-            throw AppException.badRequest("Lich trinh khong thuoc tour mau nay");
+            throw AppException.badRequest("Lịch trình không thuộc tour mẫu này");
         }
 
         // Kiểm tra ngày thứ không trùng (trừ chính nó)
@@ -203,7 +203,7 @@ public class TourMauService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay lich trinh: " + maLichTrinh));
 
         if (!lt.getTourMau().getMaTourMau().equals(maTourMau)) {
-            throw AppException.badRequest("Lich trinh khong thuoc tour mau nay");
+            throw AppException.badRequest("Lịch trình không thuộc tour mẫu này");
         }
 
         lichTrinhTourRepository.delete(lt);

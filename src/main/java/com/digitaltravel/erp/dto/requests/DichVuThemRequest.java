@@ -11,14 +11,14 @@ import lombok.Getter;
 @Getter
 public class DichVuThemRequest {
 
-    @NotBlank(message = "Ten dich vu khong duoc de trong")
-    @Size(max = 200, message = "Ten dich vu toi da 200 ky tu")
+    @NotBlank(message = "Tên dịch vụ không được để trống")
+    @Size(max = 200, message = "Tên dịch vụ tối đa 200 ký tự")
     String ten;
 
-    @Size(max = 100, message = "Don vi tinh toi da 100 ky tu")
+    @Size(max = 100, message = "Đơn vị tính tối đa 100 ký tự")
     String donViTinh;
 
-    @NotNull(message = "Don gia khong duoc de trong")
-    @DecimalMin(value = "0", message = "Don gia khong duoc am")
+    @NotNull(message = "Đơn giá không được để trống")
+    @DecimalMin(value = "0", message = "Đơn giá không được âm")
     BigDecimal donGia;
 }

@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 public class DatLaiMatKhauRequest {
 
-    @NotBlank(message = "Reset token khong duoc de trong")
+    @NotBlank(message = "Reset token không được để trống")
     String resetToken;
 
-    @NotBlank(message = "Mat khau moi khong duoc de trong")
-    @Size(min = 6, message = "Mat khau moi phai co it nhat 6 ky tu")
+    @NotBlank(message = "Mật khẩu mới không được để trống")
+    @Size(min = 6, message = "Mật khẩu mới phải có ít nhất 6 ký tự")
     String matKhauMoi;
 
-    @NotBlank(message = "Xac nhan mat khau khong duoc de trong")
+    @NotBlank(message = "Xác nhận mật khẩu không được để trống")
     String xacNhanMatKhau;
 }

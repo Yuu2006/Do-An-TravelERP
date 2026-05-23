@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 public class QuenMatKhauRequest {
 
-    @NotBlank(message = "Ten dang nhap khong duoc de trong")
-    String tenDangNhap;
+    @NotBlank(message = "Email không được để trống")
+    String email;
 }

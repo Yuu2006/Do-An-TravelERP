@@ -128,11 +128,11 @@ public class JwtUtil {
         try {
             Claims claims = parseClaims(token);
             if (!PURPOSE_RESET.equals(claims.get("purpose", String.class))) {
-                throw AppException.badRequest("Token khong hop le");
+                throw AppException.badRequest("Token không hợp lệ");
             }
             return claims.getSubject();
         } catch (JwtException e) {
-            throw AppException.badRequest("Token khong hop le hoac da het han");
+            throw AppException.badRequest("Token không hợp lệ hoặc đã hết hạn");
         }
     }
 }

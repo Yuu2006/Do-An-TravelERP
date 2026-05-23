@@ -8,19 +8,19 @@ import lombok.Getter;
 @Getter
 public class DangKyNhanVienRequest {
 
-    @NotBlank(message = "Ten dang nhap khong duoc de trong")
-    @Size(min = 4, max = 100, message = "Ten dang nhap phai tu 4 den 100 ky tu")
+    @NotBlank(message = "Tên đăng nhập không được để trống")
+    @Size(min = 4, max = 100, message = "Tên đăng nhập phải từ 4 đến 100 ký tự")
     String tenDangNhap;
 
-    @NotBlank(message = "Mat khau khong duoc de trong")
-    @Size(min = 6, message = "Mat khau phai co it nhat 6 ky tu")
+    @NotBlank(message = "Mật khẩu không được để trống")
+    @Size(min = 6, message = "Mật khẩu phải có ít nhất 6 ký tự")
     String matKhau;
 
-    @NotBlank(message = "Ho ten khong duoc de trong")
+    @NotBlank(message = "Họ tên không được để trống")
     @Size(max = 200)
     String hoTen;
 
-    @Email(message = "Email khong hop le")
+    @Email(message = "Email không hợp lệ")
     String email;
 
     @Size(max = 20)
@@ -30,6 +30,6 @@ public class DangKyNhanVienRequest {
      * Ma vai tro can gan: SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV
      * (ADMIN va KHACHHANG khong dung endpoint nay)
      */
-    @NotBlank(message = "Ma vai tro khong duoc de trong")
+    @NotBlank(message = "Mã vai trò không được để trống")
     String maVaiTro;
 }

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class DatTourRequest {
 
-    @NotBlank(message = "Ma tour thuc te khong duoc de trong")
+    @NotBlank(message = "Mã tour thực tế không được để trống")
     String maTourThucTe;
 
     // Tuỳ chọn: danh sách dịch vụ bổ sung
@@ -22,9 +22,14 @@ public class DatTourRequest {
     List<NguoiDongHanhRequest> danhSachNguoiDongHanh;
 
     // Tuỳ chọn: hành động xanh khách chọn trước khi tham gia tour
-    @Size(max = 20, message = "Chi duoc chon toi da 20 hanh dong xanh")
+    @Size(max = 20, message = "Chỉ được chọn tối đa 20 hành động xanh")
     List<String> danhSachHanhDongXanh;
 
-    @Size(max = 2000, message = "Ghi chu khong duoc vuot qua 2000 ky tu")
+    // Tuy chon moi: hanh dong xanh kem so luong cam ket
+    @Valid
+    @Size(max = 20, message = "Chỉ được chọn tối đa 20 hành động xanh")
+    List<HanhDongXanhDatRequest> danhSachHanhDongXanhChiTiet;
+
+    @Size(max = 2000, message = "Ghi chú không được vượt qua 2000 ký tự")
     String ghiChu;
 }

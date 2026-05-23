@@ -8,21 +8,21 @@ import java.time.LocalDate;
 @Getter
 public class CapNhatHoChieuSoRequest {
 
-    @Size(max = 20, message = "CCCD khong duoc vuot qua 20 ky tu")
+    @Size(max = 20, message = "CCCD không được vượt qua 20 ký tự")
     String cccd;
 
     LocalDate ngaySinh;
 
-    @Size(max = 100, message = "Ten dang nhap khong duoc vuot qua 100 ky tu")
+    @Size(max = 100, message = "Tên đăng nhập không được vượt qua 100 ký tự")
     String tenDangNhap;
 
-    @Size(max = 200, message = "Email khong duoc vuot qua 200 ky tu")
+    @Size(max = 200, message = "Email không được vượt qua 200 ký tự")
     String email;
 
-    @Size(max = 20, message = "So dien thoai khong duoc vuot qua 20 ky tu")
+    @Size(max = 20, message = "Số điện thoại không được vượt qua 20 ký tự")
     String soDienThoai;
 
-    @Size(max = 1000, message = "Di ung khong duoc vuot qua 1000 ky tu")
+    @Size(max = 1000, message = "Dị ứng không được vượt qua 1000 ký tự")
     String diUng;
 
     // CLOB field - no max length constraint

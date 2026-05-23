@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HuyTourRequest {
 
-    @NotBlank(message = "Ly do huy khong duoc de trong")
+    @NotBlank(message = "Lý do hủy không được để trống")
     String lyDo;
 }

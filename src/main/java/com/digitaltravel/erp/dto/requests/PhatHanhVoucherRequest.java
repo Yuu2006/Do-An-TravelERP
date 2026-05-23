@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class PhatHanhVoucherRequest {
-    @NotBlank(message = "MaKhachHang khong duoc trong")
+    @NotBlank(message = "Mã khách hàng không được trống")
     String maKhachHang;
 }

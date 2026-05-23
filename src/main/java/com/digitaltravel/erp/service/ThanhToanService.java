@@ -49,7 +49,7 @@ public class ThanhToanService {
 
         // Kiểm tra chủ sở hữu đơn
         if (!don.getKhachHang().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
-            throw AppException.forbidden("Ban khong co quyen thanh toan don nay");
+            throw AppException.forbidden("Bạn không có quyền thanh toán đơn này");
         }
 
         // Chỉ thanh toán đơn CHO_XAC_NHAN và chưa hết hạn
@@ -58,18 +58,21 @@ public class ThanhToanService {
                     "Don chi co the thanh toan o trang thai CHO_XAC_NHAN. Hien tai: " + don.getTrangThai());
         }
         if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
-            throw AppException.badRequest("Don dat tour da het han giu cho. Vui long dat lai.");
+            throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
         }
 
         // Kiểm tra xem đã có giao dịch thành công chưa (idempotency)
         if (giaoDichRepository.findThanhCongByMaDatTour(request.getMaDonDatTour()).isPresent()) {
-            throw AppException.badRequest("Don nay da duoc thanh toan thanh cong truoc do.");
+            throw AppException.badRequest("Đơn này đã được thanh toán thành công trước đó.");
         }
 
         String phuongThuc = (request.getPhuongThuc() == null || request.getPhuongThuc().isBlank())
                 ? "MOMO_WALLET" : request.getPhuongThuc();
 
-        if (mockEnabled) {
+        if (request.isMock()) {
+            if (!mockEnabled) {
+                throw AppException.forbidden("Thanh toán mock đang bị tắt trên môi trường hiện tại");
+            }
             return xuLyMock(don, phuongThuc);
         }
 
@@ -79,21 +82,48 @@ public class ThanhToanService {
 
         // TODO: Tích hợp MoMo thực — xem README phần UC29
         // Hiện tại trả về lỗi hướng dẫn dùng mock
-        throw AppException.badRequest(
-                "Tich hop MoMo that chua san sang. Vui long su dung mock=true de kiem thu.");
+        return taoGiaoDichChoThanhToan(don, phuongThuc);
     }
 
     // ── Mock: bypass MoMo, xác nhận thanh toán ngay ──────────────────────
+    private ThanhToanResponse taoGiaoDichChoThanhToan(DonDatTour don, String phuongThuc) {
+        GiaoDich giaoDich = giaoDichRepository.findByMaDatTour(don.getMaDatTour()).stream()
+                .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai()))
+                .findFirst()
+                .orElseGet(() -> {
+                    GiaoDich gd = new GiaoDich();
+                    gd.setMaGiaoDich("GD_QR_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+                    gd.setDonDatTour(don);
+                    gd.setLoaiGiaoDich("THANH_TOAN");
+                    gd.setPhuongThuc(phuongThuc);
+                    gd.setSoTien(don.getTongTien());
+                    gd.setMaGDNH("QR_" + don.getMaDatTour());
+                    gd.setTrangThai("CHO_THANH_TOAN");
+                    gd.setNgayThanhToan(LocalDateTime.now());
+                    return giaoDichRepository.save(gd);
+                });
+
+        return ThanhToanResponse.builder()
+                .maGiaoDich(giaoDich.getMaGiaoDich())
+                .maDatTour(don.getMaDatTour())
+                .trangThai(giaoDich.getTrangThai())
+                .phuongThuc(giaoDich.getPhuongThuc())
+                .soTien(giaoDich.getSoTien())
+                .ngayThanhToan(giaoDich.getNgayThanhToan())
+                .thongBao("Da tao giao dich cho thanh toan QR. Don se duoc xac nhan sau khi doi soat.")
+                .build();
+    }
+
     @Transactional
     protected ThanhToanResponse xuLyMock(DonDatTour don, String phuongThuc) {
         LocalDateTime now = LocalDateTime.now();
         String maGiaoDich = "GD_MOCK_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế"));
         int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
         if (tour.getChoConLai() < soKhach) {
-            throw AppException.badRequest("Tour khong con du cho cho don dat nay");
+            throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
 
         // Tạo bản ghi giao dịch
@@ -150,7 +180,7 @@ public class ThanhToanService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
         if (!don.getKhachHang().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
-            throw AppException.forbidden("Ban khong co quyen xem don nay");
+            throw AppException.forbidden("Bạn không có quyền xem đơn này");
         }
 
         GiaoDich gd = giaoDichRepository.findByMaDatTour(maDatTour).stream()

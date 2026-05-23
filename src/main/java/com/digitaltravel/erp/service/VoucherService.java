@@ -49,7 +49,7 @@ public class VoucherService {
     @Transactional
     public Page<KhuyenMaiKhResponse> viVoucher(String maTaiKhoan, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
         return khuyenMaiKhRepository.findByMaKhachHang(hcs.getMaKhachHang(), pageable)
                 .map(this::capNhatHetHanNeuCan)
                 .map(this::toKhuyenMaiKhResponse);
@@ -59,44 +59,44 @@ public class VoucherService {
     @Transactional(noRollbackFor = AppException.class)
     public VoucherResponse apVoucher(String maTaiKhoan, ApVoucherRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         DonDatTour don = donDatTourRepository.findByIdWithDetails(request.getMaDatTour())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + request.getMaDatTour()));
 
         // Chỉ cho phép KH áp voucher của chính mình
         if (!don.getKhachHang().getMaKhachHang().equals(hcs.getMaKhachHang())) {
-            throw AppException.forbidden("Ban khong co quyen ap voucher cho don nay");
+            throw AppException.forbidden("Bạn không có quyền áp voucher cho đơn này");
         }
 
         // Voucher chi ap dung truoc khi thanh toan/xac nhan don.
         if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chi co the ap voucher cho don o trang thai CHO_XAC_NHAN");
+            throw AppException.badRequest("Chỉ có thể áp voucher cho đơn ở trạng thái CHO_XAC_NHAN");
         }
 
         // Lấy voucher từ ví của KH
         KhuyenMaiKh kmkh = khuyenMaiKhRepository.findHieuLucByKhachHangAndVoucher(hcs.getMaKhachHang(), request.getMaVoucher())
-                .orElseThrow(() -> AppException.notFound("Voucher khong ton tai hoac khong con hieu luc trong vi cua ban"));
+                .orElseThrow(() -> AppException.notFound("Voucher không tồn tại hoặc không còn hiệu lực trong ví của bạn"));
 
         Voucher voucher = kmkh.getVoucher();
 
         // Kiểm tra hạn của voucher
         LocalDate today = LocalDate.now();
         if (!"SAN_SANG".equals(voucher.getTrangThai())) {
-            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+            throw AppException.badRequest("Voucher đã bị vô hiệu hóa");
         }
         if (voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chua den ngay hieu luc");
+            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực");
         }
         if (voucher.getNgayHetHan().isBefore(today) || (kmkh.getNgayHetHan() != null && kmkh.getNgayHetHan().isBefore(today))) {
             kmkh.setTrangThai("HET_HAN");
             khuyenMaiKhRepository.save(kmkh);
-            throw AppException.badRequest("Voucher da het han");
+            throw AppException.badRequest("Voucher đã hết hạn");
         }
 
         // Kiểm tra đơn chưa áp voucher này rồi
         if (datTourUuDaiRepository.existsByDatTourAndVoucher(request.getMaDatTour(), request.getMaVoucher())) {
-            throw AppException.badRequest("Voucher nay da duoc ap dung cho don nay");
+            throw AppException.badRequest("Voucher này đã được áp dụng cho đơn này");
         }
 
         // Tính số tiền giảm
@@ -130,7 +130,7 @@ public class VoucherService {
     @Transactional
     public KhuyenMaiKhResponse doiDiem(String maTaiKhoan, DoiDiemVoucherRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so khach hang"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         Voucher voucher = voucherRepository.findById(request.getMaVoucher())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + request.getMaVoucher()));
@@ -157,17 +157,17 @@ public class VoucherService {
         }
 
         if (!laLoaiUuDaiHopLe(request.getLoaiUuDai())) {
-            throw AppException.badRequest("LoaiUuDai chi chap nhan PHAN_TRAM hoac SO_TIEN");
+            throw AppException.badRequest("Loại ưu đãi chỉ chấp nhận PHAN_TRAM hoặc SO_TIEN");
         }
 
         // Validate PHAN_TRAM không vượt 100
         if ("PHAN_TRAM".equals(request.getLoaiUuDai())
                 && request.getGiaTriGiam().compareTo(BigDecimal.valueOf(100)) > 0) {
-            throw AppException.badRequest("Giam PHAN_TRAM khong duoc vuot qua 100%");
+            throw AppException.badRequest("Giảm PHAN_TRAM không được vượt qua 100%");
         }
 
         if (request.getNgayHieuLuc().isAfter(request.getNgayHetHan())) {
-            throw AppException.badRequest("NgayHieuLuc phai truoc NgayHetHan");
+            throw AppException.badRequest("Ngày hiệu lực phải trước Ngày hết hạn");
         }
 
         Voucher v = new Voucher();
@@ -198,20 +198,20 @@ public class VoucherService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
 
         if (request.getLoaiUuDai() != null && !laLoaiUuDaiHopLe(request.getLoaiUuDai())) {
-            throw AppException.badRequest("LoaiUuDai chi chap nhan PHAN_TRAM hoac SO_TIEN");
+            throw AppException.badRequest("Loại ưu đãi chỉ chấp nhận PHAN_TRAM hoặc SO_TIEN");
         }
 
         String loaiUuDaiSauCapNhat = request.getLoaiUuDai() != null ? request.getLoaiUuDai() : v.getLoaiUuDai();
         BigDecimal giaTriGiamSauCapNhat = request.getGiaTriGiam() != null ? request.getGiaTriGiam() : v.getGiaTriGiam();
         if ("PHAN_TRAM".equals(loaiUuDaiSauCapNhat)
                 && giaTriGiamSauCapNhat.compareTo(BigDecimal.valueOf(100)) > 0) {
-            throw AppException.badRequest("Giam PHAN_TRAM khong duoc vuot qua 100%");
+            throw AppException.badRequest("Giảm PHAN_TRAM không được vượt qua 100%");
         }
 
         LocalDate ngayHieuLucSauCapNhat = request.getNgayHieuLuc() != null ? request.getNgayHieuLuc() : v.getNgayHieuLuc();
         LocalDate ngayHetHanSauCapNhat = request.getNgayHetHan() != null ? request.getNgayHetHan() : v.getNgayHetHan();
         if (ngayHieuLucSauCapNhat.isAfter(ngayHetHanSauCapNhat)) {
-            throw AppException.badRequest("NgayHieuLuc phai truoc NgayHetHan");
+            throw AppException.badRequest("Ngày hiệu lực phải trước Ngày hết hạn");
         }
 
         if (request.getMaCode() != null && !request.getMaCode().equals(v.getMaCode())) {
@@ -238,23 +238,23 @@ public class VoucherService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
 
         if (!"SAN_SANG".equals(voucher.getTrangThai())) {
-            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+            throw AppException.badRequest("Voucher đã bị vô hiệu hóa");
         }
 
         LocalDate today = LocalDate.now();
         if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
+            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực hoặc đã hết hạn");
         }
 
         HoChieuSo hcs = hoChieuSoRepository.findById(request.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + request.getMaKhachHang()));
 
         if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), maVoucher).isPresent()) {
-            throw AppException.badRequest("Khach hang nay da co voucher nay roi");
+            throw AppException.badRequest("Khách hàng này đã có voucher này rồi");
         }
 
         if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
-            throw AppException.badRequest("Voucher da het luot phat hanh");
+            throw AppException.badRequest("Voucher đã hết lượt phát hành");
         }
 
         KhuyenMaiKh kmkh = new KhuyenMaiKh();
@@ -281,10 +281,10 @@ public class VoucherService {
     @Transactional
     public KhuyenMaiKhResponse thuHoiVoucher(String maVoucher, String maKhachHang, String nguoiCapNhat) {
         KhuyenMaiKh kmkh = khuyenMaiKhRepository.findByKhachHangAndVoucher(maKhachHang, maVoucher)
-                .orElseThrow(() -> AppException.notFound("Khach hang khong co voucher nay trong vi"));
+                .orElseThrow(() -> AppException.notFound("Khách hàng không có voucher này trong ví"));
         capNhatHetHanNeuCan(kmkh);
         if (!"CO_HIEU_LUC".equals(kmkh.getTrangThai())) {
-            throw AppException.badRequest("Chi co the thu hoi voucher dang CO_HIEU_LUC");
+            throw AppException.badRequest("Chỉ có thể thu hồi voucher đang CO_HIEU_LUC");
         }
         kmkh.setTrangThai("DA_THU_HOI");
         khuyenMaiKhRepository.save(kmkh);
@@ -334,16 +334,16 @@ public class VoucherService {
     private void kiemTraVoucherCoTheDoi(HoChieuSo hcs, Voucher voucher) {
         LocalDate today = LocalDate.now();
         if (!"SAN_SANG".equals(voucher.getTrangThai())) {
-            throw AppException.badRequest("Voucher da bi vo hieu hoa");
+            throw AppException.badRequest("Voucher đã bị vô hiệu hóa");
         }
         if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chua den ngay hieu luc hoac da het han");
+            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực hoặc đã hết hạn");
         }
         if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
-            throw AppException.badRequest("Voucher da het luot doi");
+            throw AppException.badRequest("Voucher đã hết lượt đổi");
         }
         if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), voucher.getMaVoucher()).isPresent()) {
-            throw AppException.badRequest("Ban da co voucher nay trong vi roi");
+            throw AppException.badRequest("Bạn đã có voucher này trong ví rồi");
         }
     }
 

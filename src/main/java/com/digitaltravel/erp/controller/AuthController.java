@@ -51,22 +51,22 @@ public class AuthController {
     @Transactional
     public ResponseEntity<ApiResponse<DangNhapResponse>> dangKy(@Valid @RequestBody DangKyRequest request) {
         if (!request.getMatKhau().equals(request.getXacNhanMatKhau())) {
-            throw AppException.badRequest("Mat khau va xac nhan mat khau khong khop");
+            throw AppException.badRequest("Mật khẩu và xác nhận mật khẩu không khớp");
         }
         if (taiKhoanRepository.existsByTenDangNhap(request.getTenDangNhap())) {
-            throw AppException.badRequest("Ten dang nhap da ton tai");
+            throw AppException.badRequest("Tên đăng nhập đã tồn tại");
         }
         if (request.getEmail() != null && !request.getEmail().isBlank()
                 && taiKhoanRepository.existsByEmail(request.getEmail())) {
-            throw AppException.badRequest("Email da duoc su dung");
+            throw AppException.badRequest("Email đã được sử dụng");
         }
         if (request.getCccd() != null && !request.getCccd().isBlank()
                 && taiKhoanRepository.existsByCccd(request.getCccd())) {
-            throw AppException.badRequest("CCCD da duoc su dung");
+            throw AppException.badRequest("CCCD đã được sử dụng");
         }
 
         VaiTro vaiTroKhach = vaiTroRepository.findById(VaiTroConst.KHACHHANG)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay vai tro KHACHHANG"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy vai trò KHÁCH HÀNG"));
 
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setMaTaiKhoan(maTuDongService.taoMaTaiKhoanTheoVaiTro(VaiTroConst.KHACHHANG));
@@ -118,7 +118,7 @@ public class AuthController {
                 .tenHienThi(details.getTaiKhoan().getVaiTro().getTenHienThi())
                 .hoTen(details.getTaiKhoan().getHoTen())
                 .build();
-        return ResponseEntity.ok(ApiResponse.ok("Dang nhap thanh cong", body));
+        return ResponseEntity.ok(ApiResponse.ok("Đăng nhập thành công", body));
     }
 
     @PostMapping("/doi-mat-khau")
@@ -127,42 +127,42 @@ public class AuthController {
             @AuthenticationPrincipal TaiKhoanDetails details,
             @Valid @RequestBody DoiMatKhauRequest request) {
         if (!request.getMatKhauMoi().equals(request.getXacNhanMatKhau())) {
-            throw AppException.badRequest("Mat khau moi va xac nhan khong khop");
+            throw AppException.badRequest("Mật khẩu mới và xác nhận không khớp");
         }
         if (!passwordEncoder.matches(request.getMatKhauCu(), details.getPassword())) {
-            throw AppException.unauthorized("Mat khau cu khong dung");
+            throw AppException.unauthorized("Mật khẩu cũ không đúng");
         }
         TaiKhoan taiKhoan = details.getTaiKhoan();
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
-        return ResponseEntity.ok(ApiResponse.noContent("Doi mat khau thanh cong"));
+        return ResponseEntity.ok(ApiResponse.noContent("Đổi mật khẩu thành công"));
     }
 
     @PostMapping("/quen-mat-khau")
     public ResponseEntity<ApiResponse<String>> quenMatKhau(@Valid @RequestBody QuenMatKhauRequest request) {
-        taiKhoanRepository.findByTenDangNhapWithVaiTro(request.getTenDangNhap())
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tai khoan"));
-        String resetToken = jwtUtil.generateResetToken(request.getTenDangNhap());
+        TaiKhoan taiKhoan = taiKhoanRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tài khoản với email này"));
+        String resetToken = jwtUtil.generateResetToken(taiKhoan.getTenDangNhap());
         // TODO: Thay viec tra ve token bang gui email trong production
-        return ResponseEntity.ok(ApiResponse.ok("Da tao token dat lai mat khau (hieu luc 15 phut)", resetToken));
+        return ResponseEntity.ok(ApiResponse.ok("Đã tạo token đặt lại mật khẩu (hiệu lực 15 phút)", resetToken));
     }
 
     @PostMapping("/dat-lai-mat-khau")
     public ResponseEntity<ApiResponse<Void>> datLaiMatKhau(@Valid @RequestBody DatLaiMatKhauRequest request) {
         if (!request.getMatKhauMoi().equals(request.getXacNhanMatKhau())) {
-            throw AppException.badRequest("Mat khau moi va xac nhan khong khop");
+            throw AppException.badRequest("Mật khẩu mới và xác nhận không khớp");
         }
         String tenDangNhap = jwtUtil.extractResetSubject(request.getResetToken());
         TaiKhoan taiKhoan = taiKhoanRepository.findByTenDangNhapWithVaiTro(tenDangNhap)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tai khoan"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tài khoản"));
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
-        return ResponseEntity.ok(ApiResponse.noContent("Dat lai mat khau thanh cong"));
+        return ResponseEntity.ok(ApiResponse.noContent("Đặt lại mật khẩu thành công"));
     }
 
     @PostMapping("/dang-xuat")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<Void>> dangXuat() {
-        return ResponseEntity.ok(ApiResponse.noContent("Dang xuat thanh cong"));
+        return ResponseEntity.ok(ApiResponse.noContent("Đăng xuất thành công"));
     }
 }

@@ -71,7 +71,7 @@ public class PhanCongTourService {
                 .findMaNhanVienKhaDung(ngayKhoiHanh, ngayKhoiHanh)
                 .contains(request.getMaNhanVien());
         if (trungLich) {
-            throw AppException.badRequest("HDV da bi phan cong cho tour khac trong cung thoi gian.");
+            throw AppException.badRequest("HDV đã bị phân công cho tour khác trong cùng thời gian.");
         }
 
         PhanCongTour pc = new PhanCongTour();
@@ -98,7 +98,7 @@ public class PhanCongTourService {
         String maNhanVien = pc.getNhanVien().getMaNhanVien();
         if (diemDanhRepository.existsByMaTourAndMaNhanVien(maTour, maNhanVien)
                 || hanhDongRepository.existsByMaTourAndMaNhanVien(maTour, maNhanVien)) {
-            throw AppException.badRequest("Khong the huy phan cong da co du lieu van hanh.");
+            throw AppException.badRequest("Không thể hủy phân công đã có dữ liệu vận hành.");
         }
 
         phanCongTourRepository.delete(pc);
@@ -117,7 +117,7 @@ public class PhanCongTourService {
     @Transactional(readOnly = true)
     public List<PhanCongResponse> tourCuaToi(String maTaiKhoan) {
         NhanVien hdv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay ho so nhan vien"));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
         return phanCongTourRepository.findByMaNhanVien(hdv.getMaNhanVien()).stream()
                 .map(this::toResponse)
                 .toList();
