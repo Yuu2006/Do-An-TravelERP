@@ -34,12 +34,14 @@ public class NhanVienService {
     private final VaiTroRepository vaiTroRepository;
 
     // ── Tìm kiếm nhân viên (UC68) ─────────────────────────────────────────
+    /** Tìm kiếm nhân viên theo điều kiện. */
     public Page<NhanVienResponse> timKiem(String hoTen, String maVaiTro, String trangThai, Pageable pageable) {
         return nhanVienRepository.timKiem(hoTen, maVaiTro, trangThai, pageable)
                 .map(this::toResponse);
     }
 
     // ── Chi tiết nhân viên (UC68) ─────────────────────────────────────────
+    /** Lấy chi tiết thông tin nhân viên. */
     public NhanVienResponse chiTiet(String maNhanVien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + maNhanVien));
@@ -47,6 +49,7 @@ public class NhanVienService {
     }
 
     // ── Khóa tài khoản (UC66) ─────────────────────────────────────────────
+    /** Khóa tài khoản của nhân viên. */
     @Transactional
     public void khoaTaiKhoan(String maNhanVien, String nguoiThucHien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
@@ -66,6 +69,7 @@ public class NhanVienService {
     }
 
     // ── Mở khóa tài khoản (UC67) ──────────────────────────────────────────
+    /** Mở khóa tài khoản của nhân viên. */
     @Transactional
     public void moKhoaTaiKhoan(String maNhanVien) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
@@ -80,6 +84,7 @@ public class NhanVienService {
     }
 
     // ── UC69: Gán vai trò cho nhân viên ──────────────────────────────────────
+    /** Gán vai trò mới cho nhân viên. */
     @Transactional
     public NhanVienResponse ganVaiTro(String maNhanVien, GanVaiTroRequest request) {
         NhanVien nv = nhanVienRepository.findById(maNhanVien)
@@ -101,11 +106,18 @@ public class NhanVienService {
     }
 
     // ── UC24: Tìm kiếm thông tin khách hàng ──────────────────────────────────
-    public Page<HoChieuSoResponse> timKiemKhachHang(String hoTen, String email, String soDienThoai, Pageable pageable) {
-        return hoChieuSoRepository.timKiemKhachHang(hoTen, email, soDienThoai, pageable)
+    /** Tìm kiếm thông tin khách hàng. */
+    public Page<HoChieuSoResponse> timKiemKhachHang(String hoTen, String email, String soDienThoai,
+                                                     String maVoucherChuaNhan, Pageable pageable) {
+        boolean locKhachChuaNhanVoucher = maVoucherChuaNhan != null && !maVoucherChuaNhan.isBlank();
+
+        return (locKhachChuaNhanVoucher
+                ? hoChieuSoRepository.timKiemKhachHangChuaNhanVoucher(hoTen, email, soDienThoai, maVoucherChuaNhan, pageable)
+                : hoChieuSoRepository.timKiemKhachHang(hoTen, email, soDienThoai, pageable))
                 .map(this::toHoChieuSoResponse);
     }
 
+    /** Lấy chi tiết thông tin khách hàng. */
     public HoChieuSoResponse chiTietKhachHang(String maKhachHang) {
         return hoChieuSoRepository.findById(maKhachHang)
                 .map(this::toHoChieuSoResponse)
@@ -113,12 +125,14 @@ public class NhanVienService {
     }
 
     // ── Lấy NhanVien theo maTaiKhoan (dùng cho controller) ───────────────────
+    /** Tìm nhân viên theo mã tài khoản. */
     public NhanVien findNhanVienByTaiKhoan(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
     }
 
     // ── Lấy Hồ sơ cá nhân (Dành cho HDV tự xem) ──────────────────────────────
+    /** Lấy hồ sơ cá nhân của nhân viên. */
     public NhanVienResponse layHoSoCaNhan(String maTaiKhoan) {
         NhanVien nv = findNhanVienByTaiKhoan(maTaiKhoan);
         return toResponse(nv);

@@ -169,6 +169,9 @@ public class NhanVienController {
 
     // ──────────────── UC39: HDV xem lịch công tác ─────────────────────────
 
+    /**
+     * Xem lịch công tác của hướng dẫn viên.
+     */
     @GetMapping({"/api/huong-dan-vien/lich-cong-tac", "/api/dieu-hanh/lich-cong-tac"})
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<PhanCongResponse>>> lichCongTac(
@@ -179,17 +182,24 @@ public class NhanVienController {
 
     // ──────────────── UC24: Tìm kiếm khách hàng ──────────────────────────
 
+    /**
+     * Tìm kiếm khách hàng cho kinh doanh.
+     */
     @GetMapping("/api/kinh-doanh/khach-hang")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<HoChieuSoResponse>>> timKiemKhachHang(
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String soDienThoai,
+            @RequestParam(required = false) String maVoucherChuaNhan,
             @PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
-                nhanVienService.timKiemKhachHang(hoTen, email, soDienThoai, pageable)));
+                nhanVienService.timKiemKhachHang(hoTen, email, soDienThoai, maVoucherChuaNhan, pageable)));
     }
 
+    /**
+     * Xem chi tiết khách hàng.
+     */
     @GetMapping("/api/kinh-doanh/khach-hang/{maKhachHang}")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<HoChieuSoResponse>> chiTietKhachHang(
@@ -199,6 +209,9 @@ public class NhanVienController {
 
     // ──────────────── UC34: SALES xem đơn đặt tour ───────────────────────
 
+    /**
+     * Xem danh sách đơn đặt tour cho kinh doanh.
+     */
     @GetMapping("/api/kinh-doanh/don-dat-tour")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachDonDatTour(
@@ -210,6 +223,9 @@ public class NhanVienController {
 
     // ──────────────── UC41: SALES xử lý yêu cầu hỗ trợ / khiếu nại ─────────
 
+    /**
+     * Xem danh sách yêu cầu hỗ trợ.
+     */
     @GetMapping("/api/kinh-doanh/yeu-cau-ho-tro")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<YeuCauHoTroResponse>>> danhSachYeuCauHoTro(
@@ -220,6 +236,9 @@ public class NhanVienController {
                 yeuCauHoTroService.danhSachTatCa(loaiYeuCau, trangThai, pageable)));
     }
 
+    /**
+     * Xử lý yêu cầu hỗ trợ của khách hàng.
+     */
     @PutMapping("/api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> xuLyYeuCauHoTro(
@@ -232,6 +251,9 @@ public class NhanVienController {
 
     // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────
 
+    /**
+     * Xem hồ sơ cá nhân của hướng dẫn viên.
+     */
     @GetMapping("/api/huong-dan-vien/ho-so")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> hoSoCaNhan(
@@ -240,6 +262,9 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(nhanVienService.layHoSoCaNhan(maTaiKhoan)));
     }
 
+    /**
+     * Xem năng lực của hướng dẫn viên hiện tại.
+     */
     @GetMapping("/api/huong-dan-vien/nang-luc")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> nangLucCuaToi(
@@ -250,6 +275,9 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(nangLucService.layNangLuc(nv.getMaNhanVien())));
     }
 
+    /**
+     * Xem năng lực của nhân viên.
+     */
     @GetMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc")
     @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> nangLucNhanVien(
@@ -257,6 +285,9 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(nangLucService.layNangLuc(maNhanVien)));
     }
 
+    /**
+     * Cập nhật năng lực của nhân viên.
+     */
     @PutMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/nang-luc")
     @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NangLucResponse>> capNhatNangLuc(
@@ -269,6 +300,9 @@ public class NhanVienController {
 
     // ──────────────── UC69: Gán vai trò ──────────────────────────────────
 
+    /**
+     * Gán vai trò cho nhân viên.
+     */
     @PutMapping("/api/quan-tri/nhan-vien/{maNhanVien}/vai-tro")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> ganVaiTro(

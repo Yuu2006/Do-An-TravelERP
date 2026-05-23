@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.PhatHanhVoucherRequest;
 import com.digitaltravel.erp.dto.requests.VoucherRequest;
@@ -39,6 +41,9 @@ public class VoucherAdminController {
     private final VoucherService voucherService;
 
     // ── Danh sách voucher ─────────────────────────────────────────────────────
+    /**
+     * Xem danh sách voucher quản trị.
+     */
     @GetMapping
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> danhSach(
@@ -47,6 +52,9 @@ public class VoucherAdminController {
     }
 
     // ── Chi tiết voucher ──────────────────────────────────────────────────────
+    /**
+     * Xem chi tiết voucher.
+     */
     @GetMapping("/{maVoucher}")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> chiTiet(@PathVariable String maVoucher) {
@@ -54,6 +62,9 @@ public class VoucherAdminController {
     }
 
     // ── UC53: Tạo voucher mới ─────────────────────────────────────────────────
+    /**
+     * Tạo voucher mới.
+     */
     @PostMapping
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> taoVoucher(
@@ -64,6 +75,9 @@ public class VoucherAdminController {
     }
 
     // ── UC52: Cập nhật / vô hiệu hóa voucher ──────────────────────────────────
+    /**
+     * Cập nhật thông tin voucher.
+     */
     @PutMapping("/{maVoucher}")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> capNhatVoucher(
@@ -74,6 +88,9 @@ public class VoucherAdminController {
                 voucherService.capNhatVoucher(maVoucher, request, user.getUsername())));
     }
 
+    /**
+     * Vô hiệu hóa voucher.
+     */
     @PutMapping("/{maVoucher}/vo-hieu-hoa")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> voHieuHoaVoucher(
@@ -84,6 +101,9 @@ public class VoucherAdminController {
     }
 
     // ── UC54: Phát hành / thu hồi voucher cho khách hàng ──────────────────────
+    /**
+     * Phát hành voucher cho khách hàng.
+     */
     @PostMapping("/{maVoucher}/phat-hanh")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> phatHanh(
@@ -94,6 +114,19 @@ public class VoucherAdminController {
                 voucherService.phatHanhChoKhachHang(maVoucher, request, user.getUsername())));
     }
 
+    /**
+     * Xem khách hàng đã được phân bổ voucher.
+     */
+    @GetMapping("/{maVoucher}/khach-hang-da-phan-bo")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<KhuyenMaiKhResponse>>> danhSachKhachHangDaPhanBo(
+            @PathVariable String maVoucher) {
+        return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSachKhachHangDaPhanBo(maVoucher)));
+    }
+
+    /**
+     * Thu hồi voucher của khách hàng.
+     */
     @PutMapping("/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi")
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> thuHoi(
