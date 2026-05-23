@@ -2,6 +2,7 @@ package com.digitaltravel.erp.dto.requests;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Future;
@@ -30,4 +31,8 @@ public class TaoTourThucTeRequest {
     @NotNull(message = "Giá hiện hành không được để trống")
     @DecimalMin(value = "0.01", message = "Giá hiện hành phải lớn hơn 0")
     BigDecimal giaHienHanh;
+
+    List<String> maDichVuThem;
+
+    List<String> maHanhDongXanh;
 }

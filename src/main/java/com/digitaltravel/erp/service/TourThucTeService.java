@@ -7,13 +7,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.digitaltravel.erp.dto.requests.CapNhatTourThucTeRequest;
 import com.digitaltravel.erp.dto.requests.TaoTourThucTeRequest;
+import com.digitaltravel.erp.dto.responses.DichVuThemResponse;
+import com.digitaltravel.erp.dto.responses.HanhDongXanhResponse;
 import com.digitaltravel.erp.dto.responses.LichTrinhResponse;
 import com.digitaltravel.erp.dto.responses.TourCongKhaiResponse;
 import com.digitaltravel.erp.dto.responses.TourThucTeResponse;
+import com.digitaltravel.erp.entity.DichVuThem;
+import com.digitaltravel.erp.entity.DichVuTourThucTe;
+import com.digitaltravel.erp.entity.DichVuTourThucTeId;
+import com.digitaltravel.erp.entity.HanhDongXanh;
+import com.digitaltravel.erp.entity.HdxTourThucTe;
+import com.digitaltravel.erp.entity.HdxTourThucTeId;
 import com.digitaltravel.erp.entity.LichTrinhTour;
 import com.digitaltravel.erp.entity.TourMau;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.DichVuThemRepository;
+import com.digitaltravel.erp.repository.DichVuTourThucTeRepository;
+import com.digitaltravel.erp.repository.HanhDongXanhRepository;
+import com.digitaltravel.erp.repository.HdxTourThucTeRepository;
 import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
@@ -29,6 +41,10 @@ public class TourThucTeService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final DonDatTourRepository donDatTourRepository;
+    private final DichVuThemRepository dichVuThemRepository;
+    private final DichVuTourThucTeRepository dichVuTourThucTeRepository;
+    private final HanhDongXanhRepository hanhDongXanhRepository;
+    private final HdxTourThucTeRepository hdxTourThucTeRepository;
     private final MaTuDongService maTuDongService;
 
     // ── UC14: Danh sách tour thực tế (nội bộ - có filter) ───────────────────
@@ -118,6 +134,8 @@ public class TourThucTeService {
         ttt.setChoConLai(request.getSoKhachToiDa());
         ttt.setTrangThai("MO_BAN");
         tourThucTeRepository.save(ttt);
+        capNhatDichVuTour(ttt, request.getMaDichVuThem());
+        capNhatHanhDongXanhTour(ttt, request.getMaHanhDongXanh());
 
         return toResponse(ttt);
     }
@@ -148,6 +166,12 @@ public class TourThucTeService {
             ttt.setTrangThai(request.getTrangThai());
         }
         tourThucTeRepository.save(ttt);
+        if (request.getMaDichVuThem() != null) {
+            capNhatDichVuTour(ttt, request.getMaDichVuThem());
+        }
+        if (request.getMaHanhDongXanh() != null) {
+            capNhatHanhDongXanhTour(ttt, request.getMaHanhDongXanh());
+        }
 
         return toResponse(ttt);
     }
@@ -166,6 +190,8 @@ public class TourThucTeService {
             throw AppException.badRequest("Không thể xóa tour thực tế đã phát sinh đơn đặt tour");
         }
 
+        dichVuTourThucTeRepository.deleteByTourThucTe_MaTourThucTe(id);
+        hdxTourThucTeRepository.deleteByTourThucTe_MaTourThucTe(id);
         ttt.setTrangThai("HUY");
         tourThucTeRepository.save(ttt);
     }
@@ -179,9 +205,69 @@ public class TourThucTeService {
         }
     }
 
+    private void capNhatDichVuTour(TourThucTe ttt, java.util.List<String> maDichVuThem) {
+        dichVuTourThucTeRepository.deleteByTourThucTe_MaTourThucTe(ttt.getMaTourThucTe());
+        if (maDichVuThem == null) {
+            return;
+        }
+        maDichVuThem.stream()
+                .filter(ma -> ma != null && !ma.isBlank())
+                .distinct()
+                .forEach(ma -> {
+                    DichVuThem dichVu = dichVuThemRepository.findById(ma)
+                            .orElseThrow(() -> AppException.notFound("Khong tim thay dich vu them: " + ma));
+                    DichVuTourThucTe link = new DichVuTourThucTe();
+                    link.setId(new DichVuTourThucTeId(ttt.getMaTourThucTe(), dichVu.getMaDichVuThem()));
+                    link.setTourThucTe(ttt);
+                    link.setDichVuThem(dichVu);
+                    dichVuTourThucTeRepository.save(link);
+                });
+    }
+
+    private void capNhatHanhDongXanhTour(TourThucTe ttt, java.util.List<String> maHanhDongXanh) {
+        hdxTourThucTeRepository.deleteByTourThucTe_MaTourThucTe(ttt.getMaTourThucTe());
+        if (maHanhDongXanh == null) {
+            return;
+        }
+        maHanhDongXanh.stream()
+                .filter(ma -> ma != null && !ma.isBlank())
+                .distinct()
+                .forEach(ma -> {
+                    HanhDongXanh hanhDong = hanhDongXanhRepository.findById(ma)
+                            .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + ma));
+                    HdxTourThucTe link = new HdxTourThucTe();
+                    link.setId(new HdxTourThucTeId(ttt.getMaTourThucTe(), hanhDong.getMaHanhDongXanh()));
+                    link.setTourThucTe(ttt);
+                    link.setHanhDongXanh(hanhDong);
+                    hdxTourThucTeRepository.save(link);
+                });
+    }
+
     private TourThucTeResponse toResponse(TourThucTe ttt) {
         TourMau tm = ttt.getTourMau();
         java.time.LocalDate ngayKetThuc = ttt.getNgayKhoiHanh().plusDays(tm.getThoiLuong() - 1);
+        java.util.List<DichVuThemResponse> dichVu = dichVuTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
+                .map(link -> {
+                    DichVuThem dv = link.getDichVuThem();
+                    return DichVuThemResponse.builder()
+                            .maDichVuThem(dv.getMaDichVuThem())
+                            .ten(dv.getTen())
+                            .donViTinh(dv.getDonViTinh())
+                            .donGia(dv.getDonGia())
+                            .build();
+                })
+                .toList();
+        java.util.List<HanhDongXanhResponse> hanhDongXanh = hdxTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
+                .map(link -> {
+                    HanhDongXanh hdx = link.getHanhDongXanh();
+                    return HanhDongXanhResponse.builder()
+                            .maHanhDongXanh(hdx.getMaHanhDongXanh())
+                            .maTourThucTe(ttt.getMaTourThucTe())
+                            .tenHanhDong(hdx.getTenHanhDong())
+                            .diemCong(hdx.getDiemCong())
+                            .build();
+                })
+                .toList();
 
         return TourThucTeResponse.builder()
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -194,6 +280,8 @@ public class TourThucTeService {
                 .soKhachToiThieu(ttt.getSoKhachToiThieu())
                 .choConLai(ttt.getChoConLai())
                 .trangThai(ttt.getTrangThai())
+                .dichVu(dichVu)
+                .hanhDongXanh(hanhDongXanh)
                 .build();
     }
 }
