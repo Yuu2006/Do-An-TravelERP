@@ -45,7 +45,8 @@ public class HuyTourService {
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, kh.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
-        // Chỉ cho hủy đơn đã xác nhận (đã thanh toán) — đơn CHO_XAC_NHAN tự hủy qua endpoint riêng
+        // Chỉ cho hủy đơn đã xác nhận (đã thanh toán) — đơn CHO_XAC_NHAN tự hủy qua
+        // endpoint riêng
         if (!"DA_XAC_NHAN".equals(don.getTrangThai())) {
             throw AppException.badRequest(
                     "Chi co the yeu cau huy don o trang thai DA_XAC_NHAN. Hien tai: " + don.getTrangThai());
@@ -156,9 +157,12 @@ public class HuyTourService {
 
     // ── Helper: tính tỉ lệ hoàn ──────────────────────────────────────────
     private int tinhTiLeHoan(int soNgayConLai) {
-        if (soNgayConLai > 15) return 90;
-        if (soNgayConLai >= 7) return 70;
-        if (soNgayConLai >= 3) return 50;
+        if (soNgayConLai > 15)
+            return 90;
+        if (soNgayConLai >= 7)
+            return 70;
+        if (soNgayConLai >= 3)
+            return 50;
         return 0;
     }
 
@@ -172,7 +176,8 @@ public class HuyTourService {
                 return tongTien.multiply(BigDecimal.valueOf(pct))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
             }
-        } catch (Exception ignored) { /* fallback */ }
+        } catch (Exception ignored) {
+            /* fallback */ }
         return BigDecimal.ZERO;
     }
 

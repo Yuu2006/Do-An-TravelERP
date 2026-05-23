@@ -48,7 +48,8 @@ public class QuyetToanService {
         return tourThucTeRepository.timKiem("KET_THUC", null, null, null, pageable)
                 .map(tt -> {
                     boolean daqt = quyetToanRepository.existsByTourThucTe_MaTourThucTe(tt.getMaTourThucTe());
-                    if (daqt) return null;
+                    if (daqt)
+                        return null;
                     return toQuyetToanXemTruoc(tt);
                 })
                 .map(r -> r); // filter nulls handled by client or via separate query
@@ -248,6 +249,7 @@ public class QuyetToanService {
                 .filter(d -> d.getTourThucTe().getMaTourThucTe().equals(maTour))
                 .filter(d -> "DA_XAC_NHAN".equals(d.getTrangThai())
                         || "CHO_HUY".equals(d.getTrangThai())
+                        || "CHO_HOAN_TIEN".equals(d.getTrangThai())
                         || "TU_CHOI_HOAN_TIEN".equals(d.getTrangThai()))
                 .map(DonDatTour::getTongTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -265,10 +267,12 @@ public class QuyetToanService {
         BigDecimal chiPhi = tinhChiPhi(maTour);
         qt.setTongDoanhThu(doanhThu);
         qt.setTongChiPhi(chiPhi);
-        if (req != null && req.getGiaCamKet() != null) qt.setGiaCamKet(req.getGiaCamKet());
+        if (req != null && req.getGiaCamKet() != null)
+            qt.setGiaCamKet(req.getGiaCamKet());
         qt.setLoiNhuan(doanhThu.subtract(chiPhi));
         qt.setNgayQuyetToan(LocalDateTime.now());
-        if (req != null && req.getGhiChu() != null) qt.setGhiChu(req.getGhiChu());
+        if (req != null && req.getGhiChu() != null)
+            qt.setGhiChu(req.getGhiChu());
         quyetToanRepository.save(qt);
         return toResponse(qt);
     }
