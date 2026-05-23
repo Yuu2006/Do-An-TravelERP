@@ -42,6 +42,18 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             @Param("maKhachHang") String maKhachHang
     );
 
+    @Query("""
+            SELECT d FROM DonDatTour d
+            WHERE d.khachHang.MaKhachHang = :maKhachHang
+              AND d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.trangThai NOT IN ('DA_HUY', 'HET_HAN_GIU_CHO', 'THANH_TOAN_THAT_BAI')
+            ORDER BY d.ngayDat DESC
+            """)
+    List<DonDatTour> findRecentByMaKhachHangAndMaTourThucTe(
+            @Param("maKhachHang") String maKhachHang,
+            @Param("maTourThucTe") String maTourThucTe
+    );
+
     // Dành cho nhân viên: tất cả đơn (filter theo trạng thái)
     @Query(value = """
             SELECT d FROM DonDatTour d

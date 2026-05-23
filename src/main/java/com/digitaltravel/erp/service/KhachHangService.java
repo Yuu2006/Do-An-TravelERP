@@ -10,7 +10,9 @@ import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
 import com.digitaltravel.erp.dto.responses.LichSuTourResponse;
 import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.LichSuTour;
+import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.DonDatTourRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.LichSuTourRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
@@ -25,6 +27,7 @@ public class KhachHangService {
 
     private final HoChieuSoRepository hoChieuSoRepository;
     private final LichSuTourRepository lichSuTourRepository;
+    private final DonDatTourRepository donDatTourRepository;
     private final TaiKhoanRepository taiKhoanRepository;
     private final DanhGiaKhRepository danhGiaKhRepository;
     private final YeuCauHoTroRepository yeuCauHoTroRepository;
@@ -75,8 +78,8 @@ public class KhachHangService {
     public Page<LichSuTourResponse> lichSuTour(String maTaiKhoan, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
-        return lichSuTourRepository.findByMaKhachHang(hcs.getMaKhachHang(), pageable)
-                .map(this::tolichSuTourResponse);
+        return donDatTourRepository.findByMaKhachHang(hcs.getMaKhachHang(), pageable)
+                .map(this::toLichSuTourResponse);
     }
 
     // ── Mapper ────────────────────────────────────────────────────────────────
@@ -98,28 +101,33 @@ public class KhachHangService {
                 .build();
     }
 
-    private LichSuTourResponse tolichSuTourResponse(LichSuTour ls) {
-        String maDatTour = ls.getChiTietDatTour() != null && ls.getChiTietDatTour().getDonDatTour() != null
-                ? ls.getChiTietDatTour().getDonDatTour().getMaDatTour()
-                : null;
-        String trangThaiKhieuNai = maDatTour != null
-                ? yeuCauHoTroRepository.findByMaDatTourAndLoaiYeuCau(maDatTour, "KHIEU_NAI").stream()
-                        .findFirst()
-                        .map(yc -> yc.getTrangThai())
-                        .orElse(null)
-                : null;
+    private LichSuTourResponse toLichSuTourResponse(DonDatTour don) {
+        LichSuTour lichSuTour = lichSuTourRepository
+                .findByMaKhachHangAndMaTourThucTe(
+                        don.getKhachHang().getMaKhachHang(),
+                        don.getTourThucTe().getMaTourThucTe())
+                .orElse(null);
+        String trangThaiKhieuNai = yeuCauHoTroRepository
+                .findByMaDatTourAndLoaiYeuCau(don.getMaDatTour(), "KHIEU_NAI")
+                .stream()
+                .findFirst()
+                .map(yc -> yc.getTrangThai())
+                .orElse(null);
         return LichSuTourResponse.builder()
-                .maLichSuTour(ls.getMaLichSuTour())
-                .maDatTour(maDatTour)
-                .maTourThucTe(ls.getTourThucTe().getMaTourThucTe())
-                .tieuDeTour(ls.getTourThucTe().getTourMau().getTieuDe())
-                .ngayKhoiHanh(ls.getTourThucTe().getNgayKhoiHanh())
-                .thoiLuong(ls.getTourThucTe().getTourMau().getThoiLuong())
-                .ngayThamGia(ls.getNgayThamGia())
-                .trangThaiTour(ls.getTourThucTe().getTrangThai())
+                .maLichSuTour(lichSuTour != null ? lichSuTour.getMaLichSuTour() : null)
+                .maDatTour(don.getMaDatTour())
+                .maTourThucTe(don.getTourThucTe().getMaTourThucTe())
+                .tieuDeTour(don.getTourThucTe().getTourMau().getTieuDe())
+                .ngayKhoiHanh(don.getTourThucTe().getNgayKhoiHanh())
+                .thoiLuong(don.getTourThucTe().getTourMau().getThoiLuong())
+                .ngayDat(don.getNgayDat())
+                .ngayThamGia(lichSuTour != null ? lichSuTour.getNgayThamGia() : don.getTourThucTe().getNgayKhoiHanh())
+                .trangThai(don.getTrangThai())
+                .trangThaiTour(don.getTourThucTe().getTrangThai())
+                .tongTien(don.getTongTien())
                 .daDanhGia(danhGiaKhRepository.existsByKhachHangAndTour(
-                        ls.getKhachHang().getMaKhachHang(),
-                        ls.getTourThucTe().getMaTourThucTe()))
+                        don.getKhachHang().getMaKhachHang(),
+                        don.getTourThucTe().getMaTourThucTe()))
                 .daKhieuNai(trangThaiKhieuNai != null)
                 .trangThaiKhieuNai(trangThaiKhieuNai)
                 .build();
