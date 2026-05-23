@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,11 +75,6 @@ public class ThanhToanService {
             }
             return xuLyMock(don, phuongThuc);
         }
-
-        if (request.isMock()) {
-            throw AppException.forbidden("Thanh toan mock dang bi tat tren moi truong hien tai");
-        }
-
         // TODO: Tích hợp MoMo thực — xem README phần UC29
         // Hiện tại trả về lỗi hướng dẫn dùng mock
         return taoGiaoDichChoThanhToan(don, phuongThuc);

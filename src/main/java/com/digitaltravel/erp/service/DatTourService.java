@@ -217,6 +217,8 @@ public class DatTourService {
         if (tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
+        List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
+        don.setTongTien(tinhTongTienTuChiTiet(dsChiTiet, dsDichVu));
 
         GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
         giaoDichRepository.save(giaoDich);
@@ -229,7 +231,6 @@ public class DatTourService {
 
         taoLichSuTourNeuChuaCo(don, tour);
 
-        List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         return toResponse(don, dsChiTiet, dsDichVu);
     }
 
@@ -457,6 +458,7 @@ public class DatTourService {
                 .findFirst()
                 .map(yc -> yc.getTrangThai())
                 .orElse(null);
+        BigDecimal tongTien = tinhTongTienTuChiTiet(dsChiTiet, dsDichVu);
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -467,7 +469,7 @@ public class DatTourService {
                 .maKhachHang(don.getKhachHang().getMaKhachHang())
                 .tenKhachHang(don.getKhachHang().getTaiKhoan().getHoTen())
                 .ngayDat(don.getNgayDat())
-                .tongTien(don.getTongTien())
+                .tongTien(tongTien)
                 .trangThai(don.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
@@ -484,6 +486,18 @@ public class DatTourService {
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
                 .chiTietDichVu(dsDichVu.stream().map(this::toDichVuResponse).toList())
                 .build();
+    }
+
+    private BigDecimal tinhTongTienTuChiTiet(List<ChiTietDatTour> dsChiTiet, List<ChiTietDichVu> dsDichVu) {
+        BigDecimal tongTienKhach = dsChiTiet.stream()
+                .map(ChiTietDatTour::getGiaTaiThoiDiemDat)
+                .filter(gia -> gia != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal tongTienDichVu = dsDichVu.stream()
+                .map(ChiTietDichVu::getThanhTien)
+                .filter(thanhTien -> thanhTien != null)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return tongTienKhach.add(tongTienDichVu);
     }
 
     private List<String> parseHanhDongXanh(String value) {

@@ -541,3 +541,717 @@ CREATE INDEX IDX_NKHT_TAIKHOAN           ON NHATKYHETHONG(MaTaiKhoan);
 CREATE INDEX IDX_NKHT_HANHDONG           ON NHATKYHETHONG(HanhDong);
 CREATE INDEX IDX_NKHT_DOITUONG           ON NHATKYHETHONG(DoiTuong, MaDoiTuong);
 CREATE INDEX IDX_NKHT_THOIGIAN           ON NHATKYHETHONG(ThoiGian);
+
+-- ============================================================
+-- BUSINESS FUNCTIONS, PROCEDURES, TRIGGERS
+-- ============================================================
+
+CREATE OR REPLACE FUNCTION FN_TINH_TIEN_UU_DAI (
+    p_MaVoucher   IN VARCHAR2,
+    p_TongTienDon IN NUMBER
+) RETURN NUMBER
+IS
+    v_LoaiUuDai  VOUCHER.LoaiUuDai%TYPE;
+    v_GiaTriGiam VOUCHER.GiaTriGiam%TYPE;
+BEGIN
+    SELECT LoaiUuDai, GiaTriGiam
+    INTO v_LoaiUuDai, v_GiaTriGiam
+    FROM VOUCHER
+    WHERE MaVoucher = p_MaVoucher;
+
+    IF v_LoaiUuDai = 'PHAN_TRAM' THEN
+        RETURN NVL(p_TongTienDon, 0) * v_GiaTriGiam / 100;
+    END IF;
+
+    RETURN LEAST(v_GiaTriGiam, NVL(p_TongTienDon, 0));
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_TINH_TONG_DOANH_THU (
+    p_MaTourThucTe IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_Tong NUMBER(18,2);
+BEGIN
+    SELECT NVL(SUM(gd.SoTien), 0)
+    INTO v_Tong
+    FROM GIAODICH gd
+    JOIN DONDATTOUR ddt ON ddt.MaDatTour = gd.MaDatTour
+    WHERE ddt.MaTourThucTe = p_MaTourThucTe
+      AND gd.LoaiGiaoDich = 'THANH_TOAN'
+      AND gd.TrangThai = 'THANH_CONG';
+
+    RETURN v_Tong;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_TINH_TONG_CHI_PHI (
+    p_MaTourThucTe IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_Tong NUMBER(18,2);
+BEGIN
+    SELECT NVL(SUM(ThanhTien), 0)
+    INTO v_Tong
+    FROM CHIPHITHUCTE
+    WHERE MaTourThucTe = p_MaTourThucTe
+      AND TrangThaiDuyet = 'DA_DUYET';
+
+    RETURN v_Tong;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_TINH_LOI_NHUAN (
+    p_MaTourThucTe IN VARCHAR2
+) RETURN NUMBER
+IS
+BEGIN
+    RETURN FN_TINH_TONG_DOANH_THU(p_MaTourThucTe) - FN_TINH_TONG_CHI_PHI(p_MaTourThucTe);
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_XEP_HANG_THANH_VIEN (
+    p_DiemXanh IN NUMBER
+) RETURN VARCHAR2
+IS
+    v_Diem NUMBER := NVL(p_DiemXanh, 0);
+BEGIN
+    IF v_Diem >= 10000 THEN
+        RETURN 'KIM_CUONG';
+    ELSIF v_Diem >= 5000 THEN
+        RETURN 'VANG';
+    ELSIF v_Diem >= 2000 THEN
+        RETURN 'BAC';
+    ELSIF v_Diem >= 500 THEN
+        RETURN 'DONG';
+    END IF;
+
+    RETURN 'THANH_VIEN';
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_TINH_PHI_HUY_TOUR (
+    p_MaDatTour IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_TongTien DONDATTOUR.TongTien%TYPE;
+    v_NgayKhoiHanh TOURTHUCTE.NgayKhoiHanh%TYPE;
+    v_SoNgay NUMBER;
+BEGIN
+    SELECT ddt.TongTien, ttt.NgayKhoiHanh
+    INTO v_TongTien, v_NgayKhoiHanh
+    FROM DONDATTOUR ddt
+    JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = ddt.MaTourThucTe
+    WHERE ddt.MaDatTour = p_MaDatTour;
+
+    v_SoNgay := TRUNC(v_NgayKhoiHanh) - TRUNC(SYSDATE);
+
+    IF v_SoNgay > 15 THEN
+        RETURN v_TongTien * 0.10;
+    ELSIF v_SoNgay >= 7 THEN
+        RETURN v_TongTien * 0.30;
+    ELSIF v_SoNgay >= 3 THEN
+        RETURN v_TongTien * 0.50;
+    END IF;
+
+    RETURN v_TongTien;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_LAY_DIEM_XANH_HIEN_TAI (
+    p_MaKhachHang IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_Diem HOCHIEUSO.DiemXanh%TYPE;
+BEGIN
+    SELECT DiemXanh
+    INTO v_Diem
+    FROM HOCHIEUSO
+    WHERE MaKhachHang = p_MaKhachHang;
+
+    RETURN v_Diem;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_CHECK_CAN_DANH_GIA (
+    p_MaTourThucTe IN VARCHAR2,
+    p_MaKhachHang  IN VARCHAR2
+) RETURN VARCHAR2
+IS
+    v_Count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_Count
+    FROM LICHSUTOUR lst
+    JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = lst.MaTourThucTe
+    JOIN TOURMAU tm ON tm.MaTourMau = ttt.MaTourMau
+    WHERE lst.MaTourThucTe = p_MaTourThucTe
+      AND lst.MaKhachHang = p_MaKhachHang
+      AND ttt.TrangThai = 'KET_THUC'
+      AND TRUNC(SYSDATE) <= TRUNC(ttt.NgayKhoiHanh) + tm.ThoiLuong + 30;
+
+    RETURN CASE WHEN v_Count > 0 THEN 'YES' ELSE 'NO' END;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_LAY_GIA_TRI_VOUCHER (
+    p_MaVoucher IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_GiaTri VOUCHER.GiaTriGiam%TYPE;
+BEGIN
+    SELECT GiaTriGiam
+    INTO v_GiaTri
+    FROM VOUCHER
+    WHERE MaVoucher = p_MaVoucher;
+
+    RETURN v_GiaTri;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+END;
+/
+
+CREATE OR REPLACE FUNCTION FN_TINH_TONG_TIEN_DONDAT (
+    p_MaDatTour IN VARCHAR2
+) RETURN NUMBER
+IS
+    v_TienKhach NUMBER(18,2);
+    v_TienDichVu NUMBER(18,2);
+    v_TienUuDai NUMBER(18,2);
+BEGIN
+    SELECT NVL(SUM(GiaTaiThoiDiemDat), 0)
+    INTO v_TienKhach
+    FROM CHITIETDATTOUR
+    WHERE MaDatTour = p_MaDatTour;
+
+    SELECT NVL(SUM(ThanhTien), 0)
+    INTO v_TienDichVu
+    FROM CHITIETDICHVU
+    WHERE MaDatTour = p_MaDatTour;
+
+    SELECT NVL(SUM(SoTienUuDai), 0)
+    INTO v_TienUuDai
+    FROM DATTOUR_UUDAI
+    WHERE MaDatTour = p_MaDatTour;
+
+    RETURN GREATEST(v_TienKhach + v_TienDichVu - v_TienUuDai, 0);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_HET_HAN_GIU_CHO
+IS
+BEGIN
+    UPDATE DONDATTOUR
+    SET TrangThai = 'HET_HAN_GIU_CHO'
+    WHERE TrangThai = 'CHO_XAC_NHAN'
+      AND ThoiGianHetHan IS NOT NULL
+      AND ThoiGianHetHan < SYSTIMESTAMP;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_XAC_NHAN_THANH_TOAN (
+    p_MaDatTour  IN VARCHAR2,
+    p_PhuongThuc IN VARCHAR2,
+    p_MaGDNH     IN VARCHAR2,
+    p_SoTien     IN NUMBER
+)
+IS
+BEGIN
+    INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+    VALUES (RAWTOHEX(SYS_GUID()), p_MaDatTour, 'THANH_TOAN', p_PhuongThuc, p_SoTien, p_MaGDNH, 'THANH_CONG', SYSTIMESTAMP);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_HUY_DAT_TOUR (
+    p_MaDatTour IN VARCHAR2,
+    p_LyDo      IN VARCHAR2
+)
+IS
+    v_TrangThai DONDATTOUR.TrangThai%TYPE;
+    v_TongTien DONDATTOUR.TongTien%TYPE;
+BEGIN
+    SELECT TrangThai, TongTien
+    INTO v_TrangThai, v_TongTien
+    FROM DONDATTOUR
+    WHERE MaDatTour = p_MaDatTour
+    FOR UPDATE;
+
+    IF v_TrangThai = 'DA_XAC_NHAN' THEN
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, TrangThai, NgayThanhToan)
+        VALUES (RAWTOHEX(SYS_GUID()), p_MaDatTour, 'HOAN_TIEN', 'HE_THONG', v_TongTien - FN_TINH_PHI_HUY_TOUR(p_MaDatTour), 'CHO_THANH_TOAN', SYSTIMESTAMP);
+    END IF;
+
+    UPDATE DONDATTOUR
+    SET TrangThai = 'DA_HUY', GhiChu = SUBSTR(NVL(GhiChu, '') || ' ' || p_LyDo, 1, 2000)
+    WHERE MaDatTour = p_MaDatTour;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_AP_DUNG_VOUCHER (
+    p_MaDatTour IN VARCHAR2,
+    p_MaVoucher IN VARCHAR2
+)
+IS
+    v_MaKhachHang DONDATTOUR.MaKhachHang%TYPE;
+    v_TongTien DONDATTOUR.TongTien%TYPE;
+    v_SoTienUuDai NUMBER(18,2);
+    v_Count NUMBER;
+BEGIN
+    SELECT MaKhachHang, TongTien
+    INTO v_MaKhachHang, v_TongTien
+    FROM DONDATTOUR
+    WHERE MaDatTour = p_MaDatTour
+    FOR UPDATE;
+
+    SELECT COUNT(*)
+    INTO v_Count
+    FROM VOUCHER v
+    JOIN KHUYENMAI_KH km ON km.MaVoucher = v.MaVoucher
+    WHERE v.MaVoucher = p_MaVoucher
+      AND km.MaKhachHang = v_MaKhachHang
+      AND v.TrangThai = 'SAN_SANG'
+      AND km.TrangThai = 'CO_HIEU_LUC'
+      AND TRUNC(SYSDATE) BETWEEN TRUNC(v.NgayHieuLuc) AND TRUNC(v.NgayHetHan)
+      AND (km.NgayHetHan IS NULL OR TRUNC(SYSDATE) <= TRUNC(km.NgayHetHan))
+      AND v.SoLuotDaDung < v.SoLuotPhatHanh;
+
+    IF v_Count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20041, 'Voucher khong hop le hoac khong con hieu luc');
+    END IF;
+
+    v_SoTienUuDai := FN_TINH_TIEN_UU_DAI(p_MaVoucher, v_TongTien);
+
+    INSERT INTO DATTOUR_UUDAI (MaDatTour, MaVoucher, SoTienUuDai)
+    VALUES (p_MaDatTour, p_MaVoucher, v_SoTienUuDai);
+
+    UPDATE DONDATTOUR
+    SET TongTien = GREATEST(TongTien - v_SoTienUuDai, 0)
+    WHERE MaDatTour = p_MaDatTour;
+
+    UPDATE KHUYENMAI_KH
+    SET TrangThai = 'DA_SU_DUNG'
+    WHERE MaKhachHang = v_MaKhachHang
+      AND MaVoucher = p_MaVoucher;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_TINH_LAI_QUYET_TOAN (
+    p_MaTourThucTe IN VARCHAR2,
+    p_MaNhanVien   IN VARCHAR2
+)
+IS
+    v_DoanhThu NUMBER(18,2);
+    v_ChiPhi NUMBER(18,2);
+BEGIN
+    v_DoanhThu := FN_TINH_TONG_DOANH_THU(p_MaTourThucTe);
+    v_ChiPhi := FN_TINH_TONG_CHI_PHI(p_MaTourThucTe);
+
+    MERGE INTO QUYETTOAN qt
+    USING (SELECT p_MaTourThucTe MaTourThucTe FROM dual) src
+    ON (qt.MaTourThucTe = src.MaTourThucTe)
+    WHEN MATCHED THEN
+        UPDATE SET TongDoanhThu = v_DoanhThu,
+                   TongChiPhi = v_ChiPhi,
+                   LoiNhuan = v_DoanhThu - v_ChiPhi,
+                   MaNhanVien = p_MaNhanVien,
+                   NgayQuyetToan = SYSTIMESTAMP
+    WHEN NOT MATCHED THEN
+        INSERT (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, LoiNhuan, MaNhanVien, TrangThai)
+        VALUES (RAWTOHEX(SYS_GUID()), p_MaTourThucTe, v_DoanhThu, v_ChiPhi, v_DoanhThu - v_ChiPhi, p_MaNhanVien, 'CHUA_QUYET_TOAN');
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_CAP_NHAT_HANG_THANH_VIEN (
+    p_MaKhachHang IN VARCHAR2
+)
+IS
+BEGIN
+    UPDATE HOCHIEUSO
+    SET HangThanhVien = FN_XEP_HANG_THANH_VIEN(DiemXanh)
+    WHERE MaKhachHang = p_MaKhachHang;
+END;
+/
+
+CREATE OR REPLACE PROCEDURE PROC_DOI_SOAT_THANH_TOAN (
+    p_MaGDNH             IN VARCHAR2,
+    p_TrangThaiNganHang  IN VARCHAR2
+)
+IS
+BEGIN
+    UPDATE GIAODICH
+    SET TrangThai = CASE WHEN p_TrangThaiNganHang = 'THANH_CONG' THEN 'THANH_CONG' ELSE 'THAT_BAI' END,
+        NgayThanhToan = CASE WHEN p_TrangThaiNganHang = 'THANH_CONG' THEN NVL(NgayThanhToan, SYSTIMESTAMP) ELSE NgayThanhToan END
+    WHERE MaGDNH = p_MaGDNH;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_VAITRO_HOCHIEUSO
+BEFORE INSERT OR UPDATE OF MaTaiKhoan ON HOCHIEUSO
+FOR EACH ROW
+DECLARE
+    v_VaiTro TAIKHOAN.VaiTro%TYPE;
+BEGIN
+    SELECT VaiTro INTO v_VaiTro FROM TAIKHOAN WHERE MaTaiKhoan = :NEW.MaTaiKhoan;
+    IF v_VaiTro <> 'KHACHHANG' THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Tai khoan cua HOCHIEUSO phai co VaiTro = KHACHHANG');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_VAITRO_NHANVIEN
+BEFORE INSERT OR UPDATE OF MaTaiKhoan ON NHANVIEN
+FOR EACH ROW
+DECLARE
+    v_VaiTro TAIKHOAN.VaiTro%TYPE;
+BEGIN
+    SELECT VaiTro INTO v_VaiTro FROM TAIKHOAN WHERE MaTaiKhoan = :NEW.MaTaiKhoan;
+    IF v_VaiTro = 'KHACHHANG' THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Tai khoan cua NHANVIEN khong duoc co VaiTro = KHACHHANG');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_CHAN_DOI_VAITRO_TK
+BEFORE UPDATE OF VaiTro ON TAIKHOAN
+FOR EACH ROW
+DECLARE
+    v_Count NUMBER;
+BEGIN
+    IF NVL(:OLD.VaiTro, '#') <> NVL(:NEW.VaiTro, '#') THEN
+        SELECT COUNT(*) INTO v_Count FROM HOCHIEUSO WHERE MaTaiKhoan = :OLD.MaTaiKhoan;
+        IF v_Count > 0 THEN
+            RAISE_APPLICATION_ERROR(-20003, 'Khong duoc doi VaiTro cua tai khoan da lien ket HOCHIEUSO');
+        END IF;
+
+        SELECT COUNT(*) INTO v_Count FROM NHANVIEN WHERE MaTaiKhoan = :OLD.MaTaiKhoan;
+        IF v_Count > 0 THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Khong duoc doi VaiTro cua tai khoan da lien ket NHANVIEN');
+        END IF;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KHOA_CP_QUYETTOAN
+BEFORE INSERT OR UPDATE OR DELETE ON CHIPHITHUCTE
+FOR EACH ROW
+DECLARE
+    v_MaTourThucTe CHIPHITHUCTE.MaTourThucTe%TYPE;
+    v_Count NUMBER;
+BEGIN
+    v_MaTourThucTe := CASE WHEN DELETING THEN :OLD.MaTourThucTe ELSE :NEW.MaTourThucTe END;
+
+    SELECT COUNT(*)
+    INTO v_Count
+    FROM TOURTHUCTE ttt
+    WHERE ttt.MaTourThucTe = v_MaTourThucTe
+      AND ttt.TrangThai = 'DA_QUYET_TOAN';
+
+    IF v_Count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20005, 'Khong duoc thay doi chi phi cua tour da quyet toan');
+    END IF;
+
+    SELECT COUNT(*) INTO v_Count FROM QUYETTOAN WHERE MaTourThucTe = v_MaTourThucTe;
+    IF v_Count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20006, 'Khong duoc thay doi chi phi khi tour da co quyet toan');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_CHOT_TOUR_QUYETTOAN
+AFTER INSERT ON QUYETTOAN
+FOR EACH ROW
+BEGIN
+    UPDATE TOURTHUCTE
+    SET TrangThai = 'DA_QUYET_TOAN'
+    WHERE MaTourThucTe = :NEW.MaTourThucTe;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_TOUR_MO_BAN
+BEFORE INSERT ON DONDATTOUR
+FOR EACH ROW
+DECLARE
+    v_Count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_Count
+    FROM TOURTHUCTE
+    WHERE MaTourThucTe = :NEW.MaTourThucTe
+      AND TrangThai = 'MO_BAN'
+      AND NgayKhoiHanh > SYSDATE;
+
+    IF v_Count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20007, 'Chi duoc dat tour dang MO_BAN va chua khoi hanh');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_CONG_DIEM_XANH
+AFTER INSERT ON HANHDONG
+FOR EACH ROW
+DECLARE
+    v_DiemCong HANHDONGXANH.DiemCong%TYPE;
+BEGIN
+    SELECT DiemCong INTO v_DiemCong FROM HANHDONGXANH WHERE MaHanhDongXanh = :NEW.MaHanhDongXanh;
+    UPDATE HOCHIEUSO
+    SET DiemXanh = DiemXanh + v_DiemCong
+    WHERE MaKhachHang = :NEW.MaKhachHang;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_HDV_XACMINH_HD
+BEFORE INSERT ON HANHDONG
+FOR EACH ROW
+DECLARE
+    v_Count NUMBER;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_Count
+    FROM PHANCONGTOUR pct
+    JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = pct.MaTourThucTe
+    WHERE pct.MaTourThucTe = :NEW.MaTourThucTe
+      AND pct.MaNhanVien = :NEW.MaNhanVienXacMinh
+      AND ttt.TrangThai = 'DANG_DIEN_RA';
+
+    IF v_Count = 0 THEN
+        RAISE_APPLICATION_ERROR(-20008, 'HDV xac minh phai duoc phan cong va tour dang dien ra');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_TRU_DIEM_DOI_VOUCHER
+AFTER INSERT ON NHATKYDOIDIEM
+FOR EACH ROW
+BEGIN
+    UPDATE HOCHIEUSO
+    SET DiemXanh = DiemXanh - :NEW.DiemQuyDoi
+    WHERE MaKhachHang = :NEW.MaKhachHang;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_SUC_CHUA_DATTOUR
+FOR INSERT OR UPDATE OF MaDatTour ON CHITIETDATTOUR
+COMPOUND TRIGGER
+    TYPE t_keys IS TABLE OF CHITIETDATTOUR.MaDatTour%TYPE INDEX BY PLS_INTEGER;
+    g_MaDatTour t_keys;
+    g_Count PLS_INTEGER := 0;
+
+    PROCEDURE add_key(p_MaDatTour IN CHITIETDATTOUR.MaDatTour%TYPE) IS
+    BEGIN
+        IF p_MaDatTour IS NOT NULL THEN
+            g_Count := g_Count + 1;
+            g_MaDatTour(g_Count) := p_MaDatTour;
+        END IF;
+    END;
+
+    AFTER EACH ROW IS
+    BEGIN
+        add_key(:NEW.MaDatTour);
+    END AFTER EACH ROW;
+
+    AFTER STATEMENT IS
+        v_VuotSucChua NUMBER;
+    BEGIN
+        FOR i IN 1 .. g_Count LOOP
+            SELECT COUNT(*)
+            INTO v_VuotSucChua
+            FROM (
+                SELECT COUNT(*) SoKhach, ttt.SoKhachToiDa
+                FROM DONDATTOUR ddt
+                JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = ddt.MaTourThucTe
+                JOIN CHITIETDATTOUR ctdt ON ctdt.MaDatTour = ddt.MaDatTour
+                WHERE ddt.MaDatTour = g_MaDatTour(i)
+                GROUP BY ttt.SoKhachToiDa
+                HAVING COUNT(*) > ttt.SoKhachToiDa
+            );
+
+            IF v_VuotSucChua > 0 THEN
+                RAISE_APPLICATION_ERROR(-20009, 'So khach cua don vuot qua suc chua tour');
+            END IF;
+        END LOOP;
+    END AFTER STATEMENT;
+END TRG_KT_SUC_CHUA_DATTOUR;
+/
+
+CREATE OR REPLACE TRIGGER TRG_CAPNHAT_CHO_CONLAI
+AFTER INSERT OR UPDATE OR DELETE ON CHITIETDATTOUR
+DECLARE
+BEGIN
+    UPDATE TOURTHUCTE ttt
+    SET ChoConLai = SoKhachToiDa - (
+        SELECT COUNT(*)
+        FROM CHITIETDATTOUR ctdt
+        JOIN DONDATTOUR ddt ON ddt.MaDatTour = ctdt.MaDatTour
+        WHERE ddt.MaTourThucTe = ttt.MaTourThucTe
+          AND ddt.TrangThai IN ('CHO_XAC_NHAN','DA_XAC_NHAN')
+    )
+    WHERE ttt.MaTourThucTe IS NOT NULL;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_DAT_HAN_GIU_CHO
+BEFORE INSERT ON DONDATTOUR
+FOR EACH ROW
+BEGIN
+    :NEW.ThoiGianHetHan := NVL(:NEW.ThoiGianHetHan, SYSTIMESTAMP + INTERVAL '15' MINUTE);
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_DANHGIA_SAU_TOUR
+BEFORE INSERT ON DANHGIAKH
+FOR EACH ROW
+BEGIN
+    IF FN_CHECK_CAN_DANH_GIA(:NEW.MaTourThucTe, :NEW.MaKhachHang) <> 'YES' THEN
+        RAISE_APPLICATION_ERROR(-20010, 'Khach hang khong du dieu kien danh gia tour');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_TRUNG_LICH_HDV
+FOR INSERT OR UPDATE OF MaTourThucTe, MaNhanVien ON PHANCONGTOUR
+COMPOUND TRIGGER
+    AFTER STATEMENT IS
+        v_Count NUMBER;
+    BEGIN
+        SELECT COUNT(*)
+        INTO v_Count
+        FROM PHANCONGTOUR pct1
+        JOIN PHANCONGTOUR pct2 ON pct2.MaNhanVien = pct1.MaNhanVien
+                              AND pct2.MaPhanCongTour > pct1.MaPhanCongTour
+        JOIN TOURTHUCTE ttt1 ON ttt1.MaTourThucTe = pct1.MaTourThucTe
+        JOIN TOURMAU tm1 ON tm1.MaTourMau = ttt1.MaTourMau
+        JOIN TOURTHUCTE ttt2 ON ttt2.MaTourThucTe = pct2.MaTourThucTe
+        JOIN TOURMAU tm2 ON tm2.MaTourMau = ttt2.MaTourMau
+        WHERE ttt1.NgayKhoiHanh < ttt2.NgayKhoiHanh + tm2.ThoiLuong + (12/24)
+          AND ttt2.NgayKhoiHanh < ttt1.NgayKhoiHanh + tm1.ThoiLuong + (12/24);
+
+        IF v_Count > 0 THEN
+            RAISE_APPLICATION_ERROR(-20011, 'HDV bi trung lich phan cong tour');
+        END IF;
+    END AFTER STATEMENT;
+END TRG_KT_TRUNG_LICH_HDV;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_GIA_TOUR_THUCTE
+BEFORE INSERT OR UPDATE OF GiaHienHanh, MaTourMau ON TOURTHUCTE
+FOR EACH ROW
+DECLARE
+    v_GiaSan TOURMAU.GiaSan%TYPE;
+BEGIN
+    SELECT GiaSan INTO v_GiaSan FROM TOURMAU WHERE MaTourMau = :NEW.MaTourMau;
+    IF :NEW.GiaHienHanh < v_GiaSan THEN
+        RAISE_APPLICATION_ERROR(-20012, 'Gia hien hanh phai lon hon hoac bang GiaSan cua tour mau');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_TANG_LUOT_DUNG_VC
+AFTER INSERT ON DATTOUR_UUDAI
+FOR EACH ROW
+BEGIN
+    UPDATE VOUCHER
+    SET SoLuotDaDung = SoLuotDaDung + 1
+    WHERE MaVoucher = :NEW.MaVoucher;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_KT_THANHTOAN_QUA_HAN
+BEFORE INSERT ON GIAODICH
+FOR EACH ROW
+DECLARE
+    v_ThoiGianHetHan DONDATTOUR.ThoiGianHetHan%TYPE;
+BEGIN
+    SELECT ThoiGianHetHan INTO v_ThoiGianHetHan FROM DONDATTOUR WHERE MaDatTour = :NEW.MaDatTour;
+    IF :NEW.LoaiGiaoDich = 'THANH_TOAN'
+       AND :NEW.TrangThai = 'THANH_CONG'
+       AND v_ThoiGianHetHan IS NOT NULL
+       AND NVL(:NEW.NgayThanhToan, SYSTIMESTAMP) > v_ThoiGianHetHan THEN
+        RAISE_APPLICATION_ERROR(-20013, 'Thanh toan qua han giu cho, can xu ly hoan tien');
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_XACNHAN_DON_THANHTOAN
+FOR INSERT OR UPDATE OF TrangThai, SoTien ON GIAODICH
+COMPOUND TRIGGER
+    TYPE t_keys IS TABLE OF GIAODICH.MaDatTour%TYPE INDEX BY PLS_INTEGER;
+    g_MaDatTour t_keys;
+    g_Count PLS_INTEGER := 0;
+
+    AFTER EACH ROW IS
+    BEGIN
+        IF :NEW.LoaiGiaoDich = 'THANH_TOAN' THEN
+            g_Count := g_Count + 1;
+            g_MaDatTour(g_Count) := :NEW.MaDatTour;
+        END IF;
+    END AFTER EACH ROW;
+
+    AFTER STATEMENT IS
+        v_TongThanhToan NUMBER(18,2);
+        v_TongTien DONDATTOUR.TongTien%TYPE;
+    BEGIN
+        FOR i IN 1 .. g_Count LOOP
+            SELECT TongTien INTO v_TongTien FROM DONDATTOUR WHERE MaDatTour = g_MaDatTour(i);
+
+            SELECT NVL(SUM(SoTien), 0)
+            INTO v_TongThanhToan
+            FROM GIAODICH
+            WHERE MaDatTour = g_MaDatTour(i)
+              AND LoaiGiaoDich = 'THANH_TOAN'
+              AND TrangThai = 'THANH_CONG';
+
+            IF v_TongThanhToan >= v_TongTien THEN
+                UPDATE DONDATTOUR
+                SET TrangThai = 'DA_XAC_NHAN'
+                WHERE MaDatTour = g_MaDatTour(i)
+                  AND TrangThai = 'CHO_XAC_NHAN';
+            END IF;
+        END LOOP;
+    END AFTER STATEMENT;
+END TRG_XACNHAN_DON_THANHTOAN;
+/
+
+CREATE OR REPLACE TRIGGER TRG_HUY_DON_KHI_HUY_TOUR
+AFTER UPDATE OF TrangThai ON TOURTHUCTE
+FOR EACH ROW
+BEGIN
+    IF :NEW.TrangThai = 'HUY' AND :OLD.TrangThai <> 'HUY' THEN
+        FOR r IN (
+            SELECT MaDatTour, MaKhachHang
+            FROM DONDATTOUR
+            WHERE MaTourThucTe = :NEW.MaTourThucTe
+              AND TrangThai IN ('CHO_XAC_NHAN','DA_XAC_NHAN','CHO_HUY')
+        ) LOOP
+            UPDATE DONDATTOUR SET TrangThai = 'DA_HUY' WHERE MaDatTour = r.MaDatTour;
+
+            INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai)
+            VALUES (RAWTOHEX(SYS_GUID()), r.MaDatTour, r.MaKhachHang, 'HOAN_TIEN', 'Tour bi huy, can xu ly hoan tien', 'CHUA_XU_LY');
+        END LOOP;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_TINH_TIEN_DICHVU
+BEFORE INSERT OR UPDATE OF SoLuong, DonGia ON CHITIETDICHVU
+FOR EACH ROW
+BEGIN
+    :NEW.ThanhTien := :NEW.SoLuong * :NEW.DonGia;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRG_TINH_TONG_QUYETTOAN
+BEFORE INSERT ON QUYETTOAN
+FOR EACH ROW
+BEGIN
+    :NEW.TongDoanhThu := FN_TINH_TONG_DOANH_THU(:NEW.MaTourThucTe);
+    :NEW.TongChiPhi := FN_TINH_TONG_CHI_PHI(:NEW.MaTourThucTe);
+    :NEW.LoiNhuan := :NEW.TongDoanhThu - :NEW.TongChiPhi;
+END;
+/

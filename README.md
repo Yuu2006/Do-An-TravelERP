@@ -48,11 +48,10 @@ Chạy script DDL:
 @src/main/resources/db/KhoiTaoBang.sql
 ```
 
-Seed data demo nếu cần:
+Seed tài khoản nhân viên nếu cần:
 
 ```sql
 @src/main/resources/db/data_v1.sql
-@src/main/resources/db/data_v2.sql
 ```
 
 Nếu schema đã được tạo trước khi bổ sung trạng thái `TU_CHOI_HOAN_TIEN`, chạy thêm:
