@@ -25,6 +25,7 @@ import com.digitaltravel.erp.dto.responses.ChiTietDichVuResponse;
 import com.digitaltravel.erp.dto.responses.DonDatTourResponse;
 import com.digitaltravel.erp.entity.ChiTietDatTour;
 import com.digitaltravel.erp.entity.ChiTietDichVu;
+import com.digitaltravel.erp.entity.DatTourUuDai;
 import com.digitaltravel.erp.entity.DichVuThem;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.DsNguoiDongHanh;
@@ -38,6 +39,7 @@ import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.ChiTietDichVuRepository;
+import com.digitaltravel.erp.repository.DatTourUuDaiRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 import com.digitaltravel.erp.repository.DichVuTourThucTeRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
@@ -50,6 +52,7 @@ import com.digitaltravel.erp.repository.NangLucNhanVienRepository;
 import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 import com.digitaltravel.erp.repository.YeuCauHoTroRepository;
+import com.digitaltravel.erp.repository.DanhGiaKhRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -62,6 +65,7 @@ public class DatTourService {
     private final DonDatTourRepository donDatTourRepository;
     private final ChiTietDatTourRepository chiTietDatTourRepository;
     private final ChiTietDichVuRepository chiTietDichVuRepository;
+    private final DatTourUuDaiRepository datTourUuDaiRepository;
     private final TourThucTeRepository tourThucTeRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final DichVuThemRepository dichVuThemRepository;
@@ -73,6 +77,7 @@ public class DatTourService {
     private final PhanCongTourRepository phanCongTourRepository;
     private final NangLucNhanVienRepository nangLucNhanVienRepository;
     private final YeuCauHoTroRepository yeuCauHoTroRepository;
+    private final DanhGiaKhRepository danhGiaKhRepository;
 
     // ── Đặt tour ────────────────────────────────────────────────────────────
     @Transactional
@@ -197,11 +202,11 @@ public class DatTourService {
             String nguoiXacNhan,
             XacNhanThanhToanOfflineRequest request) {
         DonDatTour don = donDatTourRepository.findByIdWithDetails(maDatTour)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy đơn đặt tour: " + maDatTour));
 
         if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
             throw AppException.badRequest(
-                    "Chi co the xac nhan don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + don.getTrangThai());
+                    "Chỉ có thể xác nhận đơn ở trạng thái 'Chờ xác nhận'. Trạng thái hiện tại: " + don.getTrangThai());
         }
         if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
             throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
@@ -229,7 +234,7 @@ public class DatTourService {
         tour.setChoConLai(tour.getChoConLai() - soKhach);
         tourThucTeRepository.save(tour);
 
-        taoLichSuTourNeuChuaCo(don, tour);
+        taoLichSuTourNeuChuaCo(don, tour, dsChiTiet);
 
         return toResponse(don, dsChiTiet, dsDichVu);
     }
@@ -245,7 +250,7 @@ public class DatTourService {
         String maGdNganHang = request != null ? request.getMaGiaoDichNganHang() : null;
         if (maGdNganHang != null && !maGdNganHang.isBlank()
                 && giaoDichRepository.findByMaGDNH(maGdNganHang).isPresent()) {
-            throw AppException.badRequest("Ma giao dich ngan hang da ton tai: " + maGdNganHang);
+            throw AppException.badRequest("Mã giao dịch ngân hàng đã tồn tại: " + maGdNganHang);
         }
 
         String phuongThuc = request != null ? request.getPhuongThuc() : null;
@@ -268,8 +273,33 @@ public class DatTourService {
         return giaoDich;
     }
 
-    private void taoLichSuTourNeuChuaCo(DonDatTour don, TourThucTe tour) {
+    private void taoLichSuTourNeuChuaCo(DonDatTour don, TourThucTe tour, List<ChiTietDatTour> dsChiTiet) {
+        // 1. Map cho người đặt
         HoChieuSo kh = don.getKhachHang();
+        taoChoMotKhachHang(kh, tour, dsChiTiet.stream()
+                .filter(ct -> ct.getKhachHang() != null
+                        && kh.getMaKhachHang().equals(ct.getKhachHang().getMaKhachHang()))
+                .findFirst()
+                .orElse(null));
+
+        // 2. Map cho những người đồng hành (nếu họ có Hộ chiếu số)
+        for (ChiTietDatTour ct : dsChiTiet) {
+            if ("NGUOI_DONG_HANH".equals(ct.getLoaiKhach()) && ct.getNguoiDongHanh() != null) {
+                String cccd = ct.getNguoiDongHanh().getCccd();
+                String sdt = ct.getNguoiDongHanh().getSoDienThoai();
+                if ((cccd != null && !cccd.isBlank()) || (sdt != null && !sdt.isBlank())) {
+                    List<HoChieuSo> dsHcs = hoChieuSoRepository.findByCccdOrSoDienThoai(cccd, sdt);
+                    for (HoChieuSo hcsDongHanh : dsHcs) {
+                        if (!hcsDongHanh.getMaKhachHang().equals(kh.getMaKhachHang())) {
+                            taoChoMotKhachHang(hcsDongHanh, tour, ct);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void taoChoMotKhachHang(HoChieuSo kh, TourThucTe tour, ChiTietDatTour ctDat) {
         boolean daCoLich = lichSuTourRepository
                 .findByMaKhachHangAndMaTourThucTe(kh.getMaKhachHang(), tour.getMaTourThucTe())
                 .isPresent();
@@ -281,20 +311,18 @@ public class DatTourService {
         lichSu.setMaLichSuTour("LST_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         lichSu.setKhachHang(kh);
         lichSu.setTourThucTe(tour);
-        chiTietDatTourRepository.findByMaDatTour(don.getMaDatTour()).stream()
-                .filter(ct -> ct.getKhachHang() != null
-                        && kh.getMaKhachHang().equals(ct.getKhachHang().getMaKhachHang()))
-                .findFirst()
-                .ifPresent(lichSu::setChiTietDatTour);
+        if (ctDat != null) {
+            lichSu.setChiTietDatTour(ctDat);
+        }
         lichSu.setNgayThamGia(tour.getNgayKhoiHanh() != null ? tour.getNgayKhoiHanh() : LocalDate.now());
         lichSuTourRepository.save(lichSu);
     }
 
     private TourThucTe kiemTraDieuKienDatTour(String maTourThucTe, int soKhach) {
         TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay tour thuc te: " + maTourThucTe));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế: " + maTourThucTe));
         if (!"MO_BAN".equals(tour.getTrangThai())) {
-            throw AppException.badRequest("Tour không ở trạng thái MO_BAN, không thể đặt");
+            throw AppException.badRequest("Tour không ở trạng thái "Mở bán", không thể đặt");
         }
         if (tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour đã hết chỗ");
@@ -334,7 +362,8 @@ public class DatTourService {
             if (!hanhDongXanhRepository.existsAvailableForTour(maHanhDongXanh, tour.getMaTourThucTe())) {
                 throw AppException.badRequest("Hành động xanh không thuộc tour thực tế: " + maHanhDongXanh);
             }
-            dsHopLe.add(new HanhDongXanhDaChon(maHanhDongXanh, entry.getValue()));
+            dsHopLe.add(new HanhDongXanhDaChon(maHanhDongXanh, entry.getValue(),
+                    hdx.getDiemCong() != null ? hdx.getDiemCong() : 0L));
         }
         return dsHopLe;
     }
@@ -425,7 +454,7 @@ public class DatTourService {
 
     private String maHoaHanhDongXanh(List<HanhDongXanhDaChon> dsHanhDongXanh) {
         return String.join(",", dsHanhDongXanh.stream()
-                .map(item -> item.maHanhDongXanh() + ":" + item.soLuong())
+                .map(item -> item.maHanhDongXanh() + ":" + item.soLuong() + ":" + item.diemCongTaiThoiDiemDat())
                 .toList());
     }
 
@@ -458,7 +487,11 @@ public class DatTourService {
                 .findFirst()
                 .map(yc -> yc.getTrangThai())
                 .orElse(null);
-        BigDecimal tongTien = tinhTongTienTuChiTiet(dsChiTiet, dsDichVu);
+        List<DatTourUuDai> dsUuDai = datTourUuDaiRepository.findByMaDatTour(don.getMaDatTour());
+        BigDecimal soTienUuDai = dsUuDai.stream()
+                .map(DatTourUuDai::getSoTienUuDai)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        DatTourUuDai uuDaiDauTien = dsUuDai.stream().findFirst().orElse(null);
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -469,8 +502,14 @@ public class DatTourService {
                 .maKhachHang(don.getKhachHang().getMaKhachHang())
                 .tenKhachHang(don.getKhachHang().getTaiKhoan().getHoTen())
                 .ngayDat(don.getNgayDat())
-                .tongTien(tongTien)
+                .tongTien(don.getTongTien())
+                .tongTienGoc(don.getTongTien().add(soTienUuDai))
+                .soTienUuDai(soTienUuDai)
+                .maVoucher(uuDaiDauTien != null ? uuDaiDauTien.getVoucher().getMaVoucher() : null)
+                .maCodeVoucher(uuDaiDauTien != null ? uuDaiDauTien.getVoucher().getMaCode() : null)
+                .diemXanhDuKien(tinhDiemXanhDuKien(don.getHanhDongXanh()))
                 .trangThai(don.getTrangThai())
+                .trangThaiTour(ttt.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
                 .danhSachHanhDongXanh(parseHanhDongXanh(don.getHanhDongXanh()))
@@ -481,6 +520,9 @@ public class DatTourService {
                         phanCong != null ? phanCong.getNhanVien().getTaiKhoan().getSoDienThoai() : null)
                 .danhGiaHuongDanVien(nangLuc != null ? nangLuc.getDanhGia() : null)
                 .soDanhGiaHuongDanVien(nangLuc != null ? nangLuc.getSoDanhGia() : null)
+                .daDanhGia(danhGiaKhRepository.existsByKhachHangAndTour(
+                        don.getKhachHang().getMaKhachHang(),
+                        don.getTourThucTe().getMaTourThucTe()))
                 .daKhieuNai(trangThaiKhieuNai != null)
                 .trangThaiKhieuNai(trangThaiKhieuNai)
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
@@ -505,6 +547,41 @@ public class DatTourService {
             return List.of();
         }
         return List.of(value.split(","));
+    }
+
+    private Long tinhDiemXanhDuKien(String value) {
+        if (value == null || value.isBlank()) {
+            return 0L;
+        }
+        long tongDiem = 0L;
+        for (String item : value.split(",")) {
+            if (item == null || item.isBlank()) {
+                continue;
+            }
+            String[] parts = item.split(":");
+            long soLuong = 1L;
+            if (parts.length > 1) {
+                try {
+                    soLuong = Long.parseLong(parts[1].trim());
+                } catch (NumberFormatException ignored) {
+                    soLuong = 1L;
+                }
+            }
+            if (parts.length > 2) {
+                try {
+                    tongDiem += Long.parseLong(parts[2].trim()) * soLuong;
+                    continue;
+                } catch (NumberFormatException ignored) {
+                    // Fallback for legacy malformed data below.
+                }
+            }
+            String maHanhDongXanh = parts[0].trim();
+            final long finalSoLuong = soLuong;
+            tongDiem += hanhDongXanhRepository.findById(maHanhDongXanh)
+                    .map(hdx -> (hdx.getDiemCong() != null ? hdx.getDiemCong() : 0L) * finalSoLuong)
+                    .orElse(0L);
+        }
+        return tongDiem;
     }
 
     private ChiTietDatTourResponse toChiTietResponse(ChiTietDatTour ct) {
@@ -554,6 +631,6 @@ public class DatTourService {
                 .build();
     }
 
-    private record HanhDongXanhDaChon(String maHanhDongXanh, long soLuong) {
+    private record HanhDongXanhDaChon(String maHanhDongXanh, long soLuong, long diemCongTaiThoiDiemDat) {
     }
 }

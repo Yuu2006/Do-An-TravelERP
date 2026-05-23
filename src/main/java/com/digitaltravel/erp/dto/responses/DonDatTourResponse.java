@@ -21,7 +21,13 @@ public class DonDatTourResponse {
     String tenKhachHang;
     LocalDateTime ngayDat;
     BigDecimal tongTien;
+    BigDecimal tongTienGoc;
+    BigDecimal soTienUuDai;
+    String maVoucher;
+    String maCodeVoucher;
+    Long diemXanhDuKien;
     String trangThai;
+    String trangThaiTour;
     LocalDateTime thoiGianHetHan;
     String ghiChu;
     List<String> danhSachHanhDongXanh;
@@ -32,6 +38,7 @@ public class DonDatTourResponse {
     BigDecimal danhGiaHuongDanVien;
     Integer soDanhGiaHuongDanVien;
     Boolean daKhieuNai;
+    Boolean daDanhGia;
     String trangThaiKhieuNai;
     List<ChiTietDatTourResponse> chiTietKhach;
     List<ChiTietDichVuResponse> chiTietDichVu;

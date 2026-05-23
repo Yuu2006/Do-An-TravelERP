@@ -27,6 +27,13 @@ public interface HoChieuSoRepository extends JpaRepository<HoChieuSo, String> {
             """)
     boolean existsByMaTaiKhoan(@Param("maTaiKhoan") String maTaiKhoan);
 
+    @Query("""
+            SELECT hcs FROM HoChieuSo hcs JOIN FETCH hcs.taiKhoan tk
+            WHERE (tk.Cccd = :cccd AND :cccd IS NOT NULL AND :cccd <> '')
+               OR (tk.SoDienThoai = :soDienThoai AND :soDienThoai IS NOT NULL AND :soDienThoai <> '')
+            """)
+    java.util.List<HoChieuSo> findByCccdOrSoDienThoai(@Param("cccd") String cccd, @Param("soDienThoai") String soDienThoai);
+
     // UC24: Nhân viên tìm hồ sơ khách hàng
     @Query("""
             SELECT hcs FROM HoChieuSo hcs JOIN FETCH hcs.taiKhoan tk
