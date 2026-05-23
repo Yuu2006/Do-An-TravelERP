@@ -45,11 +45,10 @@ public class HuyTourService {
         DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(maDatTour, kh.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
-        // Chỉ cho hủy đơn đã xác nhận (đã thanh toán) — đơn CHO_XAC_NHAN tự hủy qua
-        // endpoint riêng
-        if (!"DA_XAC_NHAN".equals(don.getTrangThai())) {
+        // Cho phép hủy đơn ở trạng thái DA_XAC_NHAN hoặc CHO_XAC_NHAN
+        if (!"DA_XAC_NHAN".equals(don.getTrangThai()) && !"CHO_XAC_NHAN".equals(don.getTrangThai())) {
             throw AppException.badRequest(
-                    "Chi co the yeu cau huy don o trang thai DA_XAC_NHAN. Hien tai: " + don.getTrangThai());
+                    "Chi co the yeu cau huy don o trang thai DA_XAC_NHAN hoac CHO_XAC_NHAN. Hien tai: " + don.getTrangThai());
         }
 
         // Kiểm tra chưa có yêu cầu hủy đang chờ
