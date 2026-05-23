@@ -10,9 +10,13 @@ import com.digitaltravel.erp.entity.HdxTourThucTe;
 import com.digitaltravel.erp.entity.HdxTourThucTeId;
 
 public interface HdxTourThucTeRepository extends JpaRepository<HdxTourThucTe, HdxTourThucTeId> {
-    void deleteByHanhDongXanh_MaHanhDongXanh(String maHanhDongXanh);
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM HdxTourThucTe h WHERE h.hanhDongXanh.MaHanhDongXanh = :maHanhDongXanh")
+    void deleteByHanhDongXanh_MaHanhDongXanh(@Param("maHanhDongXanh") String maHanhDongXanh);
 
-    void deleteByTourThucTe_MaTourThucTe(String maTourThucTe);
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM HdxTourThucTe h WHERE h.tourThucTe.MaTourThucTe = :maTourThucTe")
+    void deleteByTourThucTe_MaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 
     @Query("""
             select link from HdxTourThucTe link

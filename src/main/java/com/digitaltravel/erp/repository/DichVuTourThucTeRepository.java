@@ -10,7 +10,9 @@ import com.digitaltravel.erp.entity.DichVuTourThucTe;
 import com.digitaltravel.erp.entity.DichVuTourThucTeId;
 
 public interface DichVuTourThucTeRepository extends JpaRepository<DichVuTourThucTe, DichVuTourThucTeId> {
-    void deleteByTourThucTe_MaTourThucTe(String maTourThucTe);
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM DichVuTourThucTe d WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe")
+    void deleteByTourThucTe_MaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 
     @Query("""
             select link from DichVuTourThucTe link
