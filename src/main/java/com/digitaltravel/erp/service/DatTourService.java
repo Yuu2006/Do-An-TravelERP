@@ -468,7 +468,7 @@ public class DatTourService {
                 .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
                 .hoTen(khachHang != null ? khachHang.getTaiKhoan().getHoTen() : nguoiDongHanh.getHoTen())
                 .cccd(khachHang != null ? khachHang.getTaiKhoan().getCccd() : nguoiDongHanh.getCccd())
-                .soDienThoai(khachHang != null ? khachHang.getSoDienThoai() : nguoiDongHanh.getSoDienThoai())
+                .soDienThoai(khachHang != null ? khachHang.getTaiKhoan().getSoDienThoai() : nguoiDongHanh.getSoDienThoai())
                 .ngaySinh(ngaySinh)
                 .tuoi(tinhTuoi(ngaySinh, ngayTinhTuoi))
                 .nhomTuoi(treEm ? "TRE_EM" : "NGUOI_LON")
