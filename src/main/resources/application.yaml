@@ -59,4 +59,12 @@ app:
     expiration: ${JWT_EXPIRATION:86400000}
   payment:
     mock-enabled: ${PAYMENT_MOCK_ENABLED:true}
+  powerbi:
+    db-host: ${POWERBI_DB_HOST:${DB_HOST:localhost}}
+    db-port: ${POWERBI_DB_PORT:${DB_PORT:1521}}
+    db-service: ${POWERBI_DB_SERVICE:${DB_SERVICE:orcl}}
+    db-schema: ${POWERBI_DB_SCHEMA:${DB_USERNAME:TRAVEL}}
+    db-username: ${POWERBI_READONLY_USER:READONLY}   # tài khoản read-only cố định
+    db-password: ${POWERBI_READONLY_PASS:readpass}   # mật khẩu tương ứng
+    temp-user-ttl-seconds: 28800
 
