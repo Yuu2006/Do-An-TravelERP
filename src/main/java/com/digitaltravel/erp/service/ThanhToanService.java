@@ -76,6 +76,10 @@ public class ThanhToanService {
             return xuLyMock(don, phuongThuc);
         }
 
+        if (request.isMock()) {
+            throw AppException.forbidden("Thanh toan mock dang bi tat tren moi truong hien tai");
+        }
+
         // TODO: Tích hợp MoMo thực — xem README phần UC29
         // Hiện tại trả về lỗi hướng dẫn dùng mock
         return taoGiaoDichChoThanhToan(don, phuongThuc);

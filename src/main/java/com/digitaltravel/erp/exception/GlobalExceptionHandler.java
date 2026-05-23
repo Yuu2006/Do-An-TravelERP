@@ -16,6 +16,9 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -94,6 +97,7 @@ public class GlobalExceptionHandler {
     // ── 500 – Mọi lỗi còn lại ────────────────────────────────────────────────
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGeneric(Exception ex) {
+        log.error("Unhandled exception", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.internalError("Lỗi hệ thống, vui lòng thử lại sau"));

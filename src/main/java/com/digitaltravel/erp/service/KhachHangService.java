@@ -49,7 +49,6 @@ public class KhachHangService {
             hcs.getTaiKhoan().setNgaySinh(request.getNgaySinh());
         }
         if (request.getSoDienThoai() != null) {
-            hcs.setSoDienThoai(request.getSoDienThoai());
             hcs.getTaiKhoan().setSoDienThoai(request.getSoDienThoai());
         }
         if (request.getDiUng() != null) {

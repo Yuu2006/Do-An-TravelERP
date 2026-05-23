@@ -68,23 +68,23 @@ VALUES ('NV_HDV05', 'TK_HDV05', 'HDV', DATE '2024-05-20', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_HDV06', 'TK_HDV06', 'HDV', DATE '2024-09-01', 'HOAT_DONG');
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH007', 'TK_KH07', '0900000018', 'Tiền sử say xe nhẹ, ưu tiên ghế đầu.', 'Không ăn hải sản sống', 'BAC', 1850);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH007', 'TK_KH07', 'Tiền sử say xe nhẹ, ưu tiên ghế đầu.', 'Không ăn hải sản sống', 'BAC', 1850);
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH008', 'TK_KH08', '0900000019', 'Cần nhắc uống thuốc huyết áp buổi sáng.', 'Không', 'THANH_VIEN', 120);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH008', 'TK_KH08', 'Cần nhắc uống thuốc huyết áp buổi sáng.', 'Không', 'THANH_VIEN', 120);
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH009', 'TK_KH09', '0900000020', 'Ăn chay ngày rằm.', 'Dị ứng đậu phộng', 'DONG', 720);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH009', 'TK_KH09', 'Ăn chay ngày rằm.', 'Dị ứng đậu phộng', 'DONG', 720);
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH010', 'TK_KH10', '0900000021', 'Ưu tiên lịch trình ít leo dốc.', 'Không', 'VANG', 4200);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH010', 'TK_KH10', 'Ưu tiên lịch trình ít leo dốc.', 'Không', 'VANG', 4200);
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH011', 'TK_KH11', '0900000022', 'Đi cùng gia đình có trẻ nhỏ.', 'Dị ứng tôm', 'KIM_CUONG', 8200);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH011', 'TK_KH11', 'Đi cùng gia đình có trẻ nhỏ.', 'Dị ứng tôm', 'KIM_CUONG', 8200);
 
-INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, SoDienThoai, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH012', 'TK_KH12', '0900000023', 'Khách mới, cần tư vấn kỹ chính sách hủy.', 'Không', 'THANH_VIEN', 0);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH012', 'TK_KH12', 'Khách mới, cần tư vấn kỹ chính sách hủy.', 'Không', 'THANH_VIEN', 0);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV05', 'NV_HDV05',

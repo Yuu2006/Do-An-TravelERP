@@ -277,7 +277,8 @@ src/main/java/com/digitaltravel/erp/
 | POST | `/api/thanh-toan/khoi-tao` | KHACHHANG | UC29 | DONE (mock=true) |
 | GET | `/api/thanh-toan/{maDatTour}/ket-qua` | KHACHHANG | UC29 | DONE |
 
-> Thanh toán thực MoMo chưa tích hợp. Dùng `"mock": true` trong request body để bypass.
+> Thanh toán thực MoMo chưa tích hợp. Mock payment đang bật mặc định cho demo qua `PAYMENT_MOCK_ENABLED=true`.
+> Khi mock bật, endpoint sẽ xác nhận thanh toán ngay; trường `"mock": true` vẫn có thể gửi để thể hiện rõ request demo.
 
 **Request body mẫu:**
 ```json
@@ -471,6 +472,7 @@ Các UC cấp cha dùng để gom nhóm nghiệp vụ, không nhất thiết án
 | `DB_PASSWORD` | Password DB | Có |
 | `JWT_SECRET` | Khóa ký JWT (Base64, tối thiểu 42 ký tự) | Có |
 | `JWT_EXPIRATION` | TTL access token (ms), mặc định 86400000 (24h) | Không |
+| `PAYMENT_MOCK_ENABLED` | Bật mock thanh toán demo, mặc định `true`; đặt `false` để chặn bypass | Không |
 
 Tạo file `.env` ở root project (đã có trong `.gitignore`):
 
