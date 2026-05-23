@@ -23,6 +23,7 @@ import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
 import com.digitaltravel.erp.dto.responses.NhatKySuCoResponse;
+import com.digitaltravel.erp.dto.responses.ThanhVienDoanResponse;
 import com.digitaltravel.erp.entity.ChiPhiThucTe;
 import com.digitaltravel.erp.entity.DiemDanh;
 import com.digitaltravel.erp.entity.DsNguoiDongHanh;
@@ -64,11 +65,54 @@ public class VanHanhService {
     private final DonDatTourRepository donDatTourRepository;
 
     // ── UC42: Xem danh sách đoàn ─────────────────────────────────────────
-    public List<DiemDanhResponse> danhSachDoan(String maTour, String maTaiKhoan, String maVaiTro) {
+    @Transactional(readOnly = true)
+    public List<ThanhVienDoanResponse> danhSachDoan(String maTour, String maTaiKhoan, String maVaiTro) {
         kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
-        return diemDanhRepository.findByMaTour(maTour).stream()
-                .map(this::toDiemDanhResponse)
-                .toList();
+
+        List<ThanhVienDoanResponse> result = new ArrayList<>();
+        donDatTourRepository.timKiem("DA_XAC_NHAN", maTour, Pageable.unpaged()).forEach(don -> {
+            HoChieuSo kh = don.getKhachHang();
+            String hoTen = kh.getTaiKhoan() != null ? kh.getTaiKhoan().getHoTen() : "";
+            result.add(ThanhVienDoanResponse.builder()
+                .maDatTour(don.getMaDatTour())
+                .loaiKhach("NGUOI_DAT")
+                .maKhachHang(kh.getMaKhachHang())
+                .hoTenKhachHang(hoTen)
+                .soDienThoai(kh.getTaiKhoan() != null ? kh.getTaiKhoan().getSoDienThoai() : null)
+                .hangThanhVien(kh.getHangThanhVien())
+                .ghiChuYTe(gopGhiChu(kh.getGhiChuYTe(), don.getGhiChu()))
+                .ghiChuDatTour(don.getGhiChu())
+                .hanhDongXanh(don.getHanhDongXanh())
+                .diemXanh(kh.getDiemXanh())
+                .build());
+            
+            dsNguoiDongHanhRepository.findByDonDatTour_MaDatTour(don.getMaDatTour()).forEach(ndh -> {
+                result.add(ThanhVienDoanResponse.builder()
+                    .maDatTour(don.getMaDatTour())
+                    .loaiKhach("NGUOI_DONG_HANH")
+                    .maNguoiDongHanh(ndh.getMaNguoiDongHanh())
+                    .hoTenKhachHang(ndh.getHoTen())
+                    .soDienThoai(ndh.getSoDienThoai())
+                    .hangThanhVien("THANH_VIEN")
+                    .ghiChuYTe(gopGhiChu(ndh.getGhiChu(), don.getGhiChu()))
+                    .ghiChuDatTour(don.getGhiChu())
+                    .hanhDongXanh(don.getHanhDongXanh())
+                    .diemXanh(0L)
+                    .build());
+            });
+        });
+        return result;
+    }
+
+    private String gopGhiChu(String ghiChuCaNhan, String ghiChuDonTour) {
+        List<String> parts = new ArrayList<>();
+        if (ghiChuCaNhan != null && !ghiChuCaNhan.isBlank()) {
+            parts.add(ghiChuCaNhan);
+        }
+        if (ghiChuDonTour != null && !ghiChuDonTour.isBlank()) {
+            parts.add("Yêu cầu đặt tour: " + ghiChuDonTour);
+        }
+        return String.join(" | ", parts);
     }
 
     // ── UC43: Điểm danh khách ─────────────────────────────────────────────

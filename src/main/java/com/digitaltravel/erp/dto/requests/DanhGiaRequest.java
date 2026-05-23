@@ -16,5 +16,9 @@ public class DanhGiaRequest {
     @Max(value = 5, message = "Số sao tối đa là 5")
     Integer soSao;
 
+    @Min(value = 1, message = "So sao HDV toi thieu la 1")
+    @Max(value = 5, message = "So sao HDV toi da la 5")
+    Integer soSaoHdv;
+
     String nhanXet;
 }

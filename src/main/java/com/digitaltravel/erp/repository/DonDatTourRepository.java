@@ -47,7 +47,8 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             SELECT d FROM DonDatTour d
             JOIN FETCH d.tourThucTe ttt
             JOIN FETCH ttt.tourMau
-            JOIN FETCH d.khachHang
+            JOIN FETCH d.khachHang kh
+            LEFT JOIN FETCH kh.taiKhoan
             WHERE (:trangThai IS NULL OR d.trangThai = :trangThai)
               AND (:maTourThucTe IS NULL OR d.tourThucTe.MaTourThucTe = :maTourThucTe)
             """,

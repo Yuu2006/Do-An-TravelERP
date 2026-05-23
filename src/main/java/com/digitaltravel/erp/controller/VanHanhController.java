@@ -26,6 +26,7 @@ import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
 import com.digitaltravel.erp.dto.responses.NhatKySuCoResponse;
+import com.digitaltravel.erp.dto.responses.ThanhVienDoanResponse;
 import com.digitaltravel.erp.service.VanHanhService;
 
 import jakarta.validation.Valid;
@@ -40,7 +41,7 @@ public class VanHanhController {
     // ── UC42: Xem danh sách đoàn ─────────────────────────────────────────
     @GetMapping({"/api/huong-dan-vien/tour/{maTour}/doan", "/api/dieu-hanh/tour/{maTour}/doan"})
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<DiemDanhResponse>>> danhSachDoan(
+    public ResponseEntity<ApiResponse<List<ThanhVienDoanResponse>>> danhSachDoan(
             @PathVariable String maTour,
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachDoan(

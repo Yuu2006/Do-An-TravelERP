@@ -21,6 +21,19 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             @Param("loaiYeuCau") String loaiYeuCau
     );
 
+    @Query("""
+            SELECT CASE WHEN COUNT(y) > 0 THEN true ELSE false END
+            FROM YeuCauHoTro y
+            WHERE y.khachHang.MaKhachHang = :maKhachHang
+              AND y.LoaiYeuCau = 'KHIEU_NAI'
+              AND y.TrangThai IN ('CHUA_XU_LY', 'CHO_BO_SUNG', 'CHO_GIAI_TRINH')
+              AND y.donDatTour.tourThucTe.MaTourThucTe = :maTourThucTe
+            """)
+    boolean existsActiveKhieuNaiByKhachHangAndTour(
+            @Param("maKhachHang") String maKhachHang,
+            @Param("maTourThucTe") String maTourThucTe
+    );
+
     // Nhân viên SALES xem tất cả yêu cầu theo loại + trạng thái
     @Query("""
             SELECT y FROM YeuCauHoTro y

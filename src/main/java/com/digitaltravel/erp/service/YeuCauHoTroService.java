@@ -48,6 +48,11 @@ public class YeuCauHoTroService {
         if (request.getMaDatTour() != null && !request.getMaDatTour().isBlank()) {
             DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(request.getMaDatTour(), hcs.getMaKhachHang())
                     .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + request.getMaDatTour()));
+            if ("KHIEU_NAI".equals(request.getLoaiYeuCau())
+                    && !yeuCauHoTroRepository.findByMaDatTourAndLoaiYeuCau(
+                            request.getMaDatTour(), "KHIEU_NAI").isEmpty()) {
+                throw AppException.badRequest("Don dat tour nay da co khieu nai, khong the gui trung lap");
+            }
             yc.setDonDatTour(don);
         }
 

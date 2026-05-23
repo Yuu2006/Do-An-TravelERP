@@ -27,6 +27,12 @@ public class DonDatTourResponse {
     List<String> danhSachHanhDongXanh;
     Integer soNguoiLon;
     Integer soTreEm;
+    String tenHuongDanVien;
+    String soDienThoaiHuongDanVien;
+    BigDecimal danhGiaHuongDanVien;
+    Integer soDanhGiaHuongDanVien;
+    Boolean daKhieuNai;
+    String trangThaiKhieuNai;
     List<ChiTietDatTourResponse> chiTietKhach;
     List<ChiTietDichVuResponse> chiTietDichVu;
 }
