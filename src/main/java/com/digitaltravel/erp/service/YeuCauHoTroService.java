@@ -47,11 +47,14 @@ public class YeuCauHoTroService {
         // Gắn với đơn đặt tour nếu có
         if (request.getMaDatTour() != null && !request.getMaDatTour().isBlank()) {
             DonDatTour don = donDatTourRepository.findByIdAndMaKhachHang(request.getMaDatTour(), hcs.getMaKhachHang())
-                    .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + request.getMaDatTour()));
-            if ("KHIEU_NAI".equals(request.getLoaiYeuCau())
-                    && !yeuCauHoTroRepository.findByMaDatTourAndLoaiYeuCau(
-                            request.getMaDatTour(), "KHIEU_NAI").isEmpty()) {
-                throw AppException.badRequest("Don dat tour nay da co khieu nai, khong the gui trung lap");
+                    .orElseThrow(() -> AppException.notFound("Không tìm thấy đơn đặt tour: " + request.getMaDatTour()));
+            if ("KHIEU_NAI".equals(request.getLoaiYeuCau())) {
+                boolean hasActive = yeuCauHoTroRepository.findByMaDatTourAndLoaiYeuCau(request.getMaDatTour(), "KHIEU_NAI")
+                        .stream()
+                        .anyMatch(k -> !"DA_XU_LY".equals(k.getTrangThai()) && !"TU_CHOI".equals(k.getTrangThai()));
+                if (hasActive) {
+                    throw AppException.badRequest("Đơn đặt tour này đã có khiếu nại đang chờ xử lý, không thể gửi trùng lặp");
+                }
             }
             yc.setDonDatTour(don);
         }
@@ -76,14 +79,14 @@ public class YeuCauHoTroService {
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
 
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy yêu cầu: " + maYeuCau));
 
         if (!yc.getKhachHang().getMaKhachHang().equals(hcs.getMaKhachHang())) {
             throw AppException.forbidden("Không có quyền truy cập yêu cầu này");
         }
 
         if (!"CHO_BO_SUNG".equals(yc.getTrangThai()) && !"CHUA_XU_LY".equals(yc.getTrangThai())) {
-            throw AppException.badRequest("Yeu cau nay dang o trang thai " + yc.getTrangThai() + ", khong the bo sung");
+            throw AppException.badRequest("Yêu cầu này đang ở trạng thái " + yc.getTrangThai() + ", không thể bổ sung");
         }
 
         String ngayBoSung = java.time.LocalDate.now().toString();
@@ -104,7 +107,7 @@ public class YeuCauHoTroService {
     @Transactional
     public YeuCauHoTroResponse xuLy(String maYeuCau, XuLyHoTroRequest request, String maTaiKhoanXuLy) {
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy yêu cầu: " + maYeuCau));
 
         if ("DA_XU_LY".equals(yc.getTrangThai()) || "TU_CHOI".equals(yc.getTrangThai())) {
             throw AppException.badRequest("Yêu cầu này đã kết thúc, không thể cập nhật");
@@ -117,14 +120,14 @@ public class YeuCauHoTroService {
                 && !"DA_XU_LY".equals(trangThaiMoi)
                 && !"TU_CHOI".equals(trangThaiMoi)) {
             throw AppException.badRequest(
-                    "TrangThai khong hop le. Chi chap nhan: CHUA_XU_LY, CHO_BO_SUNG, CHO_GIAI_TRINH, DA_XU_LY, TU_CHOI");
+                    "Trạng thái không hợp lệ. Chỉ chấp nhận: CHUA_XU_LY, CHO_BO_SUNG, CHO_GIAI_TRINH, DA_XU_LY, TU_CHOI");
         }
         yc.setTrangThai(trangThaiMoi);
 
         // Gán nhân viên xử lý nếu có
         if (request.getMaNhanVienXuLy() != null && !request.getMaNhanVienXuLy().isBlank()) {
             NhanVien nv = nhanVienRepository.findById(request.getMaNhanVienXuLy())
-                    .orElseThrow(() -> AppException.notFound("Khong tim thay nhan vien: " + request.getMaNhanVienXuLy()));
+                    .orElseThrow(() -> AppException.notFound("Không tìm thấy nhân viên: " + request.getMaNhanVienXuLy()));
             yc.setNhanVienXuLy(nv);
         }
 
@@ -135,7 +138,7 @@ public class YeuCauHoTroService {
     // ── Chi tiết yêu cầu ─────────────────────────────────────────────────────
     public YeuCauHoTroResponse chiTiet(String maYeuCau) {
         YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
-                .orElseThrow(() -> AppException.notFound("Khong tim thay yeu cau: " + maYeuCau));
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy yêu cầu: " + maYeuCau));
         return toResponse(yc);
     }
 
