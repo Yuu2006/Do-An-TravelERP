@@ -32,6 +32,8 @@ import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.entity.HanhDongXanh;
 import com.digitaltravel.erp.entity.HoChieuSo;
 import com.digitaltravel.erp.entity.LichSuTour;
+import com.digitaltravel.erp.entity.NangLucNhanVien;
+import com.digitaltravel.erp.entity.PhanCongTour;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
@@ -43,7 +45,10 @@ import com.digitaltravel.erp.repository.GiaoDichRepository;
 import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.LichSuTourRepository;
+import com.digitaltravel.erp.repository.NangLucNhanVienRepository;
+import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
+import com.digitaltravel.erp.repository.YeuCauHoTroRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -63,6 +68,9 @@ public class DatTourService {
     private final HanhDongXanhRepository hanhDongXanhRepository;
     private final GiaoDichRepository giaoDichRepository;
     private final LichSuTourRepository lichSuTourRepository;
+    private final PhanCongTourRepository phanCongTourRepository;
+    private final NangLucNhanVienRepository nangLucNhanVienRepository;
+    private final YeuCauHoTroRepository yeuCauHoTroRepository;
 
     // ── Đặt tour ────────────────────────────────────────────────────────────
     @Transactional
@@ -269,6 +277,11 @@ public class DatTourService {
         lichSu.setMaLichSuTour("LST_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
         lichSu.setKhachHang(kh);
         lichSu.setTourThucTe(tour);
+        chiTietDatTourRepository.findByMaDatTour(don.getMaDatTour()).stream()
+                .filter(ct -> ct.getKhachHang() != null
+                        && kh.getMaKhachHang().equals(ct.getKhachHang().getMaKhachHang()))
+                .findFirst()
+                .ifPresent(lichSu::setChiTietDatTour);
         lichSu.setNgayThamGia(tour.getNgayKhoiHanh() != null ? tour.getNgayKhoiHanh() : LocalDate.now());
         lichSuTourRepository.save(lichSu);
     }
@@ -425,6 +438,18 @@ public class DatTourService {
                 .filter(ct -> laTreEm(layNgaySinh(ct), ngayTinhTuoi))
                 .count();
         int soNguoiLon = dsChiTiet.size() - soTreEm;
+        PhanCongTour phanCong = phanCongTourRepository.findActiveByMaTour(ttt.getMaTourThucTe()).stream()
+                .findFirst()
+                .orElse(null);
+        NangLucNhanVien nangLuc = phanCong != null
+                ? nangLucNhanVienRepository.findByMaNhanVien(phanCong.getNhanVien().getMaNhanVien()).orElse(null)
+                : null;
+        String trangThaiKhieuNai = yeuCauHoTroRepository
+                .findByMaDatTourAndLoaiYeuCau(don.getMaDatTour(), "KHIEU_NAI")
+                .stream()
+                .findFirst()
+                .map(yc -> yc.getTrangThai())
+                .orElse(null);
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -442,6 +467,12 @@ public class DatTourService {
                 .danhSachHanhDongXanh(parseHanhDongXanh(don.getHanhDongXanh()))
                 .soNguoiLon(soNguoiLon)
                 .soTreEm(soTreEm)
+                .tenHuongDanVien(phanCong != null ? phanCong.getNhanVien().getTaiKhoan().getHoTen() : null)
+                .soDienThoaiHuongDanVien(phanCong != null ? phanCong.getNhanVien().getTaiKhoan().getSoDienThoai() : null)
+                .danhGiaHuongDanVien(nangLuc != null ? nangLuc.getDanhGia() : null)
+                .soDanhGiaHuongDanVien(nangLuc != null ? nangLuc.getSoDanhGia() : null)
+                .daKhieuNai(trangThaiKhieuNai != null)
+                .trangThaiKhieuNai(trangThaiKhieuNai)
                 .chiTietKhach(dsChiTiet.stream().map(this::toChiTietResponse).toList())
                 .chiTietDichVu(dsDichVu.stream().map(this::toDichVuResponse).toList())
                 .build();

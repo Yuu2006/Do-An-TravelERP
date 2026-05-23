@@ -42,4 +42,18 @@ public interface DanhGiaKhRepository extends JpaRepository<DanhGiaKh, String> {
             ORDER BY d.NgayDanhGia DESC
             """)
     Page<DanhGiaKh> findAllWithDetails(Pageable pageable);
+
+    @Query("""
+            SELECT COALESCE(AVG(d.SoSao), 0)
+            FROM DanhGiaKh d
+            WHERE d.tourThucTe.tourMau.MaTourMau = :maTourMau
+            """)
+    java.math.BigDecimal averageSoSaoByMaTourMau(@Param("maTourMau") String maTourMau);
+
+    @Query("""
+            SELECT COUNT(d)
+            FROM DanhGiaKh d
+            WHERE d.tourThucTe.tourMau.MaTourMau = :maTourMau
+            """)
+    long countByMaTourMau(@Param("maTourMau") String maTourMau);
 }

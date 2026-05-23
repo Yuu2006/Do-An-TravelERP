@@ -19,6 +19,8 @@ public interface LichSuTourRepository extends JpaRepository<LichSuTour, String> 
             SELECT lst FROM LichSuTour lst
             JOIN FETCH lst.tourThucTe ttt
             JOIN FETCH ttt.tourMau
+            LEFT JOIN FETCH lst.chiTietDatTour ctd
+            LEFT JOIN FETCH ctd.donDatTour
             WHERE lst.khachHang.MaKhachHang = :maKhachHang
             ORDER BY lst.NgayThamGia DESC
             """)
