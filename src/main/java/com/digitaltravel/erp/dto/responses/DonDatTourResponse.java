@@ -21,6 +21,11 @@ public class DonDatTourResponse {
     String tenKhachHang;
     LocalDateTime ngayDat;
     BigDecimal tongTien;
+    BigDecimal tongTienGoc;
+    BigDecimal soTienUuDai;
+    String maVoucher;
+    String maCodeVoucher;
+    Long diemXanhDuKien;
     String trangThai;
     LocalDateTime thoiGianHetHan;
     String ghiChu;
