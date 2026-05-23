@@ -23,4 +23,6 @@ public class TourCongKhaiResponse {
     BigDecimal diemDanhGia;
     Integer soDanhGia;
     List<LichTrinhResponse> lichTrinh;
+    List<DichVuThemResponse> dichVu;
+    List<HanhDongXanhResponse> hanhDongXanh;
 }

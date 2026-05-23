@@ -19,4 +19,6 @@ public interface DichVuTourThucTeRepository extends JpaRepository<DichVuTourThuc
             order by link.dichVuThem.MaDichVuThem
             """)
     List<DichVuTourThucTe> findByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
+
+    boolean existsByDichVuThem_MaDichVuThemAndTourThucTe_MaTourThucTe(String maDichVuThem, String maTourThucTe);
 }
