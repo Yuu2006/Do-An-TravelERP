@@ -137,7 +137,10 @@ public class PhanCongTourService {
                 .tenNhanVien(nv.getTaiKhoan().getHoTen())
                 .ngayPhanCong(pc.getNgayPhanCong())
                 .ngayKhoiHanh(tt.getNgayKhoiHanh())
+                .ngayKetThuc(tt.getTourMau() != null ? tt.getNgayKhoiHanh().plusDays(tt.getTourMau().getThoiLuong()) : tt.getNgayKhoiHanh())
                 .trangThaiTour(tt.getTrangThai())
+                .soKhachToiDa(tt.getSoKhachToiDa())
+                .choConLai(tt.getChoConLai())
                 .build();
     }
 

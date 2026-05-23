@@ -17,4 +17,6 @@ public class ThanhVienDoanResponse {
     private String ghiChuDatTour;
     private String hanhDongXanh;
     private Long diemXanh;
+    private String trangThai;
+    private String ghiChuDiemDanh;
 }

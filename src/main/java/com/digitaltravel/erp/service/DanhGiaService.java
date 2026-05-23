@@ -112,10 +112,15 @@ public class DanhGiaService {
 
         for (PhanCongTour pc : phanCongTourRepository.findActiveByMaTour(maTourThucTe)) {
             NangLucNhanVien nl = nangLucNhanVienRepository.findByMaNhanVien(pc.getNhanVien().getMaNhanVien())
-                    .orElse(null);
-            if (nl == null) {
-                continue;
-            }
+                    .orElseGet(() -> {
+                        NangLucNhanVien moi = new NangLucNhanVien();
+                        moi.setMaNangLucNhanVien("NLNV_" + UUID.randomUUID().toString().substring(0, 8).toUpperCase());
+                        moi.setNhanVien(pc.getNhanVien());
+                        moi.setDanhGia(BigDecimal.ZERO);
+                        moi.setSoDanhGia(0);
+                        return moi;
+                    });
+
             int soDanhGia = (nl.getSoDanhGia() == null ? 0 : nl.getSoDanhGia()) + 1;
             BigDecimal diemHienTai = nl.getDanhGia() == null ? BigDecimal.ZERO : nl.getDanhGia();
             BigDecimal diemMoi = diemHienTai.multiply(BigDecimal.valueOf(soDanhGia - 1))
