@@ -92,4 +92,12 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
               AND ttt.TrangThai <> 'HUY'
             """)
     List<TourThucTe> findActiveByTourMau(@Param("maTourMau") String maTourMau);
+
+    // UC51: Xuất dữ liệu tour cho Power BI
+    @Query("""
+            SELECT t FROM TourThucTe t
+            JOIN FETCH t.tourMau
+            ORDER BY t.NgayKhoiHanh DESC
+            """)
+    List<TourThucTe> xuatDuLieuTour();
 }

@@ -104,4 +104,18 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             @Param("maTourThucTe") String maTourThucTe,
             @Param("maKhachHang") String maKhachHang
     );
+
+    // UC51: Xuất dữ liệu đơn đặt tour cho Power BI
+    @Query("""
+            SELECT d FROM DonDatTour d
+            JOIN FETCH d.tourThucTe ttt
+            JOIN FETCH ttt.tourMau
+            WHERE (:tuNgay IS NULL OR d.ngayDat >= :tuNgay)
+              AND (:denNgay IS NULL OR d.ngayDat < :denNgay)
+            ORDER BY d.ngayDat DESC
+            """)
+    java.util.List<DonDatTour> xuatDuLieu(
+            @Param("tuNgay") LocalDateTime tuNgay,
+            @Param("denNgay") LocalDateTime denNgay
+    );
 }
