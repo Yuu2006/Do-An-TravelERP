@@ -103,6 +103,8 @@ public class TourThucTeService {
                 .diemDanhGia(tm.getDanhGia())
                 .soDanhGia(tm.getSoDanhGia())
                 .lichTrinh(lichTrinhResponses)
+                .dichVu(layDichVuTheoTour(ttt))
+                .hanhDongXanh(layHanhDongXanhTheoTour(ttt))
                 .build();
     }
 
@@ -246,28 +248,8 @@ public class TourThucTeService {
     private TourThucTeResponse toResponse(TourThucTe ttt) {
         TourMau tm = ttt.getTourMau();
         java.time.LocalDate ngayKetThuc = ttt.getNgayKhoiHanh().plusDays(tm.getThoiLuong() - 1);
-        java.util.List<DichVuThemResponse> dichVu = dichVuTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
-                .map(link -> {
-                    DichVuThem dv = link.getDichVuThem();
-                    return DichVuThemResponse.builder()
-                            .maDichVuThem(dv.getMaDichVuThem())
-                            .ten(dv.getTen())
-                            .donViTinh(dv.getDonViTinh())
-                            .donGia(dv.getDonGia())
-                            .build();
-                })
-                .toList();
-        java.util.List<HanhDongXanhResponse> hanhDongXanh = hdxTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
-                .map(link -> {
-                    HanhDongXanh hdx = link.getHanhDongXanh();
-                    return HanhDongXanhResponse.builder()
-                            .maHanhDongXanh(hdx.getMaHanhDongXanh())
-                            .maTourThucTe(ttt.getMaTourThucTe())
-                            .tenHanhDong(hdx.getTenHanhDong())
-                            .diemCong(hdx.getDiemCong())
-                            .build();
-                })
-                .toList();
+        java.util.List<DichVuThemResponse> dichVu = layDichVuTheoTour(ttt);
+        java.util.List<HanhDongXanhResponse> hanhDongXanh = layHanhDongXanhTheoTour(ttt);
 
         return TourThucTeResponse.builder()
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -283,5 +265,33 @@ public class TourThucTeService {
                 .dichVu(dichVu)
                 .hanhDongXanh(hanhDongXanh)
                 .build();
+    }
+
+    private java.util.List<DichVuThemResponse> layDichVuTheoTour(TourThucTe ttt) {
+        return dichVuTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
+                .map(link -> {
+                    DichVuThem dv = link.getDichVuThem();
+                    return DichVuThemResponse.builder()
+                            .maDichVuThem(dv.getMaDichVuThem())
+                            .ten(dv.getTen())
+                            .donViTinh(dv.getDonViTinh())
+                            .donGia(dv.getDonGia())
+                            .build();
+                })
+                .toList();
+    }
+
+    private java.util.List<HanhDongXanhResponse> layHanhDongXanhTheoTour(TourThucTe ttt) {
+        return hdxTourThucTeRepository.findByMaTourThucTe(ttt.getMaTourThucTe()).stream()
+                .map(link -> {
+                    HanhDongXanh hdx = link.getHanhDongXanh();
+                    return HanhDongXanhResponse.builder()
+                            .maHanhDongXanh(hdx.getMaHanhDongXanh())
+                            .maTourThucTe(ttt.getMaTourThucTe())
+                            .tenHanhDong(hdx.getTenHanhDong())
+                            .diemCong(hdx.getDiemCong())
+                            .build();
+                })
+                .toList();
     }
 }

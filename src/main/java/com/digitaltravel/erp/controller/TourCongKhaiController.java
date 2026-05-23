@@ -16,9 +16,11 @@ import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.DanhGiaKhResponse;
 import com.digitaltravel.erp.dto.responses.TourCongKhaiResponse;
 import com.digitaltravel.erp.dto.responses.TourThucTeResponse;
+import com.digitaltravel.erp.dto.responses.DichVuThemResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongXanhResponse;
 import com.digitaltravel.erp.service.DanhGiaService;
 import com.digitaltravel.erp.service.TourThucTeService;
+import com.digitaltravel.erp.service.DichVuThemService;
 import com.digitaltravel.erp.service.HanhDongXanhService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class TourCongKhaiController {
 
     private final TourThucTeService tourThucTeService;
     private final DanhGiaService danhGiaService;
+    private final DichVuThemService dichVuThemService;
     private final HanhDongXanhService hanhDongXanhService;
 
     // ── UC25: Danh sách tour đang mở bán ─────────────────────────────────────
@@ -68,5 +71,12 @@ public class TourCongKhaiController {
     public ResponseEntity<ApiResponse<List<HanhDongXanhResponse>>> hanhDongXanhTour(
             @PathVariable String maTourThucTe) {
         return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(maTourThucTe)));
+    }
+
+    // ── UC26: Dịch vụ bổ sung của tour ─────────────────────────────────────
+    @GetMapping("/tour/{maTourThucTe}/dich-vu-them")
+    public ResponseEntity<ApiResponse<List<DichVuThemResponse>>> dichVuThemTour(
+            @PathVariable String maTourThucTe) {
+        return ResponseEntity.ok(ApiResponse.ok(dichVuThemService.danhSach(maTourThucTe)));
     }
 }

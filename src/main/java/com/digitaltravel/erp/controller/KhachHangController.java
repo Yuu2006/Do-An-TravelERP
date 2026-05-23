@@ -177,8 +177,9 @@ public class KhachHangController {
     // ──────────────────────── DANH MỤC DỊCH VỤ & HÀNH ĐỘNG XANH (Cho Form Đặt Tour) ─────────
     @GetMapping("/dich-vu-them")
     @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<DichVuThemResponse>>> danhSachDichVuThem() {
-        return ResponseEntity.ok(ApiResponse.ok(dichVuThemService.danhSach()));
+    public ResponseEntity<ApiResponse<List<DichVuThemResponse>>> danhSachDichVuThem(
+            @RequestParam(required = false) String maTourThucTe) {
+        return ResponseEntity.ok(ApiResponse.ok(dichVuThemService.danhSach(maTourThucTe)));
     }
 
     @GetMapping("/hanh-dong-xanh")
