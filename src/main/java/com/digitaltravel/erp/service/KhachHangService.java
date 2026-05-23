@@ -89,17 +89,13 @@ public class KhachHangService {
                 .email(hcs.getTaiKhoan().getEmail())
                 .cccd(hcs.getTaiKhoan().getCccd())
                 .ngaySinh(hcs.getTaiKhoan().getNgaySinh())
-                .soDienThoai(laySoDienThoai(hcs))
+                .soDienThoai(hcs.getTaiKhoan().getSoDienThoai())
                 .trangThaiTaiKhoan(hcs.getTaiKhoan().getTrangThai())
                 .diUng(hcs.getDiUng())
                 .ghiChuYTe(hcs.getGhiChuYTe())
                 .hangThanhVien(hcs.getHangThanhVien())
                 .diemXanh(hcs.getDiemXanh())
                 .build();
-    }
-
-    private String laySoDienThoai(HoChieuSo hcs) {
-        return hcs.getTaiKhoan().getSoDienThoai();
     }
 
     private LichSuTourResponse tolichSuTourResponse(LichSuTour ls) {
