@@ -2,6 +2,7 @@ package com.digitaltravel.erp.dto.responses;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,6 @@ public class TourThucTeResponse {
     Integer soKhachToiThieu;
     Integer choConLai;
     String trangThai;
+    List<DichVuThemResponse> dichVu;
+    List<HanhDongXanhResponse> hanhDongXanh;
 }

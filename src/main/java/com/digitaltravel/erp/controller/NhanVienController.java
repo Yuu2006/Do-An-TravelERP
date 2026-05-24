@@ -163,8 +163,9 @@ public class NhanVienController {
      */
     @GetMapping("/api/huong-dan-vien/hanh-dong-xanh")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<com.digitaltravel.erp.dto.responses.HanhDongXanhResponse>>> danhSachHanhDongXanh() {
-        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(null)));
+    public ResponseEntity<ApiResponse<List<com.digitaltravel.erp.dto.responses.HanhDongXanhResponse>>> danhSachHanhDongXanh(
+            @RequestParam(required = false) String maTourThucTe) {
+        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(maTourThucTe)));
     }
 
     // ──────────────── UC39: HDV xem lịch công tác ─────────────────────────

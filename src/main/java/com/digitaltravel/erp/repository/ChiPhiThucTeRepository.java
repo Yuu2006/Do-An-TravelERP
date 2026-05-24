@@ -37,4 +37,17 @@ public interface ChiPhiThucTeRepository extends JpaRepository<ChiPhiThucTe, Stri
             ORDER BY c.NgayKhai DESC
             """)
     List<ChiPhiThucTe> findAllWithRelations();
+
+    // UC51: Xuất dữ liệu chi phí cho Power BI
+    @Query("""
+            SELECT c FROM ChiPhiThucTe c
+            JOIN FETCH c.tourThucTe
+            WHERE (:tuNgay IS NULL OR c.NgayKhai >= :tuNgay)
+              AND (:denNgay IS NULL OR c.NgayKhai < :denNgay)
+            ORDER BY c.NgayKhai DESC
+            """)
+    List<ChiPhiThucTe> xuatDuLieu(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
 }

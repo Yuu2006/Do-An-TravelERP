@@ -9,6 +9,7 @@ import com.digitaltravel.erp.dto.requests.DichVuThemRequest;
 import com.digitaltravel.erp.dto.responses.DichVuThemResponse;
 import com.digitaltravel.erp.entity.DichVuThem;
 import com.digitaltravel.erp.exception.AppException;
+import com.digitaltravel.erp.repository.DichVuTourThucTeRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +19,19 @@ import lombok.RequiredArgsConstructor;
 public class DichVuThemService {
 
     private final DichVuThemRepository dichVuThemRepository;
+    private final DichVuTourThucTeRepository dichVuTourThucTeRepository;
     private final MaTuDongService maTuDongService;
 
     public List<DichVuThemResponse> danhSach() {
+        return danhSach(null);
+    }
+
+    public List<DichVuThemResponse> danhSach(String maTourThucTe) {
+        if (maTourThucTe != null && !maTourThucTe.isBlank()) {
+            return dichVuTourThucTeRepository.findByMaTourThucTe(maTourThucTe).stream()
+                    .map(link -> toResponse(link.getDichVuThem()))
+                    .toList();
+        }
         return dichVuThemRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();

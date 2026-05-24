@@ -98,7 +98,6 @@ Chạy script SQL thủ công bằng SQL Developer, SQL*Plus hoặc tool Oracle 
 ```sql
 @src/main/resources/db/KhoiTaoBang.sql
 @src/main/resources/db/data_v1.sql
-@src/main/resources/db/data_v2.sql
 ```
 
 Ý nghĩa từng file:
@@ -106,8 +105,7 @@ Chạy script SQL thủ công bằng SQL Developer, SQL*Plus hoặc tool Oracle 
 | File | Nội dung |
 |---|---|
 | `KhoiTaoBang.sql` | Drop và tạo lại toàn bộ bảng, khóa ngoại, check constraint, index |
-| `data_v1.sql` | Dữ liệu nền: vai trò, tài khoản, tour mẫu, tour thực tế, voucher, booking, giao dịch mẫu |
-| `data_v2.sql` | Dữ liệu mở rộng: thêm tour, khách, booking, phân công, điểm danh, sự cố, chi phí, quyết toán |
+| `data_v1.sql` | Dữ liệu tài khoản nhân viên: vai trò, tài khoản nhân viên, hồ sơ nhân viên |
 
 Cấu trúc database theo luồng nghiệp vụ:
 
@@ -160,7 +158,7 @@ Ghi chú: test `@SpringBootTest` cần Oracle schema thật vì context sẽ val
 
 ## 6. Tài Khoản Seed
 
-Mật khẩu mặc định cho các tài khoản trong `data_v1.sql` và `data_v2.sql`: `password`
+Mật khẩu mặc định cho các tài khoản trong `data_v1.sql`: `password`
 
 | Vai trò | Username | Mã nghiệp vụ | Ghi chú test nhanh |
 |---|---|---|---|
@@ -168,18 +166,9 @@ Mật khẩu mặc định cho các tài khoản trong `data_v1.sql` và `data_v
 | `SANPHAM` | `sanpham01` | `NV_SP01` | Tour mẫu, dịch vụ thêm/phụ thu phòng, hành động xanh |
 | `DIEUHANH` | `manager01` | `NV_MGR01` | Tour thực tế, phân công HDV, năng lực HDV |
 | `KINHDOANH` | `sales01` | `NV_SALES01` | Đơn đặt tour, khách hàng, voucher, yêu cầu hỗ trợ |
-| `KINHDOANH` | `sales02` | `NV_SALES02` | Dữ liệu bổ sung từ `data_v2.sql` |
 | `KETOAN` | `ketoan01` | `NV_KT01` | Chi phí, hoàn tiền, quyết toán, doanh thu |
-| `HDV` | `hdv01` | `NV_HDV01` | Được phân công `TTT001`, `TTT005`, `TTT099` |
-| `HDV` | `hdv02` | `NV_HDV02` | Được phân công `TTT003`, `TTT010`, `TTT098` |
-| `HDV` | `hdv03` | `NV_HDV03` | Được phân công `TTT008` |
-| `HDV` | `hdv04` | `NV_HDV04` | Được phân công `TTT009` |
-| `KHACHHANG` | `khachhang01` | `KH001` | Có 350 điểm xanh, booking `DDT001`, `DDT007`, `DDT099`, lịch sử `TTT099` |
-| `KHACHHANG` | `khachhang02` | `KH002` | Có booking `DDT002`, `DDT008`, giao dịch hoàn `GD_HOA01` |
-| `KHACHHANG` | `khachhang03` | `KH003` | Hạng `BAC`, có booking `DDT003`, `DDT097` |
-| `KHACHHANG` | `khachhang04` | `KH004` | Có booking chờ xác nhận `DDT004` |
-| `KHACHHANG` | `khachhang05` | `KH005` | Có booking `DDT005`, điểm xanh 480 |
-| `KHACHHANG` | `khachhang06` | `KH006` | Hạng `VANG`, điểm xanh 3500, có booking `DDT006`, `DDT098` |
+| `HDV` | `hdv01` | `NV_HDV01` | Tài khoản hướng dẫn viên |
+| `HDV` | `hdv02` | `NV_HDV02` | Tài khoản hướng dẫn viên |
 
 ---
 
@@ -194,7 +183,7 @@ Content-Type: application/json
 
 ```json
 {
-  "tenDangNhap": "khachhang01",
+  "tenDangNhap": "admin",
   "matKhau": "password"
 }
 ```

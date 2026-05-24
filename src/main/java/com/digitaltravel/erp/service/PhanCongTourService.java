@@ -14,6 +14,7 @@ import com.digitaltravel.erp.dto.responses.NhanVienResponse;
 import com.digitaltravel.erp.dto.responses.PhanCongResponse;
 import com.digitaltravel.erp.entity.NhanVien;
 import com.digitaltravel.erp.entity.PhanCongTour;
+import com.digitaltravel.erp.entity.TaiKhoan;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.DiemDanhRepository;
@@ -35,6 +36,7 @@ public class PhanCongTourService {
     private final HanhDongRepository hanhDongRepository;
 
     // ── UC38: Tìm HDV khả dụng ────────────────────────────────────────────
+    @Transactional(readOnly = true)
     public List<NhanVienResponse> timHdvKhaDung(String maTourThucTe) {
         TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTourThucTe));
@@ -140,16 +142,29 @@ public class PhanCongTourService {
     }
 
     private NhanVienResponse toNhanVienResponse(NhanVien nv) {
+        TaiKhoan tk = nv.getTaiKhoan();
+        if (tk == null) {
+            return NhanVienResponse.builder()
+                    .maNhanVien(nv.getMaNhanVien())
+                    .trangThaiLamViec(nv.getTrangThaiLamViec())
+                    .loaiNhanVien(nv.getLoaiNhanVien())
+                    .ngayVaoLam(nv.getNgayVaoLam())
+                    .build();
+        }
         return NhanVienResponse.builder()
                 .maNhanVien(nv.getMaNhanVien())
-                .maTaiKhoan(nv.getTaiKhoan().getMaTaiKhoan())
-                .hoTen(nv.getTaiKhoan().getHoTen())
-                .email(nv.getTaiKhoan().getEmail())
-                .soDienThoai(nv.getTaiKhoan().getSoDienThoai())
-                .maVaiTro(nv.getTaiKhoan().getVaiTro().getMaVaiTro())
-                .trangThaiTaiKhoan(nv.getTaiKhoan().getTrangThai())
+                .maTaiKhoan(tk.getMaTaiKhoan())
+                .tenDangNhap(tk.getTenDangNhap())
+                .hoTen(tk.getHoTen())
+                .email(tk.getEmail())
+                .soDienThoai(tk.getSoDienThoai())
+                .maVaiTro(tk.getVaiTro() != null ? tk.getVaiTro().getMaVaiTro() : null)
+                .trangThaiTaiKhoan(tk.getTrangThai())
                 .trangThaiLamViec(nv.getTrangThaiLamViec())
+                .loaiNhanVien(nv.getLoaiNhanVien())
                 .ngayVaoLam(nv.getNgayVaoLam())
+                .cccd(tk.getCccd())
+                .ngaySinh(tk.getNgaySinh())
                 .build();
     }
 }

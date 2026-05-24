@@ -35,4 +35,17 @@ public interface GiaoDichRepository extends JpaRepository<GiaoDich, String> {
     org.springframework.data.domain.Page<GiaoDich> findChoHoanTien(
             org.springframework.data.domain.Pageable pageable
     );
+
+    // UC51: Xuất dữ liệu giao dịch cho Power BI
+    @Query("""
+            SELECT g FROM GiaoDich g
+            JOIN FETCH g.donDatTour
+            WHERE (:tuNgay IS NULL OR g.ngayThanhToan >= :tuNgay)
+              AND (:denNgay IS NULL OR g.ngayThanhToan < :denNgay)
+            ORDER BY g.ngayThanhToan DESC
+            """)
+    java.util.List<GiaoDich> xuatDuLieu(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
 }

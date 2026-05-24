@@ -1,6 +1,7 @@
 package com.digitaltravel.erp.dto.requests;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -19,4 +20,8 @@ public class CapNhatTourThucTeRequest {
     Integer soKhachToiThieu;
 
     String trangThai;
+
+    List<String> maDichVuThem;
+
+    List<String> maHanhDongXanh;
 }

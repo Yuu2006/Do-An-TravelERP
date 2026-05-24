@@ -54,4 +54,18 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             @Param("tuNgay") java.time.LocalDateTime tuNgay,
             @Param("denNgay") java.time.LocalDateTime denNgay
     );
+
+    // UC51: Xuất dữ liệu doanh thu cho Power BI
+    @Query("""
+            SELECT qt FROM QuyetToan qt
+            JOIN FETCH qt.tourThucTe tt
+            JOIN FETCH tt.tourMau
+            WHERE (:tuNgay IS NULL OR qt.NgayQuyetToan >= :tuNgay)
+              AND (:denNgay IS NULL OR qt.NgayQuyetToan < :denNgay)
+            ORDER BY qt.NgayQuyetToan DESC
+            """)
+    java.util.List<QuyetToan> xuatDuLieuDoanhThu(
+            @Param("tuNgay") java.time.LocalDateTime tuNgay,
+            @Param("denNgay") java.time.LocalDateTime denNgay
+    );
 }

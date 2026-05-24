@@ -167,7 +167,7 @@ public class VanHanhService {
         kiemTraKhachThuocTourDaXacNhan(maTour, kh.getMaKhachHang());
         HanhDongXanh hdx = hanhDongXanhRepository.findById(req.getMaHanhDongXanh())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
-        if (hdx.getTourThucTe() != null && !maTour.equals(hdx.getTourThucTe().getMaTourThucTe())) {
+        if (!hanhDongXanhRepository.existsAvailableForTour(req.getMaHanhDongXanh(), maTour)) {
             throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + req.getMaHanhDongXanh());
         }
         NhanVien hdv = getHdv(maTaiKhoan);
