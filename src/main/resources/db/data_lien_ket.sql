@@ -1259,6 +1259,85 @@ VALUES ('DG_NB_01', 'TTT_KT', 'KH_04', 5, 'Canh rat dep va HDV nhiet tinh.', SYS
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
 VALUES ('DG_HUE_01', 'TTT_QT', 'KH_02', 4, 'Do an ngon nhung thoi tiet hoi suong mu.', SYSTIMESTAMP - INTERVAL '5' DAY);
 
+-- ============================================================
+-- BO SUNG: KHACH HANG DAT TOUR DANG MO BAN (KEM THANH TOAN)
+-- ============================================================
+-- Dat tour cho Hoi An
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
+VALUES ('DDT_HA_NEW', 'TTT_HOIAN', 'KH_09', SYSTIMESTAMP - INTERVAL '2' DAY, 11960000, 'DA_XAC_NHAN', SYSTIMESTAMP);
+
+INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+VALUES ('NDH_HA_NEW_01', 'DDT_HA_NEW', 'Nguyen Van Binh', '079299000301', '0922000301', DATE '1995-05-15', 'NAM', NULL);
+
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_HA_NEW_KH', 'DDT_HA_NEW', 'KH_09', NULL, 'NGUOI_DAT', 5980000);
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_HA_NEW_NDH', 'DDT_HA_NEW', NULL, 'NDH_HA_NEW_01', 'NGUOI_DONG_HANH', 5980000);
+
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_HA_NEW', 'DDT_HA_NEW', 'THANH_TOAN', 'THE_TIN_DUNG', 11960000, 'BANK-HA-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '1' DAY);
+
+-- Dat tour cho Mui Ne
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
+VALUES ('DDT_MN_NEW', 'TTT_MUINE', 'KH_10', SYSTIMESTAMP - INTERVAL '1' DAY, 5910000, 'DA_XAC_NHAN', SYSTIMESTAMP);
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_MN_NEW_KH', 'DDT_MN_NEW', 'KH_10', NULL, 'NGUOI_DAT', 5910000);
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_MN_NEW', 'DDT_MN_NEW', 'THANH_TOAN', 'VNPAY', 5910000, 'BANK-MN-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '12' HOUR);
+
+-- ============================================================
+-- BO SUNG: DATA TOUR QUA KHU DE CO DANH GIA CHO HOI AN, MUI NE, HA LONG
+-- ============================================================
+-- 1. Tour thuc te trong qua khu (ban dau set MO_BAN de vuot trigger)
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_HOIAN_OLD', 'TM_HOIAN', TRUNC(SYSDATE) - 20, 5980000, 24, 10, 24, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_MUINE_OLD', 'TM_MUINE', TRUNC(SYSDATE) - 20, 5910000, 26, 10, 26, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_HALONG_OLD', 'TM_HALONG', TRUNC(SYSDATE) - 20, 6790000, 26, 10, 26, 'MO_BAN');
+
+-- 2. Don dat tour trong qua khu
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
+VALUES ('DDT_HA_OLD', 'TTT_HOIAN_OLD', 'KH_06', SYSTIMESTAMP - INTERVAL '30' DAY, 5980000, 'DA_XAC_NHAN', SYSTIMESTAMP);
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_HA_OLD', 'DDT_HA_OLD', 'KH_06', NULL, 'NGUOI_DAT', 5980000);
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_HA_OLD', 'DDT_HA_OLD', 'THANH_TOAN', 'CHUYEN_KHOAN', 5980000, 'BANK-HA', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '29' DAY);
+
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
+VALUES ('DDT_MN_OLD', 'TTT_MUINE_OLD', 'KH_07', SYSTIMESTAMP - INTERVAL '30' DAY, 5910000, 'DA_XAC_NHAN', SYSTIMESTAMP);
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_MN_OLD', 'DDT_MN_OLD', 'KH_07', NULL, 'NGUOI_DAT', 5910000);
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_MN_OLD', 'DDT_MN_OLD', 'THANH_TOAN', 'CHUYEN_KHOAN', 5910000, 'BANK-MN', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '29' DAY);
+
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
+VALUES ('DDT_HL_OLD', 'TTT_HALONG_OLD', 'KH_08', SYSTIMESTAMP - INTERVAL '30' DAY, 6790000, 'DA_XAC_NHAN', SYSTIMESTAMP);
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_HL_OLD', 'DDT_HL_OLD', 'KH_08', NULL, 'NGUOI_DAT', 6790000);
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_HL_OLD', 'DDT_HL_OLD', 'THANH_TOAN', 'CHUYEN_KHOAN', 6790000, 'BANK-HL', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '29' DAY);
+
+-- 3. Chuyen trang thai tour sang KET_THUC de pass logic
+UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC' WHERE MaTourThucTe IN ('TTT_HOIAN_OLD', 'TTT_MUINE_OLD', 'TTT_HALONG_OLD');
+
+-- 4. Them Lich Su Tour 
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_HA_OLD', 'KH_06', 'TTT_HOIAN_OLD', 'CTDT_HA_OLD', TRUNC(SYSDATE) - 20);
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_MN_OLD', 'KH_07', 'TTT_MUINE_OLD', 'CTDT_MN_OLD', TRUNC(SYSDATE) - 20);
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_HL_OLD', 'KH_08', 'TTT_HALONG_OLD', 'CTDT_HL_OLD', TRUNC(SYSDATE) - 20);
+
+-- 5. Them Danh Gia cho cac tour nay
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_HA_01', 'TTT_HOIAN_OLD', 'KH_06', 5, 'Trai nghiem rat tuyet voi, pho co dep.', SYSTIMESTAMP - INTERVAL '15' DAY);
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_MN_01', 'TTT_MUINE_OLD', 'KH_07', 4, 'Doi cat rat rong va dep, tuy nhien troi hoi nang.', SYSTIMESTAMP - INTERVAL '15' DAY);
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_HL_01', 'TTT_HALONG_OLD', 'KH_08', 5, 'Du thuyen dep, do an ngon, phuc vu chu dao.', SYSTIMESTAMP - INTERVAL '15' DAY);
+
+
 -- Phuc hoi lai ham kiem tra goc (co ho tro DA_QUYET_TOAN)
 CREATE OR REPLACE FUNCTION FN_CHECK_CAN_DANH_GIA (
     p_MaTourThucTe IN VARCHAR2,
@@ -1280,6 +1359,12 @@ BEGIN
     RETURN CASE WHEN v_Count > 0 THEN 'YES' ELSE 'NO' END;
 END;
 /
+
+-- Cap nhat lai SoDanhGia va DanhGia dong bo voi so luot review thuc te cho tat ca cac tour.
+-- Nhung tour chua co ai danh gia se co SoDanhGia = 0, DanhGia = 0
+UPDATE TOURMAU tm
+SET SoDanhGia = (SELECT COUNT(*) FROM TOURTHUCTE ttt JOIN DANHGIAKH dg ON ttt.MaTourThucTe = dg.MaTourThucTe WHERE ttt.MaTourMau = tm.MaTourMau),
+    DanhGia = NVL((SELECT ROUND(AVG(dg.SoSao), 2) FROM TOURTHUCTE ttt JOIN DANHGIAKH dg ON ttt.MaTourThucTe = dg.MaTourThucTe WHERE ttt.MaTourMau = tm.MaTourMau), 0);
 
 COMMIT;
 
