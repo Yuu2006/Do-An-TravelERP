@@ -20,6 +20,9 @@ public class TourThucTeResponse {
     Integer soKhachToiThieu;
     Integer choConLai;
     String trangThai;
+    Integer thoiLuong;
+    BigDecimal diemDanhGia;
+    Integer soDanhGia;
     List<DichVuThemResponse> dichVu;
     List<HanhDongXanhResponse> hanhDongXanh;
 }
