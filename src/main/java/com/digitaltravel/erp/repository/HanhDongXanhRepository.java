@@ -14,7 +14,7 @@ public interface HanhDongXanhRepository extends JpaRepository<HanhDongXanh, Stri
 
     @Query("""
             select hdx from HanhDongXanh hdx
-            where exists (
+            where not exists (
                 select 1 from HdxTourThucTe link
                 where link.hanhDongXanh = hdx
                   and link.tourThucTe.MaTourThucTe = :maTourThucTe
@@ -25,7 +25,7 @@ public interface HanhDongXanhRepository extends JpaRepository<HanhDongXanh, Stri
     @Query("""
             select count(hdx) > 0 from HanhDongXanh hdx
             where hdx.MaHanhDongXanh = :maHanhDongXanh
-              and exists (
+              and not exists (
                 select 1 from HdxTourThucTe link
                 where link.hanhDongXanh = hdx
                   and link.tourThucTe.MaTourThucTe = :maTourThucTe

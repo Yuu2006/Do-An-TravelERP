@@ -79,6 +79,15 @@ VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'HOAT_DONG
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'HOAT_DONG');
 
+-- ------------------------------------------------------------
+-- 4. NANGLUCNHANVIEN — Đánh giá và năng lực
+-- ------------------------------------------------------------
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV01', 'NV_HDV01', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Lịch sử, Văn hóa, Ẩm thực', 4.8, 126);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV02', 'NV_HDV02', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế', 'Mua sắm, Ẩm thực', 4.5, 89);
+
 COMMIT;
 -- ============================================================
 -- END SEED DATA
