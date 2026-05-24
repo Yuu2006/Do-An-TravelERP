@@ -201,7 +201,7 @@ public class TourThucTeService {
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private void validateTrangThaiTourThucTe(String trangThai) {
-        if (!java.util.Set.of("CHO_KICH_HOAT", "MO_BAN", "SAP_DIEN_RA",
+        if (!java.util.Set.of("CHO_KICH_HOAT", "MO_BAN",
                 "DANG_DIEN_RA", "KET_THUC", "HUY", "DA_QUYET_TOAN").contains(trangThai)) {
             throw AppException.badRequest("Trang thai khong hop le: " + trangThai);
         }

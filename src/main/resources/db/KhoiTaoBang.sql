@@ -174,7 +174,7 @@ CREATE TABLE TOURTHUCTE (
                             CONSTRAINT CK_TTT_SoKhach              CHECK (SoKhachToiDa >= SoKhachToiThieu AND SoKhachToiThieu > 0),
                             CONSTRAINT CK_TTT_ChoConLai            CHECK (ChoConLai >= 0 AND ChoConLai <= SoKhachToiDa),
                             CONSTRAINT CK_TTT_TrangThai            CHECK (TrangThai IN (
-                                                                                        'CHO_KICH_HOAT','MO_BAN','SAP_DIEN_RA','DANG_DIEN_RA',
+                                                                                        'CHO_KICH_HOAT','MO_BAN','DANG_DIEN_RA',
                                                                                         'KET_THUC','HUY','DA_QUYET_TOAN'
                                 ))
 );
@@ -371,9 +371,11 @@ CREATE TABLE PHANCONGTOUR (
                               MaTourThucTe     VARCHAR2(50)  NOT NULL,
                               MaNhanVien       VARCHAR2(50)  NOT NULL,
                               NgayPhanCong     TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
+                              TrangThaiChapNhan VARCHAR2(20) DEFAULT 'CHO_PHAN_HOI' NOT NULL,
                               CONSTRAINT UQ_PCT_TourThucTe_NhanVien UNIQUE (MaTourThucTe, MaNhanVien),
                               CONSTRAINT FK_PCT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
-                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien)
+                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
+                              CONSTRAINT CK_PCT_TrangThaiChapNhan    CHECK (TrangThaiChapNhan IN ('CHO_PHAN_HOI','DA_DONG_Y','TU_CHOI'))
 );
 
 -- Nhat ky diem danh khach trong tour
