@@ -18,9 +18,12 @@ public class PhanCongResponse {
     String maNhanVien;
     String tenNhanVien;
     LocalDateTime ngayPhanCong;
+    LocalDateTime ngayPhanHoi;
+    String trangThaiChapNhan;
     LocalDate ngayKhoiHanh;
     LocalDate ngayKetThuc;
     String trangThaiTour;
     Integer soKhachToiDa;
     Integer choConLai;
+    Long soKhachDaXacNhan;
 }

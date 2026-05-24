@@ -2,6 +2,7 @@ package com.digitaltravel.erp.exception;
 
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -92,6 +93,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.notFound("Không tìm thấy đường dẫn: " + ex.getResourcePath()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        String message = ex.getMostSpecificCause() != null
+                ? ex.getMostSpecificCause().getMessage()
+                : ex.getMessage();
+        if (message != null && message.contains("HDV bi trung lich phan cong tour")) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(ApiResponse.badRequest("DATA_INTEGRITY_ERROR", "HDV đã bị trùng lịch phân công tour."));
+        }
+        log.warn("Data integrity violation", ex);
+        return ResponseEntity
+                .badRequest()
+                .body(ApiResponse.badRequest("DATA_INTEGRITY_ERROR", "Dữ liệu không hợp lệ hoặc bị trùng ràng buộc."));
     }
 
     // ── 500 – Mọi lỗi còn lại ────────────────────────────────────────────────

@@ -37,4 +37,10 @@ public class PhanCongTour {
     @Column(name = "NgayPhanCong", nullable = false)
     LocalDateTime NgayPhanCong;
 
+    @Column(name = "TrangThaiChapNhan", nullable = false, length = 30)
+    String TrangThaiChapNhan = "CHO_PHAN_HOI";
+
+    @Column(name = "NgayPhanHoi")
+    LocalDateTime NgayPhanHoi;
+
 }

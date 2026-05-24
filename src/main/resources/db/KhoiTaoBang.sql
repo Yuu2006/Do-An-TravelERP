@@ -371,9 +371,12 @@ CREATE TABLE PHANCONGTOUR (
                               MaTourThucTe     VARCHAR2(50)  NOT NULL,
                               MaNhanVien       VARCHAR2(50)  NOT NULL,
                               NgayPhanCong     TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
+                              TrangThaiChapNhan VARCHAR2(30) DEFAULT 'CHO_PHAN_HOI' NOT NULL,
+                              NgayPhanHoi       TIMESTAMP,
                               CONSTRAINT UQ_PCT_TourThucTe_NhanVien UNIQUE (MaTourThucTe, MaNhanVien),
                               CONSTRAINT FK_PCT_TourThucTe           FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
-                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien)
+                              CONSTRAINT FK_PCT_NhanVien             FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
+                              CONSTRAINT CK_PCT_TrangThaiChapNhan    CHECK (TrangThaiChapNhan IN ('CHO_PHAN_HOI','DA_DONG_Y','TU_CHOI'))
 );
 
 -- Nhat ky diem danh khach trong tour
@@ -1018,6 +1021,7 @@ BEGIN
     JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = pct.MaTourThucTe
     WHERE pct.MaTourThucTe = :NEW.MaTourThucTe
       AND pct.MaNhanVien = :NEW.MaNhanVienXacMinh
+      AND pct.TrangThaiChapNhan = 'DA_DONG_Y'
       AND ttt.TrangThai = 'DANG_DIEN_RA';
 
     IF v_Count = 0 THEN
@@ -1130,7 +1134,9 @@ COMPOUND TRIGGER
         JOIN TOURTHUCTE ttt2 ON ttt2.MaTourThucTe = pct2.MaTourThucTe
         JOIN TOURMAU tm2 ON tm2.MaTourMau = ttt2.MaTourMau
         WHERE ttt1.NgayKhoiHanh < ttt2.NgayKhoiHanh + tm2.ThoiLuong + (12/24)
-          AND ttt2.NgayKhoiHanh < ttt1.NgayKhoiHanh + tm1.ThoiLuong + (12/24);
+          AND ttt2.NgayKhoiHanh < ttt1.NgayKhoiHanh + tm1.ThoiLuong + (12/24)
+          AND pct1.TrangThaiChapNhan <> 'TU_CHOI'
+          AND pct2.TrangThaiChapNhan <> 'TU_CHOI';
 
         IF v_Count > 0 THEN
             RAISE_APPLICATION_ERROR(-20011, 'HDV bi trung lich phan cong tour');
