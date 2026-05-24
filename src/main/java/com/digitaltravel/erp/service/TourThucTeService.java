@@ -262,6 +262,9 @@ public class TourThucTeService {
                 .soKhachToiThieu(ttt.getSoKhachToiThieu())
                 .choConLai(ttt.getChoConLai())
                 .trangThai(ttt.getTrangThai())
+                .thoiLuong(tm.getThoiLuong())
+                .diemDanhGia(tm.getDanhGia())
+                .soDanhGia(tm.getSoDanhGia())
                 .dichVu(dichVu)
                 .hanhDongXanh(hanhDongXanh)
                 .build();
