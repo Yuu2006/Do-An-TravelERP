@@ -47,11 +47,26 @@ DELETE FROM DICHVUTHEM       WHERE MaDichVuThem LIKE 'DVT_%';
 DELETE FROM NANGLUCNHANVIEN  WHERE MaNangLucNhanVien LIKE 'NL_%';
 DELETE FROM NHATKYHETHONG    WHERE MaNhatKyHeThong LIKE 'NKHT_%';
 DELETE FROM HOCHIEUSO        WHERE MaKhachHang LIKE 'KH_%';
+DELETE FROM NHANVIEN         WHERE MaNhanVien IN ('NV_HDV11', 'NV_HDV12');
+DELETE FROM TAIKHOAN         WHERE MaTaiKhoan IN ('TK_HDV11', 'TK_HDV12');
 DELETE FROM TAIKHOAN         WHERE MaTaiKhoan LIKE 'TK_KH_%';
 
 -- ------------------------------------------------------------
 -- 1. NANG LUC HDV VA KHACH HANG
 -- ------------------------------------------------------------
+-- Hai hướng dẫn viên bổ sung phục vụ màn hình lịch sử và lịch sắp khởi hành.
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV11', 'hdv11', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Võ Thuỳ Dương', '048192006811', DATE '1992-06-08', 'thuyduong.hdv@digitaltravel.vn', '0908112211', 'HDV', 'HOAT_DONG');
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV12', 'hdv12', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Nguyễn Quốc Việt', '092189007512', DATE '1989-07-15', 'quocviet.hdv@digitaltravel.vn', '0908223312', 'HDV', 'HOAT_DONG');
+
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV11', 'TK_HDV11', 'HDV', DATE '2022-03-14', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV12', 'TK_HDV12', 'HDV', DATE '2021-10-04', 'HOAT_DONG');
+
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV01', 'NV_HDV01', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa; Sơ cấp cứu cơ bản', 'Tây Bắc, Trekking, Tour xanh', 4.80, 126);
 
@@ -74,6 +89,10 @@ INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, C
 VALUES ('NL_HDV09', 'NV_HDV09', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'Thẻ HDV quốc tế; Cứu hộ biển cơ bản', 'Phú Quốc, Côn Đảo, tour biển đảo và gia đình', 4.73, 82);
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV10', 'NV_HDV10', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Tây Nguyên, Cần Thơ, tour văn hóa và ẩm thực địa phương', 4.66, 58);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV11', 'NV_HDV11', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'Thẻ HDV quốc tế; Chứng nhận sơ cấp cứu du lịch', 'Di sản miền Trung, biển Quy Nhơn, trải nghiệm văn hoá địa phương', 4.86, 94);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV12', 'NV_HDV12', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa; Chứng nhận an toàn đường thuỷ', 'Miền Tây sông nước, chợ nổi, du lịch cộng đồng bền vững', 4.81, 88);
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_01', 'khach01', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
@@ -2189,6 +2208,663 @@ INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_SAPA_OPEN
 INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_DANANG_OPEN_04', 'HDX_PUBLIC_TRANSFER');
 INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_PHUQUOC_OPEN_04', 'HDX_CORAL_SAFE');
 INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_HUE_OPEN_04', 'HDX_REUSABLE_BAG');
+
+-- ------------------------------------------------------------
+-- 10 TOUR MO BAN CO DINH TRONG NAM 2026 - DAY DU DON, KHACH, HDV VA THANH TOAN
+-- Cac tour mau duoi day da co lich trinh va danh gia tu cac dot da ket thuc o tren.
+-- Tour dang MO_BAN khong duoc gan DANHGIAKH truc tiep vi chua phat sinh lich su tham gia.
+-- ------------------------------------------------------------
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_SAPA_JUL', 'TM_SAPA', DATE '2026-07-16', 4950000, 28, 10, 28, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_DANANG_JUL', 'TM_DANANG', DATE '2026-07-30', 6750000, 32, 12, 32, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_PHUQUOC_AUG', 'TM_PHUQUOC', DATE '2026-08-13', 8150000, 28, 10, 28, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_HUE_AUG', 'TM_HUE', DATE '2026-08-27', 4550000, 26, 8, 26, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_HOIAN_SEP', 'TM_HOIAN', DATE '2026-09-10', 4750000, 28, 10, 28, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_HALONG_SEP', 'TM_HALONG', DATE '2026-09-24', 6150000, 30, 10, 30, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_CANTHO_OCT', 'TM_CANTHO', DATE '2026-10-15', 3950000, 30, 10, 30, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_MUINE_NOV', 'TM_MUINE', DATE '2026-11-05', 5100000, 30, 10, 30, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_SAPA_NOV', 'TM_SAPA', DATE '2026-11-19', 5050000, 28, 10, 28, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_DANANG_DEC', 'TM_DANANG', DATE '2026-12-10', 6900000, 34, 12, 34, 'MO_BAN');
+
+-- Moi dot mo ban co dich vu bo sung va hanh dong xanh phu hop tuyen.
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_SAPA_JUL', 'DVT_SAPA_HERBAL');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_DANANG_JUL', 'DVT_DANANG_SHOW');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_PHUQUOC_AUG', 'DVT_PHUQUOC_SNORKEL');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_HUE_AUG', 'DVT_HUE_AODAI');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_HOIAN_SEP', 'DVT_HOIAN_LANTERN');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_HALONG_SEP', 'DVT_HALONG_KAYAK');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_CANTHO_OCT', 'DVT_CANTHO_COOKING');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_MUINE_NOV', 'DVT_MUINE_JEEP');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_SAPA_NOV', 'DVT_SAPA_HERBAL');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_DANANG_DEC', 'DVT_DANANG_SHOW');
+
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_SAPA_JUL', 'HDX_REFILL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_DANANG_JUL', 'HDX_PUBLIC_TRANSFER');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_PHUQUOC_AUG', 'HDX_CORAL_SAFE');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_HUE_AUG', 'HDX_REUSABLE_BAG');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_HOIAN_SEP', 'HDX_LOCAL_MEAL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_HALONG_SEP', 'HDX_REFILL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_CANTHO_OCT', 'HDX_LOCAL_MEAL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_MUINE_NOV', 'HDX_REFILL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_SAPA_NOV', 'HDX_COMMUNITY_BUY');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_DANANG_DEC', 'HDX_PUBLIC_TRANSFER');
+
+-- HDV da chap nhan; lich khoi hanh cach nhau de khong vi pham trung lich.
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_SAPA_JUL_HDV03', 'TTT_26_SAPA_JUL', 'NV_HDV03', TIMESTAMP '2026-05-18 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-18 14:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_DANANG_JUL_HDV04', 'TTT_26_DANANG_JUL', 'NV_HDV04', TIMESTAMP '2026-05-18 09:15:00', 'DA_DONG_Y', TIMESTAMP '2026-05-18 15:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_PHUQUOC_AUG_HDV09', 'TTT_26_PHUQUOC_AUG', 'NV_HDV09', TIMESTAMP '2026-05-19 08:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-19 11:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_HUE_AUG_HDV06', 'TTT_26_HUE_AUG', 'NV_HDV06', TIMESTAMP '2026-05-19 08:20:00', 'DA_DONG_Y', TIMESTAMP '2026-05-19 12:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_HOIAN_SEP_HDV04', 'TTT_26_HOIAN_SEP', 'NV_HDV04', TIMESTAMP '2026-05-20 08:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-20 10:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_HALONG_SEP_HDV05', 'TTT_26_HALONG_SEP', 'NV_HDV05', TIMESTAMP '2026-05-20 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-20 13:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_CANTHO_OCT_HDV10', 'TTT_26_CANTHO_OCT', 'NV_HDV10', TIMESTAMP '2026-05-21 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-21 13:30:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_MUINE_NOV_HDV05', 'TTT_26_MUINE_NOV', 'NV_HDV05', TIMESTAMP '2026-05-22 08:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-22 11:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_SAPA_NOV_HDV03', 'TTT_26_SAPA_NOV', 'NV_HDV03', TIMESTAMP '2026-05-22 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-22 13:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_DANANG_DEC_HDV04', 'TTT_26_DANANG_DEC', 'NV_HDV04', TIMESTAMP '2026-05-23 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-05-23 12:00:00');
+
+-- Tao hai don co thong tin hanh khach, dich vu va giao dich hoan tat cho moi tour 2026.
+DECLARE
+    PROCEDURE them_don_2026 (
+        p_MaRutGon       IN VARCHAR2,
+        p_MaTour         IN VARCHAR2,
+        p_MaKhachHang    IN VARCHAR2,
+        p_GiaTour        IN NUMBER,
+        p_SoKhach        IN NUMBER,
+        p_MaDichVu       IN VARCHAR2,
+        p_DonGiaDichVu   IN NUMBER,
+        p_HanhDongXanh   IN VARCHAR2,
+        p_NgayDat        IN TIMESTAMP,
+        p_Seed           IN NUMBER
+    ) IS
+        v_MaDatTour VARCHAR2(50) := 'DDT_' || p_MaRutGon;
+        v_TongTien NUMBER(18,2) := p_GiaTour * p_SoKhach + p_DonGiaDichVu * p_SoKhach;
+        v_MaNdh VARCHAR2(50);
+    BEGIN
+        INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+        VALUES (v_MaDatTour, p_MaTour, p_MaKhachHang, p_NgayDat, v_TongTien, 'DA_XAC_NHAN',
+                p_NgayDat + INTERVAL '2' DAY,
+                'Đơn mở bán 2026 đã xác nhận, hồ sơ hành khách và dịch vụ bổ sung đã được kiểm tra.',
+                p_HanhDongXanh || ':' || p_SoKhach);
+
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaRutGon || '_KH', v_MaDatTour, p_MaKhachHang, NULL, 'NGUOI_DAT', p_GiaTour);
+
+        FOR i IN 1 .. p_SoKhach - 1 LOOP
+            v_MaNdh := 'NDH_' || p_MaRutGon || '_' || LPAD(i, 2, '0');
+            INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+            VALUES (v_MaNdh, v_MaDatTour,
+                    CASE MOD(p_Seed + i, 8)
+                        WHEN 0 THEN 'Nguyễn Gia Minh'
+                        WHEN 1 THEN 'Trần Bảo Anh'
+                        WHEN 2 THEN 'Lê Khánh Linh'
+                        WHEN 3 THEN 'Phạm Hoàng Nam'
+                        WHEN 4 THEN 'Vũ Minh Châu'
+                        WHEN 5 THEN 'Đỗ Ngọc Hà'
+                        WHEN 6 THEN 'Bùi Quốc An'
+                        ELSE 'Hoàng Thanh Mai'
+                    END,
+                    '026' || LPAD(p_Seed * 10 + i, 9, '0'),
+                    '0906' || LPAD(p_Seed * 10 + i, 6, '0'),
+                    ADD_MONTHS(DATE '1992-06-15', -12 * MOD(p_Seed + i, 18)),
+                    CASE WHEN MOD(i, 2) = 0 THEN 'NU' ELSE 'NAM' END,
+                    CASE WHEN i = 1 THEN 'Người đồng hành chính, đã xác nhận CCCD và số liên hệ.'
+                         ELSE 'Khách đi cùng, đã tiếp nhận lưu ý hành trình và dịch vụ đăng ký.' END);
+            INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+            VALUES ('CTDT_' || p_MaRutGon || '_N' || LPAD(i, 2, '0'), v_MaDatTour, NULL, v_MaNdh,
+                    'NGUOI_DONG_HANH', p_GiaTour);
+        END LOOP;
+
+        INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, DonGia, ThanhTien)
+        VALUES ('CTDV_' || p_MaRutGon, v_MaDatTour, p_MaDichVu, p_SoKhach, p_DonGiaDichVu,
+                p_SoKhach * p_DonGiaDichVu);
+
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaRutGon || '_PAY', v_MaDatTour, 'THANH_TOAN',
+                CASE MOD(p_Seed, 4)
+                    WHEN 0 THEN 'CHUYEN_KHOAN'
+                    WHEN 1 THEN 'THE_NOI_DIA'
+                    WHEN 2 THEN 'THE_QUOC_TE'
+                    ELSE 'VI_DIEN_TU'
+                END,
+                v_TongTien, 'BANK-26-' || p_MaRutGon, 'THANH_CONG', p_NgayDat + INTERVAL '1' HOUR);
+    END;
+BEGIN
+    them_don_2026('26_SAPA_JUL_A', 'TTT_26_SAPA_JUL', 'KH_01', 4950000, 4, 'DVT_SAPA_HERBAL', 320000, 'HDX_REFILL', TIMESTAMP '2026-05-18 09:00:00', 101);
+    them_don_2026('26_SAPA_JUL_B', 'TTT_26_SAPA_JUL', 'KH_02', 4950000, 2, 'DVT_SAPA_HERBAL', 320000, 'HDX_REFILL', TIMESTAMP '2026-05-18 10:00:00', 102);
+    them_don_2026('26_DANANG_JUL_A', 'TTT_26_DANANG_JUL', 'KH_03', 6750000, 4, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-19 09:00:00', 103);
+    them_don_2026('26_DANANG_JUL_B', 'TTT_26_DANANG_JUL', 'KH_04', 6750000, 3, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-19 14:00:00', 104);
+    them_don_2026('26_PHUQUOC_AUG_A', 'TTT_26_PHUQUOC_AUG', 'KH_05', 8150000, 4, 'DVT_PHUQUOC_SNORKEL', 950000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-05-20 09:00:00', 105);
+    them_don_2026('26_PHUQUOC_AUG_B', 'TTT_26_PHUQUOC_AUG', 'KH_06', 8150000, 2, 'DVT_PHUQUOC_SNORKEL', 950000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-05-20 14:00:00', 106);
+    them_don_2026('26_HUE_AUG_A', 'TTT_26_HUE_AUG', 'KH_07', 4550000, 3, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-21 09:00:00', 107);
+    them_don_2026('26_HUE_AUG_B', 'TTT_26_HUE_AUG', 'KH_08', 4550000, 2, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-21 14:00:00', 108);
+    them_don_2026('26_HOIAN_SEP_A', 'TTT_26_HOIAN_SEP', 'KH_09', 4750000, 4, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-22 09:00:00', 109);
+    them_don_2026('26_HOIAN_SEP_B', 'TTT_26_HOIAN_SEP', 'KH_10', 4750000, 2, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-22 14:00:00', 110);
+    them_don_2026('26_HALONG_SEP_A', 'TTT_26_HALONG_SEP', 'KH_11', 6150000, 3, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-05-22 09:30:00', 111);
+    them_don_2026('26_HALONG_SEP_B', 'TTT_26_HALONG_SEP', 'KH_12', 6150000, 2, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-05-22 15:00:00', 112);
+    them_don_2026('26_CANTHO_OCT_A', 'TTT_26_CANTHO_OCT', 'KH_13', 3950000, 4, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 09:00:00', 113);
+    them_don_2026('26_CANTHO_OCT_B', 'TTT_26_CANTHO_OCT', 'KH_14', 3950000, 2, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 14:00:00', 114);
+    them_don_2026('26_MUINE_NOV_A', 'TTT_26_MUINE_NOV', 'KH_15', 5100000, 3, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-05-23 09:30:00', 115);
+    them_don_2026('26_MUINE_NOV_B', 'TTT_26_MUINE_NOV', 'KH_01', 5100000, 2, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-05-23 15:00:00', 116);
+    them_don_2026('26_SAPA_NOV_A', 'TTT_26_SAPA_NOV', 'KH_02', 5050000, 4, 'DVT_SAPA_HERBAL', 320000, 'HDX_COMMUNITY_BUY', TIMESTAMP '2026-05-24 09:00:00', 117);
+    them_don_2026('26_SAPA_NOV_B', 'TTT_26_SAPA_NOV', 'KH_03', 5050000, 2, 'DVT_SAPA_HERBAL', 320000, 'HDX_COMMUNITY_BUY', TIMESTAMP '2026-05-24 10:00:00', 118);
+    them_don_2026('26_DANANG_DEC_A', 'TTT_26_DANANG_DEC', 'KH_04', 6900000, 4, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-24 14:00:00', 119);
+    them_don_2026('26_DANANG_DEC_B', 'TTT_26_DANANG_DEC', 'KH_05', 6900000, 3, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-24 15:00:00', 120);
+END;
+/
+
+-- ------------------------------------------------------------
+-- BỘ DỮ LIỆU NGHIỆP VỤ ĐẦY ĐỦ CHO HAI HƯỚNG DẪN VIÊN MỚI
+-- Các tour mẫu được sử dụng bên dưới đã có lịch trình từng ngày đầy đủ.
+-- Mỗi HDV có một chuyến đã quyết toán và một chuyến sắp khởi hành.
+-- ------------------------------------------------------------
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_H11_QUYNHON_LS', 'TM_QUYNHON', DATE '2026-05-06', 5650000, 22, 6, 22, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_H12_CANTHO_LS', 'TM_CANTHO', DATE '2026-05-12', 4050000, 24, 6, 24, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_H11_HUE_SKH', 'TM_HUE', DATE '2026-06-18', 4720000, 26, 8, 26, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_H12_CANTHO_SKH', 'TM_CANTHO', DATE '2026-06-25', 4120000, 28, 8, 28, 'MO_BAN');
+
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_H11_QUYNHON_LS', 'DVT_QUYNHON_CANOE');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_H12_CANTHO_LS', 'DVT_CANTHO_COOKING');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_H11_HUE_SKH', 'DVT_HUE_AODAI');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_H12_CANTHO_SKH', 'DVT_CANTHO_COOKING');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_H11_QUYNHON_LS', 'HDX_CORAL_SAFE');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_H12_CANTHO_LS', 'HDX_LOCAL_MEAL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_H11_HUE_SKH', 'HDX_REUSABLE_BAG');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_H12_CANTHO_SKH', 'HDX_LOCAL_MEAL');
+
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_H11_QUYNHON_LS', 'TTT_H11_QUYNHON_LS', 'NV_HDV11', TIMESTAMP '2026-04-14 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-04-14 13:40:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_H12_CANTHO_LS', 'TTT_H12_CANTHO_LS', 'NV_HDV12', TIMESTAMP '2026-04-20 08:30:00', 'DA_DONG_Y', TIMESTAMP '2026-04-20 11:20:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_H11_HUE_SKH', 'TTT_H11_HUE_SKH', 'NV_HDV11', TIMESTAMP '2026-05-20 09:10:00', 'DA_DONG_Y', TIMESTAMP '2026-05-20 15:10:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_H12_CANTHO_SKH', 'TTT_H12_CANTHO_SKH', 'NV_HDV12', TIMESTAMP '2026-05-21 08:45:00', 'DA_DONG_Y', TIMESTAMP '2026-05-21 14:00:00');
+
+-- Tạo đơn, danh sách hành khách, dịch vụ bổ sung và giao dịch đã thanh toán.
+DECLARE
+    PROCEDURE tao_don_hdv (
+        p_MaGon          IN VARCHAR2,
+        p_MaTour         IN VARCHAR2,
+        p_MaKhachHang    IN VARCHAR2,
+        p_GiaTour        IN NUMBER,
+        p_SoKhach        IN NUMBER,
+        p_MaDichVu       IN VARCHAR2,
+        p_DonGiaDichVu   IN NUMBER,
+        p_HanhDongXanh   IN VARCHAR2,
+        p_NgayDat        IN TIMESTAMP,
+        p_ThuTu          IN NUMBER,
+        p_GhiChu         IN VARCHAR2
+    ) IS
+        v_MaDatTour VARCHAR2(50) := 'DDT_' || p_MaGon;
+        v_MaNguoiDongHanh VARCHAR2(50);
+        v_TongTien NUMBER(18,2) := p_SoKhach * (p_GiaTour + p_DonGiaDichVu);
+    BEGIN
+        INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+        VALUES (v_MaDatTour, p_MaTour, p_MaKhachHang, p_NgayDat, v_TongTien, 'DA_XAC_NHAN',
+                p_NgayDat + INTERVAL '2' DAY, p_GhiChu, p_HanhDongXanh || ':' || p_SoKhach);
+
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaGon || '_K', v_MaDatTour, p_MaKhachHang, NULL, 'NGUOI_DAT', p_GiaTour);
+
+        FOR i IN 1 .. p_SoKhach - 1 LOOP
+            v_MaNguoiDongHanh := 'NDH_' || p_MaGon || '_' || LPAD(i, 2, '0');
+            INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+            VALUES (v_MaNguoiDongHanh, v_MaDatTour,
+                    CASE MOD(p_ThuTu + i, 10)
+                        WHEN 0 THEN 'Trần Minh Thư'
+                        WHEN 1 THEN 'Lê Gia Huy'
+                        WHEN 2 THEN 'Phạm Ngọc Diệp'
+                        WHEN 3 THEN 'Võ Hải Nam'
+                        WHEN 4 THEN 'Nguyễn Khánh An'
+                        WHEN 5 THEN 'Đặng Thuỳ Trang'
+                        WHEN 6 THEN 'Bùi Hoàng Phúc'
+                        WHEN 7 THEN 'Hồ Ngọc Ánh'
+                        WHEN 8 THEN 'Dương Tuấn Kiệt'
+                        ELSE 'Trương Mai Phương'
+                    END,
+                    '07926' || LPAD(p_ThuTu * 10 + i, 7, '0'),
+                    '0938' || LPAD(p_ThuTu * 10 + i, 6, '0'),
+                    ADD_MONTHS(DATE '1996-08-18', -12 * MOD(p_ThuTu + i, 20)),
+                    CASE WHEN MOD(i, 2) = 0 THEN 'NỮ' ELSE 'NAM' END,
+                    CASE WHEN i = 1 THEN 'Người liên hệ phụ của đoàn, đã xác nhận căn cước và yêu cầu ăn uống.'
+                         ELSE 'Hành khách đi cùng, đã tiếp nhận lịch trình chi tiết và thông tin tập trung.' END);
+            INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+            VALUES ('CTDT_' || p_MaGon || '_N' || LPAD(i, 2, '0'), v_MaDatTour, NULL, v_MaNguoiDongHanh,
+                    'NGUOI_DONG_HANH', p_GiaTour);
+        END LOOP;
+
+        INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, DonGia, ThanhTien)
+        VALUES ('CTDV_' || p_MaGon, v_MaDatTour, p_MaDichVu, p_SoKhach, p_DonGiaDichVu, p_SoKhach * p_DonGiaDichVu);
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaGon, v_MaDatTour, 'THANH_TOAN',
+                CASE MOD(p_ThuTu, 3) WHEN 0 THEN 'CHUYEN_KHOAN' WHEN 1 THEN 'THE_NOI_DIA' ELSE 'VI_DIEN_TU' END,
+                v_TongTien, 'NGAN-HANG-' || p_MaGon, 'THANH_CONG', p_NgayDat + INTERVAL '3' HOUR);
+    END;
+BEGIN
+    tao_don_hdv('H11QN_A', 'TTT_H11_QUYNHON_LS', 'KH_01', 5650000, 4, 'DVT_QUYNHON_CANOE', 680000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-04-20 09:00:00', 201, 'Gia đình tham quan Quy Nhơn, đăng ký ca nô riêng và lưu ý an toàn biển cho trẻ nhỏ.');
+    tao_don_hdv('H11QN_B', 'TTT_H11_QUYNHON_LS', 'KH_02', 5650000, 3, 'DVT_QUYNHON_CANOE', 680000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-04-22 14:00:00', 202, 'Nhóm khách yêu biển, đã xác nhận quy định bảo vệ san hô và giờ tập trung tại bến.');
+    tao_don_hdv('H12CT_A', 'TTT_H12_CANTHO_LS', 'KH_03', 4050000, 4, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-25 08:30:00', 203, 'Gia đình trải nghiệm chợ nổi và lớp nấu món miền Tây, cần suất ăn ít cay.');
+    tao_don_hdv('H12CT_B', 'TTT_H12_CANTHO_LS', 'KH_04', 4050000, 3, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-26 10:00:00', 204, 'Nhóm bạn đăng ký trải nghiệm ẩm thực địa phương và mua đặc sản từ hộ dân.');
+    tao_don_hdv('H11HUE_A', 'TTT_H11_HUE_SKH', 'KH_05', 4720000, 5, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-20 09:00:00', 205, 'Đoàn gia đình sắp khởi hành đi Huế, đã đăng ký áo dài chụp ảnh và phòng gần nhau.');
+    tao_don_hdv('H11HUE_B', 'TTT_H11_HUE_SKH', 'KH_06', 4720000, 3, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-21 10:30:00', 206, 'Ba khách tham quan cố đô, cần thực đơn không hải sản có vỏ và xe đón đúng giờ.');
+    tao_don_hdv('H11HUE_C', 'TTT_H11_HUE_SKH', 'KH_09', 4720000, 7, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-22 09:15:00', 209, 'Nhóm khách yêu di sản đã chốt danh sách, đăng ký trang phục áo dài và cam kết dùng túi vải khi mua quà.');
+    tao_don_hdv('H11HUE_D', 'TTT_H11_HUE_SKH', 'KH_10', 4720000, 6, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-23 09:40:00', 210, 'Đoàn sáu khách đặt sát ngày khởi hành, đã xác nhận thông tin y tế và điểm đón tại Huế.');
+    tao_don_hdv('H12CTF_A', 'TTT_H12_CANTHO_SKH', 'KH_07', 4120000, 4, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-22 08:00:00', 207, 'Đoàn sắp đi Cần Thơ, mong muốn trải nghiệm chợ nổi sớm và bữa ăn nguyên liệu địa phương.');
+    tao_don_hdv('H12CTF_B', 'TTT_H12_CANTHO_SKH', 'KH_08', 4120000, 4, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 14:00:00', 208, 'Gia đình bốn khách đã thanh toán đầy đủ, có một khách cần món ăn chay trong ngày thứ hai.');
+    tao_don_hdv('H12CTF_C', 'TTT_H12_CANTHO_SKH', 'KH_11', 4120000, 7, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 09:00:00', 211, 'Đoàn bạn bè tham quan miền Tây, đăng ký lớp nấu ăn và ưu tiên sử dụng nông sản địa phương.');
+    tao_don_hdv('H12CTF_D', 'TTT_H12_CANTHO_SKH', 'KH_12', 4120000, 8, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-24 08:30:00', 212, 'Gia đình nhiều thế hệ đã xác nhận danh sách, cần bố trí thuyền ổn định và bữa ăn nhẹ buổi sáng.');
+END;
+/
+
+-- Sau khi đủ đoàn và đã thanh toán, các chuyến tương lai đi vào danh sách sắp khởi hành của HDV.
+UPDATE TOURTHUCTE SET TrangThai = 'SAP_DIEN_RA' WHERE MaTourThucTe IN ('TTT_H11_HUE_SKH', 'TTT_H12_CANTHO_SKH');
+
+-- Hai chuyến lịch sử chuyển sang giai đoạn vận hành để ghi nhận điểm danh và hành động xanh.
+UPDATE TOURTHUCTE SET TrangThai = 'DANG_DIEN_RA' WHERE MaTourThucTe IN ('TTT_H11_QUYNHON_LS', 'TTT_H12_CANTHO_LS');
+
+INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
+SELECT 'DD_' || SUBSTR(ct.MaChiTietDat, 6), d.MaTourThucTe, ct.MaKhachHang, ct.MaNguoiDongHanh, ct.LoaiKhach,
+       CASE d.MaTourThucTe WHEN 'TTT_H11_QUYNHON_LS' THEN 'NV_HDV11' ELSE 'NV_HDV12' END,
+       CASE d.MaTourThucTe WHEN 'TTT_H11_QUYNHON_LS' THEN TIMESTAMP '2026-05-06 07:10:00' ELSE TIMESTAMP '2026-05-12 05:20:00' END,
+       CASE d.MaTourThucTe WHEN 'TTT_H11_QUYNHON_LS' THEN 'Điểm đón trung tâm Quy Nhơn' ELSE 'Bến Ninh Kiều, Cần Thơ' END,
+       'DA_DIEM_DANH'
+FROM CHITIETDATTOUR ct
+JOIN DONDATTOUR d ON d.MaDatTour = ct.MaDatTour
+WHERE d.MaTourThucTe IN ('TTT_H11_QUYNHON_LS', 'TTT_H12_CANTHO_LS');
+
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_H11QN_KH01', 'TTT_H11_QUYNHON_LS', 'KH_01', 'HDX_CORAL_SAFE', 'NV_HDV11', TIMESTAMP '2026-05-07 10:00:00', 'Gia đình sử dụng kem chống nắng thân thiện biển và tuân thủ hướng dẫn khi đi ca nô.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_H11QN_KH02', 'TTT_H11_QUYNHON_LS', 'KH_02', 'HDX_CORAL_SAFE', 'NV_HDV11', TIMESTAMP '2026-05-07 10:15:00', 'Nhóm khách không chạm san hô, thu gom vật dụng cá nhân sau hoạt động biển.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_H12CT_KH03', 'TTT_H12_CANTHO_LS', 'KH_03', 'HDX_LOCAL_MEAL', 'NV_HDV12', TIMESTAMP '2026-05-13 11:30:00', 'Đoàn lựa chọn bữa trưa sử dụng nguyên liệu theo mùa từ nhà vườn địa phương.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_H12CT_KH04', 'TTT_H12_CANTHO_LS', 'KH_04', 'HDX_LOCAL_MEAL', 'NV_HDV12', TIMESTAMP '2026-05-13 11:40:00', 'Nhóm khách dùng bữa tại hộ dân và mua sản phẩm địa phương có bao bì tái sử dụng.');
+
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_H11QN_SONG', 'TTT_H11_QUYNHON_LS', 'NV_HDV11', 'Biển có sóng nhẹ vào đầu giờ chiều tại khu vực Kỳ Co.',
+        'Điều chỉnh hoạt động ca nô sang khung giờ an toàn và phổ biến lại quy định áo phao cho cả đoàn.', 'THAP', 'THOI_TIET', TIMESTAMP '2026-05-07 12:30:00');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_H12CT_BEN', 'TTT_H12_CANTHO_LS', 'NV_HDV12', 'Bến đón chợ nổi thay đổi vị trí do mực nước lên sớm.',
+        'Thông báo trước cho đoàn, bố trí xe trung chuyển ngắn và kiểm đếm đầy đủ khách trước khi xuống thuyền.', 'THAP', 'PHUONG_TIEN', TIMESTAMP '2026-05-13 05:10:00');
+
+UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC' WHERE MaTourThucTe IN ('TTT_H11_QUYNHON_LS', 'TTT_H12_CANTHO_LS');
+
+-- Chi phí được HDV kê khai và duyệt trước khi kế toán lập quyết toán.
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H11QN_XE', 'TTT_H11_QUYNHON_LS', 'NV_HDV11', 'Xe đưa đón sân bay Phù Cát và nội thành', 5400000, 'https://seed.local/hoa-don/quynhon-xe-dua-don.jpg', 'DA_DUYET', TIMESTAMP '2026-05-09 09:00:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H11QN_KS', 'TTT_H11_QUYNHON_LS', 'NV_HDV11', 'Khách sạn Quy Nhơn hai đêm cho đoàn', 12600000, 'https://seed.local/hoa-don/quynhon-khach-san.jpg', 'DA_DUYET', TIMESTAMP '2026-05-09 09:20:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H11QN_VE', 'TTT_H11_QUYNHON_LS', 'NV_HDV11', 'Vé tham quan và bảo hiểm hoạt động biển', 3280000, 'https://seed.local/hoa-don/quynhon-ve-tham-quan.jpg', 'DA_DUYET', TIMESTAMP '2026-05-09 09:40:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H12CT_TAU', 'TTT_H12_CANTHO_LS', 'NV_HDV12', 'Thuyền tham quan chợ nổi Cái Răng', 3600000, 'https://seed.local/hoa-don/cantho-thuyen.jpg', 'DA_DUYET', TIMESTAMP '2026-05-15 08:10:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H12CT_KS', 'TTT_H12_CANTHO_LS', 'NV_HDV12', 'Khách sạn Cần Thơ hai đêm cho đoàn', 8900000, 'https://seed.local/hoa-don/cantho-khach-san.jpg', 'DA_DUYET', TIMESTAMP '2026-05-15 08:30:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+VALUES ('CP_H12CT_AN', 'TTT_H12_CANTHO_LS', 'NV_HDV12', 'Bữa ăn miệt vườn và nguyên liệu lớp nấu ăn', 4300000, 'https://seed.local/hoa-don/cantho-am-thuc.jpg', 'DA_DUYET', TIMESTAMP '2026-05-15 08:50:00');
+
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu)
+VALUES ('QT_H11QN_HOANTAT', 'TTT_H11_QUYNHON_LS', 0, 0, 45500000, 0, 'NV_KT01', TIMESTAMP '2026-05-11 10:00:00', 'DA_QUYET_TOAN',
+        'Kế toán đã đối chiếu giao dịch, hóa đơn vận hành và xác nhận hoàn tất quyết toán chuyến Quy Nhơn do hướng dẫn viên Võ Thuỳ Dương phụ trách.');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu)
+VALUES ('QT_H12CT_HOANTAT', 'TTT_H12_CANTHO_LS', 0, 0, 33500000, 0, 'NV_KT01', TIMESTAMP '2026-05-17 10:30:00', 'DA_QUYET_TOAN',
+        'Kế toán đã kiểm tra doanh thu, chi phí và chốt chuyến Cần Thơ do hướng dẫn viên Nguyễn Quốc Việt phụ trách.');
+
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_H11QN_KH01', 'KH_01', 'TTT_H11_QUYNHON_LS', 'CTDT_H11QN_A_K', DATE '2026-05-06');
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_H11QN_KH02', 'KH_02', 'TTT_H11_QUYNHON_LS', 'CTDT_H11QN_B_K', DATE '2026-05-06');
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_H12CT_KH03', 'KH_03', 'TTT_H12_CANTHO_LS', 'CTDT_H12CT_A_K', DATE '2026-05-12');
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_H12CT_KH04', 'KH_04', 'TTT_H12_CANTHO_LS', 'CTDT_H12CT_B_K', DATE '2026-05-12');
+
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_H11QN_KH01', 'TTT_H11_QUYNHON_LS', 'KH_01', 5, 'Hướng dẫn viên Thuỳ Dương chu đáo, nhắc an toàn biển rõ ràng và hỗ trợ gia đình có trẻ nhỏ rất tốt.', TIMESTAMP '2026-05-11 19:30:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_H11QN_KH02', 'TTT_H11_QUYNHON_LS', 'KH_02', 5, 'Lịch trình Quy Nhơn hợp lý, cảnh đẹp, đoàn được chăm sóc kỹ và hoạt động bảo vệ biển rất ý nghĩa.', TIMESTAMP '2026-05-12 20:10:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_H12CT_KH03', 'TTT_H12_CANTHO_LS', 'KH_03', 5, 'Anh Quốc Việt hướng dẫn thân thiện, tổ chức chợ nổi gọn gàng và chuẩn bị bữa ăn miền Tây rất ngon.', TIMESTAMP '2026-05-18 18:20:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
+VALUES ('DG_H12CT_KH04', 'TTT_H12_CANTHO_LS', 'KH_04', 4, 'Chuyến đi chân thực, nhiều trải nghiệm địa phương; việc đổi bến được thông báo nhanh nên cả đoàn vẫn thoải mái.', TIMESTAMP '2026-05-18 20:00:00');
+
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
+VALUES ('NKHT_H11_CP_XE', 'TK_HDV11', 'THEM', 'Chi phí thực tế hướng dẫn viên', 'CP_H11QN_XE', TIMESTAMP '2026-05-09 09:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
+VALUES ('NKHT_H12_CP_TAU', 'TK_HDV12', 'THEM', 'Chi phí thực tế hướng dẫn viên', 'CP_H12CT_TAU', TIMESTAMP '2026-05-15 08:10:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
+VALUES ('NKHT_H11_QT', 'TK_KT01', 'THEM', 'Quyết toán tour đã hoàn thành', 'QT_H11QN_HOANTAT', TIMESTAMP '2026-05-11 10:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
+VALUES ('NKHT_H12_QT', 'TK_KT01', 'THEM', 'Quyết toán tour đã hoàn thành', 'QT_H12CT_HOANTAT', TIMESTAMP '2026-05-17 10:30:00');
+
+-- Bổ sung đoàn khách đã xác nhận cho 10 tour mở bán cố định năm 2026.
+-- Mỗi tour còn 4-5 chỗ để phù hợp thực tế bán gần đủ nhưng vẫn nhận thêm khách lẻ.
+DECLARE
+    PROCEDURE them_doan_gan_du_cho (
+        p_MaGon        IN VARCHAR2,
+        p_MaTour       IN VARCHAR2,
+        p_MaKhachHang  IN VARCHAR2,
+        p_GiaTour      IN NUMBER,
+        p_SoKhach      IN NUMBER,
+        p_MaDichVu     IN VARCHAR2,
+        p_DonGiaDV     IN NUMBER,
+        p_HanhDongXanh IN VARCHAR2,
+        p_NgayDat      IN TIMESTAMP,
+        p_Seed         IN NUMBER,
+        p_GhiChu       IN VARCHAR2
+    ) IS
+        v_MaDatTour VARCHAR2(50) := 'DDT_' || p_MaGon;
+        v_NguoiDongHanh VARCHAR2(50);
+        v_TongTien NUMBER(18,2) := p_SoKhach * (p_GiaTour + p_DonGiaDV);
+    BEGIN
+        INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+        VALUES (v_MaDatTour, p_MaTour, p_MaKhachHang, p_NgayDat, v_TongTien, 'DA_XAC_NHAN',
+                p_NgayDat + INTERVAL '2' DAY, p_GhiChu, p_HanhDongXanh || ':' || p_SoKhach);
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaGon || '_KH', v_MaDatTour, p_MaKhachHang, NULL, 'NGUOI_DAT', p_GiaTour);
+
+        FOR i IN 1 .. p_SoKhach - 1 LOOP
+            v_NguoiDongHanh := 'NDH_' || p_MaGon || '_' || LPAD(i, 2, '0');
+            INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+            VALUES (v_NguoiDongHanh, v_MaDatTour,
+                    CASE MOD(p_Seed + i, 12)
+                        WHEN 0 THEN 'Nguyễn Quỳnh Anh'
+                        WHEN 1 THEN 'Trần Đức Minh'
+                        WHEN 2 THEN 'Lê Phương Thảo'
+                        WHEN 3 THEN 'Phạm Tuấn Anh'
+                        WHEN 4 THEN 'Võ Ngọc Hân'
+                        WHEN 5 THEN 'Đặng Hải Đăng'
+                        WHEN 6 THEN 'Bùi Thanh Mai'
+                        WHEN 7 THEN 'Hoàng Quốc Bảo'
+                        WHEN 8 THEN 'Đỗ Thu Hà'
+                        WHEN 9 THEN 'Dương Minh Khang'
+                        WHEN 10 THEN 'Hồ Khánh Vy'
+                        ELSE 'Mai Thành Công'
+                    END,
+                    '07726' || LPAD(p_Seed * 100 + i, 7, '0'),
+                    '0942' || LPAD(p_Seed * 100 + i, 6, '0'),
+                    ADD_MONTHS(DATE '1994-05-20', -12 * MOD(p_Seed + i, 22)),
+                    CASE WHEN MOD(i, 2) = 0 THEN 'NỮ' ELSE 'NAM' END,
+                    CASE WHEN i = 1 THEN 'Đại diện phụ của đoàn, đã kiểm tra thông tin liên lạc và yêu cầu ăn uống.'
+                         ELSE 'Thành viên đoàn, đã nhận chương trình tour và lưu ý tập trung đúng giờ.' END);
+            INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+            VALUES ('CTDT_' || p_MaGon || '_N' || LPAD(i, 2, '0'), v_MaDatTour, NULL, v_NguoiDongHanh,
+                    'NGUOI_DONG_HANH', p_GiaTour);
+        END LOOP;
+
+        INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, DonGia, ThanhTien)
+        VALUES ('CTDV_' || p_MaGon, v_MaDatTour, p_MaDichVu, p_SoKhach, p_DonGiaDV, p_SoKhach * p_DonGiaDV);
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaGon, v_MaDatTour, 'THANH_TOAN',
+                CASE MOD(p_Seed, 4) WHEN 0 THEN 'CHUYEN_KHOAN' WHEN 1 THEN 'THE_NOI_DIA' WHEN 2 THEN 'THE_QUOC_TE' ELSE 'VI_DIEN_TU' END,
+                v_TongTien, 'THANH-TOAN-2026-' || p_MaGon, 'THANH_CONG', p_NgayDat + INTERVAL '2' HOUR);
+    END;
+BEGIN
+    them_doan_gan_du_cho('LAP_SJ_C', 'TTT_26_SAPA_JUL', 'KH_09', 4950000, 8, 'DVT_SAPA_HERBAL', 320000, 'HDX_REFILL', TIMESTAMP '2026-05-19 08:30:00', 301, 'Đoàn gia đình tám khách đi Sa Pa, đã đăng ký tắm lá thuốc và mang bình nước dùng lại.');
+    them_doan_gan_du_cho('LAP_SJ_D', 'TTT_26_SAPA_JUL', 'KH_10', 4950000, 9, 'DVT_SAPA_HERBAL', 320000, 'HDX_REFILL', TIMESTAMP '2026-05-20 09:00:00', 302, 'Nhóm công ty nhỏ nghỉ hè tại Sa Pa, cần hỗ trợ phòng gần nhau và lịch tập trung sớm.');
+    them_doan_gan_du_cho('LAP_DJ_C', 'TTT_26_DANANG_JUL', 'KH_11', 6750000, 10, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-20 10:00:00', 303, 'Đoàn mười khách tham quan miền Trung, đã chốt vé show và ưu tiên xe ghép trong phố cổ.');
+    them_doan_gan_du_cho('LAP_DJ_D', 'TTT_26_DANANG_JUL', 'KH_12', 6750000, 10, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-21 10:00:00', 304, 'Gia đình nhiều thế hệ đi Đà Nẵng, cần thực đơn nhẹ và hỗ trợ di chuyển buổi tối.');
+    them_doan_gan_du_cho('LAP_PQ_C', 'TTT_26_PHUQUOC_AUG', 'KH_13', 8150000, 9, 'DVT_PHUQUOC_SNORKEL', 950000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-05-21 11:00:00', 305, 'Đoàn nghỉ dưỡng Phú Quốc đã xác nhận khả năng bơi và quy định bảo vệ san hô.');
+    them_doan_gan_du_cho('LAP_PQ_D', 'TTT_26_PHUQUOC_AUG', 'KH_14', 8150000, 9, 'DVT_PHUQUOC_SNORKEL', 950000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-05-22 09:00:00', 306, 'Gia đình đi biển đăng ký tàu riêng ngắm san hô, có trẻ nhỏ cần áo phao phù hợp.');
+    them_doan_gan_du_cho('LAP_HU_C', 'TTT_26_HUE_AUG', 'KH_15', 4550000, 8, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-20 13:00:00', 307, 'Đoàn tám khách khám phá cố đô, đăng ký áo dài và túi vải khi mua đặc sản.');
+    them_doan_gan_du_cho('LAP_HU_D', 'TTT_26_HUE_AUG', 'KH_01', 4550000, 9, 'DVT_HUE_AODAI', 250000, 'HDX_REUSABLE_BAG', TIMESTAMP '2026-05-21 13:30:00', 308, 'Nhóm bạn yêu lịch sử đã xác nhận dịch vụ chụp ảnh Đại Nội và suất ăn địa phương.');
+    them_doan_gan_du_cho('LAP_HA_C', 'TTT_26_HOIAN_SEP', 'KH_02', 4750000, 9, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-22 08:30:00', 309, 'Đoàn khách Hội An đăng ký làm đèn lồng và ưu tiên bữa ăn từ nguyên liệu địa phương.');
+    them_doan_gan_du_cho('LAP_HA_D', 'TTT_26_HOIAN_SEP', 'KH_03', 4750000, 9, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-22 14:30:00', 310, 'Gia đình chín khách muốn trải nghiệm phố cổ nhịp chậm, cần bố trí phòng yên tĩnh.');
+    them_doan_gan_du_cho('LAP_HL_C', 'TTT_26_HALONG_SEP', 'KH_04', 6150000, 10, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-05-23 08:30:00', 311, 'Đoàn tham quan vịnh đã đăng ký kayak, được phổ biến an toàn nước và trạm tiếp nước.');
+    them_doan_gan_du_cho('LAP_HL_D', 'TTT_26_HALONG_SEP', 'KH_05', 6150000, 10, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-05-23 09:30:00', 312, 'Đoàn doanh nghiệp nhỏ nghỉ dưỡng du thuyền, yêu cầu xuất hóa đơn và phòng gần nhau.');
+    them_doan_gan_du_cho('LAP_CT_C', 'TTT_26_CANTHO_OCT', 'KH_06', 3950000, 10, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 10:30:00', 313, 'Đoàn miền Tây đăng ký lớp nấu ăn, mong muốn dùng thực phẩm theo mùa tại nhà vườn.');
+    them_doan_gan_du_cho('LAP_CT_D', 'TTT_26_CANTHO_OCT', 'KH_07', 3950000, 10, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-05-23 14:00:00', 314, 'Gia đình mười khách muốn đi chợ nổi sớm, có hai khách cần món chay.');
+    them_doan_gan_du_cho('LAP_MN_C', 'TTT_26_MUINE_NOV', 'KH_08', 5100000, 10, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-05-24 08:00:00', 315, 'Đoàn Mũi Né đặt xe jeep ngắm bình minh, cam kết giảm chai nhựa dùng một lần.');
+    them_doan_gan_du_cho('LAP_MN_D', 'TTT_26_MUINE_NOV', 'KH_09', 5100000, 10, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-05-24 09:00:00', 316, 'Nhóm khách nghỉ biển đã thống nhất lịch chụp ảnh đồi cát và điểm tập trung sáng sớm.');
+    them_doan_gan_du_cho('LAP_SN_C', 'TTT_26_SAPA_NOV', 'KH_10', 5050000, 8, 'DVT_SAPA_HERBAL', 320000, 'HDX_COMMUNITY_BUY', TIMESTAMP '2026-05-23 11:00:00', 317, 'Đoàn Sa Pa mùa cuối năm đăng ký tắm lá và mua sản phẩm thủ công trực tiếp từ bản.');
+    them_doan_gan_du_cho('LAP_SN_D', 'TTT_26_SAPA_NOV', 'KH_11', 5050000, 9, 'DVT_SAPA_HERBAL', 320000, 'HDX_COMMUNITY_BUY', TIMESTAMP '2026-05-24 10:00:00', 318, 'Gia đình chín khách cần hỗ trợ hành lý và lịch tham quan vừa sức cho người lớn tuổi.');
+    them_doan_gan_du_cho('LAP_DD_C', 'TTT_26_DANANG_DEC', 'KH_12', 6900000, 11, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-23 15:00:00', 319, 'Đoàn cuối năm tham quan Đà Nẵng và Hội An, đã mua vé show cho toàn bộ thành viên.');
+    them_doan_gan_du_cho('LAP_DD_D', 'TTT_26_DANANG_DEC', 'KH_13', 6900000, 11, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-24 15:00:00', 320, 'Đoàn khách doanh nghiệp đã thanh toán đầy đủ, cần xuất hóa đơn và sắp xe theo nhóm.');
+END;
+/
+
+-- Đơn đã hủy: vẫn lưu đầy đủ danh sách khách, dịch vụ, thanh toán ban đầu, hoàn tiền và yêu cầu hỗ trợ.
+DECLARE
+    PROCEDURE them_don_da_huy (
+        p_MaGon        IN VARCHAR2,
+        p_MaTour       IN VARCHAR2,
+        p_MaKhachHang  IN VARCHAR2,
+        p_GiaTour      IN NUMBER,
+        p_MaDichVu     IN VARCHAR2,
+        p_DonGiaDV     IN NUMBER,
+        p_HanhDongXanh IN VARCHAR2,
+        p_NgayDat      IN TIMESTAMP,
+        p_Seed         IN NUMBER,
+        p_LyDo         IN VARCHAR2
+    ) IS
+        v_MaDatTour VARCHAR2(50) := 'DDT_' || p_MaGon;
+        v_TongTien NUMBER(18,2) := 2 * (p_GiaTour + p_DonGiaDV);
+    BEGIN
+        INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+        VALUES (v_MaDatTour, p_MaTour, p_MaKhachHang, p_NgayDat, v_TongTien, 'DA_HUY',
+                p_NgayDat + INTERVAL '1' DAY, 'Đơn đã xác nhận trước đó và được hủy theo yêu cầu khách: ' || p_LyDo, p_HanhDongXanh || ':2');
+        INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+        VALUES ('NDH_' || p_MaGon, v_MaDatTour, 'Nguyễn Minh Châu', '06626' || LPAD(p_Seed, 7, '0'), '0968' || LPAD(p_Seed, 6, '0'),
+                DATE '1991-10-12', 'NỮ', 'Người đồng hành trong đơn đã hủy, thông tin được lưu phục vụ đối soát hoàn tiền.');
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaGon || '_KH', v_MaDatTour, p_MaKhachHang, NULL, 'NGUOI_DAT', p_GiaTour);
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaGon || '_N01', v_MaDatTour, NULL, 'NDH_' || p_MaGon, 'NGUOI_DONG_HANH', p_GiaTour);
+        INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, DonGia, ThanhTien)
+        VALUES ('CTDV_' || p_MaGon, v_MaDatTour, p_MaDichVu, 2, p_DonGiaDV, 2 * p_DonGiaDV);
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaGon || '_THU', v_MaDatTour, 'THANH_TOAN', 'CHUYEN_KHOAN', v_TongTien,
+                'THU-' || p_MaGon, 'THANH_CONG', p_NgayDat + INTERVAL '2' HOUR);
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaGon || '_HOAN', v_MaDatTour, 'HOAN_TIEN', 'CHUYEN_KHOAN', v_TongTien,
+                'HOAN-' || p_MaGon, 'DA_HOAN_TIEN', p_NgayDat + INTERVAL '2' DAY);
+        INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
+        VALUES ('YCHT_' || p_MaGon, v_MaDatTour, p_MaKhachHang, 'HOAN_TIEN',
+                'Khách yêu cầu hủy tour. Kế toán đã đối chiếu giao dịch và hoàn lại toàn bộ số tiền do hủy sớm.', 'DA_XU_LY', 'NV_KT01');
+    END;
+BEGIN
+    them_don_da_huy('HUY_SJ_01', 'TTT_26_SAPA_JUL', 'KH_14', 4950000, 'DVT_SAPA_HERBAL', 320000, 'HDX_REFILL', TIMESTAMP '2026-05-15 09:00:00', 401, 'thay đổi lịch nghỉ hè của gia đình.');
+    them_don_da_huy('HUY_PQ_01', 'TTT_26_PHUQUOC_AUG', 'KH_15', 8150000, 'DVT_PHUQUOC_SNORKEL', 950000, 'HDX_CORAL_SAFE', TIMESTAMP '2026-05-16 10:00:00', 402, 'khách cần điều trị sức khỏe ngắn hạn.');
+    them_don_da_huy('HUY_HL_01', 'TTT_26_HALONG_SEP', 'KH_01', 6150000, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-05-17 08:30:00', 403, 'lịch công tác phát sinh trùng ngày khởi hành.');
+    them_don_da_huy('HUY_DD_01', 'TTT_26_DANANG_DEC', 'KH_02', 6900000, 'DVT_DANANG_SHOW', 650000, 'HDX_PUBLIC_TRANSFER', TIMESTAMP '2026-05-18 10:15:00', 404, 'đoàn điều chỉnh kế hoạch cuối năm và hủy trước hạn.');
+END;
+/
+
+-- Bốn chuyến đã hoàn tất gần đây, cùng tour mẫu với các đợt đang bán năm 2026,
+-- cung cấp nguồn đánh giá hợp lệ cho trang công khai.
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_HOIAN_DG', 'TM_HOIAN', DATE '2026-04-27', 4800000, 16, 8, 16, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_CANTHO_DG', 'TM_CANTHO', DATE '2026-05-01', 4050000, 16, 8, 16, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_HALONG_DG', 'TM_HALONG', DATE '2026-05-02', 6200000, 16, 8, 16, 'MO_BAN');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_26_MUINE_DG', 'TM_MUINE', DATE '2026-05-07', 5150000, 16, 8, 16, 'MO_BAN');
+
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_HOIAN_DG', 'DVT_HOIAN_LANTERN');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_CANTHO_DG', 'DVT_CANTHO_COOKING');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_HALONG_DG', 'DVT_HALONG_KAYAK');
+INSERT INTO DICHVU_TOURTHUCTE (MaTourThucTe, MaDichVuThem) VALUES ('TTT_26_MUINE_DG', 'DVT_MUINE_JEEP');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_HOIAN_DG', 'HDX_LOCAL_MEAL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_CANTHO_DG', 'HDX_LOCAL_MEAL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_HALONG_DG', 'HDX_REFILL');
+INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_26_MUINE_DG', 'HDX_REFILL');
+
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_HOIAN_DG_H11', 'TTT_26_HOIAN_DG', 'NV_HDV11', TIMESTAMP '2026-04-08 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-04-08 14:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_CANTHO_DG_H11', 'TTT_26_CANTHO_DG', 'NV_HDV11', TIMESTAMP '2026-04-10 09:00:00', 'DA_DONG_Y', TIMESTAMP '2026-04-10 15:00:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_HALONG_DG_H12', 'TTT_26_HALONG_DG', 'NV_HDV12', TIMESTAMP '2026-04-11 08:00:00', 'DA_DONG_Y', TIMESTAMP '2026-04-11 12:30:00');
+INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+VALUES ('PC_26_MUINE_DG_H12', 'TTT_26_MUINE_DG', 'NV_HDV12', TIMESTAMP '2026-04-15 08:00:00', 'DA_DONG_Y', TIMESTAMP '2026-04-15 13:00:00');
+
+DECLARE
+    PROCEDURE them_don_tour_danh_gia (
+        p_MaGon       IN VARCHAR2,
+        p_MaTour      IN VARCHAR2,
+        p_MaKhachHang IN VARCHAR2,
+        p_GiaTour     IN NUMBER,
+        p_MaDichVu    IN VARCHAR2,
+        p_DonGiaDV    IN NUMBER,
+        p_HanhDong    IN VARCHAR2,
+        p_NgayDat     IN TIMESTAMP,
+        p_Seed        IN NUMBER
+    ) IS
+        v_Don VARCHAR2(50) := 'DDT_' || p_MaGon;
+        v_Tong NUMBER(18,2) := 3 * (p_GiaTour + p_DonGiaDV);
+    BEGIN
+        INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+        VALUES (v_Don, p_MaTour, p_MaKhachHang, p_NgayDat, v_Tong, 'DA_XAC_NHAN', p_NgayDat + INTERVAL '2' DAY,
+                'Đơn tour đã hoàn thành, hồ sơ đoàn và dịch vụ được lưu đầy đủ để đối soát đánh giá.', p_HanhDong || ':3');
+        INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+        VALUES ('CTDT_' || p_MaGon || '_KH', v_Don, p_MaKhachHang, NULL, 'NGUOI_DAT', p_GiaTour);
+        FOR i IN 1 .. 2 LOOP
+            INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
+            VALUES ('NDH_' || p_MaGon || '_' || i, v_Don,
+                    CASE MOD(p_Seed + i, 6)
+                        WHEN 0 THEN 'Tạ Minh Huy'
+                        WHEN 1 THEN 'Lý Thuỳ Dung'
+                        WHEN 2 THEN 'Trịnh Gia Bảo'
+                        WHEN 3 THEN 'Ngô Khánh Linh'
+                        WHEN 4 THEN 'Đinh Hoàng Nam'
+                        ELSE 'Phan Mai Anh'
+                    END,
+                    '08826' || LPAD(p_Seed * 10 + i, 7, '0'), '0975' || LPAD(p_Seed * 10 + i, 6, '0'),
+                    ADD_MONTHS(DATE '1993-09-09', -12 * MOD(p_Seed + i, 18)),
+                    CASE WHEN MOD(i, 2) = 0 THEN 'NỮ' ELSE 'NAM' END,
+                    'Thông tin đã đối chiếu trước ngày khởi hành và lưu trong hồ sơ đoàn.');
+            INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+            VALUES ('CTDT_' || p_MaGon || '_N0' || i, v_Don, NULL, 'NDH_' || p_MaGon || '_' || i, 'NGUOI_DONG_HANH', p_GiaTour);
+        END LOOP;
+        INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, DonGia, ThanhTien)
+        VALUES ('CTDV_' || p_MaGon, v_Don, p_MaDichVu, 3, p_DonGiaDV, 3 * p_DonGiaDV);
+        INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+        VALUES ('GD_' || p_MaGon, v_Don, 'THANH_TOAN', 'CHUYEN_KHOAN', v_Tong, 'DA-THANH-TOAN-' || p_MaGon, 'THANH_CONG', p_NgayDat + INTERVAL '2' HOUR);
+    END;
+BEGIN
+    them_don_tour_danh_gia('DGHA_A', 'TTT_26_HOIAN_DG', 'KH_01', 4800000, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-12 09:00:00', 501);
+    them_don_tour_danh_gia('DGHA_B', 'TTT_26_HOIAN_DG', 'KH_02', 4800000, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-13 09:00:00', 502);
+    them_don_tour_danh_gia('DGHA_C', 'TTT_26_HOIAN_DG', 'KH_03', 4800000, 'DVT_HOIAN_LANTERN', 280000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-14 09:00:00', 503);
+    them_don_tour_danh_gia('DGCT_A', 'TTT_26_CANTHO_DG', 'KH_04', 4050000, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-15 09:00:00', 504);
+    them_don_tour_danh_gia('DGCT_B', 'TTT_26_CANTHO_DG', 'KH_05', 4050000, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-16 09:00:00', 505);
+    them_don_tour_danh_gia('DGCT_C', 'TTT_26_CANTHO_DG', 'KH_06', 4050000, 'DVT_CANTHO_COOKING', 360000, 'HDX_LOCAL_MEAL', TIMESTAMP '2026-04-17 09:00:00', 506);
+    them_don_tour_danh_gia('DGHL_A', 'TTT_26_HALONG_DG', 'KH_07', 6200000, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-04-18 09:00:00', 507);
+    them_don_tour_danh_gia('DGHL_B', 'TTT_26_HALONG_DG', 'KH_08', 6200000, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-04-19 09:00:00', 508);
+    them_don_tour_danh_gia('DGHL_C', 'TTT_26_HALONG_DG', 'KH_09', 6200000, 'DVT_HALONG_KAYAK', 300000, 'HDX_REFILL', TIMESTAMP '2026-04-20 09:00:00', 509);
+    them_don_tour_danh_gia('DGMN_A', 'TTT_26_MUINE_DG', 'KH_10', 5150000, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-04-21 09:00:00', 510);
+    them_don_tour_danh_gia('DGMN_B', 'TTT_26_MUINE_DG', 'KH_11', 5150000, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-04-22 09:00:00', 511);
+    them_don_tour_danh_gia('DGMN_C', 'TTT_26_MUINE_DG', 'KH_12', 5150000, 'DVT_MUINE_JEEP', 750000, 'HDX_REFILL', TIMESTAMP '2026-04-23 09:00:00', 512);
+END;
+/
+
+UPDATE TOURTHUCTE SET TrangThai = 'DANG_DIEN_RA'
+WHERE MaTourThucTe IN ('TTT_26_HOIAN_DG', 'TTT_26_CANTHO_DG', 'TTT_26_HALONG_DG', 'TTT_26_MUINE_DG');
+
+INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
+SELECT 'DD_' || ct.MaChiTietDat, d.MaTourThucTe, ct.MaKhachHang, ct.MaNguoiDongHanh, ct.LoaiKhach,
+       CASE d.MaTourThucTe WHEN 'TTT_26_HOIAN_DG' THEN 'NV_HDV11' WHEN 'TTT_26_CANTHO_DG' THEN 'NV_HDV11' ELSE 'NV_HDV12' END,
+       CAST(t.NgayKhoiHanh AS TIMESTAMP) + INTERVAL '7' HOUR,
+       CASE d.MaTourThucTe WHEN 'TTT_26_HOIAN_DG' THEN 'Điểm đón phố cổ Hội An'
+            WHEN 'TTT_26_CANTHO_DG' THEN 'Bến Ninh Kiều'
+            WHEN 'TTT_26_HALONG_DG' THEN 'Cảng tàu du lịch Hạ Long'
+            ELSE 'Sảnh khách sạn Mũi Né' END,
+       'DA_DIEM_DANH'
+FROM CHITIETDATTOUR ct
+JOIN DONDATTOUR d ON d.MaDatTour = ct.MaDatTour
+JOIN TOURTHUCTE t ON t.MaTourThucTe = d.MaTourThucTe
+WHERE d.MaTourThucTe IN ('TTT_26_HOIAN_DG', 'TTT_26_CANTHO_DG', 'TTT_26_HALONG_DG', 'TTT_26_MUINE_DG');
+
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_DGHA_KH01', 'TTT_26_HOIAN_DG', 'KH_01', 'HDX_LOCAL_MEAL', 'NV_HDV11', TIMESTAMP '2026-04-28 18:00:00', 'Khách sử dụng bữa tối nguyên liệu địa phương tại Hội An và hạn chế vật dụng dùng một lần.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_DGCT_KH04', 'TTT_26_CANTHO_DG', 'KH_04', 'HDX_LOCAL_MEAL', 'NV_HDV11', TIMESTAMP '2026-05-02 11:00:00', 'Đoàn chọn nông sản theo mùa trong lớp nấu ăn tại miệt vườn.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_DGHL_KH07', 'TTT_26_HALONG_DG', 'KH_07', 'HDX_REFILL', 'NV_HDV12', TIMESTAMP '2026-05-03 09:00:00', 'Khách dùng bình nước cá nhân và tiếp nước trên du thuyền thay chai nhựa mới.');
+INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
+VALUES ('HD_DGMN_KH10', 'TTT_26_MUINE_DG', 'KH_10', 'HDX_REFILL', 'NV_HDV12', TIMESTAMP '2026-05-08 08:30:00', 'Nhóm khách dùng trạm tiếp nước trước hành trình xe jeep tại Bàu Trắng.');
+
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_DGHA_MONCHAY', 'TTT_26_HOIAN_DG', 'NV_HDV11', 'Một khách báo cần đổi sang suất ăn chay trong bữa tối.',
+        'Hướng dẫn viên làm việc với nhà hàng và phục vụ suất thay thế trong vòng hai mươi phút.', 'THAP', 'AN_UONG', TIMESTAMP '2026-04-28 17:30:00');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_DGCT_NUOC', 'TTT_26_CANTHO_DG', 'NV_HDV11', 'Mực nước thay đổi khiến giờ cập bến miệt vườn chậm mười phút.',
+        'Điều chỉnh thứ tự lớp nấu ăn và báo lại giờ tập trung cho toàn đoàn.', 'THAP', 'PHUONG_TIEN', TIMESTAMP '2026-05-02 09:20:00');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_DGHL_GIO', 'TTT_26_HALONG_DG', 'NV_HDV12', 'Gió trên vịnh tăng nhẹ vào buổi chiều, cần theo dõi lịch chèo kayak.',
+        'Rút ngắn thời lượng kayak, yêu cầu mặc áo phao và giữ nhóm theo hướng dẫn viên.', 'THAP', 'THOI_TIET', TIMESTAMP '2026-05-03 13:00:00');
+INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+VALUES ('SC_DGMN_XE', 'TTT_26_MUINE_DG', 'NV_HDV12', 'Một xe jeep đến điểm đón trễ mười lăm phút do kiểm tra lốp an toàn.',
+        'Bổ sung nước mát cho khách trong thời gian chờ và điều chỉnh lịch chụp ảnh không ảnh hưởng chương trình.', 'THAP', 'PHUONG_TIEN', TIMESTAMP '2026-05-08 05:20:00');
+
+UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC'
+WHERE MaTourThucTe IN ('TTT_26_HOIAN_DG', 'TTT_26_CANTHO_DG', 'TTT_26_HALONG_DG', 'TTT_26_MUINE_DG');
+
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+SELECT 'LST_' || SUBSTR(d.MaDatTour, 5), d.MaKhachHang, d.MaTourThucTe, ct.MaChiTietDat, t.NgayKhoiHanh
+FROM DONDATTOUR d
+JOIN CHITIETDATTOUR ct ON ct.MaDatTour = d.MaDatTour AND ct.MaKhachHang = d.MaKhachHang
+JOIN TOURTHUCTE t ON t.MaTourThucTe = d.MaTourThucTe
+WHERE d.MaTourThucTe IN ('TTT_26_HOIAN_DG', 'TTT_26_CANTHO_DG', 'TTT_26_HALONG_DG', 'TTT_26_MUINE_DG');
+
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGHA_LUUTRU', 'TTT_26_HOIAN_DG', 'NV_HDV11', 'Lưu trú và bữa sáng Hội An cho đoàn', 15400000, 'https://seed.local/hoa-don/dgha-luu-tru.jpg', 'DA_DUYET', TIMESTAMP '2026-04-30 10:00:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGHA_XE', 'TTT_26_HOIAN_DG', 'NV_HDV11', 'Xe đưa đón và vé tham quan phố cổ', 7600000, 'https://seed.local/hoa-don/dgha-xe-ve.jpg', 'DA_DUYET', TIMESTAMP '2026-04-30 10:15:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGCT_LUUTRU', 'TTT_26_CANTHO_DG', 'NV_HDV11', 'Lưu trú Cần Thơ và bữa sáng cho đoàn', 12100000, 'https://seed.local/hoa-don/dgct-luu-tru.jpg', 'DA_DUYET', TIMESTAMP '2026-05-04 10:00:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGCT_THUYEN', 'TTT_26_CANTHO_DG', 'NV_HDV11', 'Thuyền chợ nổi và xe trung chuyển miệt vườn', 6300000, 'https://seed.local/hoa-don/dgct-thuyen.jpg', 'DA_DUYET', TIMESTAMP '2026-05-04 10:20:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGHL_TAU', 'TTT_26_HALONG_DG', 'NV_HDV12', 'Du thuyền và phòng nghỉ trên vịnh cho đoàn', 27200000, 'https://seed.local/hoa-don/dghl-du-thuyen.jpg', 'DA_DUYET', TIMESTAMP '2026-05-05 09:00:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGHL_VE', 'TTT_26_HALONG_DG', 'NV_HDV12', 'Vé vịnh và thiết bị an toàn kayak', 8200000, 'https://seed.local/hoa-don/dghl-ve.jpg', 'DA_DUYET', TIMESTAMP '2026-05-05 09:20:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGMN_KS', 'TTT_26_MUINE_DG', 'NV_HDV12', 'Khách sạn ven biển Mũi Né cho đoàn', 16200000, 'https://seed.local/hoa-don/dgmn-khach-san.jpg', 'DA_DUYET', TIMESTAMP '2026-05-10 09:00:00');
+INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai) VALUES ('CP_DGMN_XE', 'TTT_26_MUINE_DG', 'NV_HDV12', 'Xe đưa đón và hỗ trợ lịch trình đồi cát', 7900000, 'https://seed.local/hoa-don/dgmn-xe.jpg', 'DA_DUYET', TIMESTAMP '2026-05-10 09:20:00');
+
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu) VALUES ('QT_DGHA_XONG', 'TTT_26_HOIAN_DG', 0, 0, 39000000, 0, 'NV_KT01', TIMESTAMP '2026-05-01 10:00:00', 'DA_QUYET_TOAN', 'Đã đối chiếu đủ doanh thu, dịch vụ và chi phí đoàn Hội An trước khi khóa quyết toán.');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu) VALUES ('QT_DGCT_XONG', 'TTT_26_CANTHO_DG', 0, 0, 34000000, 0, 'NV_KT01', TIMESTAMP '2026-05-05 10:00:00', 'DA_QUYET_TOAN', 'Đã chốt doanh thu và chi phí chuyến Cần Thơ, hóa đơn thực tế đã được duyệt.');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu) VALUES ('QT_DGHL_XONG', 'TTT_26_HALONG_DG', 0, 0, 55500000, 0, 'NV_KT01', TIMESTAMP '2026-05-06 10:00:00', 'DA_QUYET_TOAN', 'Đã hoàn tất quyết toán chuyến du thuyền Hạ Long và lưu hóa đơn vận hành.');
+INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu) VALUES ('QT_DGMN_XONG', 'TTT_26_MUINE_DG', 0, 0, 48000000, 0, 'NV_KT01', TIMESTAMP '2026-05-11 10:00:00', 'DA_QUYET_TOAN', 'Đã đối soát thanh toán và chi phí chuyến Mũi Né, dữ liệu sẵn sàng phục vụ báo cáo.');
+
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHA_01', 'TTT_26_HOIAN_DG', 'KH_01', 5, 'Hội An đẹp và nhẹ nhàng, lớp làm đèn lồng thú vị, hướng dẫn viên hỗ trợ món ăn địa phương rất chu đáo.', TIMESTAMP '2026-05-02 18:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHA_02', 'TTT_26_HOIAN_DG', 'KH_02', 5, 'Lịch trình hợp lý, xe đúng giờ và phần trải nghiệm tại Trà Quế phù hợp cho cả gia đình.', TIMESTAMP '2026-05-02 19:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHA_03', 'TTT_26_HOIAN_DG', 'KH_03', 4, 'Dịch vụ tốt, phố cổ rất đẹp, mong có thêm thời gian tự do buổi tối để dạo đèn lồng.', TIMESTAMP '2026-05-03 09:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGCT_01', 'TTT_26_CANTHO_DG', 'KH_04', 5, 'Chợ nổi rất đáng trải nghiệm, hướng dẫn viên xử lý việc đổi bến nhanh và bữa ăn miền Tây ngon.', TIMESTAMP '2026-05-06 18:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGCT_02', 'TTT_26_CANTHO_DG', 'KH_05', 5, 'Lớp nấu ăn gần gũi, nhà vườn thân thiện, lịch trình vừa sức cho người lớn tuổi.', TIMESTAMP '2026-05-06 19:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGCT_03', 'TTT_26_CANTHO_DG', 'KH_06', 4, 'Tour chỉn chu và nhiều trải nghiệm thật, giờ xuất phát chợ nổi hơi sớm nhưng rất xứng đáng.', TIMESTAMP '2026-05-07 08:30:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHL_01', 'TTT_26_HALONG_DG', 'KH_07', 5, 'Du thuyền sạch và tiện nghi, hoạt động kayak được hướng dẫn an toàn, cảnh vịnh rất đẹp.', TIMESTAMP '2026-05-07 18:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHL_02', 'TTT_26_HALONG_DG', 'KH_08', 4, 'Chuyến đi thư giãn, nhân viên nhiệt tình; thời tiết có gió nhưng lịch trình được điều chỉnh hợp lý.', TIMESTAMP '2026-05-08 08:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGHL_03', 'TTT_26_HALONG_DG', 'KH_09', 5, 'Gia đình hài lòng với phòng nghỉ trên tàu và hoạt động tiếp nước giảm chai nhựa.', TIMESTAMP '2026-05-08 09:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGMN_01', 'TTT_26_MUINE_DG', 'KH_10', 5, 'Xe jeep ngắm bình minh rất đáng nhớ, lịch trình gọn và hướng dẫn viên chăm sóc đoàn tốt.', TIMESTAMP '2026-05-12 18:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGMN_02', 'TTT_26_MUINE_DG', 'KH_11', 5, 'Biển sạch, khách sạn thoải mái và thời gian chụp ảnh ở đồi cát được sắp xếp rất đẹp.', TIMESTAMP '2026-05-12 19:00:00');
+INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia) VALUES ('DG_DGMN_03', 'TTT_26_MUINE_DG', 'KH_12', 4, 'Trải nghiệm tốt, đoàn được hỗ trợ ngay khi xe đến trễ; mong có thêm lựa chọn món chay.', TIMESTAMP '2026-05-13 08:00:00');
+
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_HUY_SJ_01', 'TK_KT01', 'CAP_NHAT', 'Hoàn tiền đơn hủy', 'DDT_HUY_SJ_01', TIMESTAMP '2026-05-17 09:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_HUY_PQ_01', 'TK_KT01', 'CAP_NHAT', 'Hoàn tiền đơn hủy', 'DDT_HUY_PQ_01', TIMESTAMP '2026-05-18 10:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_HUY_HL_01', 'TK_KT01', 'CAP_NHAT', 'Hoàn tiền đơn hủy', 'DDT_HUY_HL_01', TIMESTAMP '2026-05-19 08:30:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_HUY_DD_01', 'TK_KT01', 'CAP_NHAT', 'Hoàn tiền đơn hủy', 'DDT_HUY_DD_01', TIMESTAMP '2026-05-20 10:15:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_QT_DGHA', 'TK_KT01', 'THEM', 'Quyết toán tour đã đánh giá', 'QT_DGHA_XONG', TIMESTAMP '2026-05-01 10:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_QT_DGCT', 'TK_KT01', 'THEM', 'Quyết toán tour đã đánh giá', 'QT_DGCT_XONG', TIMESTAMP '2026-05-05 10:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_QT_DGHL', 'TK_KT01', 'THEM', 'Quyết toán tour đã đánh giá', 'QT_DGHL_XONG', TIMESTAMP '2026-05-06 10:00:00');
+INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian) VALUES ('NKHT_QT_DGMN', 'TK_KT01', 'THEM', 'Quyết toán tour đã đánh giá', 'QT_DGMN_XONG', TIMESTAMP '2026-05-11 10:00:00');
 
 -- Voucher bo sung: tao master, vi khach hang, lich su ap dung va dong bo tong tien/giao dich.
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_FAMILY1M', 'OPEN-FAMILY-1M', 'SO_TIEN', 1000000, 'Giảm 1.000.000 cho nhóm gia đình từ 4 khách trong giai đoạn mở bán', 120, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
