@@ -83,7 +83,9 @@ public class DanhGiaService {
     }
 
     public Page<DanhGiaKhResponse> danhSachDanhGia(String maTourThucTe, Pageable pageable) {
-        return danhGiaKhRepository.findByMaTourThucTe(maTourThucTe, pageable)
+        TourThucTe tour = tourThucTeRepository.findById(maTourThucTe)
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy tour: " + maTourThucTe));
+        return danhGiaKhRepository.findByMaTourMau(tour.getTourMau().getMaTourMau(), pageable)
                 .map(this::toResponse);
     }
 

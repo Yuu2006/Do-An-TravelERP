@@ -12,14 +12,29 @@ import com.digitaltravel.erp.entity.DanhGiaKh;
 @Repository
 public interface DanhGiaKhRepository extends JpaRepository<DanhGiaKh, String> {
 
-    @Query("""
+    @Query(value = """
             SELECT d FROM DanhGiaKh d
             JOIN FETCH d.khachHang kh
             JOIN FETCH kh.taiKhoan
+            JOIN FETCH d.tourThucTe ttt
+            JOIN FETCH ttt.tourMau
             WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
             ORDER BY d.NgayDanhGia DESC
-            """)
+            """,
+            countQuery = "SELECT COUNT(d) FROM DanhGiaKh d WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe")
     Page<DanhGiaKh> findByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe, Pageable pageable);
+
+    @Query(value = """
+            SELECT d FROM DanhGiaKh d
+            JOIN FETCH d.khachHang kh
+            JOIN FETCH kh.taiKhoan
+            JOIN FETCH d.tourThucTe ttt
+            JOIN FETCH ttt.tourMau
+            WHERE d.tourThucTe.tourMau.MaTourMau = :maTourMau
+            ORDER BY d.NgayDanhGia DESC
+            """,
+            countQuery = "SELECT COUNT(d) FROM DanhGiaKh d WHERE d.tourThucTe.tourMau.MaTourMau = :maTourMau")
+    Page<DanhGiaKh> findByMaTourMau(@Param("maTourMau") String maTourMau, Pageable pageable);
 
     @Query("""
             SELECT CASE WHEN COUNT(d) > 0 THEN true ELSE false END
