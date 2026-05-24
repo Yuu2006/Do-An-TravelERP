@@ -493,7 +493,7 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 | Entity | Giá trị hợp lệ |
 |--------|---------------|
 | `TaiKhoan.TrangThai` | HOAT_DONG · KHOA |
-| `TourThucTe.TrangThai` | CHO_KICH_HOAT · MO_BAN · SAP_DIEN_RA · DANG_DIEN_RA · KET_THUC · HUY · DA_QUYET_TOAN |
+| `TourThucTe.TrangThai` | CHO_KICH_HOAT · MO_BAN · DANG_DIEN_RA · KET_THUC · HUY · DA_QUYET_TOAN |
 | `DonDatTour.TrangThai` | CHO_XAC_NHAN · DA_XAC_NHAN · CHO_HUY · DA_HUY · TU_CHOI_HOAN_TIEN · HET_HAN_GIU_CHO · THANH_TOAN_THAT_BAI |
 | `GiaoDich.LoaiGiaoDich` | THANH_TOAN · HOAN_TIEN |
 | `GiaoDich.TrangThai` | CHO_THANH_TOAN · THANH_CONG · THAT_BAI · DA_HOAN_TIEN |

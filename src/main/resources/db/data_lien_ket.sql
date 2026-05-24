@@ -979,7 +979,7 @@ VALUES ('GD_HALONG_OK', 'DDT_HALONG_OK', 'THANH_TOAN', 'THE_QUOC_TE', 18600000, 
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
 VALUES ('GD_HALONG_TRE_EM_PAY', 'DDT_HALONG_TRE_EM', 'THANH_TOAN', 'CHUYEN_KHOAN', 8970000, 'BANK-025', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '5' HOUR);
 
--- Goi 2: Can Tho - sap dien ra, khach cong ty da thanh toan va co yeu cau hoa don.
+-- Goi 2: Can Tho - mo ban, khach cong ty da thanh toan va co yeu cau hoa don.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_CANTHO_OK', 'TTT_CANTHO', 'KH_09', SYSTIMESTAMP - INTERVAL '3' DAY, 7680000, 'CHO_XAC_NHAN',
         SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach can hoa don cong ty sau thanh toan.', 'HDX_LOCAL:1');
@@ -997,7 +997,7 @@ INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, M
 VALUES ('GD_CANTHO_OK', 'DDT_CANTHO_OK', 'THANH_TOAN', 'CHUYEN_KHOAN', 7680000, 'BANK-012', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '2' DAY);
 
 UPDATE TOURTHUCTE
-SET TrangThai = 'SAP_DIEN_RA'
+SET TrangThai = 'MO_BAN'
 WHERE MaTourThucTe = 'TTT_CANTHO';
 
 -- Goi 3: Con Dao - dang dien ra, co diem danh, hanh dong xanh va su co phuong tien.
@@ -1147,7 +1147,7 @@ VALUES ('DDT_HOIAN_VOUCHER', 'VC_FAMILY700', 700000);
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
 VALUES ('GD_HOIAN_VOUCHER_PAY', 'DDT_HOIAN_VOUCHER', 'THANH_TOAN', 'CHUYEN_KHOAN', 9060000, 'BANK-024', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '3' HOUR);
 
--- Goi 7: Buon Ma Thuot - sap dien ra, thanh vien vang da dung voucher phan tram.
+-- Goi 7: Buon Ma Thuot - mo ban, thanh vien vang da dung voucher phan tram.
 INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
 VALUES ('TTT_BUONMATHUOT', 'TM_BUONMATHUOT', TRUNC(SYSDATE) + 180, 4100000, 20, 8, 20, 'MO_BAN');
 
@@ -1175,7 +1175,7 @@ INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, M
 VALUES ('GD_BUONMATHUOT_OK', 'DDT_BUONMATHUOT_OK', 'THANH_TOAN', 'THE_QUOC_TE', 7174000, 'BANK-018', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '1' DAY);
 
 UPDATE TOURTHUCTE
-SET TrangThai = 'SAP_DIEN_RA'
+SET TrangThai = 'MO_BAN'
 WHERE MaTourThucTe = 'TTT_BUONMATHUOT';
 
 -- Goi 8: Pu Luong - da ket thuc, voucher so tien va danh gia sau tour.
@@ -1264,9 +1264,9 @@ VALUES ('GD_HALONG_COC', 'DDT_HALONG_CHO', 'THANH_TOAN', 'THE_NOI_DIA', 3000000,
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
 VALUES ('GD_HOIAN_COC', 'DDT_HOIAN_CHO', 'THANH_TOAN', 'VI_DIEN_TU', 4500000, 'BANK-023', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '4' HOUR);
 
--- Cap nhat tour Da Nang sang SAP_DIEN_RA sau khi da seed cac don dat phu hop.
+-- Cap nhat tour Da Nang sang MO_BAN sau khi da seed cac don dat phu hop.
 UPDATE TOURTHUCTE
-SET TrangThai = 'SAP_DIEN_RA'
+SET TrangThai = 'MO_BAN'
 WHERE MaTourThucTe = 'TTT_SDR';
 
 -- Recalculate ChoConLai sau cac thay doi trang thai don/tour do trigger chi lang nghe CHITIETDATTOUR.
@@ -1336,7 +1336,7 @@ VALUES ('NKHT_CP_QT_DUYET2', 'TK_KT01', 'CAP_NHAT', 'CHIPHITHUCTE_KETOAN', 'CP_Q
 INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
 VALUES ('NKHT_QT_HUE_THEM', 'TK_KT01', 'THEM', 'QUYETTOAN_KETOAN', 'QT_HUE_DONE', SYSTIMESTAMP - INTERVAL '18' DAY);
 -- Cap nhat lai TrangThai cho TOURTHUCTE sau khi da them DONDATTOUR (de thoa man trigger MO_BAN)
-UPDATE TOURTHUCTE SET TrangThai = 'SAP_DIEN_RA' WHERE MaTourThucTe = 'TTT_SDR';
+UPDATE TOURTHUCTE SET TrangThai = 'MO_BAN' WHERE MaTourThucTe = 'TTT_SDR';
 UPDATE TOURTHUCTE SET TrangThai = 'DANG_DIEN_RA' WHERE MaTourThucTe = 'TTT_DDR';
 UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC' WHERE MaTourThucTe = 'TTT_KT';
 UPDATE TOURTHUCTE SET TrangThai = 'HUY' WHERE MaTourThucTe = 'TTT_HUY';
@@ -1650,7 +1650,7 @@ INSERT INTO CHITIETDICHVU (MaChiTietDichVu, MaDatTour, MaDichVuThem, SoLuong, Do
 VALUES ('CTDV_PHUQUOC_SDR_02_AIR', 'DDT_PHUQUOC_SDR_02_OK', 'DVT_AIRPORT', 1, 350000, 350000);
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
 VALUES ('GD_PHUQUOC_SDR_02_PAY', 'DDT_PHUQUOC_SDR_02_OK', 'THANH_TOAN', 'THE_QUOC_TE', 16150000, 'BANK-PHUQUOC-02', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '11' DAY);
-UPDATE TOURTHUCTE SET TrangThai = 'SAP_DIEN_RA' WHERE MaTourThucTe = 'TTT_PHUQUOC_SDR_02';
+UPDATE TOURTHUCTE SET TrangThai = 'MO_BAN' WHERE MaTourThucTe = 'TTT_PHUQUOC_SDR_02';
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_BMT_DDR_02_OK', 'TTT_BUONMATHUOT_DDR_02', 'KH_08', SYSTIMESTAMP - INTERVAL '10' DAY, 8680000, 'CHO_XAC_NHAN',
@@ -2521,4 +2521,3 @@ COMMIT;
 -- ============================================================
 -- END SEED DATA LIEN KET
 -- ============================================================
-

@@ -38,7 +38,7 @@ public class TourThucTeController {
 
     // UC14: Danh sach tour thuc te cho dieu hanh
     @GetMapping
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<TourThucTeResponse>>> danhSach(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourMau,
@@ -61,14 +61,14 @@ public class TourThucTeController {
 
     // UC14: Chi tiết tour thực tế
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourThucTeService.chiTiet(id)));
     }
 
     // UC11: Khởi tạo tour thực tế từ tour mẫu
     @PostMapping
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> taoMoi(
             @Valid @RequestBody TaoTourThucTeRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user
@@ -79,7 +79,7 @@ public class TourThucTeController {
 
     // UC13: Sửa tour thực tế
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody CapNhatTourThucTeRequest request,
@@ -90,7 +90,7 @@ public class TourThucTeController {
 
     // UC12: Xóa tour thực tế (soft delete → HUY)
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> xoa(@PathVariable String id) {
         tourThucTeService.xoa(id);
         return ResponseEntity.ok(ApiResponse.noContent("Huy tour thuc te thanh cong"));

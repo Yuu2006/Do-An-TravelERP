@@ -55,7 +55,7 @@ public interface KhuyenMaiKhRepository extends JpaRepository<KhuyenMaiKh, Khuyen
             JOIN FETCH k.khachHang h
             JOIN FETCH h.taiKhoan
             WHERE k.voucher.MaVoucher = :maVoucher
-              AND k.TrangThai = 'CO_HIEU_LUC'
+              AND k.TrangThai IN ('CO_HIEU_LUC', 'DA_SU_DUNG')
             ORDER BY k.NgayNhan DESC
             """)
     List<KhuyenMaiKh> findDangPhanBoByMaVoucher(@Param("maVoucher") String maVoucher);
