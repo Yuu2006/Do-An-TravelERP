@@ -117,6 +117,16 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
             @Param("maKhachHang") String maKhachHang
     );
 
+    @Query("""
+            SELECT d FROM DonDatTour d
+            JOIN FETCH d.khachHang kh
+            LEFT JOIN FETCH kh.taiKhoan
+            WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.trangThai = 'DA_XAC_NHAN'
+            ORDER BY d.ngayDat DESC
+            """)
+    List<DonDatTour> findConfirmedByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
+
     // UC51: Xuất dữ liệu đơn đặt tour cho Power BI
     @Query("""
             SELECT d FROM DonDatTour d
