@@ -22,5 +22,8 @@ public interface DichVuTourThucTeRepository extends JpaRepository<DichVuTourThuc
             """)
     List<DichVuTourThucTe> findByMaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 
-    boolean existsByDichVuThem_MaDichVuThemAndTourThucTe_MaTourThucTe(String maDichVuThem, String maTourThucTe);
+    @Query("SELECT COUNT(d) > 0 FROM DichVuTourThucTe d WHERE d.dichVuThem.MaDichVuThem = :maDichVuThem AND d.tourThucTe.MaTourThucTe = :maTourThucTe")
+    boolean existsByDichVuThem_MaDichVuThemAndTourThucTe_MaTourThucTe(
+            @Param("maDichVuThem") String maDichVuThem, 
+            @Param("maTourThucTe") String maTourThucTe);
 }
