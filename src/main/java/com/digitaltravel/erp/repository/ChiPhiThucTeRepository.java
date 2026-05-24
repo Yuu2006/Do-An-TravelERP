@@ -17,6 +17,16 @@ public interface ChiPhiThucTeRepository extends JpaRepository<ChiPhiThucTe, Stri
     @Query("SELECT c FROM ChiPhiThucTe c JOIN FETCH c.nhanVien nv JOIN FETCH nv.taiKhoan WHERE c.tourThucTe.MaTourThucTe = :maTour ORDER BY c.NgayKhai DESC")
     List<ChiPhiThucTe> findByMaTour(@Param("maTour") String maTour);
 
+    @Query("""
+            SELECT c FROM ChiPhiThucTe c
+            JOIN FETCH c.tourThucTe tt
+            JOIN FETCH c.nhanVien nv
+            JOIN FETCH nv.taiKhoan tk
+            WHERE tk.MaTaiKhoan = :maTaiKhoan
+            ORDER BY c.NgayKhai DESC
+            """)
+    List<ChiPhiThucTe> findByHdvTaiKhoan(@Param("maTaiKhoan") String maTaiKhoan);
+
     // Kế toán: DS chi phí chờ duyệt
     @Query("""
             SELECT c FROM ChiPhiThucTe c JOIN FETCH c.nhanVien nv JOIN FETCH nv.taiKhoan

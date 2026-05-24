@@ -275,6 +275,16 @@ public class VanHanhService {
                 .map(this::toSuCoResponse).toList();
     }
 
+    public List<NhatKySuCoResponse> lichSuSuCoCuaHdv(String mucDo, String maTaiKhoan, String maVaiTro) {
+        if (VaiTroConst.HDV.equals(maVaiTro)) {
+            return nhatKySuCoRepository.findByHdvTaiKhoan(maTaiKhoan, chuanHoaMucDoSuCoFilter(mucDo)).stream()
+                    .map(this::toSuCoResponse).toList();
+        }
+        return nhatKySuCoRepository.findAllWithRelations(chuanHoaMucDoSuCoFilter(mucDo)).stream()
+                .map(this::toSuCoResponse)
+                .toList();
+    }
+
     // ── UC46: Khai báo chi phí phát sinh ─────────────────────────────────
     @Transactional
     public ChiPhiThucTeResponse khaiChiPhi(String maTour, KhaiChiPhiRequest req, String maTaiKhoan, String maVaiTro) {
@@ -300,6 +310,15 @@ public class VanHanhService {
     public List<ChiPhiThucTeResponse> chiPhiCuaTour(String maTour, String maTaiKhoan, String maVaiTro) {
         kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         return chiPhiThucTeRepository.findByMaTour(maTour).stream()
+                .map(this::toChiPhiResponse).toList();
+    }
+
+    public List<ChiPhiThucTeResponse> lichSuChiPhiCuaHdv(String maTaiKhoan, String maVaiTro) {
+        if (VaiTroConst.HDV.equals(maVaiTro)) {
+            return chiPhiThucTeRepository.findByHdvTaiKhoan(maTaiKhoan).stream()
+                    .map(this::toChiPhiResponse).toList();
+        }
+        return chiPhiThucTeRepository.findAllWithRelations().stream()
                 .map(this::toChiPhiResponse).toList();
     }
 
@@ -541,6 +560,7 @@ public class VanHanhService {
     private NhatKySuCoResponse toSuCoResponse(NhatKySuCo sc) {
         return NhatKySuCoResponse.builder()
                 .maNhatKySuCo(sc.getMaNhatKySuCo())
+                .maTour(sc.getTourThucTe().getMaTourThucTe())
                 .moTa(sc.getMoTa())
                 .giaiPhap(sc.getGiaiPhap())
                 .mucDo(sc.getMucDo())

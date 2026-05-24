@@ -21,5 +21,6 @@ public class ChiTietDatTourResponse {
     String nhomTuoi;
     String gioiTinh;
     String ghiChu;
+    String ghiChuYTe;
     BigDecimal giaTaiThoiDiemDat;
 }

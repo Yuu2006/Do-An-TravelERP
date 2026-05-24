@@ -22,4 +22,28 @@ public interface NhatKySuCoRepository extends JpaRepository<NhatKySuCo, String> 
             @Param("maTour") String maTour,
             @Param("mucDo") String mucDo
     );
+
+    @Query("""
+            SELECT n FROM NhatKySuCo n
+            JOIN FETCH n.tourThucTe tt
+            JOIN FETCH n.nhanVienBaoCao nv
+            JOIN FETCH nv.taiKhoan tk
+            WHERE tk.MaTaiKhoan = :maTaiKhoan
+              AND (:mucDo IS NULL OR n.MucDo = :mucDo)
+            ORDER BY n.ThoiGianBaoCao DESC
+            """)
+    List<NhatKySuCo> findByHdvTaiKhoan(
+            @Param("maTaiKhoan") String maTaiKhoan,
+            @Param("mucDo") String mucDo
+    );
+
+    @Query("""
+            SELECT n FROM NhatKySuCo n
+            JOIN FETCH n.tourThucTe tt
+            JOIN FETCH n.nhanVienBaoCao nv
+            JOIN FETCH nv.taiKhoan
+            WHERE (:mucDo IS NULL OR n.MucDo = :mucDo)
+            ORDER BY n.ThoiGianBaoCao DESC
+            """)
+    List<NhatKySuCo> findAllWithRelations(@Param("mucDo") String mucDo);
 }

@@ -605,8 +605,22 @@ public class DatTourService {
                 .nhomTuoi(treEm ? "TRE_EM" : "NGUOI_LON")
                 .gioiTinh(nguoiDongHanh != null ? nguoiDongHanh.getGioiTinh() : null)
                 .ghiChu(nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null)
+                .ghiChuYTe(khachHang != null
+                        ? gopGhiChuYTeVaDiUng(khachHang.getGhiChuYTe(), khachHang.getDiUng())
+                        : nguoiDongHanh.getGhiChu())
                 .giaTaiThoiDiemDat(ct.getGiaTaiThoiDiemDat())
                 .build();
+    }
+
+    private String gopGhiChuYTeVaDiUng(String ghiChuYTe, String diUng) {
+        List<String> parts = new ArrayList<>();
+        if (ghiChuYTe != null && !ghiChuYTe.isBlank()) {
+            parts.add(ghiChuYTe);
+        }
+        if (diUng != null && !diUng.isBlank()) {
+            parts.add("Dị ứng: " + diUng);
+        }
+        return String.join(" | ", parts);
     }
 
     private LocalDate layNgaySinh(ChiTietDatTour ct) {

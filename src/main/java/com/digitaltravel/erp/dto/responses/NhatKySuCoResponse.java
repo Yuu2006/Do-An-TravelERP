@@ -9,6 +9,7 @@ import lombok.Data;
 @Builder
 public class NhatKySuCoResponse {
     private String maNhatKySuCo;
+    private String maTour;
     private String moTa;
     private String giaiPhap;
     private String mucDo;

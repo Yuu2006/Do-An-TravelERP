@@ -94,6 +94,17 @@ public class VanHanhController {
                 user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
 
+    @GetMapping("/api/huong-dan-vien/su-co")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<NhatKySuCoResponse>>> lichSuSuCoCuaHdv(
+            @RequestParam(required = false) String mucDo,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.lichSuSuCoCuaHdv(
+                mucDo,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
+    }
+
     @PostMapping("/api/huong-dan-vien/tour/{maTour}/su-co")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NhatKySuCoResponse>> baoCaoSuCo(
@@ -143,6 +154,15 @@ public class VanHanhController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiPhiCuaTour(
                 maTour,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
+    }
+
+    @GetMapping("/api/huong-dan-vien/chi-phi")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<ChiPhiThucTeResponse>>> lichSuChiPhiCuaHdv(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.lichSuChiPhiCuaHdv(
                 user.getTaiKhoan().getMaTaiKhoan(),
                 user.getTaiKhoan().getVaiTro().getMaVaiTro())));
     }
@@ -207,4 +227,3 @@ public class VanHanhController {
         return ResponseEntity.ok(ApiResponse.ok(vanHanhService.chiTietCanhBaoChiPhi(maCanhBao)));
     }
 }
-
