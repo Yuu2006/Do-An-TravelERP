@@ -48,4 +48,35 @@ public interface HoChieuSoRepository extends JpaRepository<HoChieuSo, String> {
             @Param("soDienThoai") String soDienThoai,
             Pageable pageable
     );
+
+    @Query(value = """
+            SELECT hcs FROM HoChieuSo hcs JOIN FETCH hcs.taiKhoan tk
+            WHERE (:hoTen IS NULL OR LOWER(tk.HoTen) LIKE LOWER(CONCAT('%', :hoTen, '%')))
+              AND (:email IS NULL OR LOWER(tk.Email) LIKE LOWER(CONCAT('%', :email, '%')))
+              AND (:soDienThoai IS NULL OR tk.SoDienThoai LIKE CONCAT('%', :soDienThoai, '%'))
+              AND NOT EXISTS (
+                  SELECT k FROM KhuyenMaiKh k
+                  WHERE k.khachHang = hcs
+                    AND k.voucher.MaVoucher = :maVoucher
+              )
+            ORDER BY tk.HoTen
+            """,
+            countQuery = """
+            SELECT COUNT(hcs) FROM HoChieuSo hcs JOIN hcs.taiKhoan tk
+            WHERE (:hoTen IS NULL OR LOWER(tk.HoTen) LIKE LOWER(CONCAT('%', :hoTen, '%')))
+              AND (:email IS NULL OR LOWER(tk.Email) LIKE LOWER(CONCAT('%', :email, '%')))
+              AND (:soDienThoai IS NULL OR tk.SoDienThoai LIKE CONCAT('%', :soDienThoai, '%'))
+              AND NOT EXISTS (
+                  SELECT k FROM KhuyenMaiKh k
+                  WHERE k.khachHang = hcs
+                    AND k.voucher.MaVoucher = :maVoucher
+              )
+            """)
+    Page<HoChieuSo> timKiemKhachHangChuaNhanVoucher(
+            @Param("hoTen") String hoTen,
+            @Param("email") String email,
+            @Param("soDienThoai") String soDienThoai,
+            @Param("maVoucher") String maVoucher,
+            Pageable pageable
+    );
 }

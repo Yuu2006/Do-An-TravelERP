@@ -10,6 +10,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class KhuyenMaiKhResponse {
+    String maKhachHang;
+    String hoTenKhachHang;
+    String emailKhachHang;
+    String soDienThoaiKhachHang;
     String maVoucher;
     String maCode;
     String loaiUuDai;
