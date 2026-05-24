@@ -1,4 +1,4 @@
--- ============================================================
+﻿-- ============================================================
 -- SEED DATA LIEN KET - Tour, khach hang, HDV, dieu hanh
 -- Chay sau:
 --   @src/main/resources/db/KhoiTaoBang.sql
@@ -53,10 +53,10 @@ DELETE FROM TAIKHOAN         WHERE MaTaiKhoan LIKE 'TK_KH_%';
 -- 1. NANG LUC HDV VA KHACH HANG
 -- ------------------------------------------------------------
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NL_HDV01', 'NV_HDV01', 'Tiếng Việt', 'Tiếng Anh', 'The HDV nội địa; Sơ cấp cứu cơ bản', 'Tây Bắc, Trekking, Tour xanh', 4.80, 126);
+VALUES ('NL_HDV01', 'NV_HDV01', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa; Sơ cấp cứu cơ bản', 'Tây Bắc, Trekking, Tour xanh', 4.80, 126);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NL_HDV02', 'NV_HDV02', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'The HDV quốc tế', 'Biển đảo, di sản miền Trung, gia đình', 4.70, 98);
+VALUES ('NL_HDV02', 'NV_HDV02', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'Thẻ HDV quốc tế', 'Biển đảo, di sản miền Trung, gia đình', 4.70, 98);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV03', 'NV_HDV03', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Miền núi phía Bắc, tour cộng đồng', 4.76, 84);
@@ -66,6 +66,14 @@ INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, C
 VALUES ('NL_HDV05', 'NV_HDV05', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Biển đảo, nghỉ dưỡng gia đình', 4.72, 79);
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV06', 'NV_HDV06', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Du thuyền, tour cao cấp', 4.74, 68);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV07', 'NV_HDV07', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa; Sơ cấp cứu cơ bản', 'Tâm linh miền Bắc, Tràng An, tour gia đình', 4.69, 63);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV08', 'NV_HDV08', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Đà Lạt, Mộc Châu, nông trại và trải nghiệm cộng đồng', 4.71, 76);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV09', 'NV_HDV09', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'Thẻ HDV quốc tế; Cứu hộ biển cơ bản', 'Phú Quốc, Côn Đảo, tour biển đảo và gia đình', 4.73, 82);
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NL_HDV10', 'NV_HDV10', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Tây Nguyên, Cần Thơ, tour văn hóa và ẩm thực địa phương', 4.66, 58);
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_01', 'khach01', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
@@ -128,33 +136,33 @@ VALUES ('TK_KH_15', 'khach15', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2
         'Phan Gia Bảo', '079199000115', DATE '1993-12-02', 'khach15@digitaltravel.vn', '0911000115', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_01', 'TK_KH_01', 'Ăn chay vào buổi tối', 'Hải sản', 'DONG', 650);
+VALUES ('KH_01', 'TK_KH_01', NULL, 'Hải sản', 'DONG', 650);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_02', 'TK_KH_02', 'Đi cùng gia đình có trẻ em', NULL, 'BAC', 2400);
+VALUES ('KH_02', 'TK_KH_02', 'Bệnh hen suyễn nhẹ', NULL, 'BAC', 2400);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_03', 'TK_KH_03', NULL, 'Đậu phộng', 'THANH_VIEN', 200);
+VALUES ('KH_03', 'TK_KH_03', 'Bệnh tim mạch, tránh hoạt động gắng sức và leo dốc dài.', 'Đậu phộng', 'THANH_VIEN', 200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_04', 'TK_KH_04', 'Cần phòng tầng thấp', NULL, 'VANG', 5600);
+VALUES ('KH_04', 'TK_KH_04', 'Đau khớp gối, ưu tiên phòng tầng thấp và lịch trình ít bậc thang.', NULL, 'VANG', 5600);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_05', 'TK_KH_05', NULL, NULL, 'KIM_CUONG', 10200);
+VALUES ('KH_05', 'TK_KH_05', 'Không có ghi chú y tế đặc biệt.', NULL, 'KIM_CUONG', 10200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_06', 'TK_KH_06', 'Cần xác nhận dịch vụ đưa đón sân bay', NULL, 'DONG', 850);
+VALUES ('KH_06', 'TK_KH_06', 'Dễ say xe, ưu tiên ghế phía trước.', NULL, 'DONG', 850);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_07', 'TK_KH_07', 'Ưu tiên phòng không hút thuốc', NULL, 'THANH_VIEN', 120);
+VALUES ('KH_07', 'TK_KH_07', 'Dị ứng khói thuốc, ưu tiên phòng và khu vực ăn uống không hút thuốc.', NULL, 'THANH_VIEN', 120);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_08', 'TK_KH_08', 'Đi cùng người cao tuổi', 'Sữa bò', 'DONG', 780);
+VALUES ('KH_08', 'TK_KH_08', 'Huyết áp cao, cần lịch trình nhẹ và thời gian nghỉ giữa các điểm.', 'Sữa bò', 'DONG', 780);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_09', 'TK_KH_09', 'Cần xuất hóa đơn công ty', NULL, 'BAC', 3100);
+VALUES ('KH_09', 'TK_KH_09', 'Tiểu đường type 2, cần bữa ăn đúng giờ và hạn chế đồ ngọt.', NULL, 'BAC', 3100);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_10', 'TK_KH_10', NULL, 'Hải sản có vỏ', 'VANG', 6200);
+VALUES ('KH_10', 'TK_KH_10', 'Bệnh dạ dày, tránh món quá cay và đồ uống có gas.', 'Hải sản có vỏ', 'VANG', 6200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_11', 'TK_KH_11', 'Cần lịch trình ít leo dốc', NULL, 'KIM_CUONG', 11800);
+VALUES ('KH_11', 'TK_KH_11', 'Đau lưng, cần lịch trình ít leo dốc và hạn chế ngồi xe quá lâu.', NULL, 'KIM_CUONG', 11800);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
 VALUES ('KH_12', 'TK_KH_12', 'Ăn chay trường', NULL, 'BAC', 2800);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_13', 'TK_KH_13', 'Cần phòng yên tĩnh để làm việc từ xa', NULL, 'VANG', 7100);
+VALUES ('KH_13', 'TK_KH_13', NULL , NULL, 'VANG', 7100);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_14', 'TK_KH_14', 'Đi cùng trẻ nhỏ dưới 6 tuổi', 'Trứng gà', 'DONG', 950);
+VALUES ('KH_14', 'TK_KH_14', NULL, 'Trứng gà', 'DONG', 950);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
 VALUES ('KH_15', 'TK_KH_15', NULL, 'Phấn hoa', 'THANH_VIEN', 320);
 
@@ -576,22 +584,22 @@ VALUES ('PC_QT_HDV01', 'TTT_QT', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '3' DAY, 'D
 -- 4. VOUCHER VA VI KHUYEN MAI
 -- ------------------------------------------------------------
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_EARLY10', 'EARLY-10', 'PHAN_TRAM', 10, 'Giam 10% cho don dat som', 100, 0, TRUNC(SYSDATE) - 30, TRUNC(SYSDATE) + 120, 'SAN_SANG');
+VALUES ('VC_EARLY10', 'EARLY-10', 'PHAN_TRAM', 10, 'Giảm 10% cho đơn đặt sớm', 100, 0, TRUNC(SYSDATE) - 30, TRUNC(SYSDATE) + 120, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_GREEN500', 'GREEN-500', 'SO_TIEN', 500000, 'Doi diem xanh lay voucher 500000 VND', 50, 0, TRUNC(SYSDATE) - 15, TRUNC(SYSDATE) + 90, 'SAN_SANG');
+VALUES ('VC_GREEN500', 'GREEN-500', 'SO_TIEN', 500000, 'Đổi điểm xanh lấy voucher 500.000 VND', 50, 0, TRUNC(SYSDATE) - 15, TRUNC(SYSDATE) + 90, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_EXPIRED', 'EXPIRED', 'SO_TIEN', 300000, 'Voucher het han de minh hoa trang thai', 10, 0, TRUNC(SYSDATE) - 90, TRUNC(SYSDATE) - 10, 'VO_HIEU_HOA');
+VALUES ('VC_EXPIRED', 'EXPIRED', 'SO_TIEN', 300000, 'Voucher hết hạn để minh họa trạng thái', 10, 0, TRUNC(SYSDATE) - 90, TRUNC(SYSDATE) - 10, 'VO_HIEU_HOA');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_FAMILY700', 'FAMILY-700', 'SO_TIEN', 700000, 'Giam cho nhom gia dinh tu 3 khach tro len', 80, 0, TRUNC(SYSDATE) - 20, TRUNC(SYSDATE) + 150, 'SAN_SANG');
+VALUES ('VC_FAMILY700', 'FAMILY-700', 'SO_TIEN', 700000, 'Giảm cho nhóm gia đình từ 3 khách trở lên', 80, 0, TRUNC(SYSDATE) - 20, TRUNC(SYSDATE) + 150, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_MEMBER15', 'MEMBER-15', 'PHAN_TRAM', 15, 'Uu dai 15% cho thanh vien hang vang tro len', 60, 0, TRUNC(SYSDATE) - 10, TRUNC(SYSDATE) + 120, 'SAN_SANG');
+VALUES ('VC_MEMBER15', 'MEMBER-15', 'PHAN_TRAM', 15, 'Ưu đãi 15% cho thành viên hạng vàng trở lên', 60, 0, TRUNC(SYSDATE) - 10, TRUNC(SYSDATE) + 120, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_DIEMXANH800', 'DIEMXANH-800', 'SO_TIEN', 800000, 'Quy doi 800 diem xanh khi dat tour', 40, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 120, 'SAN_SANG');
+VALUES ('VC_DIEMXANH800', 'DIEMXANH-800', 'SO_TIEN', 800000, 'Quy đổi 800 điểm xanh khi đặt tour', 40, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 120, 'SAN_SANG');
 
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
 VALUES ('KH_01', 'VC_EARLY10', TRUNC(SYSDATE) + 60, SYSTIMESTAMP - INTERVAL '12' DAY, 'CO_HIEU_LUC');
@@ -630,81 +638,81 @@ BEGIN
       AND NgayKhoiHanh > :NEW.NgayDat;
 
     IF v_Count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20007, 'Chi duoc dat tour dang MO_BAN va chua khoi hanh');
+        RAISE_APPLICATION_ERROR(-20007, 'Chỉ được đặt tour đang MO_BAN và chưa khởi hành');
     END IF;
 END;
 /
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_CHO_XN', 'TTT_MB', 'KH_01', SYSTIMESTAMP - INTERVAL '1' DAY, 10250000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Cho khach xac nhan thanh toan', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Chờ khách xác nhận thanh toán', 'HDX_EBILL:1');
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_DA_XN', 'TTT_MB', 'KH_02', SYSTIMESTAMP - INTERVAL '2' DAY, 14250000, 'DA_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ap dung voucher VC_GREEN500: tam tinh 14.750.000, giam 500.000, tong sau giam 14.250.000. Don da thanh toan du, trigger se chuyen DA_XAC_NHAN.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_GREEN500: tạm tính 14.750.000, giảm 500.000, tổng sau giảm 14.250.000. Đơn đã thanh toán đủ, trigger sẽ chuyển DA_XAC_NHAN.', 'HDX_EBILL:1');
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HET_HAN', 'TTT_MB', 'KH_03', SYSTIMESTAMP - INTERVAL '3' DAY, 4800000, 'HET_HAN_GIU_CHO',
-        SYSTIMESTAMP - INTERVAL '2' DAY, 'Khach khong thanh toan trong thoi gian giu cho', NULL);
+        SYSTIMESTAMP - INTERVAL '2' DAY, 'Khách không thanh toán trong thời gian giữ chỗ', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_CHO_HUY', 'TTT_SDR', 'KH_04', SYSTIMESTAMP - INTERVAL '4' DAY, 6500000, 'CHO_HUY',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach gui yeu cau huy, doi dieu hanh xu ly', NULL);
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khách gửi yêu cầu hủy, đội điều hành xử lý', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_TU_CHOI_HT', 'TTT_SDR', 'KH_05', SYSTIMESTAMP - INTERVAL '4' DAY, 6500000, 'TU_CHOI_HOAN_TIEN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Qua han hoan tien theo chinh sach', NULL);
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Quá hạn hoàn tiền theo chính sách', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_TT_FAIL', 'TTT_SDR', 'KH_06', SYSTIMESTAMP - INTERVAL '1' DAY, 6500000, 'THANH_TOAN_THAT_BAI',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ngan hang tra ve that bai', NULL);
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ngân hàng trả về thất bại', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_DANG_DIEN_RA', 'TTT_DDR', 'KH_01', SYSTIMESTAMP - INTERVAL '5' DAY, 8400000, 'DA_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Don cho tour dang dien ra', 'HDX_BOTTLE:1,HDX_CLEANUP:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Đơn cho tour đang diễn ra', 'HDX_BOTTLE:1,HDX_CLEANUP:1');
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_KET_THUC', 'TTT_KT', 'KH_04', SYSTIMESTAMP - INTERVAL '15' DAY, 6000000, 'DA_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Don da hoan thanh tour va du dieu kien danh gia', NULL);
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Đơn đã hoàn thành tour và đủ điều kiện đánh giá', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HUY', 'TTT_HUY', 'KH_05', SYSTIMESTAMP - INTERVAL '7' DAY, 15800000, 'DA_HUY',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Don se bi huy tu dong khi tour bi huy', NULL);
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Đơn sẽ bị hủy tự động khi tour bị hủy', NULL);
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_QUYET_TOAN', 'TTT_QT', 'KH_02', SYSTIMESTAMP - INTERVAL '25' DAY, 8300000, 'DA_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ap dung voucher VC_EARLY10: tien tour 8.600.000, dich vu 560.000, giam 860.000, tong sau giam 8.300.000. Don thuoc tour da quyet toan.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_EARLY10: tiền tour 8.600.000, dịch vụ 560.000, giảm 860.000, tổng sau giảm 8.300.000. Đơn thuộc tour đã quyết toán.', 'HDX_EBILL:1');
 
 -- Don dat tour 5 nguoi cho tour Da Nang
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_5_PEOPLE', 'TTT_SDR', 'KH_03', SYSTIMESTAMP - INTERVAL '3' DAY, 32500000, 'DA_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Don dat 5 nguoi (1 khach, 4 dong hanh).', 'HDX_BOTTLE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Đơn đặt 5 người (1 khách, 4 đồng hành).', 'HDX_BOTTLE:1');
 
 -- Nguoi dong hanh
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_CHO_XN_01', 'DDT_CHO_XN', 'Tran Gia Bao', '079299000201', '0922000201', DATE '2014-07-11', 'NAM', 'Tre em di cung gia dinh');
+VALUES ('NDH_CHO_XN_01', 'DDT_CHO_XN', 'Trần Gia Bảo', '079299000201', '0922000201', DATE '2014-07-11', 'NAM', 'Trẻ em đi cùng gia đình');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_DA_XN_01', 'DDT_DA_XN', 'Pham Minh Quan', '079299000202', '0922000202', DATE '1994-03-02', 'NAM', NULL);
+VALUES ('NDH_DA_XN_01', 'DDT_DA_XN', 'Phạm Minh Quân', '079299000202', '0922000202', DATE '1994-03-02', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_DA_XN_02', 'DDT_DA_XN', 'Pham Tue Nhi', '079299000203', '0922000203', DATE '2018-10-05', 'NU', 'Tre em');
+VALUES ('NDH_DA_XN_02', 'DDT_DA_XN', 'Phạm Tuệ Nhi', '079299000203', '0922000203', DATE '2018-10-05', 'NU', 'Trẻ em');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_DDR_01', 'DDT_DANG_DIEN_RA', 'Tran My Anh', '079299000204', '0922000204', DATE '1998-01-19', 'NU', NULL);
+VALUES ('NDH_DDR_01', 'DDT_DANG_DIEN_RA', 'Trần Mỹ Anh', '079299000204', '0922000204', DATE '1998-01-19', 'NU', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_KT_01', 'DDT_KET_THUC', 'Nguyen Minh Tam', '079299000205', '0922000205', DATE '1988-09-30', 'NAM', NULL);
+VALUES ('NDH_KT_01', 'DDT_KET_THUC', 'Nguyễn Minh Tâm', '079299000205', '0922000205', DATE '1988-09-30', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HUY_01', 'DDT_HUY', 'Do Minh Nhat', '079299000206', '0922000206', DATE '1985-06-06', 'NAM', NULL);
+VALUES ('NDH_HUY_01', 'DDT_HUY', 'Đỗ Minh Nhật', '079299000206', '0922000206', DATE '1985-06-06', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_QT_01', 'DDT_QUYET_TOAN', 'Pham Mai Chi', '079299000207', '0922000207', DATE '1996-04-22', 'NU', NULL);
+VALUES ('NDH_QT_01', 'DDT_QUYET_TOAN', 'Phạm Mai Chi', '079299000207', '0922000207', DATE '1996-04-22', 'NU', NULL);
 
 -- Nguoi dong hanh cho don 5 nguoi
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_5P_01', 'DDT_5_PEOPLE', 'Le Minh', '079299000301', '0922000301', DATE '1990-01-01', 'NAM', NULL);
+VALUES ('NDH_5P_01', 'DDT_5_PEOPLE', 'Lê Minh', '079299000301', '0922000301', DATE '1990-01-01', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_5P_02', 'DDT_5_PEOPLE', 'Le Hoa', '079299000302', '0922000302', DATE '1992-02-02', 'NU', NULL);
+VALUES ('NDH_5P_02', 'DDT_5_PEOPLE', 'Lê Hoa', '079299000302', '0922000302', DATE '1992-02-02', 'NU', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_5P_03', 'DDT_5_PEOPLE', 'Le An', '079299000303', '0922000303', DATE '2015-03-03', 'NAM', 'Tre em');
+VALUES ('NDH_5P_03', 'DDT_5_PEOPLE', 'Lê An', '079299000303', '0922000303', DATE '2015-03-03', 'NAM', 'Trẻ em');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_5P_04', 'DDT_5_PEOPLE', 'Le Binh', '079299000304', '0922000304', DATE '2018-04-04', 'NAM', 'Tre em');
+VALUES ('NDH_5P_04', 'DDT_5_PEOPLE', 'Lê Bình', '079299000304', '0922000304', DATE '2018-04-04', 'NAM', 'Trẻ em');
 
 -- Chi tiet hanh khach
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
@@ -821,34 +829,34 @@ SET NgayKhoiHanh = TRUNC(SYSDATE) - 30,
 WHERE MaTourThucTe = 'TTT_QT';
 
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
-VALUES ('DD_DDR_KH_OK', 'TTT_DDR', 'KH_01', NULL, 'NGUOI_DAT', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '2' HOUR, 'Quang truong Lam Vien', 'DA_DIEM_DANH');
+VALUES ('DD_DDR_KH_OK', 'TTT_DDR', 'KH_01', NULL, 'NGUOI_DAT', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '2' HOUR, 'Quảng trường Lâm Viên', 'DA_DIEM_DANH');
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
-VALUES ('DD_DDR_NDH_WAIT', 'TTT_DDR', NULL, 'NDH_DDR_01', 'NGUOI_DONG_HANH', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '90' MINUTE, 'Quang truong Lam Vien', 'CHUA_DIEM_DANH');
+VALUES ('DD_DDR_NDH_WAIT', 'TTT_DDR', NULL, 'NDH_DDR_01', 'NGUOI_DONG_HANH', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '90' MINUTE, 'Quảng trường Lâm Viên', 'CHUA_DIEM_DANH');
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
-VALUES ('DD_DDR_NDH_ABS', 'TTT_DDR', NULL, 'NDH_DDR_01', 'NGUOI_DONG_HANH', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '1' HOUR, 'Nong trai Da Lat', 'VANG');
+VALUES ('DD_DDR_NDH_ABS', 'TTT_DDR', NULL, 'NDH_DDR_01', 'NGUOI_DONG_HANH', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '1' HOUR, 'Nông trại Đà Lạt', 'VANG');
 
 INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
 VALUES ('HD_DDR_BOTTLE', 'TTT_DDR', 'KH_01', 'HDX_BOTTLE', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '1' HOUR,
-        'Anh check-in voi binh nuoc ca nhan');
+        'Ảnh check-in với bình nước cá nhân');
 INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
 VALUES ('HD_DDR_CLEANUP', 'TTT_DDR', 'KH_01', 'HDX_CLEANUP', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '30' MINUTE,
-        'HDV xac nhan khach tham gia nhat rac tai diem tham quan');
+        'HDV xác nhận khách tham gia nhặt rác tại điểm tham quan');
 
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
-VALUES ('SC_DDR_WEATHER', 'TTT_DDR', 'NV_HDV01', 'Mua lon bat ngo tai diem tham quan.',
-        'Doi lich tham quan trong nha va cap ao mua cho khach.', 'THAP', 'THOI_TIET', SYSTIMESTAMP - INTERVAL '20' MINUTE);
+VALUES ('SC_DDR_WEATHER', 'TTT_DDR', 'NV_HDV01', 'Mưa lớn bất ngờ tại điểm tham quan.',
+        'Đổi lịch tham quan trong nhà và cấp áo mưa cho khách.', 'THAP', 'THOI_TIET', SYSTIMESTAMP - INTERVAL '20' MINUTE);
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
-VALUES ('SC_DDR_MEDICAL', 'TTT_DDR', 'NV_HDV01', 'Khach bi say xe can theo doi.',
-        'Sap xep ghe dau xe, cap nuoc am va theo doi suc khoe.', 'SOS', 'Y_TE', SYSTIMESTAMP - INTERVAL '10' MINUTE);
+VALUES ('SC_DDR_MEDICAL', 'TTT_DDR', 'NV_HDV01', 'Khách bị say xe cần theo dõi.',
+        'Sắp xếp ghế đầu xe, cấp nước ấm và theo dõi sức khỏe.', 'SOS', 'Y_TE', SYSTIMESTAMP - INTERVAL '10' MINUTE);
 
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DDR_APPROVED', 'TTT_DDR', 'NV_HDV01', 'Ao mua du phong', 320000, 'https://seed.local/hoa-don/ao-mua.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '1' HOUR);
+VALUES ('CP_DDR_APPROVED', 'TTT_DDR', 'NV_HDV01', 'Áo mưa dự phòng', 320000, 'https://seed.local/hoa-don/ao-mua.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '1' HOUR);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DDR_PENDING', 'TTT_DDR', 'NV_HDV01', 'Nuoc uong bo sung', 180000, 'https://seed.local/hoa-don/nuoc.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '30' MINUTE);
+VALUES ('CP_DDR_PENDING', 'TTT_DDR', 'NV_HDV01', 'Nước uống bổ sung', 180000, 'https://seed.local/hoa-don/nuoc.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '30' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DDR_REJECT', 'TTT_DDR', 'NV_HDV01', 'Phu phi khong hop le', 90000, NULL, 'TU_CHOI', SYSTIMESTAMP - INTERVAL '20' MINUTE);
+VALUES ('CP_DDR_REJECT', 'TTT_DDR', 'NV_HDV01', 'Phụ phí không hợp lệ', 90000, NULL, 'TU_CHOI', SYSTIMESTAMP - INTERVAL '20' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DDR_NEED_MORE', 'TTT_DDR', 'NV_HDV01', 'Ve gui xe', 120000, NULL, 'YEU_CAU_BO_SUNG', SYSTIMESTAMP - INTERVAL '10' MINUTE);
+VALUES ('CP_DDR_NEED_MORE', 'TTT_DDR', 'NV_HDV01', 'Vé gửi xe', 120000, NULL, 'YEU_CAU_BO_SUNG', SYSTIMESTAMP - INTERVAL '10' MINUTE);
 
 UPDATE TOURTHUCTE
 SET NgayKhoiHanh = TRUNC(SYSDATE) - 7,
@@ -859,7 +867,7 @@ INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, N
 VALUES ('LST_KT_KH04', 'KH_04', 'TTT_KT', 'CTDT_KT_KH', TRUNC(SYSDATE) - 7);
 
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_KT_KH04', 'TTT_KT', 'KH_04', 5, 'Lich trinh gon, HDV cham soc tot va giai thich ro ve Trang An.', SYSTIMESTAMP - INTERVAL '2' DAY);
+VALUES ('DG_KT_KH04', 'TTT_KT', 'KH_04', 5, 'Lịch trình gọn, HDV chăm sóc tốt và giải thích rõ về Tràng An.', SYSTIMESTAMP - INTERVAL '2' DAY);
 
 UPDATE TOURTHUCTE
 SET TrangThai = 'HUY'
@@ -877,15 +885,15 @@ INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, N
 VALUES ('LST_QT_KH02', 'KH_02', 'TTT_QT', 'CTDT_QT_KH', TRUNC(SYSDATE) - 24);
 
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_QT_HOTEL', 'TTT_QT', 'NV_HDV01', 'Khach san Hue 2 dem', 4800000, 'https://seed.local/hoa-don/hue-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '20' DAY);
+VALUES ('CP_QT_HOTEL', 'TTT_QT', 'NV_HDV01', 'Khách sạn Huế 2 đêm', 4800000, 'https://seed.local/hoa-don/hue-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '20' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_QT_BUS', 'TTT_QT', 'NV_HDV01', 'Xe du lich Hue', 2600000, 'https://seed.local/hoa-don/hue-bus.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '20' DAY);
+VALUES ('CP_QT_BUS', 'TTT_QT', 'NV_HDV01', 'Xe du lịch Huế', 2600000, 'https://seed.local/hoa-don/hue-bus.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '20' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_QT_TICKET', 'TTT_QT', 'NV_HDV01', 'Ve tham quan Dai Noi', 900000, 'https://seed.local/hoa-don/hue-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '19' DAY);
+VALUES ('CP_QT_TICKET', 'TTT_QT', 'NV_HDV01', 'Vé tham quan Đại Nội', 900000, 'https://seed.local/hoa-don/hue-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '19' DAY);
 
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu)
 VALUES ('QT_HUE_DONE', 'TTT_QT', 0, 0, 11000000, 0, 'NV_KT01', SYSTIMESTAMP - INTERVAL '18' DAY, 'DA_QUYET_TOAN',
-        'Trigger tinh lai TongDoanhThu, TongChiPhi, LoiNhuan va chot tour DA_QUYET_TOAN.');
+        'Trigger tính lại TongDoanhThu, TongChiPhi, LoiNhuan và chốt tour DA_QUYET_TOAN.');
 
 -- ------------------------------------------------------------
 -- 6B. 5 BO DATA BO SUNG DE MINH HOA TOAN DIEN HON
@@ -932,23 +940,23 @@ VALUES ('PC_QUYNHON_HDV02', 'TTT_QUYNHON', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '
 -- Goi 1: Ha Long - tour dang mo ban, co don cho thanh toan va don da xac nhan.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HALONG_CHO', 'TTT_HALONG', 'KH_07', SYSTIMESTAMP - INTERVAL '1' DAY, 11920000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach dang giu cho du thuyen Ha Long.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khách đang giữ chỗ du thuyền Hạ Long.', 'HDX_EBILL:1');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HALONG_OK', 'TTT_HALONG', 'KH_08', SYSTIMESTAMP - INTERVAL '2' DAY, 18600000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Nhom gia dinh da thanh toan du.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Nhóm gia đình đã thanh toán đủ.', 'HDX_EBILL:1');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HALONG_TRE_EM', 'TTT_HALONG', 'KH_15', SYSTIMESTAMP - INTERVAL '6' HOUR, 8970000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Don co tre em duoi 10 tuoi di kem.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Đơn có trẻ em dưới 10 tuổi đi kèm.', 'HDX_EBILL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HALONG_CHO_01', 'DDT_HALONG_CHO', 'Hoang Minh Duc', '079299000208', '0922000208', DATE '1990-02-21', 'NAM', NULL);
+VALUES ('NDH_HALONG_CHO_01', 'DDT_HALONG_CHO', 'Hoàng Minh Đức', '079299000208', '0922000208', DATE '1990-02-21', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HALONG_OK_01', 'DDT_HALONG_OK', 'Vu Thanh Son', '079299000209', '0922000209', DATE '1962-08-14', 'NAM', 'Nguoi cao tuoi');
+VALUES ('NDH_HALONG_OK_01', 'DDT_HALONG_OK', 'Vũ Thanh Sơn', '079299000209', '0922000209', DATE '1962-08-14', 'NAM', 'Người cao tuổi');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HALONG_OK_02', 'DDT_HALONG_OK', 'Vu Minh Anh', '079299000210', '0922000210', DATE '2012-12-01', 'NU', 'Tre em');
+VALUES ('NDH_HALONG_OK_02', 'DDT_HALONG_OK', 'Vũ Minh Anh', '079299000210', '0922000210', DATE '2012-12-01', 'NU', 'Trẻ em');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
 VALUES ('NDH_HALONG_TRE_EM_01', 'DDT_HALONG_TRE_EM', 'Phan Minh Khang', '079299000220', '0922000220',
-        ADD_MONTHS(TRUNC(SYSDATE), -84), 'NAM', 'Tre em duoi 10 tuoi');
+        ADD_MONTHS(TRUNC(SYSDATE), -84), 'NAM', 'Trẻ em duoi 10 tuoi');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_HALONG_CHO_KH', 'DDT_HALONG_CHO', 'KH_07', NULL, 'NGUOI_DAT', 5900000);
@@ -982,10 +990,10 @@ VALUES ('GD_HALONG_TRE_EM_PAY', 'DDT_HALONG_TRE_EM', 'THANH_TOAN', 'CHUYEN_KHOAN
 -- Goi 2: Can Tho - sap dien ra, khach cong ty da thanh toan va co yeu cau hoa don.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_CANTHO_OK', 'TTT_CANTHO', 'KH_09', SYSTIMESTAMP - INTERVAL '3' DAY, 7680000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach can hoa don cong ty sau thanh toan.', 'HDX_LOCAL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khách cần hóa đơn công ty sau thanh toán.', 'HDX_LOCAL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_CANTHO_01', 'DDT_CANTHO_OK', 'Dang Minh Tue', '079299000211', '0922000211', DATE '1987-05-18', 'NAM', NULL);
+VALUES ('NDH_CANTHO_01', 'DDT_CANTHO_OK', 'Đặng Minh Tuệ', '079299000211', '0922000211', DATE '1987-05-18', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_CANTHO_KH', 'DDT_CANTHO_OK', 'KH_09', NULL, 'NGUOI_DAT', 3700000);
@@ -1003,10 +1011,10 @@ WHERE MaTourThucTe = 'TTT_CANTHO';
 -- Goi 3: Con Dao - dang dien ra, co diem danh, hanh dong xanh va su co phuong tien.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_CONDAO_OK', 'TTT_CONDAO', 'KH_10', SYSTIMESTAMP - INTERVAL '5' DAY, 17320000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach di bien dao, co di ung hai san co vo.', 'HDX_CLEANUP:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khách đi biển đảo, có dị ứng hải sản có vỏ.', 'HDX_CLEANUP:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_CONDAO_01', 'DDT_CONDAO_OK', 'Mai Bao Nam', '079299000212', '0922000212', DATE '1993-11-23', 'NAM', NULL);
+VALUES ('NDH_CONDAO_01', 'DDT_CONDAO_OK', 'Mai Bảo Nam', '079299000212', '0922000212', DATE '1993-11-23', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_CONDAO_KH', 'DDT_CONDAO_OK', 'KH_10', NULL, 'NGUOI_DAT', 8600000);
@@ -1023,28 +1031,28 @@ SET NgayKhoiHanh = TRUNC(SYSDATE),
 WHERE MaTourThucTe = 'TTT_CONDAO';
 
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
-VALUES ('DD_CONDAO_KH_OK', 'TTT_CONDAO', 'KH_10', NULL, 'NGUOI_DAT', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '3' HOUR, 'San bay Con Dao', 'DA_DIEM_DANH');
+VALUES ('DD_CONDAO_KH_OK', 'TTT_CONDAO', 'KH_10', NULL, 'NGUOI_DAT', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '3' HOUR, 'Sân bay Côn Đảo', 'DA_DIEM_DANH');
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
-VALUES ('DD_CONDAO_NDH_OK', 'TTT_CONDAO', NULL, 'NDH_CONDAO_01', 'NGUOI_DONG_HANH', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '3' HOUR, 'San bay Con Dao', 'DA_DIEM_DANH');
+VALUES ('DD_CONDAO_NDH_OK', 'TTT_CONDAO', NULL, 'NDH_CONDAO_01', 'NGUOI_DONG_HANH', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '3' HOUR, 'Sân bay Côn Đảo', 'DA_DIEM_DANH');
 
 INSERT INTO HANHDONG (MaGhiNhanHanhDong, MaTourThucTe, MaKhachHang, MaHanhDongXanh, MaNhanVienXacMinh, ThoiGian, MinhChung)
 VALUES ('HD_CONDAO_CLEANUP', 'TTT_CONDAO', 'KH_10', 'HDX_CLEANUP', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '1' HOUR,
-        'Anh nhom khach thu gom rac tren bai bien');
+        'Ảnh nhóm khách thu gom rác trên bãi biển');
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
-VALUES ('SC_CONDAO_TRANSPORT', 'TTT_CONDAO', 'NV_HDV02', 'Xe dua don cham 20 phut do thoi tiet.',
-        'Thong bao khach, dieu xe du phong va doi lich tham quan nhe.', 'THAP', 'PHUONG_TIEN', SYSTIMESTAMP - INTERVAL '40' MINUTE);
+VALUES ('SC_CONDAO_TRANSPORT', 'TTT_CONDAO', 'NV_HDV02', 'Xe đưa đón chậm 20 phút do thời tiết.',
+        'Thông báo khách, điều xe dự phòng và đổi lịch tham quan nhẹ.', 'THAP', 'PHUONG_TIEN', SYSTIMESTAMP - INTERVAL '40' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_CONDAO_WATER', 'TTT_CONDAO', 'NV_HDV02', 'Nuoc uong bo sung tai ben tau', 240000, 'https://seed.local/hoa-don/condao-water.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '35' MINUTE);
+VALUES ('CP_CONDAO_WATER', 'TTT_CONDAO', 'NV_HDV02', 'Nước uống bổ sung tai ben tau', 240000, 'https://seed.local/hoa-don/condao-water.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '35' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_CONDAO_TRANSFER', 'TTT_CONDAO', 'NV_HDV02', 'Xe trung chuyen du phong', 750000, 'https://seed.local/hoa-don/condao-transfer.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '25' MINUTE);
+VALUES ('CP_CONDAO_TRANSFER', 'TTT_CONDAO', 'NV_HDV02', 'Xe trung chuyển dự phòng', 750000, 'https://seed.local/hoa-don/condao-transfer.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '25' MINUTE);
 
 -- Goi 4: Moc Chau - da ket thuc, co lich su va danh gia tu khach hang.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_MOCCHAU_OK', 'TTT_MOCCHAU', 'KH_11', SYSTIMESTAMP - INTERVAL '20' DAY, 6500000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khach can lich trinh it leo doc.', 'HDX_TREE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Khách cần lịch trình ít leo dốc.', 'HDX_TREE:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_MOCCHAU_01', 'DDT_MOCCHAU_OK', 'Cao Bao Ngoc', '079299000213', '0922000213', DATE '1986-02-09', 'NU', NULL);
+VALUES ('NDH_MOCCHAU_01', 'DDT_MOCCHAU_OK', 'Cao Bảo Ngọc', '079299000213', '0922000213', DATE '1986-02-09', 'NU', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_MOCCHAU_KH', 'DDT_MOCCHAU_OK', 'KH_11', NULL, 'NGUOI_DAT', 2800000);
@@ -1063,22 +1071,22 @@ WHERE MaTourThucTe = 'TTT_MOCCHAU';
 INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
 VALUES ('LST_MOCCHAU_KH11', 'KH_11', 'TTT_MOCCHAU', 'CTDT_MOCCHAU_KH', TRUNC(SYSDATE) - 12);
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
-VALUES ('SC_MOCCHAU_TRAIL', 'TTT_MOCCHAU', 'NV_HDV01', 'Duong vao doi che am uot sau mua.',
-        'Chuyen sang loi di phu, nhac khach mang giay chong tron.', 'THAP', 'THOI_TIET', SYSTIMESTAMP - INTERVAL '11' DAY);
+VALUES ('SC_MOCCHAU_TRAIL', 'TTT_MOCCHAU', 'NV_HDV01', 'Đường vào đồi chè ẩm ướt sau mưa.',
+        'Chuyển sang lối đi phụ, nhắc khách mang giày chống trơn.', 'THAP', 'THOI_TIET', SYSTIMESTAMP - INTERVAL '11' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_MOCCHAU_RAINCOAT', 'TTT_MOCCHAU', 'NV_HDV01', 'Ao mua mong cho khach', 180000, 'https://seed.local/hoa-don/mocchau-raincoat.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '11' DAY);
+VALUES ('CP_MOCCHAU_RAINCOAT', 'TTT_MOCCHAU', 'NV_HDV01', 'Áo mưa mỏng cho khách', 180000, 'https://seed.local/hoa-don/mocchau-raincoat.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '11' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_MOCCHAU_LOCAL', 'TTT_MOCCHAU', 'NV_HDV01', 'Phi xe dien vao nong trai', 300000, 'https://seed.local/hoa-don/mocchau-ev.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
+VALUES ('CP_MOCCHAU_LOCAL', 'TTT_MOCCHAU', 'NV_HDV01', 'Phí xe điện vào nông trại', 300000, 'https://seed.local/hoa-don/mocchau-ev.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_MOCCHAU_KH11', 'TTT_MOCCHAU', 'KH_11', 4, 'Canh dep, lich trinh hop ly cho nguoi khong muon di bo qua nhieu.', SYSTIMESTAMP - INTERVAL '5' DAY);
+VALUES ('DG_MOCCHAU_KH11', 'TTT_MOCCHAU', 'KH_11', 4, 'Cảnh đẹp, lịch trình hợp lý cho người không muốn đi bộ quá nhiều.', SYSTIMESTAMP - INTERVAL '5' DAY);
 
 -- Goi 5: Quy Nhon - tour bi huy, don da thanh toan se sinh ho tro hoan tien.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_QUYNHON_HUY', 'TTT_QUYNHON', 'KH_07', SYSTIMESTAMP - INTERVAL '6' DAY, 11350000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Tour du kien huy do dieu kien thoi tiet bien.', 'HDX_BOTTLE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Tour dự kiến hủy do điều kiện thời tiết biển.', 'HDX_BOTTLE:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_QUYNHON_01', 'DDT_QUYNHON_HUY', 'Hoang Bao Tram', '079299000214', '0922000214', DATE '1992-04-04', 'NU', NULL);
+VALUES ('NDH_QUYNHON_01', 'DDT_QUYNHON_HUY', 'Hoàng Bảo Trâm', '079299000214', '0922000214', DATE '1992-04-04', 'NU', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_QUYNHON_KH', 'DDT_QUYNHON_HUY', 'KH_07', NULL, 'NGUOI_DAT', 5500000);
@@ -1107,12 +1115,12 @@ VALUES ('PC_HOIAN_HDV01', 'TTT_HOIAN', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '1' D
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HOIAN_CHO', 'TTT_HOIAN', 'KH_12', SYSTIMESTAMP - INTERVAL '8' HOUR, 14640000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Gia dinh dang giu cho tour Hoi An.', 'HDX_LOCAL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Gia đình đang giữ chỗ tour Hội An.', 'HDX_LOCAL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HOIAN_01', 'DDT_HOIAN_CHO', 'Trinh Bao Khanh', '079299000215', '0922000215', DATE '1991-10-10', 'NAM', NULL);
+VALUES ('NDH_HOIAN_01', 'DDT_HOIAN_CHO', 'Trịnh Bảo Khánh', '079299000215', '0922000215', DATE '1991-10-10', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HOIAN_02', 'DDT_HOIAN_CHO', 'Trinh Minh An', '079299000216', '0922000216', DATE '2017-05-12', 'NU', 'Tre em');
+VALUES ('NDH_HOIAN_02', 'DDT_HOIAN_CHO', 'Trịnh Minh An', '079299000216', '0922000216', DATE '2017-05-12', 'NU', 'Trẻ em');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_HOIAN_KH', 'DDT_HOIAN_CHO', 'KH_12', NULL, 'NGUOI_DAT', 4600000);
@@ -1128,10 +1136,10 @@ VALUES ('GD_HOIAN_CHO', 'DDT_HOIAN_CHO', 'THANH_TOAN', 'CHUYEN_KHOAN', 14640000,
 -- Don dat tour co su dung voucher FAMILY-700.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_HOIAN_VOUCHER', 'TTT_HOIAN', 'KH_12', SYSTIMESTAMP - INTERVAL '4' HOUR, 9060000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ap dung voucher VC_FAMILY700: tien tour 9.200.000, dich vu 560.000, giam 700.000, tong sau giam 9.060.000.', 'HDX_LOCAL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_FAMILY700: tiền tour 9.200.000, dịch vụ 560.000, giảm 700.000, tổng sau giảm 9.060.000.', 'HDX_LOCAL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HOIAN_VOUCHER_01', 'DDT_HOIAN_VOUCHER', 'Trinh Hoang Phuc', '079299000219', '0922000219', DATE '1995-01-24', 'NAM', NULL);
+VALUES ('NDH_HOIAN_VOUCHER_01', 'DDT_HOIAN_VOUCHER', 'Trịnh Hoàng Phúc', '079299000219', '0922000219', DATE '1995-01-24', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_HOIAN_VOUCHER_KH', 'DDT_HOIAN_VOUCHER', 'KH_12', NULL, 'NGUOI_DAT', 4600000);
@@ -1158,10 +1166,10 @@ VALUES ('PC_BUONMATHUOT_HDV02', 'TTT_BUONMATHUOT', 'NV_HDV02', SYSTIMESTAMP - IN
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_BUONMATHUOT_OK', 'TTT_BUONMATHUOT', 'KH_13', SYSTIMESTAMP - INTERVAL '2' DAY, 7174000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ap dung voucher VC_MEMBER15: tam tinh 8.440.000, giam 1.266.000, tong sau giam 7.174.000. Khach hang vang su dung uu dai thanh vien.', 'HDX_EBILL:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_MEMBER15: tạm tính 8.440.000, giảm 1.266.000, tổng sau giảm 7.174.000. Khách hạng vàng sử dụng ưu đãi thành viên.', 'HDX_EBILL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_BUONMATHUOT_01', 'DDT_BUONMATHUOT_OK', 'Nguyen Hoai Nam', '079299000217', '0922000217', DATE '1984-06-17', 'NAM', NULL);
+VALUES ('NDH_BUONMATHUOT_01', 'DDT_BUONMATHUOT_OK', 'Nguyễn Hoài Nam', '079299000217', '0922000217', DATE '1984-06-17', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_BUONMATHUOT_KH', 'DDT_BUONMATHUOT_OK', 'KH_13', NULL, 'NGUOI_DAT', 4100000);
@@ -1189,10 +1197,10 @@ VALUES ('PC_PULUONG_HDV02', 'TTT_PULUONG', 'NV_HDV02', SYSTIMESTAMP - INTERVAL '
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_PULUONG_OK', 'TTT_PULUONG', 'KH_14', SYSTIMESTAMP - INTERVAL '28' DAY, 6800000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Ap dung voucher VC_FAMILY700: tam tinh 7.500.000, giam 700.000, tong sau giam 6.800.000. Gia dinh da di tour Pu Luong.', 'HDX_TREE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_FAMILY700: tạm tính 7.500.000, giảm 700.000, tổng sau giảm 6.800.000. Gia đình đã đi tour Pù Luông.', 'HDX_TREE:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_PULUONG_01', 'DDT_PULUONG_OK', 'Lam Gia Han', '079299000218', '0922000218', DATE '2019-03-15', 'NU', 'Tre em duoi 6 tuoi');
+VALUES ('NDH_PULUONG_01', 'DDT_PULUONG_OK', 'Lâm Gia Hân', '079299000218', '0922000218', DATE '2019-03-15', 'NU', 'Trẻ em duoi 6 tuoi');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_PULUONG_KH', 'DDT_PULUONG_OK', 'KH_14', NULL, 'NGUOI_DAT', 3300000);
@@ -1213,14 +1221,14 @@ WHERE MaTourThucTe = 'TTT_PULUONG';
 INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
 VALUES ('LST_PULUONG_KH14', 'KH_14', 'TTT_PULUONG', 'CTDT_PULUONG_KH', TRUNC(SYSDATE) - 18);
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
-VALUES ('SC_PULUONG_CHILD', 'TTT_PULUONG', 'NV_HDV02', 'Tre nho met sau chang di bo ban Don.',
-        'Rut ngan cung di bo va bo tri xe dien ve homestay.', 'THAP', 'Y_TE', SYSTIMESTAMP - INTERVAL '17' DAY);
+VALUES ('SC_PULUONG_CHILD', 'TTT_PULUONG', 'NV_HDV02', 'Trẻ nhỏ mệt sau chặng đi bộ Bản Đôn.',
+        'Rút ngắn cung đi bộ và bố trí xe điện về homestay.', 'THAP', 'Y_TE', SYSTIMESTAMP - INTERVAL '17' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_PULUONG_EV', 'TTT_PULUONG', 'NV_HDV02', 'Xe dien ho tro gia dinh co tre nho', 360000, 'https://seed.local/hoa-don/puluong-ev.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '17' DAY);
+VALUES ('CP_PULUONG_EV', 'TTT_PULUONG', 'NV_HDV02', 'Xe điện hỗ trợ gia đình có trẻ nhỏ', 360000, 'https://seed.local/hoa-don/puluong-ev.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '17' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_PULUONG_SNACK', 'TTT_PULUONG', 'NV_HDV02', 'Do an nhe cho tre em', 150000, 'https://seed.local/hoa-don/puluong-snack.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '17' DAY);
+VALUES ('CP_PULUONG_SNACK', 'TTT_PULUONG', 'NV_HDV02', 'Đồ ăn nhẹ cho trẻ em', 150000, 'https://seed.local/hoa-don/puluong-snack.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '17' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_PULUONG_KH14', 'TTT_PULUONG', 'KH_14', 5, 'Homestay sach, HDV chu dao va lich trinh phu hop gia dinh co tre nho.', SYSTIMESTAMP - INTERVAL '8' DAY);
+VALUES ('DG_PULUONG_KH14', 'TTT_PULUONG', 'KH_14', 5, 'Homestay sạch, HDV chu đáo và lịch trình phù hợp gia đình có trẻ nhỏ.', SYSTIMESTAMP - INTERVAL '8' DAY);
 
 -- Goi 9: Mui Ne - mo ban, mot thanh toan that bai can kinh doanh ho tro lai.
 INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
@@ -1233,10 +1241,10 @@ VALUES ('PC_MUINE_HDV01', 'TTT_MUINE', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '1' D
 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_MUINE_FAIL', 'TTT_MUINE', 'KH_15', SYSTIMESTAMP - INTERVAL '6' HOUR, 5250000, 'THANH_TOAN_THAT_BAI',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Thanh toan khong thanh cong, can lien he lai khach.', 'HDX_BOTTLE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Thanh toán không thành công, cần liên hệ lại khách.', 'HDX_BOTTLE:1');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 VALUES ('DDT_MUINE_DIEMXANH', 'TTT_MUINE', 'KH_05', SYSTIMESTAMP - INTERVAL '4' HOUR, 4450000, 'CHO_XAC_NHAN',
-        SYSTIMESTAMP + INTERVAL '1' DAY, 'Su dung 800 diem xanh luc dat tour qua voucher VC_DIEMXANH800: tien tour 4.900.000, dich vu 350.000, giam 800.000, tong sau giam 4.450.000.', 'HDX_BOTTLE:1');
+        SYSTIMESTAMP + INTERVAL '1' DAY, 'Sử dụng 800 điểm xanh lúc đặt tour qua voucher VC_DIEMXANH800: tiền tour 4.900.000, dịch vụ 350.000, giảm 800.000, tổng sau giảm 4.450.000.', 'HDX_BOTTLE:1');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_MUINE_KH', 'DDT_MUINE_FAIL', 'KH_15', NULL, 'NGUOI_DAT', 4900000);
@@ -1283,21 +1291,21 @@ INSERT INTO NHATKYDOIDIEM (MaNhatKyDoiDiem, MaKhachHang, MaVoucher, DiemQuyDoi, 
 VALUES ('NKDD_KH05_BOOKING', 'KH_05', 'VC_DIEMXANH800', 800, SYSTIMESTAMP - INTERVAL '4' HOUR);
 
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_CHO_BS', 'DDT_CHO_HUY', 'KH_04', 'HUY_TOUR', 'Khach can bo sung ly do huy va xac nhan phi huy.', 'CHO_BO_SUNG', 'NV_MGR01');
+VALUES ('YCHT_CHO_BS', 'DDT_CHO_HUY', 'KH_04', 'HUY_TOUR', 'Khách cần bổ sung lý do hủy và xác nhận phí hủy.', 'CHO_BO_SUNG', 'NV_MGR01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_CHO_GT', 'DDT_TT_FAIL', 'KH_06', 'THANH_TOAN', 'Can giai trinh ket qua doi soat voi ngan hang.', 'CHO_GIAI_TRINH', 'NV_SALES01');
+VALUES ('YCHT_CHO_GT', 'DDT_TT_FAIL', 'KH_06', 'THANH_TOAN', 'Cần giải trình kết quả đối soát với ngân hàng.', 'CHO_GIAI_TRINH', 'NV_SALES01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_DA_XL', 'DDT_DA_XN', 'KH_02', 'DOI_DICH_VU', 'Da xac nhan dich vu dua don san bay rieng.', 'DA_XU_LY', 'NV_MGR01');
+VALUES ('YCHT_DA_XL', 'DDT_DA_XN', 'KH_02', 'DOI_DICH_VU', 'Đã xác nhận dịch vụ đưa đón sân bay riêng.', 'DA_XU_LY', 'NV_MGR01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_TU_CHOI', 'DDT_TU_CHOI_HT', 'KH_05', 'HOAN_TIEN', 'Tu choi hoan tien do khong dat dieu kien chinh sach.', 'TU_CHOI', 'NV_KT01');
+VALUES ('YCHT_TU_CHOI', 'DDT_TU_CHOI_HT', 'KH_05', 'HOAN_TIEN', 'Từ chối hoàn tiền do không đạt điều kiện chính sách.', 'TU_CHOI', 'NV_KT01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_CANTHO_INVOICE', 'DDT_CANTHO_OK', 'KH_09', 'HOA_DON', 'Khach yeu cau xuat hoa don cong ty cho tour Can Tho.', 'CHUA_XU_LY', 'NV_KT01');
+VALUES ('YCHT_CANTHO_INVOICE', 'DDT_CANTHO_OK', 'KH_09', 'HOA_DON', 'Khách yêu cầu xuất hóa đơn công ty cho tour Cần Thơ.', 'CHUA_XU_LY', 'NV_KT01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_HALONG_SERVICE', 'DDT_HALONG_OK', 'KH_08', 'DICH_VU_THEM', 'Xac nhan lai goi chup anh hanh trinh tren du thuyen.', 'DA_XU_LY', 'NV_MGR01');
+VALUES ('YCHT_HALONG_SERVICE', 'DDT_HALONG_OK', 'KH_08', 'DICH_VU_THEM', 'Xác nhận lại gói chụp ảnh hành trình trên du thuyền.', 'DA_XU_LY', 'NV_MGR01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_HOIAN_MEAL', 'DDT_HOIAN_CHO', 'KH_12', 'AN_UONG', 'Khach can xac nhan thuc don chay cho ca gia dinh.', 'CHO_BO_SUNG', 'NV_MGR01');
+VALUES ('YCHT_HOIAN_MEAL', 'DDT_HOIAN_CHO', 'KH_12', 'AN_UONG', 'Khách cần xác nhận thực đơn chay cho cả gia đình.', 'CHO_BO_SUNG', 'NV_MGR01');
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
-VALUES ('YCHT_MUINE_PAYMENT', 'DDT_MUINE_FAIL', 'KH_15', 'THANH_TOAN', 'Thanh toan the noi dia that bai, can kinh doanh lien he huong dan lai.', 'CHUA_XU_LY', 'NV_SALES01');
+VALUES ('YCHT_MUINE_PAYMENT', 'DDT_MUINE_FAIL', 'KH_15', 'THANH_TOAN', 'Thanh toán thẻ nội địa thất bại, cần kinh doanh liên hệ hướng dẫn lại.', 'CHUA_XU_LY', 'NV_SALES01');
 
 INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
 VALUES ('NKHT_CKH_DH', 'TK_MGR01', 'THEM', 'TOURTHUCTE_DIEU_HANH', 'TTT_CKH', SYSTIMESTAMP - INTERVAL '10' DAY);
@@ -1355,9 +1363,9 @@ END;
 /
 
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_NB_01', 'TTT_KT', 'KH_04', 5, 'Canh rat dep va HDV nhiet tinh.', SYSTIMESTAMP - INTERVAL '2' DAY);
+VALUES ('DG_NB_01', 'TTT_KT', 'KH_04', 5, 'Cảnh rất đẹp và HDV nhiệt tình.', SYSTIMESTAMP - INTERVAL '2' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_HUE_01', 'TTT_QT', 'KH_02', 4, 'Do an ngon nhung thoi tiet hoi suong mu.', SYSTIMESTAMP - INTERVAL '5' DAY);
+VALUES ('DG_HUE_01', 'TTT_QT', 'KH_02', 4, 'Đồ ăn ngon nhưng thời tiết hơi sương mù.', SYSTIMESTAMP - INTERVAL '5' DAY);
 
 -- ============================================================
 -- BO SUNG: KHACH HANG DAT TOUR DANG MO BAN (KEM THANH TOAN)
@@ -1367,7 +1375,7 @@ INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien,
 VALUES ('DDT_HA_NEW', 'TTT_HOIAN', 'KH_09', SYSTIMESTAMP - INTERVAL '2' DAY, 11960000, 'DA_XAC_NHAN', SYSTIMESTAMP);
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_HA_NEW_01', 'DDT_HA_NEW', 'Nguyen Van Binh', '079299000301', '0922000301', DATE '1995-05-15', 'NAM', NULL);
+VALUES ('NDH_HA_NEW_01', 'DDT_HA_NEW', 'Nguyễn Văn Bình', '079299000301', '0922000301', DATE '1995-05-15', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_HA_NEW_KH', 'DDT_HA_NEW', 'KH_09', NULL, 'NGUOI_DAT', 5980000);
@@ -1456,17 +1464,17 @@ VALUES ('DDT_SAPA_OLD_05', 'TTT_SAPA_OLD', 'KH_05', SYSTIMESTAMP - INTERVAL '48'
         SYSTIMESTAMP - INTERVAL '46' DAY, 'Gia đình 4 người đã thanh toán đủ.', 'HDX_CLEANUP:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_02_01', 'DDT_SAPA_OLD_02', 'Pham Quang Hieu', '079299000401', '0922000401', DATE '1994-09-09', 'NAM', NULL);
+VALUES ('NDH_SAPA_OLD_02_01', 'DDT_SAPA_OLD_02', 'Phạm Quang Hiếu', '079299000401', '0922000401', DATE '1994-09-09', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_03_01', 'DDT_SAPA_OLD_03', 'Le Bao Ngoc', '079299000402', '0922000402', DATE '1996-12-11', 'NU', NULL);
+VALUES ('NDH_SAPA_OLD_03_01', 'DDT_SAPA_OLD_03', 'Lê Bảo Ngọc', '079299000402', '0922000402', DATE '1996-12-11', 'NU', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_03_02', 'DDT_SAPA_OLD_03', 'Le Minh Quan', '079299000403', '0922000403', DATE '1992-03-15', 'NAM', NULL);
+VALUES ('NDH_SAPA_OLD_03_02', 'DDT_SAPA_OLD_03', 'Lê Minh Quan', '079299000403', '0922000403', DATE '1992-03-15', 'NAM', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_05_01', 'DDT_SAPA_OLD_05', 'Do Thanh Lam', '079299000404', '0922000404', DATE '1988-08-08', 'NU', NULL);
+VALUES ('NDH_SAPA_OLD_05_01', 'DDT_SAPA_OLD_05', 'Đỗ Thanh Lâm', '079299000404', '0922000404', DATE '1988-08-08', 'NU', NULL);
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_05_02', 'DDT_SAPA_OLD_05', 'Do Minh Khoi', '079299000405', '0922000405', DATE '2012-05-20', 'NAM', 'Tre em');
+VALUES ('NDH_SAPA_OLD_05_02', 'DDT_SAPA_OLD_05', 'Đỗ Minh Khôi', '079299000405', '0922000405', DATE '2012-05-20', 'NAM', 'Trẻ em');
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
-VALUES ('NDH_SAPA_OLD_05_03', 'DDT_SAPA_OLD_05', 'Do Gia Han', '079299000406', '0922000406', DATE '2016-11-02', 'NU', 'Tre em');
+VALUES ('NDH_SAPA_OLD_05_03', 'DDT_SAPA_OLD_05', 'Đỗ Gia Hân', '079299000406', '0922000406', DATE '2016-11-02', 'NU', 'Trẻ em');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_SAPA_OLD_01_KH', 'DDT_SAPA_OLD_01', 'KH_01', NULL, 'NGUOI_DAT', 4800000);
@@ -1557,11 +1565,11 @@ VALUES ('CP_SAPA_OLD_EV', 'TTT_SAPA_OLD', 'NV_HDV03', 'Xe điện hỗ trợ kh�
 
 -- 5. Them Danh Gia cho cac tour nay
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_HA_01', 'TTT_HOIAN_OLD', 'KH_06', 5, 'Trai nghiem rat tuyet voi, pho co dep.', SYSTIMESTAMP - INTERVAL '15' DAY);
+VALUES ('DG_HA_01', 'TTT_HOIAN_OLD', 'KH_06', 5, 'Trải nghiệm rất tuyệt vời, phố cổ đẹp.', SYSTIMESTAMP - INTERVAL '15' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_MN_01', 'TTT_MUINE_OLD', 'KH_07', 4, 'Doi cat rat rong va dep, tuy nhien troi hoi nang.', SYSTIMESTAMP - INTERVAL '15' DAY);
+VALUES ('DG_MN_01', 'TTT_MUINE_OLD', 'KH_07', 4, 'Đồi cát rất rộng và đẹp, tuy nhiên trời hơi nắng.', SYSTIMESTAMP - INTERVAL '15' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_HL_01', 'TTT_HALONG_OLD', 'KH_08', 5, 'Du thuyen dep, do an ngon, phuc vu chu dao.', SYSTIMESTAMP - INTERVAL '15' DAY);
+VALUES ('DG_HL_01', 'TTT_HALONG_OLD', 'KH_08', 5, 'Du thuyền đẹp, đồ ăn ngon, phục vụ chu đáo.', SYSTIMESTAMP - INTERVAL '15' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
 VALUES ('DG_SAPA_OLD_KH01', 'TTT_SAPA_OLD', 'KH_01', 5, 'Fansipan nhiều sương nhưng HDV đổi lịch rất linh hoạt.', SYSTIMESTAMP - INTERVAL '30' DAY);
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
@@ -2271,22 +2279,22 @@ VALUES ('PC_HUE_REVIEW_03_HDV06', 'TTT_HUE_REVIEW_03', 'NV_HDV06', SYSTIMESTAMP 
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 SELECT 'DDT_SAPA_REVIEW_03_' || MaKhachHang, 'TTT_SAPA_REVIEW_03', MaKhachHang, SYSTIMESTAMP - INTERVAL '32' DAY,
        CASE MaKhachHang WHEN 'KH_02' THEN 9800000 WHEN 'KH_05' THEN 14700000 ELSE 4900000 END,
-       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '31' DAY, 'Khach da hoan thanh tour Sa Pa, dung lam nguon danh gia cho tour mau.', 'HDX_REFILL:1'
+       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '31' DAY, 'Khách đã hoàn thành tour Sa Pa, dùng làm nguồn đánh giá cho tour mẫu.', 'HDX_REFILL:1'
 FROM HOCHIEUSO WHERE MaKhachHang IN ('KH_01','KH_02','KH_03','KH_04','KH_05');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 SELECT 'DDT_DANANG_REVIEW_03_' || MaKhachHang, 'TTT_DANANG_REVIEW_03', MaKhachHang, SYSTIMESTAMP - INTERVAL '35' DAY,
        CASE MaKhachHang WHEN 'KH_08' THEN 20100000 WHEN 'KH_06' THEN 13400000 WHEN 'KH_10' THEN 13400000 ELSE 6700000 END,
-       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '34' DAY, 'Khach da hoan thanh tour Da Nang - Hoi An, dung lam nguon danh gia cho tour mau.', 'HDX_PUBLIC_TRANSFER:1'
+       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '34' DAY, 'Khách đã hoàn thành tour Đà Nẵng - Hội An, dùng làm nguồn đánh giá cho tour mẫu.', 'HDX_PUBLIC_TRANSFER:1'
 FROM HOCHIEUSO WHERE MaKhachHang IN ('KH_06','KH_07','KH_08','KH_09','KH_10');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 SELECT 'DDT_PHUQUOC_REVIEW_03_' || MaKhachHang, 'TTT_PHUQUOC_REVIEW_03', MaKhachHang, SYSTIMESTAMP - INTERVAL '36' DAY,
        CASE MaKhachHang WHEN 'KH_14' THEN 24600000 WHEN 'KH_11' THEN 16400000 WHEN 'KH_13' THEN 16400000 ELSE 8200000 END,
-       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '35' DAY, 'Khach da hoan thanh tour Phu Quoc, dung lam nguon danh gia cho tour mau.', 'HDX_CORAL_SAFE:1'
+       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '35' DAY, 'Khách đã hoàn thành tour Phú Quốc, dùng làm nguồn đánh giá cho tour mẫu.', 'HDX_CORAL_SAFE:1'
 FROM HOCHIEUSO WHERE MaKhachHang IN ('KH_11','KH_12','KH_13','KH_14','KH_15');
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
 SELECT 'DDT_HUE_REVIEW_03_' || MaKhachHang, 'TTT_HUE_REVIEW_03', MaKhachHang, SYSTIMESTAMP - INTERVAL '28' DAY,
        CASE MaKhachHang WHEN 'KH_02' THEN 9200000 WHEN 'KH_04' THEN 9200000 WHEN 'KH_05' THEN 13800000 ELSE 4600000 END,
-       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '27' DAY, 'Khach da hoan thanh tour Hue, dung lam nguon danh gia cho tour mau.', 'HDX_REUSABLE_BAG:1'
+       'DA_XAC_NHAN', SYSTIMESTAMP - INTERVAL '27' DAY, 'Khách đã hoàn thành tour Huế, dùng làm nguồn đánh giá cho tour mẫu.', 'HDX_REUSABLE_BAG:1'
 FROM HOCHIEUSO WHERE MaKhachHang IN ('KH_01','KH_02','KH_03','KH_04','KH_05');
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
@@ -2470,17 +2478,164 @@ BEGIN
 END;
 /
 
+-- Bảo đảm mọi tour đang mở bán và đã hoàn thành đều có HDV hợp lệ,
+-- đồng thời bổ sung lịch sử tham gia, chi phí và báo cáo sự cố cho các tour HDV đã dẫn.
+DECLARE
+    v_MaNhanVien PHANCONGTOUR.MaNhanVien%TYPE;
+BEGIN
+    FOR r IN (
+        SELECT ttt.MaTourThucTe, ttt.MaTourMau, ttt.NgayKhoiHanh, tm.ThoiLuong, ttt.TrangThai
+        FROM TOURTHUCTE ttt
+        JOIN TOURMAU tm ON tm.MaTourMau = ttt.MaTourMau
+        WHERE ttt.TrangThai IN ('MO_BAN', 'KET_THUC', 'DA_QUYET_TOAN')
+          AND NOT EXISTS (
+              SELECT 1
+              FROM PHANCONGTOUR pc
+              WHERE pc.MaTourThucTe = ttt.MaTourThucTe
+                AND pc.TrangThaiChapNhan <> 'TU_CHOI'
+          )
+        ORDER BY ttt.NgayKhoiHanh, ttt.MaTourThucTe
+    ) LOOP
+        BEGIN
+            SELECT MaNhanVien
+            INTO v_MaNhanVien
+            FROM (
+                SELECT nv.MaNhanVien
+                FROM NHANVIEN nv
+                WHERE nv.MaNhanVien LIKE 'NV_HDV%'
+                  AND nv.TrangThaiLamViec = 'HOAT_DONG'
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM PHANCONGTOUR pc2
+                      JOIN TOURTHUCTE ttt2 ON ttt2.MaTourThucTe = pc2.MaTourThucTe
+                      JOIN TOURMAU tm2 ON tm2.MaTourMau = ttt2.MaTourMau
+                      WHERE pc2.MaNhanVien = nv.MaNhanVien
+                        AND pc2.TrangThaiChapNhan <> 'TU_CHOI'
+                        AND r.NgayKhoiHanh < ttt2.NgayKhoiHanh + tm2.ThoiLuong + (12/24)
+                        AND ttt2.NgayKhoiHanh < r.NgayKhoiHanh + r.ThoiLuong + (12/24)
+                  )
+                ORDER BY
+                    CASE
+                        WHEN r.MaTourMau IN ('TM_SAPA','TM_HAGIANG','TM_MOCCHAU','TM_PULUONG') AND nv.MaNhanVien IN ('NV_HDV01','NV_HDV03','NV_HDV08') THEN 0
+                        WHEN r.MaTourMau IN ('TM_DANANG','TM_HUE','TM_HOIAN','TM_QUYNHON') AND nv.MaNhanVien IN ('NV_HDV02','NV_HDV04','NV_HDV06') THEN 0
+                        WHEN r.MaTourMau IN ('TM_PHUQUOC','TM_CONDAO','TM_HALONG','TM_MUINE') AND nv.MaNhanVien IN ('NV_HDV05','NV_HDV06','NV_HDV09') THEN 0
+                        WHEN r.MaTourMau IN ('TM_DALAT','TM_CANTHO','TM_BUONMATHUOT','TM_NINHBINH') AND nv.MaNhanVien IN ('NV_HDV07','NV_HDV08','NV_HDV10') THEN 0
+                        ELSE 1
+                    END,
+                    nv.MaNhanVien
+            )
+            WHERE ROWNUM = 1;
+
+            INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
+            VALUES (SUBSTR('PC_AUTO_' || r.MaTourThucTe, 1, 50), r.MaTourThucTe, v_MaNhanVien,
+                    CASE WHEN r.TrangThai = 'MO_BAN' THEN SYSTIMESTAMP - INTERVAL '1' DAY ELSE CAST(r.NgayKhoiHanh AS TIMESTAMP) - INTERVAL '7' DAY END,
+                    'DA_DONG_Y',
+                    CASE WHEN r.TrangThai = 'MO_BAN' THEN SYSTIMESTAMP - INTERVAL '20' HOUR ELSE CAST(r.NgayKhoiHanh AS TIMESTAMP) - INTERVAL '6' DAY END);
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                RAISE_APPLICATION_ERROR(-20991, 'Không tìm thấy HDV khả dụng cho tour ' || r.MaTourThucTe);
+        END;
+    END LOOP;
+
+    INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+    SELECT SUBSTR('LST_AUTO_' || ctdt.MaChiTietDat, 1, 50),
+           ctdt.MaKhachHang,
+           ddt.MaTourThucTe,
+           ctdt.MaChiTietDat,
+           ttt.NgayKhoiHanh
+    FROM CHITIETDATTOUR ctdt
+    JOIN DONDATTOUR ddt ON ddt.MaDatTour = ctdt.MaDatTour
+    JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = ddt.MaTourThucTe
+    WHERE ctdt.MaKhachHang IS NOT NULL
+      AND ddt.TrangThai = 'DA_XAC_NHAN'
+      AND ttt.TrangThai IN ('KET_THUC', 'DA_QUYET_TOAN')
+      AND NOT EXISTS (
+          SELECT 1
+          FROM LICHSUTOUR lst
+          WHERE lst.MaKhachHang = ctdt.MaKhachHang
+            AND lst.MaTourThucTe = ddt.MaTourThucTe
+      );
+
+    INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
+    SELECT SUBSTR('SC_AUTO_' || ttt.MaTourThucTe, 1, 50),
+           ttt.MaTourThucTe,
+           (SELECT MIN(pc.MaNhanVien)
+            FROM PHANCONGTOUR pc
+            WHERE pc.MaTourThucTe = ttt.MaTourThucTe
+              AND pc.TrangThaiChapNhan = 'DA_DONG_Y'),
+           CASE
+               WHEN ttt.MaTourMau IN ('TM_PHUQUOC','TM_CONDAO','TM_HALONG','TM_MUINE') THEN 'Thời tiết biển thay đổi, cần điều chỉnh thứ tự tham quan để bảo đảm an toàn.'
+               WHEN ttt.MaTourMau IN ('TM_SAPA','TM_HAGIANG','TM_MOCCHAU','TM_PULUONG') THEN 'Đường tham quan ẩm sau mưa, đoàn cần giảm tốc độ di chuyển.'
+               WHEN ttt.MaTourMau IN ('TM_DALAT','TM_BUONMATHUOT','TM_CANTHO') THEN 'Một khách mệt nhẹ sau chặng di chuyển dài, cần theo dõi thêm.'
+               ELSE 'Lịch trình phát sinh thay đổi nhỏ tại điểm tham quan, HDV đã cập nhật cho đoàn.'
+           END,
+           CASE
+               WHEN ttt.MaTourMau IN ('TM_PHUQUOC','TM_CONDAO','TM_HALONG','TM_MUINE') THEN 'Chuyển hoạt động ngoài trời sang khung giờ an toàn hơn và thông báo lại cho khách.'
+               WHEN ttt.MaTourMau IN ('TM_SAPA','TM_HAGIANG','TM_MOCCHAU','TM_PULUONG') THEN 'Nhắc khách dùng giày chống trơn, bố trí thêm thời gian nghỉ và đổi sang lối đi phụ.'
+               WHEN ttt.MaTourMau IN ('TM_DALAT','TM_BUONMATHUOT','TM_CANTHO') THEN 'Sắp xếp ghế nghỉ, bổ sung nước ấm và điều chỉnh nhịp tham quan.'
+               ELSE 'Điều phối lại thời gian tập trung và xác nhận phương án mới với nhà cung cấp.'
+           END,
+           'THAP',
+           CASE
+               WHEN ttt.MaTourMau IN ('TM_PHUQUOC','TM_CONDAO','TM_HALONG','TM_MUINE') THEN 'THOI_TIET'
+               WHEN ttt.MaTourMau IN ('TM_DALAT','TM_BUONMATHUOT','TM_CANTHO') THEN 'Y_TE'
+               ELSE 'KHAC'
+           END,
+           SYSTIMESTAMP - INTERVAL '5' DAY
+    FROM TOURTHUCTE ttt
+    WHERE ttt.TrangThai IN ('KET_THUC', 'DA_QUYET_TOAN')
+      AND EXISTS (
+          SELECT 1 FROM PHANCONGTOUR pc
+          WHERE pc.MaTourThucTe = ttt.MaTourThucTe
+            AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
+      )
+      AND NOT EXISTS (
+          SELECT 1 FROM NHATKYSUCO sc
+          WHERE sc.MaTourThucTe = ttt.MaTourThucTe
+      );
+
+    INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
+    SELECT SUBSTR('CP_AUTO_' || ttt.MaTourThucTe || '_MEAL', 1, 50),
+           ttt.MaTourThucTe,
+           (SELECT MIN(pc.MaNhanVien)
+            FROM PHANCONGTOUR pc
+            WHERE pc.MaTourThucTe = ttt.MaTourThucTe
+              AND pc.TrangThaiChapNhan = 'DA_DONG_Y'),
+           'Bổ sung nước uống và bữa nhẹ cho đoàn',
+           CASE
+               WHEN ttt.SoKhachToiDa <= 20 THEN 650000
+               WHEN ttt.SoKhachToiDa <= 26 THEN 850000
+               ELSE 1100000
+           END,
+           'https://seed.local/hoa-don/' || LOWER(ttt.MaTourThucTe) || '-meal.jpg',
+           'DA_DUYET',
+           SYSTIMESTAMP - INTERVAL '4' DAY
+    FROM TOURTHUCTE ttt
+    WHERE ttt.TrangThai = 'KET_THUC'
+      AND NOT EXISTS (SELECT 1 FROM QUYETTOAN qt WHERE qt.MaTourThucTe = ttt.MaTourThucTe)
+      AND EXISTS (
+          SELECT 1 FROM PHANCONGTOUR pc
+          WHERE pc.MaTourThucTe = ttt.MaTourThucTe
+            AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
+      )
+      AND NOT EXISTS (
+          SELECT 1 FROM CHIPHITHUCTE cp
+          WHERE cp.MaChiPhiThucTe = SUBSTR('CP_AUTO_' || ttt.MaTourThucTe || '_MEAL', 1, 50)
+      );
+END;
+/
+
 -- Bo sung chi phi va quyet toan cho tour da hoan thanh co nhieu don dat, phuc vu luong tai chinh sau tour.
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DN_REVIEW_03_HOTEL', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Khach san Da Nang - Hoi An 3 dem', 42000000, 'https://seed.local/hoa-don/danang-review-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
+VALUES ('CP_DN_REVIEW_03_HOTEL', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Khách sạn Đà Nẵng - Hội An 3 đêm', 42000000, 'https://seed.local/hoa-don/danang-review-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DN_REVIEW_03_BUS', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Xe du lich 29 cho tron tour', 18500000, 'https://seed.local/hoa-don/danang-review-bus.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
+VALUES ('CP_DN_REVIEW_03_BUS', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Xe du lịch 29 chỗ trọn tour', 18500000, 'https://seed.local/hoa-don/danang-review-bus.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '10' DAY);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_DN_REVIEW_03_TICKET', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Ve tham quan va show Hoi An', 12600000, 'https://seed.local/hoa-don/danang-review-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '9' DAY);
+VALUES ('CP_DN_REVIEW_03_TICKET', 'TTT_DANANG_REVIEW_03', 'NV_HDV04', 'Vé tham quan và show Hội An', 12600000, 'https://seed.local/hoa-don/danang-review-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '9' DAY);
 
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu)
 VALUES ('QT_DANANG_REVIEW_03_DONE', 'TTT_DANANG_REVIEW_03', 0, 0, 98000000, 0, 'NV_KT01', SYSTIMESTAMP - INTERVAL '7' DAY, 'DA_QUYET_TOAN',
-        'Quyet toan tour Da Nang - Hoi An da hoan thanh; trigger tu tinh doanh thu, chi phi va loi nhuan theo giao dich/chi phi thuc te.');
+        'Quyết toán tour Đà Nẵng - Hội An đã hoàn thành; trigger tự tính doanh thu, chi phí và lợi nhuận theo giao dịch/chi phí thực tế.');
 
 -- Tính lại số chỗ còn lại sau toàn bộ cụm dữ liệu bổ sung.
 UPDATE CHITIETDATTOUR
@@ -2521,4 +2676,5 @@ COMMIT;
 -- ============================================================
 -- END SEED DATA LIEN KET
 -- ============================================================
+
 
