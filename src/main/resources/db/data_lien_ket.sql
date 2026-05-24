@@ -53,10 +53,10 @@ DELETE FROM TAIKHOAN         WHERE MaTaiKhoan LIKE 'TK_KH_%';
 -- 1. NANG LUC HDV VA KHACH HANG
 -- ------------------------------------------------------------
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NL_HDV01', 'NV_HDV01', 'Tieng Viet, Tieng Anh', 'The HDV noi dia; So cap cuu co ban', 'Tay Bac, trekking, tour xanh', 4.80, 126);
+VALUES ('NL_HDV01', 'NV_HDV01', 'Tiếng Việt', 'Tiếng Anh', 'The HDV nội địa; Sơ cấp cứu cơ bản', 'Tây Bắc, Trekking, Tour xanh', 4.80, 126);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NL_HDV02', 'NV_HDV02', 'Tieng Viet, Tieng Anh, Tieng Han', 'The HDV quoc te', 'Bien dao, di san mien Trung, gia dinh', 4.70, 98);
+VALUES ('NL_HDV02', 'NV_HDV02', 'Tiếng Việt, Tiếng Anh, Tiếng Hàn', 'The HDV quốc tế', 'Biển đảo, di sản miền Trung, gia đình', 4.70, 98);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NL_HDV03', 'NV_HDV03', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội địa', 'Miền núi phía Bắc, tour cộng đồng', 4.76, 84);
@@ -69,101 +69,103 @@ VALUES ('NL_HDV06', 'NV_HDV06', 'Tiếng Việt, Tiếng Anh', 'Thẻ HDV nội 
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_01', 'khach01', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Tran Minh Khoa', '079199000101', DATE '1995-02-14', 'khach01@digitaltravel.vn', '0911000101', 'KHACHHANG', 'HOAT_DONG');
+        'Trần Minh Khoa', '079199000101', DATE '1995-02-14', 'khach01@digitaltravel.vn', '0911000101', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_02', 'khach02', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Pham Ngoc Linh', '079199000102', DATE '1997-08-20', 'khach02@digitaltravel.vn', '0911000102', 'KHACHHANG', 'HOAT_DONG');
+        'Phạm Ngọc Linh', '079199000102', DATE '1997-08-20', 'khach02@digitaltravel.vn', '0911000102', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_03', 'khach03', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Le Thu Ha', '079199000103', DATE '1992-11-03', 'khach03@digitaltravel.vn', '0911000103', 'KHACHHANG', 'HOAT_DONG');
+        'Lê Thu Hà', '079199000103', DATE '1992-11-03', 'khach03@digitaltravel.vn', '0911000103', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_04', 'khach04', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyen Bao Chau', '079199000104', DATE '1989-05-09', 'khach04@digitaltravel.vn', '0911000104', 'KHACHHANG', 'HOAT_DONG');
+        'Nguyễn Bảo Châu', '079199000104', DATE '1989-05-09', 'khach04@digitaltravel.vn', '0911000104', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_05', 'khach05', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Do Quang Huy', '079199000105', DATE '1986-12-25', 'khach05@digitaltravel.vn', '0911000105', 'KHACHHANG', 'HOAT_DONG');
+        'Đỗ Quang Huy', '079199000105', DATE '1986-12-25', 'khach05@digitaltravel.vn', '0911000105', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_06', 'khach06', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Bui Anh Thu', '079199000106', DATE '1999-04-18', 'khach06@digitaltravel.vn', '0911000106', 'KHACHHANG', 'HOAT_DONG');
+        'Bùi Anh Thư', '079199000106', DATE '1999-04-18', 'khach06@digitaltravel.vn', '0911000106', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_07', 'khach07', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Hoang Viet Anh', '079199000107', DATE '1991-01-16', 'khach07@digitaltravel.vn', '0911000107', 'KHACHHANG', 'HOAT_DONG');
+        'Hoàng Việt Anh', '079199000107', DATE '1991-01-16', 'khach07@digitaltravel.vn', '0911000107', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_08', 'khach08', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Vu Khanh Vy', '079199000108', DATE '1994-09-27', 'khach08@digitaltravel.vn', '0911000108', 'KHACHHANG', 'HOAT_DONG');
+        'Vũ Khánh Vy', '079199000108', DATE '1994-09-27', 'khach08@digitaltravel.vn', '0911000108', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_09', 'khach09', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Dang Gia Han', '079199000109', DATE '1988-03-30', 'khach09@digitaltravel.vn', '0911000109', 'KHACHHANG', 'HOAT_DONG');
+        'Đặng Gia Hân', '079199000109', DATE '1988-03-30', 'khach09@digitaltravel.vn', '0911000109', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_10', 'khach10', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Mai Phuong Nhi', '079199000110', DATE '1996-06-12', 'khach10@digitaltravel.vn', '0911000110', 'KHACHHANG', 'HOAT_DONG');
+        'Mai Phương Nhi', '079199000110', DATE '1996-06-12', 'khach10@digitaltravel.vn', '0911000110', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_11', 'khach11', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Cao Minh Tri', '079199000111', DATE '1984-10-08', 'khach11@digitaltravel.vn', '0911000111', 'KHACHHANG', 'HOAT_DONG');
+        'Cao Minh Trí', '079199000111', DATE '1984-10-08', 'khach11@digitaltravel.vn', '0911000111', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_12', 'khach12', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Trinh My Duyen', '079199000112', DATE '1998-07-07', 'khach12@digitaltravel.vn', '0911000112', 'KHACHHANG', 'HOAT_DONG');
+        'Trịnh Mỹ Duyên', '079199000112', DATE '1998-07-07', 'khach12@digitaltravel.vn', '0911000112', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_13', 'khach13', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Nguyen Duc Long', '079199000113', DATE '1985-09-19', 'khach13@digitaltravel.vn', '0911000113', 'KHACHHANG', 'HOAT_DONG');
+        'Nguyễn Đức Long', '079199000113', DATE '1985-09-19', 'khach13@digitaltravel.vn', '0911000113', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_14', 'khach14', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Lam Tue Minh', '079199000114', DATE '1990-02-28', 'khach14@digitaltravel.vn', '0911000114', 'KHACHHANG', 'HOAT_DONG');
+        'Lâm Tuệ Minh', '079199000114', DATE '1990-02-28', 'khach14@digitaltravel.vn', '0911000114', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KH_15', 'khach15', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Phan Gia Bao', '079199000115', DATE '1993-12-02', 'khach15@digitaltravel.vn', '0911000115', 'KHACHHANG', 'HOAT_DONG');
+        'Phan Gia Bảo', '079199000115', DATE '1993-12-02', 'khach15@digitaltravel.vn', '0911000115', 'KHACHHANG', 'HOAT_DONG');
 
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_01', 'TK_KH_01', 'An chay vao buoi toi', 'Hai san', 'DONG', 650);
+VALUES ('KH_01', 'TK_KH_01', 'Ăn chay vào buổi tối', 'Hải sản', 'DONG', 650);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_02', 'TK_KH_02', 'Di cung gia dinh co tre em', NULL, 'BAC', 2400);
+VALUES ('KH_02', 'TK_KH_02', 'Đi cùng gia đình có trẻ em', NULL, 'BAC', 2400);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_03', 'TK_KH_03', NULL, 'Dau phong', 'THANH_VIEN', 200);
+VALUES ('KH_03', 'TK_KH_03', NULL, 'Đậu phộng', 'THANH_VIEN', 200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_04', 'TK_KH_04', 'Can phong tang thap', NULL, 'VANG', 5600);
+VALUES ('KH_04', 'TK_KH_04', 'Cần phòng tầng thấp', NULL, 'VANG', 5600);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
 VALUES ('KH_05', 'TK_KH_05', NULL, NULL, 'KIM_CUONG', 10200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_06', 'TK_KH_06', 'Can xac nhan dich vu dua don san bay', NULL, 'DONG', 850);
+VALUES ('KH_06', 'TK_KH_06', 'Cần xác nhận dịch vụ đưa đón sân bay', NULL, 'DONG', 850);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_07', 'TK_KH_07', 'Uu tien phong khong hut thuoc', NULL, 'THANH_VIEN', 120);
+VALUES ('KH_07', 'TK_KH_07', 'Ưu tiên phòng không hút thuốc', NULL, 'THANH_VIEN', 120);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_08', 'TK_KH_08', 'Di cung nguoi cao tuoi', 'Sua bo', 'DONG', 780);
+VALUES ('KH_08', 'TK_KH_08', 'Đi cùng người cao tuổi', 'Sữa bò', 'DONG', 780);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_09', 'TK_KH_09', 'Can xuat hoa don cong ty', NULL, 'BAC', 3100);
+VALUES ('KH_09', 'TK_KH_09', 'Cần xuất hóa đơn công ty', NULL, 'BAC', 3100);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_10', 'TK_KH_10', NULL, 'Hai san co vo', 'VANG', 6200);
+VALUES ('KH_10', 'TK_KH_10', NULL, 'Hải sản có vỏ', 'VANG', 6200);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_11', 'TK_KH_11', 'Can lich trinh it leo doc', NULL, 'KIM_CUONG', 11800);
+VALUES ('KH_11', 'TK_KH_11', 'Cần lịch trình ít leo dốc', NULL, 'KIM_CUONG', 11800);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_12', 'TK_KH_12', 'An chay truong', NULL, 'BAC', 2800);
+VALUES ('KH_12', 'TK_KH_12', 'Ăn chay trường', NULL, 'BAC', 2800);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_13', 'TK_KH_13', 'Can phong yen tinh de lam viec tu xa', NULL, 'VANG', 7100);
+VALUES ('KH_13', 'TK_KH_13', 'Cần phòng yên tĩnh để làm việc từ xa', NULL, 'VANG', 7100);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_14', 'TK_KH_14', 'Di cung tre nho duoi 6 tuoi', 'Trung ga', 'DONG', 950);
+VALUES ('KH_14', 'TK_KH_14', 'Đi cùng trẻ nhỏ dưới 6 tuổi', 'Trứng gà', 'DONG', 950);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
-VALUES ('KH_15', 'TK_KH_15', NULL, 'Phan hoa', 'THANH_VIEN', 320);
+VALUES ('KH_15', 'TK_KH_15', NULL, 'Phấn hoa', 'THANH_VIEN', 320);
 
 -- ------------------------------------------------------------
 -- 2. DANH MUC TOUR, DICH VU, HANH DONG XANH
 -- ------------------------------------------------------------
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_SAPA', 'Sa Pa - Săn mây Fansipan và bản Cát Cát',
-        'Bao gồm:
+        'Khám phá Sa Pa theo cách trọn vẹn nhất cùng hành trình săn mây Fansipan và bản Cát Cát, nơi du khách được chạm vào vẻ đẹp núi rừng Tây Bắc, văn hóa bản địa và nhịp sống bình yên giữa mây trời. Với lịch trình 3 ngày, tour cân bằng giữa tham quan, nghỉ dưỡng và trải nghiệm địa phương, phù hợp cho gia đình, nhóm bạn và du khách yêu thiên nhiên.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Fansipan và bản Cát Cát
 - Lưu trú và bữa ăn theo lịch trình
@@ -176,7 +178,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_DANANG', 'Đà Nẵng - Di sản miền Trung xanh',
-        'Bao gồm:
+        'Tận hưởng miền Trung năng động cùng hành trình Đà Nẵng, Sơn Trà, Hội An và Mỹ Sơn, nơi biển xanh, di sản và ẩm thực địa phương hòa quyện trong một chuyến đi giàu cảm xúc. Với lịch trình 4 ngày, tour được thiết kế để du khách vừa có thời gian khám phá các biểu tượng nổi bật vừa nghỉ ngơi thoải mái trong không gian thân thiện và an toàn.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Sơn Trà, Hội An và Mỹ Sơn
 - Lưu trú và bữa ăn theo lịch trình
@@ -189,7 +193,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_DALAT', 'Đà Lạt - Rừng thông và nông trại xanh',
-        'Bao gồm:
+        'Khám phá Đà Lạt theo cách trọn vẹn nhất cùng hành trình Đà Lạt - Rừng thông và nông trại xanh, nơi mỗi điểm dừng không chỉ là một chuyến tham quan mà còn là trải nghiệm đáng nhớ về văn hóa, thiên nhiên và con người bản địa. Với lịch trình 3 ngày, tour được thiết kế hài hòa giữa nghỉ dưỡng, khám phá và các hoạt động trải nghiệm xanh, mang đến cảm giác thư thái nhưng vẫn đầy cảm hứng cho mọi du khách để bạn tận hưởng chuyến đi một cách tiện lợi, an toàn và đáng nhớ cùng Digital Travel.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan nông trại xanh và các điểm trong lịch trình
 - Lưu trú và bữa ăn theo lịch trình
@@ -202,7 +208,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_NINHBINH', 'Ninh Bình - Tràng An và chùa Bái Đính',
-        'Bao gồm:
+        'Du ngoạn Ninh Bình với hành trình Tràng An, Hoa Lư và chùa Bái Đính, nơi cảnh quan non nước, di sản cố đô và không gian tâm linh tạo nên một chuyến đi nhẹ nhàng nhưng sâu lắng. Lịch trình 2 ngày phù hợp cho du khách muốn đổi gió cuối tuần, trải nghiệm văn hóa miền Bắc và tận hưởng dịch vụ được sắp xếp gọn gàng.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Tràng An, Hoa Lư và chùa Bái Đính
 - Lưu trú và bữa ăn theo lịch trình
@@ -215,7 +223,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_PHUQUOC', 'Phú Quốc - Biển xanh và hoàng hôn Nam Đảo',
-        'Bao gồm:
+        'Tận hưởng Phú Quốc với hành trình biển xanh, hoàng hôn Nam Đảo và những trải nghiệm nghỉ dưỡng thư thái giữa thiên nhiên đảo ngọc. Trong 4 ngày, du khách được kết hợp tham quan, tắm biển, khám phá đặc sản địa phương và nghỉ ngơi theo nhịp chậm rãi, phù hợp cho gia đình, cặp đôi và nhóm bạn.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Nam Đảo và các điểm trong lịch trình
 - Lưu trú và bữa ăn theo lịch trình
@@ -228,7 +238,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_HUE', 'Huế - Kinh thành và ẩm thực cố đô',
-        'Bao gồm:
+        'Đi qua chiều sâu văn hóa cố đô cùng hành trình Huế - Kinh thành và ẩm thực, nơi du khách được khám phá Đại Nội, lăng tẩm, làng nghề và những hương vị tinh tế của đất kinh kỳ. Lịch trình 3 ngày mang nhịp điệu chậm rãi, giàu chất văn hóa và phù hợp với du khách yêu lịch sử, kiến trúc và ẩm thực địa phương.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Đại Nội, lăng tẩm và làng nghề
 - Lưu trú và bữa ăn theo lịch trình
@@ -241,7 +253,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_HAGIANG', 'Hà Giang - Cung đường đá và chợ phiên',
-        'Bao gồm:
+        'Chạm vào vẻ đẹp hùng vĩ của miền cực Bắc qua cung đường đá Hà Giang, nơi cao nguyên đá, chợ phiên, bản làng và những khúc cua đèo tạo nên một hành trình đầy cảm hứng. Với 4 ngày di chuyển và khám phá, tour phù hợp cho du khách yêu thiên nhiên, văn hóa vùng cao và những trải nghiệm chân thực trên đường.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan cao nguyên đá và các điểm chợ phiên
 - Lưu trú và bữa ăn theo lịch trình
@@ -254,7 +268,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_HALONG', 'Hạ Long - Du thuyền vịnh xanh',
-        'Bao gồm:
+        'Khám phá Hạ Long trên du thuyền giữa vịnh xanh, nơi những dãy núi đá vôi, làn nước êm và khoảnh khắc hoàng hôn tạo nên trải nghiệm nghỉ dưỡng đáng nhớ. Lịch trình 3 ngày kết hợp tham quan, thư giãn trên tàu và khám phá Cát Bà, phù hợp cho du khách muốn tận hưởng một chuyến đi tiện nghi nhưng vẫn gần gũi thiên nhiên.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Vịnh Hạ Long và Cát Bà
 - Lưu trú và bữa ăn theo lịch trình
@@ -267,7 +283,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_CANTHO', 'Cần Thơ - Chợ nổi và miệt vườn sông nước',
-        'Bao gồm:
+        'Trải nghiệm nhịp sống miền Tây qua hành trình Cần Thơ, chợ nổi Cái Răng và miệt vườn sông nước, nơi du khách được cảm nhận sự mộc mạc, hào sảng và giàu bản sắc của vùng đất phù sa. Lịch trình 3 ngày nhẹ nhàng, nhiều hoạt động đời sống địa phương và phù hợp cho gia đình, nhóm bạn hoặc khách muốn nghỉ ngắn ngày.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan chợ nổi Cái Răng và miệt vườn
 - Lưu trú và bữa ăn theo lịch trình
@@ -280,7 +298,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_CONDAO', 'Côn Đảo - Biển hoang sơ và ký ức lịch sử',
-        'Bao gồm:
+        'Đến Côn Đảo để cảm nhận vẻ đẹp hoang sơ của biển đảo và chiều sâu lịch sử qua những điểm đến giàu ký ức. Trong 4 ngày, tour kết hợp nghỉ biển, tham quan di tích, trải nghiệm thiên nhiên và hoạt động bảo vệ môi trường, mang đến một chuyến đi yên bình nhưng nhiều dư âm.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Côn Đảo, di tích lịch sử và bãi biển
 - Lưu trú và bữa ăn theo lịch trình
@@ -293,7 +313,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_MOCCHAU', 'Mộc Châu - Đồi chè và mùa hoa cao nguyên',
-        'Bao gồm:
+        'Tận hưởng Mộc Châu trong sắc xanh của đồi chè, mùa hoa cao nguyên và không khí trong lành của núi rừng Tây Bắc. Lịch trình 2 ngày được thiết kế gọn gàng, dễ đi, phù hợp cho chuyến nghỉ cuối tuần với các điểm tham quan thiên nhiên, nông trại và văn hóa địa phương.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan đồi chè, nông trại và điểm mùa hoa
 - Lưu trú và bữa ăn theo lịch trình
@@ -306,7 +328,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_QUYNHON', 'Quy Nhơn - Kỳ Co Eo Gió và làng chài',
-        'Bao gồm:
+        'Khám phá Quy Nhơn qua Kỳ Co, Eo Gió và những làng chài ven biển, nơi vẻ đẹp biển xanh, vách đá và ẩm thực miền Trung tạo nên một hành trình đầy năng lượng. Với 3 ngày, tour cân bằng giữa tham quan, nghỉ biển và trải nghiệm đời sống địa phương, phù hợp cho du khách thích biển và những khung cảnh rộng mở.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Kỳ Co, Eo Gió và làng chài
 - Lưu trú và bữa ăn theo lịch trình
@@ -319,7 +343,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_HOIAN', 'Hội An - Phố cổ và làng rau Trà Quế',
-        'Bao gồm:
+        'Dạo bước qua Hội An với phố cổ, làng rau Trà Quế và những trải nghiệm văn hóa nhẹ nhàng, nơi từng con phố, món ăn và nếp sống địa phương đều mang nét duyên riêng. Lịch trình 3 ngày kết hợp tham quan di sản, trải nghiệm ẩm thực và hoạt động cộng đồng, phù hợp cho du khách yêu sự chậm rãi và tinh tế.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan phố cổ Hội An và làng rau Trà Quế
 - Lưu trú và bữa ăn theo lịch trình
@@ -332,7 +358,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_BUONMATHUOT', 'Buôn Ma Thuột - Cà phê và thác Dray Nur',
-        'Bao gồm:
+        'Khám phá Buôn Ma Thuột qua hương cà phê, văn hóa Tây Nguyên và vẻ đẹp mạnh mẽ của thác Dray Nur. Trong 3 ngày, tour đưa du khách đến bảo tàng cà phê, Buôn Đôn và các không gian văn hóa bản địa, tạo nên chuyến đi giàu trải nghiệm, gần gũi thiên nhiên và con người địa phương.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan bảo tàng cà phê, Buôn Đôn và thác Dray Nur
 - Lưu trú và bữa ăn theo lịch trình
@@ -345,7 +373,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_PULUONG', 'Pù Luông - Ruộng bậc thang và bản làng',
-        'Bao gồm:
+        'Trở về nhịp sống an yên của Pù Luông với ruộng bậc thang, bản làng và những cung đường đi bộ nhẹ giữa thung lũng xanh. Lịch trình 2 ngày phù hợp cho du khách muốn tạm rời phố thị, nghỉ tại không gian gần gũi thiên nhiên và trải nghiệm văn hóa cộng đồng một cách vừa sức.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan Pù Luông, bản làng và ruộng bậc thang
 - Lưu trú và bữa ăn theo lịch trình
@@ -358,7 +388,9 @@ Không bao gồm:
 
 INSERT INTO TOURMAU (MaTourMau, TieuDe, MoTa, ThoiLuong, GiaSan, DanhGia, SoDanhGia)
 VALUES ('TM_MUINE', 'Mũi Né - Đồi cát và biển xanh Phan Thiết',
-        'Bao gồm:
+        'Tận hưởng Mũi Né với đồi cát, làng chài và biển xanh Phan Thiết, nơi nắng gió miền duyên hải mang đến một chuyến đi rực rỡ và thư thái. Lịch trình 3 ngày kết hợp tham quan, nghỉ biển và thưởng thức đặc sản địa phương, phù hợp cho nhóm bạn, gia đình và những ai yêu không khí biển.
+
+Bao gồm:
 - Xe đưa đón theo chương trình
 - Vé tham quan đồi cát, làng chài Mũi Né và các điểm biển
 - Lưu trú và bữa ăn theo lịch trình
@@ -419,55 +451,55 @@ INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, 
 VALUES ('LTT_MUINE_01', 'TM_MUINE', 1, 'Đồi cát bay - Làng chài Mũi Né', 'Tham quan đồi cát, làng chài và nghỉ biển buổi chiều.', 'Lẩu thả Phan Thiết');
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HALONG_02', 'TM_HALONG', 2, 'Hang Sung Sot - Dao Titop', 'Tham quan hang, kayak va ngam toan canh vinh tu dinh Titop.', 'Com Viet tren tau');
+VALUES ('LTT_HALONG_02', 'TM_HALONG', 2, 'Hang Sửng Sốt - đảo Titop', 'Tham quan hang, chèo kayak và ngắm toàn cảnh vịnh từ đỉnh Titop.', 'Cơm Việt trên tàu');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HALONG_03', 'TM_HALONG', 3, 'Cat Ba - Ha Noi', 'Trai nghiem sang tren vinh, tra phong va ve lai Ha Noi.', 'Bun hai san');
+VALUES ('LTT_HALONG_03', 'TM_HALONG', 3, 'Cát Bà - Hà Nội', 'Trải nghiệm buổi sáng trên vịnh, trả phòng và về lại Hà Nội.', 'Bún hải sản');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CANTHO_02', 'TM_CANTHO', 2, 'Cho noi Cai Rang - Mien vuon', 'Di cho noi som, tham vuon trai cay va lam banh dan gian.', 'Ca loc nuong trui');
+VALUES ('LTT_CANTHO_02', 'TM_CANTHO', 2, 'Chợ nổi Cái Răng - miệt vườn', 'Đi chợ nổi sớm, thăm vườn trái cây và làm bánh dân gian.', 'Cá lóc nướng trui');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CANTHO_03', 'TM_CANTHO', 3, 'Nha co Binh Thuy - Tien khach', 'Tham quan nha co, mua dac san va ket thuc chuong trinh.', 'Hu tieu Nam Vang');
+VALUES ('LTT_CANTHO_03', 'TM_CANTHO', 3, 'Nhà cổ Bình Thủy - tiễn khách', 'Tham quan nhà cổ, mua đặc sản và kết thúc chương trình.', 'Hủ tiếu Nam Vang');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_02', 'TM_CONDAO', 2, 'Hon Bay Canh - Bao ton bien', 'Trai nghiem bien dao va nghe gioi thieu ve bao ton rua bien.', 'Com nieu hai san');
+VALUES ('LTT_CONDAO_02', 'TM_CONDAO', 2, 'Hòn Bảy Cạnh - bảo tồn biển', 'Trải nghiệm biển đảo và nghe giới thiệu về bảo tồn rùa biển.', 'Cơm niêu hải sản');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_03', 'TM_CONDAO', 3, 'Di tich Con Dao', 'Tham quan cac diem di tich lich su va bao tang dia phuong.', 'Banh xeo hai san');
+VALUES ('LTT_CONDAO_03', 'TM_CONDAO', 3, 'Di tích Côn Đảo', 'Tham quan các điểm di tích lịch sử và bảo tàng địa phương.', 'Bánh xèo hải sản');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_04', 'TM_CONDAO', 4, 'Dam Trau - Tien khach', 'Nghi bien buoi sang, mua dac san va ra san bay.', 'Com doan');
+VALUES ('LTT_CONDAO_04', 'TM_CONDAO', 4, 'Đầm Trầu - tiễn khách', 'Nghỉ biển buổi sáng, mua đặc sản và ra sân bay.', 'Cơm đoàn');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MOCCHAU_02', 'TM_MOCCHAU', 2, 'Thac Dai Yem - Ket thuc', 'Tham quan thac, mua dac san sua va ve lai diem don.', 'Lau ga den');
+VALUES ('LTT_MOCCHAU_02', 'TM_MOCCHAU', 2, 'Thác Dải Yếm - kết thúc', 'Tham quan thác, mua đặc sản sữa và về lại điểm đón.', 'Lẩu gà đen');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_QUYNHON_02', 'TM_QUYNHON', 2, 'Eo Gio - Thap Doi', 'Tham quan Eo Gio, Thap Doi va thuong thuc dac san dia phuong.', 'Nem nuong, banh xeo tom nhay');
+VALUES ('LTT_QUYNHON_02', 'TM_QUYNHON', 2, 'Eo Gió - Tháp Đôi', 'Tham quan Eo Gió, Tháp Đôi và thưởng thức đặc sản địa phương.', 'Nem nướng, bánh xèo tôm nhảy');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_QUYNHON_03', 'TM_QUYNHON', 3, 'Lang chai - Tien khach', 'Trai nghiem lang chai, mua dac san va ket thuc tour.', 'Com nha hang bien');
+VALUES ('LTT_QUYNHON_03', 'TM_QUYNHON', 3, 'Làng chài - tiễn khách', 'Trải nghiệm làng chài, mua đặc sản và kết thúc tour.', 'Cơm nhà hàng biển');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HOIAN_02', 'TM_HOIAN', 2, 'My Son - Rung dua Bay Mau', 'Tham quan My Son, di thuyen thung va an toi pho co.', 'Mi Quang, banh dap');
+VALUES ('LTT_HOIAN_02', 'TM_HOIAN', 2, 'Mỹ Sơn - rừng dừa Bảy Mẫu', 'Tham quan Mỹ Sơn, đi thuyền thúng và ăn tối phố cổ.', 'Mì Quảng, bánh đập');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HOIAN_03', 'TM_HOIAN', 3, 'Tra Que - Tien khach', 'Trai nghiem lang rau, mua qua va ket thuc chuong trinh.', 'Com ga Hoi An');
+VALUES ('LTT_HOIAN_03', 'TM_HOIAN', 3, 'Trà Quế - tiễn khách', 'Trải nghiệm làng rau, mua quà và kết thúc chương trình.', 'Cơm gà Hội An');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BMT_02', 'TM_BUONMATHUOT', 2, 'Thac Dray Nur - Buon Don', 'Tham quan thac, tim hieu van hoa Ede va M''Nong.', 'Com lam, thit nuong');
+VALUES ('LTT_BMT_02', 'TM_BUONMATHUOT', 2, 'Thác Dray Nur - Buôn Đôn', 'Tham quan thác, tìm hiểu văn hóa Ê Đê và M''Nông.', 'Cơm lam, thịt nướng');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BMT_03', 'TM_BUONMATHUOT', 3, 'Lang ca phe - Tien khach', 'Thuong thuc ca phe, mua qua va ra san bay.', 'Bun do Buon Ma Thuot');
+VALUES ('LTT_BMT_03', 'TM_BUONMATHUOT', 3, 'Làng cà phê - tiễn khách', 'Thưởng thức cà phê, mua quà và ra sân bay.', 'Bún đỏ Buôn Ma Thuột');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PULUONG_02', 'TM_PULUONG', 2, 'Hieu - Ket thuc', 'Di bo nhe ra thac Hieu, an trua va ve lai Ha Noi.', 'Com ban');
+VALUES ('LTT_PULUONG_02', 'TM_PULUONG', 2, 'Hiêu - kết thúc', 'Đi bộ nhẹ ra thác Hiêu, ăn trưa và về lại Hà Nội.', 'Cơm bản');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MUINE_02', 'TM_MUINE', 2, 'Bau Trang - Suoi Tien', 'Ngam binh minh Bau Trang, tham quan Suoi Tien va nghi bien.', 'Hai san nuong');
+VALUES ('LTT_MUINE_02', 'TM_MUINE', 2, 'Bàu Trắng - Suối Tiên', 'Ngắm bình minh Bàu Trắng, tham quan Suối Tiên và nghỉ biển.', 'Hải sản nướng');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MUINE_03', 'TM_MUINE', 3, 'Phan Thiet - Tien khach', 'Tham quan lau Ong Hoang, mua dac san va ket thuc tour.', 'Lau tha Phan Thiet');
+VALUES ('LTT_MUINE_03', 'TM_MUINE', 3, 'Phan Thiết - tiễn khách', 'Tham quan lầu Ông Hoàng, mua đặc sản và kết thúc tour.', 'Lẩu thả Phan Thiết');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_01', 'TM_HAGIANG', 1, 'Ha Noi - Quan Ba', 'Di chuyen len Ha Giang, nhan phong va tham quan cong troi Quan Ba.', 'Thang co, rau cai meo');
+VALUES ('LTT_HAGIANG_01', 'TM_HAGIANG', 1, 'Hà Nội - Quản Bạ', 'Di chuyển lên Hà Giang, nhận phòng và tham quan cổng trời Quản Bạ.', 'Thắng cố, rau cải mèo');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_02', 'TM_HAGIANG', 2, 'Yen Minh - Dong Van', 'Tham quan rung thong Yen Minh, dinh vua Meo va pho co Dong Van.', 'Lau ga den');
+VALUES ('LTT_HAGIANG_02', 'TM_HAGIANG', 2, 'Yên Minh - Đồng Văn', 'Tham quan rừng thông Yên Minh, dinh vua Mèo và phố cổ Đồng Văn.', 'Lẩu gà đen');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_03', 'TM_HAGIANG', 3, 'Ma Pi Leng - Meo Vac', 'Di cung duong Ma Pi Leng, song Nho Que va cho phien dia phuong.', 'Com lam, thit lon cap nach');
+VALUES ('LTT_HAGIANG_03', 'TM_HAGIANG', 3, 'Mã Pì Lèng - Mèo Vạc', 'Đi cung đường Mã Pì Lèng, sông Nho Quế và chợ phiên địa phương.', 'Cơm lam, thịt lợn cắp nách');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_04', 'TM_HAGIANG', 4, 'Meo Vac - Ha Noi', 'Mua dac san, tra phong va ve lai Ha Noi.', 'Pho chua Ha Giang');
+VALUES ('LTT_HAGIANG_04', 'TM_HAGIANG', 4, 'Mèo Vạc - Hà Nội', 'Mua đặc sản, trả phòng và về lại Hà Nội.', 'Phở chua Hà Giang');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_01', 'TM_PHUQUOC', 1, 'Duong Dong - Bai Truong', 'Don khach, nhan phong va ngam hoang hon tren Bai Truong.', 'Goi ca trich');
+VALUES ('LTT_PHUQUOC_01', 'TM_PHUQUOC', 1, 'Dương Đông - Bãi Trường', 'Đón khách, nhận phòng và ngắm hoàng hôn trên Bãi Trường.', 'Gỏi cá trích');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_02', 'TM_PHUQUOC', 2, 'Nam Dao - Hon Thom', 'Tham quan Nam Dao, trai nghiem cap treo va bai bien Hon Thom.', 'Hai san nuong');
+VALUES ('LTT_PHUQUOC_02', 'TM_PHUQUOC', 2, 'Nam Đảo - Hòn Thơm', 'Tham quan Nam Đảo, trải nghiệm cáp treo và bãi biển Hòn Thơm.', 'Hải sản nướng');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_03', 'TM_PHUQUOC', 3, 'Rach Vem - Vuon tieu', 'Tham quan Rach Vem, vuon tieu va co so nuoc mam truyen thong.', 'Bun quay');
+VALUES ('LTT_PHUQUOC_03', 'TM_PHUQUOC', 3, 'Rạch Vẹm - vườn tiêu', 'Tham quan Rạch Vẹm, vườn tiêu và cơ sở nước mắm truyền thống.', 'Bún quậy');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_04', 'TM_PHUQUOC', 4, 'Cho Duong Dong - Tien khach', 'Mua dac san, tra phong va ket thuc tour.', 'Com gia dinh');
+VALUES ('LTT_PHUQUOC_04', 'TM_PHUQUOC', 4, 'Chợ Dương Đông - tiễn khách', 'Mua đặc sản, trả phòng và kết thúc tour.', 'Cơm gia đình');
 
 INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
 VALUES ('DVT_SINGLE', 'Phụ thu phòng đơn', 'Phòng/đêm', 650000);
