@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.PhatHanhVoucherRequest;
 import com.digitaltravel.erp.dto.requests.VoucherRequest;
@@ -120,6 +118,12 @@ public class VoucherAdminController {
         return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSachKhachHangDaPhanBo(maVoucher)));
     }
 
+    @PutMapping("/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<KhuyenMaiKhResponse>> thuHoi(
+            @PathVariable String maVoucher,
+            @PathVariable String maKhachHang,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok("Thu hoi voucher thanh cong",
                 voucherService.thuHoiVoucher(maVoucher, maKhachHang, user.getUsername())));
     }

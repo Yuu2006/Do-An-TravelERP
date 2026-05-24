@@ -252,10 +252,6 @@ public class VoucherService {
         HoChieuSo hcs = hoChieuSoRepository.findById(request.getMaKhachHang())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + request.getMaKhachHang()));
 
-        if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), maVoucher).isPresent()) {
-            throw AppException.badRequest("Khách hàng này đã có voucher này rồi");
-        }
-
         if (soLuotDaPhanBo(voucher) >= voucher.getSoLuotPhatHanh()) {
             throw AppException.badRequest("Voucher đã hết lượt phát hành");
         }
@@ -270,8 +266,6 @@ public class VoucherService {
             existing.setNgayNhan(LocalDateTime.now());
             existing.setTrangThai("CO_HIEU_LUC");
             khuyenMaiKhRepository.save(existing);
-            voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
-            voucherRepository.save(voucher);
             return toKhuyenMaiKhResponse(existing);
         }
 
@@ -283,9 +277,6 @@ public class VoucherService {
         kmkh.setNgayNhan(LocalDateTime.now());
         kmkh.setTrangThai("CO_HIEU_LUC");
         khuyenMaiKhRepository.save(kmkh);
-
-        voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
-        voucherRepository.save(voucher);
 
         return toKhuyenMaiKhResponse(kmkh);
     }
@@ -311,17 +302,7 @@ public class VoucherService {
         }
         kmkh.setTrangThai("DA_THU_HOI");
         khuyenMaiKhRepository.save(kmkh);
-        Voucher voucher = kmkh.getVoucher();
-        voucher.setSoLuotDaDung(Math.max(voucher.getSoLuotDaDung() - 1, 0));
-        voucherRepository.save(voucher);
         return toKhuyenMaiKhResponse(kmkh);
-    }
-
-    /** Lấy danh sách khách hàng đã được phân bổ voucher. */
-    public java.util.List<KhuyenMaiKhResponse> danhSachKhachHangDaPhanBo(String maVoucher) {
-        return khuyenMaiKhRepository.findDangPhanBoByVoucher(maVoucher).stream()
-                .map(this::toKhuyenMaiKhResponse)
-                .toList();
     }
 
     // ── Danh sách voucher (Admin) ────────────────────────────────────────────
