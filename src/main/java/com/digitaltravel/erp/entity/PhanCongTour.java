@@ -37,7 +37,4 @@ public class PhanCongTour {
     @Column(name = "NgayPhanCong", nullable = false)
     LocalDateTime NgayPhanCong;
 
-    @Column(name = "TrangThaiChapNhan", nullable = false, length = 20)
-    String TrangThaiChapNhan;
-
 }

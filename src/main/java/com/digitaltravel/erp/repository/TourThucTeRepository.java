@@ -82,7 +82,7 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
     // Lấy tất cả tour đang bán để tính dynamic pricing (JOIN FETCH tourMau để đọc GiaSan)
     @Query("""
             SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
-            WHERE ttt.TrangThai = 'MO_BAN'
+            WHERE ttt.TrangThai IN ('MO_BAN', 'SAP_DIEN_RA')
             """)
     java.util.List<TourThucTe> findForDynamicPricing();
 

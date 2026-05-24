@@ -51,7 +51,7 @@ public class TourThucTe {
     @Column(name = "ChoConLai", nullable = false)
     Integer ChoConLai;
 
-    // Gia tri hop le: CHO_KICH_HOAT | MO_BAN | DANG_DIEN_RA | KET_THUC | HUY | DA_QUYET_TOAN
+    // Gia tri hop le: CHO_KICH_HOAT | MO_BAN | SAP_DIEN_RA | DANG_DIEN_RA | KET_THUC | HUY | DA_QUYET_TOAN
     @Column(name = "TrangThai", nullable = false, length = 20)
     String TrangThai;
 }

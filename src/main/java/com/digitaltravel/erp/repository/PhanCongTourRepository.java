@@ -14,13 +14,7 @@ import com.digitaltravel.erp.entity.PhanCongTour;
 public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, String> {
 
     // Lấy tất cả phân công của 1 tour
-    @Query("""
-            SELECT pc FROM PhanCongTour pc
-            JOIN FETCH pc.nhanVien nv
-            JOIN FETCH nv.taiKhoan
-            WHERE pc.tourThucTe.MaTourThucTe = :maTour
-              AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
-            """)
+    @Query("SELECT pc FROM PhanCongTour pc JOIN FETCH pc.nhanVien nv JOIN FETCH nv.taiKhoan WHERE pc.tourThucTe.MaTourThucTe = :maTour")
     List<PhanCongTour> findActiveByMaTour(@Param("maTour") String maTour);
 
     // HDV xem tour được giao (đang hiệu lực)
@@ -37,7 +31,6 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
             SELECT COUNT(pc) > 0 FROM PhanCongTour pc
             WHERE pc.tourThucTe.MaTourThucTe = :maTour
               AND pc.nhanVien.taiKhoan.MaTaiKhoan = :maTaiKhoan
-              AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
             """)
     boolean existsByMaTourAndMaTaiKhoan(
             @Param("maTour") String maTour,
@@ -56,7 +49,6 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
                   JOIN pc.tourThucTe tt
                   WHERE tt.NgayKhoiHanh <= :ngayKetThuc
                     AND tt.NgayKhoiHanh >= :ngayKhoiHanh
-                    AND pc.TrangThaiChapNhan IN ('CHO_PHAN_HOI', 'DA_DONG_Y')
               )
             """)
     List<String> findMaNhanVienKhaDung(
