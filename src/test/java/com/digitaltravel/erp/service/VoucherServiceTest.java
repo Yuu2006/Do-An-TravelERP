@@ -87,7 +87,7 @@ class VoucherServiceTest {
                 () -> voucherService.taoVoucher(request, "admin"));
 
         assertEquals("BAD_REQUEST", ex.getErrorCode());
-        assertEquals("LoaiUuDai chi chap nhan PHAN_TRAM hoac SO_TIEN", ex.getMessage());
+        assertEquals("Loại ưu đãi chỉ chấp nhận PHAN_TRAM hoặc SO_TIEN", ex.getMessage());
         verify(voucherRepository, never()).save(any());
     }
 
@@ -103,7 +103,7 @@ class VoucherServiceTest {
                 () -> voucherService.capNhatVoucher("V_01", request, "admin"));
 
         assertEquals("BAD_REQUEST", ex.getErrorCode());
-        assertEquals("Giam PHAN_TRAM khong duoc vuot qua 100%", ex.getMessage());
+        assertEquals("Giảm PHAN_TRAM không được vượt qua 100%", ex.getMessage());
         verify(voucherRepository, never()).save(any());
     }
 

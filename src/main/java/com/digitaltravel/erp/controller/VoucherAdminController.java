@@ -1,5 +1,7 @@
 package com.digitaltravel.erp.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -74,7 +76,7 @@ public class VoucherAdminController {
                 voucherService.capNhatVoucher(maVoucher, request, user.getUsername())));
     }
 
-    @PutMapping("/{maVoucher}/vo-hieu-hoa")
+    @PutMapping({"/{maVoucher}/vo-hieu-hoa", "/{maVoucher}/vo-hieu"})
     @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<VoucherResponse>> voHieuHoaVoucher(
             @PathVariable String maVoucher,
@@ -92,6 +94,13 @@ public class VoucherAdminController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.status(201).body(ApiResponse.created(
                 voucherService.phatHanhChoKhachHang(maVoucher, request, user.getUsername())));
+    }
+
+    @GetMapping("/{maVoucher}/khach-hang-da-phan-bo")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<KhuyenMaiKhResponse>>> danhSachKhachHangDaPhanBo(
+            @PathVariable String maVoucher) {
+        return ResponseEntity.ok(ApiResponse.ok(voucherService.danhSachKhachHangDaPhanBo(maVoucher)));
     }
 
     @PutMapping("/{maVoucher}/khach-hang/{maKhachHang}/thu-hoi")

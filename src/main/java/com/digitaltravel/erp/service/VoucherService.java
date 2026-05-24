@@ -3,6 +3,7 @@ package com.digitaltravel.erp.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -253,7 +254,7 @@ public class VoucherService {
             throw AppException.badRequest("Khách hàng này đã có voucher này rồi");
         }
 
-        if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
+        if (soLuotDaPhanBo(voucher) >= voucher.getSoLuotPhatHanh()) {
             throw AppException.badRequest("Voucher đã hết lượt phát hành");
         }
 
@@ -300,6 +301,16 @@ public class VoucherService {
         return voucherRepository.findAllActive(LocalDate.now(), pageable).map(this::toVoucherResponse);
     }
 
+    public List<KhuyenMaiKhResponse> danhSachKhachHangDaPhanBo(String maVoucher) {
+        if (!voucherRepository.existsById(maVoucher)) {
+            throw AppException.notFound("Khong tim thay voucher: " + maVoucher);
+        }
+        return khuyenMaiKhRepository.findDangPhanBoByMaVoucher(maVoucher)
+                .stream()
+                .map(this::toKhuyenMaiKhResponse)
+                .toList();
+    }
+
     // ── Chi tiết voucher ────────────────────────────────────────────────────
     public VoucherResponse chiTiet(String maVoucher) {
         Voucher v = voucherRepository.findById(maVoucher)
@@ -331,6 +342,10 @@ public class VoucherService {
         return "PHAN_TRAM".equals(loaiUuDai) || "SO_TIEN".equals(loaiUuDai);
     }
 
+    private long soLuotDaPhanBo(Voucher voucher) {
+        return khuyenMaiKhRepository.countDaPhanBoByMaVoucher(voucher.getMaVoucher());
+    }
+
     private void kiemTraVoucherCoTheDoi(HoChieuSo hcs, Voucher voucher) {
         LocalDate today = LocalDate.now();
         if (!"SAN_SANG".equals(voucher.getTrangThai())) {
@@ -339,7 +354,7 @@ public class VoucherService {
         if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
             throw AppException.badRequest("Voucher chưa đến ngày hiệu lực hoặc đã hết hạn");
         }
-        if (voucher.getSoLuotDaDung() >= voucher.getSoLuotPhatHanh()) {
+        if (soLuotDaPhanBo(voucher) >= voucher.getSoLuotPhatHanh()) {
             throw AppException.badRequest("Voucher đã hết lượt đổi");
         }
         if (khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), voucher.getMaVoucher()).isPresent()) {
@@ -389,6 +404,7 @@ public class VoucherService {
                 .dieuKienApDung(v.getDieuKienApDung())
                 .soLuotPhatHanh(v.getSoLuotPhatHanh())
                 .soLuotDaDung(v.getSoLuotDaDung())
+                .soLuotDaPhanBo(soLuotDaPhanBo(v))
                 .ngayHieuLuc(v.getNgayHieuLuc())
                 .ngayHetHan(v.getNgayHetHan())
                 .trangThai(v.getTrangThai())
@@ -397,7 +413,12 @@ public class VoucherService {
 
     private KhuyenMaiKhResponse toKhuyenMaiKhResponse(KhuyenMaiKh k) {
         Voucher v = k.getVoucher();
+        HoChieuSo hcs = k.getKhachHang();
         return KhuyenMaiKhResponse.builder()
+                .maKhachHang(hcs != null ? hcs.getMaKhachHang() : null)
+                .hoTenKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getHoTen() : null)
+                .emailKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getEmail() : null)
+                .soDienThoaiKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getSoDienThoai() : null)
                 .maVoucher(v.getMaVoucher())
                 .maCode(v.getMaCode())
                 .loaiUuDai(v.getLoaiUuDai())
