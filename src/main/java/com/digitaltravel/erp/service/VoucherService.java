@@ -47,6 +47,7 @@ public class VoucherService {
     private final NhatKyDoiDiemRepository nhatKyDoiDiemRepository;
 
     // ── UC31: Xem ví voucher của khách hàng ─────────────────────────────────
+    /** Lấy ví voucher của khách hàng. */
     @Transactional
     public Page<KhuyenMaiKhResponse> viVoucher(String maTaiKhoan, Pageable pageable) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
@@ -57,6 +58,7 @@ public class VoucherService {
     }
 
     // ── UC28: Áp dụng voucher vào đơn đặt tour ──────────────────────────────
+    /** Áp dụng voucher vào đơn đặt tour. */
     @Transactional(noRollbackFor = AppException.class)
     public VoucherResponse apVoucher(String maTaiKhoan, ApVoucherRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
@@ -120,14 +122,11 @@ public class VoucherService {
         kmkh.setTrangThai("DA_SU_DUNG");
         khuyenMaiKhRepository.save(kmkh);
 
-        // Tăng đếm lượt đã dùng trên master voucher
-        voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
-        voucherRepository.save(voucher);
-
         return toVoucherResponse(voucher);
     }
 
     // ── UC30: Đổi điểm xanh lấy voucher ────────────────────────────────────
+    /** Đổi điểm xanh lấy voucher. */
     @Transactional
     public KhuyenMaiKhResponse doiDiem(String maTaiKhoan, DoiDiemVoucherRequest request) {
         HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
@@ -148,6 +147,7 @@ public class VoucherService {
     }
 
     // ── UC53: Admin tạo voucher mới ─────────────────────────────────────────
+    /** Tạo voucher mới. */
     @Transactional
     public VoucherResponse taoVoucher(VoucherRequest request, String nguoiTao) {
         String maCode = request.getMaCode().trim();
@@ -193,6 +193,7 @@ public class VoucherService {
     }
 
     // ── UC52: Admin cập nhật voucher ────────────────────────────────────────
+    /** Cập nhật thông tin voucher. */
     @Transactional
     public VoucherResponse capNhatVoucher(String maVoucher, VoucherRequest request, String nguoiCapNhat) {
         Voucher v = voucherRepository.findById(maVoucher)
@@ -233,6 +234,7 @@ public class VoucherService {
     }
 
     // ── UC54: Admin phát hành voucher cho khách hàng ────────────────────────
+    /** Phát hành voucher cho khách hàng. */
     @Transactional
     public KhuyenMaiKhResponse phatHanhChoKhachHang(String maVoucher, PhatHanhVoucherRequest request, String nguoiTao) {
         Voucher voucher = voucherRepository.findById(maVoucher)
@@ -243,8 +245,8 @@ public class VoucherService {
         }
 
         LocalDate today = LocalDate.now();
-        if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực hoặc đã hết hạn");
+        if (voucher.getNgayHetHan().isBefore(today)) {
+            throw AppException.badRequest("Voucher đã hết hạn");
         }
 
         HoChieuSo hcs = hoChieuSoRepository.findById(request.getMaKhachHang())
@@ -258,6 +260,21 @@ public class VoucherService {
             throw AppException.badRequest("Voucher đã hết lượt phát hành");
         }
 
+        var existingVoucher = khuyenMaiKhRepository.findByKhachHangAndVoucher(hcs.getMaKhachHang(), maVoucher);
+        if (existingVoucher.isPresent()) {
+            KhuyenMaiKh existing = existingVoucher.get();
+            if ("CO_HIEU_LUC".equals(existing.getTrangThai()) || "DA_SU_DUNG".equals(existing.getTrangThai())) {
+                throw AppException.badRequest("Khách hàng này đã có voucher này rồi");
+            }
+            existing.setNgayHetHan(voucher.getNgayHetHan());
+            existing.setNgayNhan(LocalDateTime.now());
+            existing.setTrangThai("CO_HIEU_LUC");
+            khuyenMaiKhRepository.save(existing);
+            voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
+            voucherRepository.save(voucher);
+            return toKhuyenMaiKhResponse(existing);
+        }
+
         KhuyenMaiKh kmkh = new KhuyenMaiKh();
         kmkh.setId(new KhuyenMaiKhId(hcs.getMaKhachHang(), maVoucher));
         kmkh.setKhachHang(hcs);
@@ -267,9 +284,13 @@ public class VoucherService {
         kmkh.setTrangThai("CO_HIEU_LUC");
         khuyenMaiKhRepository.save(kmkh);
 
+        voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
+        voucherRepository.save(voucher);
+
         return toKhuyenMaiKhResponse(kmkh);
     }
 
+    /** Vô hiệu hóa voucher. */
     @Transactional
     public VoucherResponse voHieuHoaVoucher(String maVoucher, String nguoiCapNhat) {
         Voucher voucher = voucherRepository.findById(maVoucher)
@@ -279,6 +300,7 @@ public class VoucherService {
         return toVoucherResponse(voucher);
     }
 
+    /** Thu hồi voucher đã phát hành cho khách hàng. */
     @Transactional
     public KhuyenMaiKhResponse thuHoiVoucher(String maVoucher, String maKhachHang, String nguoiCapNhat) {
         KhuyenMaiKh kmkh = khuyenMaiKhRepository.findByKhachHangAndVoucher(maKhachHang, maVoucher)
@@ -289,14 +311,26 @@ public class VoucherService {
         }
         kmkh.setTrangThai("DA_THU_HOI");
         khuyenMaiKhRepository.save(kmkh);
+        Voucher voucher = kmkh.getVoucher();
+        voucher.setSoLuotDaDung(Math.max(voucher.getSoLuotDaDung() - 1, 0));
+        voucherRepository.save(voucher);
         return toKhuyenMaiKhResponse(kmkh);
     }
 
+    /** Lấy danh sách khách hàng đã được phân bổ voucher. */
+    public java.util.List<KhuyenMaiKhResponse> danhSachKhachHangDaPhanBo(String maVoucher) {
+        return khuyenMaiKhRepository.findDangPhanBoByVoucher(maVoucher).stream()
+                .map(this::toKhuyenMaiKhResponse)
+                .toList();
+    }
+
     // ── Danh sách voucher (Admin) ────────────────────────────────────────────
+    /** Lấy danh sách voucher quản trị. */
     public Page<VoucherResponse> danhSach(Pageable pageable) {
         return voucherRepository.timKiem(pageable).map(this::toVoucherResponse);
     }
 
+    /** Lấy danh sách voucher có thể đổi. */
     public Page<VoucherResponse> danhSachCoTheDoi(Pageable pageable) {
         return voucherRepository.findAllActive(LocalDate.now(), pageable).map(this::toVoucherResponse);
     }
@@ -312,6 +346,7 @@ public class VoucherService {
     }
 
     // ── Chi tiết voucher ────────────────────────────────────────────────────
+    /** Lấy chi tiết voucher. */
     public VoucherResponse chiTiet(String maVoucher) {
         Voucher v = voucherRepository.findById(maVoucher)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay voucher: " + maVoucher));
@@ -351,8 +386,11 @@ public class VoucherService {
         if (!"SAN_SANG".equals(voucher.getTrangThai())) {
             throw AppException.badRequest("Voucher đã bị vô hiệu hóa");
         }
-        if (voucher.getNgayHetHan().isBefore(today) || voucher.getNgayHieuLuc().isAfter(today)) {
-            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực hoặc đã hết hạn");
+        if (voucher.getNgayHieuLuc().isAfter(today)) {
+            throw AppException.badRequest("Voucher chưa đến ngày hiệu lực");
+        }
+        if (voucher.getNgayHetHan().isBefore(today)) {
+            throw AppException.badRequest("Voucher đã hết hạn");
         }
         if (soLuotDaPhanBo(voucher) >= voucher.getSoLuotPhatHanh()) {
             throw AppException.badRequest("Voucher đã hết lượt đổi");
@@ -382,7 +420,10 @@ public class VoucherService {
         kmkh.setNgayHetHan(voucher.getNgayHetHan());
         kmkh.setNgayNhan(LocalDateTime.now());
         kmkh.setTrangThai("CO_HIEU_LUC");
-        return khuyenMaiKhRepository.save(kmkh);
+        KhuyenMaiKh saved = khuyenMaiKhRepository.save(kmkh);
+        voucher.setSoLuotDaDung(voucher.getSoLuotDaDung() + 1);
+        voucherRepository.save(voucher);
+        return saved;
     }
 
     private void ghiNhatKyDoiDiem(HoChieuSo hcs, Voucher voucher, long diemCanDung) {
@@ -407,18 +448,20 @@ public class VoucherService {
                 .soLuotDaPhanBo(soLuotDaPhanBo(v))
                 .ngayHieuLuc(v.getNgayHieuLuc())
                 .ngayHetHan(v.getNgayHetHan())
-                .trangThai(v.getTrangThai())
+                .trangThai(layTrangThaiVoucher(v))
                 .build();
+    }
+
+    private String layTrangThaiVoucher(Voucher voucher) {
+        if (voucher.getNgayHetHan() != null && voucher.getNgayHetHan().isBefore(LocalDate.now())) {
+            return "HET_HAN";
+        }
+        return voucher.getTrangThai();
     }
 
     private KhuyenMaiKhResponse toKhuyenMaiKhResponse(KhuyenMaiKh k) {
         Voucher v = k.getVoucher();
-        HoChieuSo hcs = k.getKhachHang();
         return KhuyenMaiKhResponse.builder()
-                .maKhachHang(hcs != null ? hcs.getMaKhachHang() : null)
-                .hoTenKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getHoTen() : null)
-                .emailKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getEmail() : null)
-                .soDienThoaiKhachHang(hcs != null && hcs.getTaiKhoan() != null ? hcs.getTaiKhoan().getSoDienThoai() : null)
                 .maVoucher(v.getMaVoucher())
                 .maCode(v.getMaCode())
                 .loaiUuDai(v.getLoaiUuDai())

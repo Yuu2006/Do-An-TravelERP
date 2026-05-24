@@ -69,6 +69,18 @@ public class VanHanhService {
     public List<ThanhVienDoanResponse> danhSachDoan(String maTour, String maTaiKhoan, String maVaiTro) {
         kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
 
+        List<DiemDanh> ddList = diemDanhRepository.findByMaTour(maTour);
+        java.util.Map<String, String> khStatus = new java.util.HashMap<>();
+        java.util.Map<String, String> ndhStatus = new java.util.HashMap<>();
+        for (DiemDanh dd : ddList) {
+            if (dd.getKhachHang() != null && !khStatus.containsKey(dd.getKhachHang().getMaKhachHang())) {
+                khStatus.put(dd.getKhachHang().getMaKhachHang(), dd.getTrangThai());
+            }
+            if (dd.getNguoiDongHanh() != null && !ndhStatus.containsKey(dd.getNguoiDongHanh().getMaNguoiDongHanh())) {
+                ndhStatus.put(dd.getNguoiDongHanh().getMaNguoiDongHanh(), dd.getTrangThai());
+            }
+        }
+
         List<ThanhVienDoanResponse> result = new ArrayList<>();
         donDatTourRepository.timKiem("DA_XAC_NHAN", maTour, Pageable.unpaged()).forEach(don -> {
             HoChieuSo kh = don.getKhachHang();
@@ -80,10 +92,11 @@ public class VanHanhService {
                 .hoTenKhachHang(hoTen)
                 .soDienThoai(kh.getTaiKhoan() != null ? kh.getTaiKhoan().getSoDienThoai() : null)
                 .hangThanhVien(kh.getHangThanhVien())
-                .ghiChuYTe(gopGhiChu(kh.getGhiChuYTe(), don.getGhiChu()))
+                .ghiChuYTe(gopGhiChuYTeVaDiUng(kh.getGhiChuYTe(), kh.getDiUng()))
                 .ghiChuDatTour(don.getGhiChu())
                 .hanhDongXanh(don.getHanhDongXanh())
                 .diemXanh(kh.getDiemXanh())
+                .trangThai(khStatus.getOrDefault(kh.getMaKhachHang(), "CHUA_DIEM_DANH"))
                 .build());
             
             dsNguoiDongHanhRepository.findByDonDatTour_MaDatTour(don.getMaDatTour()).forEach(ndh -> {
@@ -94,23 +107,24 @@ public class VanHanhService {
                     .hoTenKhachHang(ndh.getHoTen())
                     .soDienThoai(ndh.getSoDienThoai())
                     .hangThanhVien("THANH_VIEN")
-                    .ghiChuYTe(gopGhiChu(ndh.getGhiChu(), don.getGhiChu()))
+                    .ghiChuYTe(ndh.getGhiChu())
                     .ghiChuDatTour(don.getGhiChu())
                     .hanhDongXanh(don.getHanhDongXanh())
                     .diemXanh(0L)
+                    .trangThai(ndhStatus.getOrDefault(ndh.getMaNguoiDongHanh(), "CHUA_DIEM_DANH"))
                     .build());
             });
         });
         return result;
     }
 
-    private String gopGhiChu(String ghiChuCaNhan, String ghiChuDonTour) {
+    private String gopGhiChuYTeVaDiUng(String ghiChuYTe, String diUng) {
         List<String> parts = new ArrayList<>();
-        if (ghiChuCaNhan != null && !ghiChuCaNhan.isBlank()) {
-            parts.add(ghiChuCaNhan);
+        if (ghiChuYTe != null && !ghiChuYTe.isBlank()) {
+            parts.add(ghiChuYTe);
         }
-        if (ghiChuDonTour != null && !ghiChuDonTour.isBlank()) {
-            parts.add("Yêu cầu đặt tour: " + ghiChuDonTour);
+        if (diUng != null && !diUng.isBlank()) {
+            parts.add("Dị ứng: " + diUng);
         }
         return String.join(" | ", parts);
     }

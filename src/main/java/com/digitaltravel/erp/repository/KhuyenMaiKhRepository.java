@@ -63,7 +63,6 @@ public interface KhuyenMaiKhRepository extends JpaRepository<KhuyenMaiKh, Khuyen
     @Query("""
             SELECT COUNT(k) FROM KhuyenMaiKh k
             WHERE k.voucher.MaVoucher = :maVoucher
-              AND k.TrangThai IN ('CO_HIEU_LUC', 'DA_SU_DUNG')
             """)
     long countDaPhanBoByMaVoucher(@Param("maVoucher") String maVoucher);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 import com.digitaltravel.erp.config.JwtUtil;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
@@ -136,6 +137,18 @@ public class AuthController {
         taiKhoan.setMatKhau(passwordEncoder.encode(request.getMatKhauMoi()));
         taiKhoanRepository.save(taiKhoan);
         return ResponseEntity.ok(ApiResponse.noContent("Đổi mật khẩu thành công"));
+    }
+
+    @PostMapping("/kiem-tra-mat-khau")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<Void>> kiemTraMatKhau(
+            @AuthenticationPrincipal TaiKhoanDetails details,
+            @RequestBody Map<String, String> request) {
+        String matKhauCu = request.get("matKhauCu");
+        if (!passwordEncoder.matches(matKhauCu, details.getPassword())) {
+            throw AppException.unauthorized("Mật khẩu cũ không đúng");
+        }
+        return ResponseEntity.ok(ApiResponse.noContent("Mật khẩu cũ chính xác"));
     }
 
     @PostMapping("/quen-mat-khau")
