@@ -68,6 +68,26 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
             Pageable pageable
     );
 
+    @Query(
+            value = """
+                    SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
+                    WHERE ttt.TrangThai = 'CHO_KICH_HOAT'
+                      AND NOT EXISTS (
+                          SELECT pc FROM PhanCongTour pc
+                          WHERE pc.tourThucTe = ttt
+                      )
+                    """,
+            countQuery = """
+                    SELECT COUNT(ttt) FROM TourThucTe ttt
+                    WHERE ttt.TrangThai = 'CHO_KICH_HOAT'
+                      AND NOT EXISTS (
+                          SELECT pc FROM PhanCongTour pc
+                          WHERE pc.tourThucTe = ttt
+                      )
+                    """
+    )
+    Page<TourThucTe> findChoKichHoatChuaPhanCong(Pageable pageable);
+
     // Đếm số tour đã kết thúc trong khoảng thời gian (báo cáo)
     @Query("""
             SELECT COUNT(ttt) FROM TourThucTe ttt

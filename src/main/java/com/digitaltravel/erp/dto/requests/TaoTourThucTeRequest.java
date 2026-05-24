@@ -32,6 +32,8 @@ public class TaoTourThucTeRequest {
     @DecimalMin(value = "0.01", message = "Giá hiện hành phải lớn hơn 0")
     BigDecimal giaHienHanh;
 
+    String trangThai;
+
     List<String> maDichVuThem;
 
     List<String> maHanhDongXanh;

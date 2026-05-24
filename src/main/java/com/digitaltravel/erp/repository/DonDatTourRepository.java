@@ -107,6 +107,14 @@ public interface DonDatTourRepository extends JpaRepository<DonDatTour, String> 
     long countBlockingBookingsByTourThucTe(@Param("maTourThucTe") String maTourThucTe);
 
     @Query("""
+            SELECT COUNT(d) FROM DonDatTour d
+            JOIN ChiTietDatTour ct ON ct.donDatTour = d
+            WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND d.trangThai = 'DA_XAC_NHAN'
+            """)
+    long countConfirmedPassengersByTourThucTe(@Param("maTourThucTe") String maTourThucTe);
+
+    @Query("""
             SELECT COUNT(d) > 0 FROM DonDatTour d
             WHERE d.tourThucTe.MaTourThucTe = :maTourThucTe
               AND d.khachHang.MaKhachHang = :maKhachHang

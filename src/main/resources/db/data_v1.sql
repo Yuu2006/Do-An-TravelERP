@@ -61,6 +61,54 @@ VALUES ('TK_HDV02', 'hdv02',
         'Nguyễn Thị Hương', '079099000006', DATE '1993-07-27', 'hdv02@digitaltravel.vn', '0900000006',
         'HDV', 'HOAT_DONG');
 
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV03', 'hdv03',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Trần Minh Khang', '079099000007', DATE '1991-11-09', 'hdv03@digitaltravel.vn', '0900000007',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV04', 'hdv04',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Phạm Thu Hà', '079099000008', DATE '1994-02-22', 'hdv04@digitaltravel.vn', '0900000008',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV05', 'hdv05',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Lê Quốc Bảo', '079099000009', DATE '1989-08-30', 'hdv05@digitaltravel.vn', '0900000009',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV06', 'hdv06',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Võ Ngọc Mai', '079099000010', DATE '1995-05-14', 'hdv06@digitaltravel.vn', '0900000010',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV07', 'hdv07',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Đỗ Hải Nam', '079099000011', DATE '1988-12-05', 'hdv07@digitaltravel.vn', '0900000011',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV08', 'hdv08',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Bùi Lan Anh', '079099000012', DATE '1992-10-18', 'hdv08@digitaltravel.vn', '0900000012',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV09', 'hdv09',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Hoàng Đức Tín', '079099000013', DATE '1990-04-26', 'hdv09@digitaltravel.vn', '0900000013',
+        'HDV', 'HOAT_DONG');
+
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_HDV10', 'hdv10',
+        '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Ngô Thanh Vy', '079099000014', DATE '1996-01-19', 'hdv10@digitaltravel.vn', '0900000014',
+        'HDV', 'HOAT_DONG');
+
 -- ------------------------------------------------------------
 -- 3. NHANVIEN — Hồ sơ nhân viên nội bộ
 -- ------------------------------------------------------------
@@ -78,6 +126,22 @@ INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangTha
 VALUES ('NV_HDV01',    'TK_HDV01',    'HDV',       DATE '2021-09-15', 'HOAT_DONG');
 INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
 VALUES ('NV_HDV02',    'TK_HDV02',    'HDV',       DATE '2022-05-10', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV03',    'TK_HDV03',    'HDV',       DATE '2022-08-20', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV04',    'TK_HDV04',    'HDV',       DATE '2023-01-10', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV05',    'TK_HDV05',    'HDV',       DATE '2021-12-01', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV06',    'TK_HDV06',    'HDV',       DATE '2023-04-15', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV07',    'TK_HDV07',    'HDV',       DATE '2020-11-25', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV08',    'TK_HDV08',    'HDV',       DATE '2022-09-05', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV09',    'TK_HDV09',    'HDV',       DATE '2021-06-12', 'HOAT_DONG');
+INSERT INTO NHANVIEN (MaNhanVien, MaTaiKhoan, LoaiNhanVien, NgayVaoLam, TrangThaiLamViec)
+VALUES ('NV_HDV10',    'TK_HDV10',    'HDV',       DATE '2023-07-01', 'HOAT_DONG');
 
 -- ------------------------------------------------------------
 -- 4. NANGLUCNHANVIEN — Đánh giá và năng lực
@@ -87,6 +151,30 @@ VALUES ('NLNV_HDV01', 'NV_HDV01', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quố
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
 VALUES ('NLNV_HDV02', 'NV_HDV02', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế', 'Mua sắm, Ẩm thực', 4.5, 89);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV03', 'NV_HDV03', 'Tiếng Anh, Tiếng Nhật', 'Thẻ HDV Quốc tế, Nghiệp vụ lữ hành', 'Di sản miền Trung, Văn hóa Chăm', 4.7, 102);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV04', 'NV_HDV04', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Du lịch gia đình, Nghỉ dưỡng biển', 4.6, 94);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV05', 'NV_HDV05', 'Tiếng Anh, Tiếng Đức', 'Thẻ HDV Quốc tế', 'Lịch sử, Kiến trúc, Tour cao cấp', 4.9, 138);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV06', 'NV_HDV06', 'Tiếng Anh, Tiếng Thái', 'Thẻ HDV Nội địa, Kỹ năng hoạt náo', 'Ẩm thực địa phương, Team building', 4.4, 76);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV07', 'NV_HDV07', 'Tiếng Anh, Tiếng Nga', 'Thẻ HDV Quốc tế, Cứu hộ du lịch', 'Du lịch mạo hiểm, Trekking, Sinh thái', 4.75, 117);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV08', 'NV_HDV08', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế, Nghiệp vụ chăm sóc khách hàng', 'MICE, Tour doanh nghiệp, Mua sắm', 4.55, 83);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV09', 'NV_HDV09', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế', 'Văn hóa Tây Nguyên, Nhiếp ảnh du lịch', 4.65, 91);
+
+INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
+VALUES ('NLNV_HDV10', 'NV_HDV10', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Nội địa, Sơ cấp cứu', 'Du lịch xanh, Trải nghiệm cộng đồng', 4.5, 68);
 
 COMMIT;
 -- ============================================================

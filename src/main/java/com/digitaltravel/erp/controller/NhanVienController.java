@@ -158,6 +158,26 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.tourCuaToi(maTaiKhoan)));
     }
 
+    @PostMapping("/api/huong-dan-vien/phan-cong/{maPhanCong}/dong-y")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PhanCongResponse>> dongYPhanCong(
+            @PathVariable String maPhanCong,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok("Da dong y phan cong",
+                phanCongTourService.dongYPhanCong(maPhanCong, maTaiKhoan)));
+    }
+
+    @PostMapping("/api/huong-dan-vien/phan-cong/{maPhanCong}/tu-choi")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PhanCongResponse>> tuChoiPhanCong(
+            @PathVariable String maPhanCong,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        return ResponseEntity.ok(ApiResponse.ok("Da tu choi phan cong",
+                phanCongTourService.tuChoiPhanCong(maPhanCong, maTaiKhoan)));
+    }
+
     /**
      * HDV xem danh sách hành động xanh (danh mục)
      */

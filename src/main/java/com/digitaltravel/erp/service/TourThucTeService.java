@@ -63,6 +63,12 @@ public class TourThucTeService {
                 .map(this::toResponse);
     }
 
+    @Transactional(readOnly = true)
+    public Page<TourThucTeResponse> danhSachCanPhanCong(Pageable pageable) {
+        return tourThucTeRepository.findChoKichHoatChuaPhanCong(pageable)
+                .map(this::toResponse);
+    }
+
     // ── UC14: Chi tiết tour thực tế ─────────────────────────────────────────
     @Transactional(readOnly = true)
     public TourThucTeResponse chiTiet(String id) {
@@ -134,7 +140,11 @@ public class TourThucTeService {
         ttt.setSoKhachToiDa(request.getSoKhachToiDa());
         ttt.setSoKhachToiThieu(soKhachToiThieu);
         ttt.setChoConLai(request.getSoKhachToiDa());
-        ttt.setTrangThai("MO_BAN");
+        String trangThai = request.getTrangThai() != null && !request.getTrangThai().isBlank()
+                ? request.getTrangThai()
+                : "CHO_KICH_HOAT";
+        validateTrangThaiTourThucTe(trangThai);
+        ttt.setTrangThai(trangThai);
         tourThucTeRepository.save(ttt);
         capNhatDichVuTour(ttt, request.getMaDichVuThem());
         capNhatHanhDongXanhTour(ttt, request.getMaHanhDongXanh());

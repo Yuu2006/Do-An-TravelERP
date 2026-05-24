@@ -2,6 +2,10 @@ package com.digitaltravel.erp.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +21,9 @@ import com.digitaltravel.erp.dto.requests.PhanCongHdvRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.NhanVienResponse;
 import com.digitaltravel.erp.dto.responses.PhanCongResponse;
+import com.digitaltravel.erp.dto.responses.TourThucTeResponse;
 import com.digitaltravel.erp.service.PhanCongTourService;
+import com.digitaltravel.erp.service.TourThucTeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +34,14 @@ import lombok.RequiredArgsConstructor;
 public class PhanCongController {
 
     private final PhanCongTourService phanCongTourService;
+    private final TourThucTeService tourThucTeService;
+
+    @GetMapping("/tour-can-phan-cong")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Page<TourThucTeResponse>>> tourCanPhanCong(
+            @PageableDefault(size = 10, sort = "NgayKhoiHanh", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.ok(tourThucTeService.danhSachCanPhanCong(pageable)));
+    }
 
     /**
      * UC38 — Danh sách HDV khả dụng cho 1 tour (không trùng lịch)
