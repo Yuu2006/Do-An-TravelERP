@@ -2478,8 +2478,9 @@ BEGIN
 END;
 /
 
--- Sau khi đủ đoàn và đã thanh toán, các chuyến tương lai đi vào danh sách sắp khởi hành của HDV.
-UPDATE TOURTHUCTE SET TrangThai = 'SAP_DIEN_RA' WHERE MaTourThucTe IN ('TTT_H11_HUE_SKH', 'TTT_H12_CANTHO_SKH');
+-- Sau khi đủ đoàn và đã thanh toán, các chuyến tương lai vẫn ở trạng thái mở bán hợp lệ;
+-- màn hình sắp khởi hành lọc theo ngày khởi hành gần và phân công HDV.
+UPDATE TOURTHUCTE SET TrangThai = 'MO_BAN' WHERE MaTourThucTe IN ('TTT_H11_HUE_SKH', 'TTT_H12_CANTHO_SKH');
 
 -- Hai chuyến lịch sử chuyển sang giai đoạn vận hành để ghi nhận điểm danh và hành động xanh.
 UPDATE TOURTHUCTE SET TrangThai = 'DANG_DIEN_RA' WHERE MaTourThucTe IN ('TTT_H11_QUYNHON_LS', 'TTT_H12_CANTHO_LS');
@@ -3618,11 +3619,11 @@ INSERT INTO HDX_TOURTHUCTE (MaTourThucTe, MaHanhDongXanh) VALUES ('TTT_TMNEW_PN_
 INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
 VALUES ('PC_TMNEW_PN_OPEN_H11', 'TTT_TMNEW_PN_OPEN', 'NV_HDV11', SYSTIMESTAMP - INTERVAL '2' DAY, 'DA_DONG_Y', SYSTIMESTAMP - INTERVAL '1' DAY);
 INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
-VALUES ('PC_TMNEW_CM_DONE_H12', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', SYSTIMESTAMP - INTERVAL '125' DAY, 'DA_DONG_Y', SYSTIMESTAMP - INTERVAL '124' DAY);
+VALUES ('PC_TMNEW_CM_DONE_H12', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', SYSTIMESTAMP - NUMTODSINTERVAL(125, 'DAY'), 'DA_DONG_Y', SYSTIMESTAMP - NUMTODSINTERVAL(124, 'DAY'));
 INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
 VALUES ('PC_TMNEW_BB_ACTIVE_H11', 'TTT_TMNEW_BB_ACTIVE', 'NV_HDV11', SYSTIMESTAMP - INTERVAL '7' DAY, 'DA_DONG_Y', SYSTIMESTAMP - INTERVAL '6' DAY);
 INSERT INTO PHANCONGTOUR (MaPhanCongTour, MaTourThucTe, MaNhanVien, NgayPhanCong, TrangThaiChapNhan, NgayPhanHoi)
-VALUES ('PC_TMNEW_PN_QT_H12', 'TTT_TMNEW_PN_QT', 'NV_HDV12', SYSTIMESTAMP - INTERVAL '150' DAY, 'DA_DONG_Y', SYSTIMESTAMP - INTERVAL '149' DAY);
+VALUES ('PC_TMNEW_PN_QT_H12', 'TTT_TMNEW_PN_QT', 'NV_HDV12', SYSTIMESTAMP - NUMTODSINTERVAL(150, 'DAY'), 'DA_DONG_Y', SYSTIMESTAMP - NUMTODSINTERVAL(149, 'DAY'));
 
 DECLARE
     PROCEDURE them_don_tmnew (
@@ -3703,7 +3704,7 @@ BEGIN
                   'Đoàn mười khách đặt tour Phong Nha, cần đủ thiết bị hang động và xác nhận danh sách căn cước trước ngày đi.',
                   'HDX_TMNEW_WATER:10', 501);
     them_don_tmnew('CM06', 'TTT_TMNEW_CM_DONE', 'KH_04', 7100000, 6, 'DVT_TMNEW_BOAT', 1, 1800000, NULL, 0,
-                  SYSTIMESTAMP - INTERVAL '120' DAY, 'THE_QUOC_TE',
+                  SYSTIMESTAMP - NUMTODSINTERVAL(120, 'DAY'), 'THE_QUOC_TE',
                   'Đoàn sáu khách đã hoàn thành tour Cà Mau, thuê tàu riêng để tham quan tuyến rừng ngập mặn.',
                   'HDX_TMNEW_LOCAL:6', 502);
     them_don_tmnew('BB04', 'TTT_TMNEW_BB_ACTIVE', 'KH_08', 3600000, 4, 'DVT_TMNEW_HOMESTAY', 2, 420000, NULL, 0,
@@ -3711,7 +3712,7 @@ BEGIN
                   'Bốn khách đang tham gia tour Ba Bể, nâng cấp hai phòng homestay riêng và cần thực đơn ít muối.',
                   'HDX_TMNEW_WATER:4', 503);
     them_don_tmnew('PN05', 'TTT_TMNEW_PN_QT', 'KH_02', 5400000, 5, 'DVT_TMNEW_CAVE', 5, 220000, NULL, 0,
-                  SYSTIMESTAMP - INTERVAL '145' DAY, 'CHUYEN_KHOAN',
+                  SYSTIMESTAMP - NUMTODSINTERVAL(145, 'DAY'), 'CHUYEN_KHOAN',
                   'Năm khách đã đi tour Phong Nha, đầy đủ thiết bị hang động và đã thanh toán trước khởi hành.',
                   'HDX_TMNEW_LOCAL:5', 504);
 END;
@@ -3747,25 +3748,25 @@ VALUES ('LST_TMN_PN_KH02', 'KH_02', 'TTT_TMNEW_PN_QT', 'CTDT_TMN_PN05_KH', TRUNC
 
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
 VALUES ('SC_TMN_CM_BOAT', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', 'Tàu tham quan Đất Mũi đổi giờ xuất bến do thủy triều.',
-        'Thông báo sớm cho khách, điều chỉnh giờ ăn trưa và giữ nguyên đủ điểm tham quan.', 'THAP', 'PHUONG_TIEN', SYSTIMESTAMP - INTERVAL '103' DAY);
+        'Thông báo sớm cho khách, điều chỉnh giờ ăn trưa và giữ nguyên đủ điểm tham quan.', 'THAP', 'PHUONG_TIEN', SYSTIMESTAMP - NUMTODSINTERVAL(103, 'DAY'));
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_TMN_CM_BOAT', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', 'Tàu riêng tuyến Đất Mũi và rừng ngập mặn', 7800000, 'https://seed.local/hoa-don/tmnew-camau-boat.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '103' DAY);
+VALUES ('CP_TMN_CM_BOAT', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', 'Tàu riêng tuyến Đất Mũi và rừng ngập mặn', 7800000, 'https://seed.local/hoa-don/tmnew-camau-boat.jpg', 'DA_DUYET', SYSTIMESTAMP - NUMTODSINTERVAL(103, 'DAY'));
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_TMN_CM_MEAL', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', 'Bữa ăn cộng đồng tại Đất Mũi', 3600000, 'https://seed.local/hoa-don/tmnew-camau-meal.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '102' DAY);
+VALUES ('CP_TMN_CM_MEAL', 'TTT_TMNEW_CM_DONE', 'NV_HDV12', 'Bữa ăn cộng đồng tại Đất Mũi', 3600000, 'https://seed.local/hoa-don/tmnew-camau-meal.jpg', 'DA_DUYET', SYSTIMESTAMP - NUMTODSINTERVAL(102, 'DAY'));
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
 VALUES ('DG_TMN_CM_KH04', 'TTT_TMNEW_CM_DONE', 'KH_04', 5, 'Tour Cà Mau nhiều trải nghiệm thật, tàu riêng giúp lịch trình thoải mái và đúng giờ.', SYSTIMESTAMP - INTERVAL '99' DAY);
 
 INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, GiaiPhap, MucDo, LoaiSuCo, ThoiGianBaoCao)
 VALUES ('SC_TMN_PN_CAVE', 'TTT_TMNEW_PN_QT', 'NV_HDV12', 'Một khách hơi mệt khi di chuyển trong hang do độ ẩm cao.',
-        'HDV bố trí nghỉ thêm mười phút, kiểm tra sức khỏe và điều chỉnh tốc độ đoàn.', 'THAP', 'Y_TE', SYSTIMESTAMP - INTERVAL '134' DAY);
+        'HDV bố trí nghỉ thêm mười phút, kiểm tra sức khỏe và điều chỉnh tốc độ đoàn.', 'THAP', 'Y_TE', SYSTIMESTAMP - NUMTODSINTERVAL(134, 'DAY'));
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_TMN_PN_HOTEL', 'TTT_TMNEW_PN_QT', 'NV_HDV12', 'Khách sạn Phong Nha hai đêm cho đoàn năm khách', 11200000, 'https://seed.local/hoa-don/tmnew-phongnha-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '133' DAY);
+VALUES ('CP_TMN_PN_HOTEL', 'TTT_TMNEW_PN_QT', 'NV_HDV12', 'Khách sạn Phong Nha hai đêm cho đoàn năm khách', 11200000, 'https://seed.local/hoa-don/tmnew-phongnha-hotel.jpg', 'DA_DUYET', SYSTIMESTAMP - NUMTODSINTERVAL(133, 'DAY'));
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_TMN_PN_TICKET', 'TTT_TMNEW_PN_QT', 'NV_HDV12', 'Vé hang động và thuyền sông Son', 5200000, 'https://seed.local/hoa-don/tmnew-phongnha-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '133' DAY);
+VALUES ('CP_TMN_PN_TICKET', 'TTT_TMNEW_PN_QT', 'NV_HDV12', 'Vé hang động và thuyền sông Son', 5200000, 'https://seed.local/hoa-don/tmnew-phongnha-ticket.jpg', 'DA_DUYET', SYSTIMESTAMP - NUMTODSINTERVAL(133, 'DAY'));
 INSERT INTO DANHGIAKH (MaDanhGiaKhachHang, MaTourThucTe, MaKhachHang, SoSao, NhanXet, NgayDanhGia)
-VALUES ('DG_TMN_PN_KH02', 'TTT_TMNEW_PN_QT', 'KH_02', 4, 'Hang động rất đẹp, thiết bị chuẩn bị đầy đủ, nên thêm thời gian nghỉ giữa hai điểm.', SYSTIMESTAMP - INTERVAL '130' DAY);
+VALUES ('DG_TMN_PN_KH02', 'TTT_TMNEW_PN_QT', 'KH_02', 4, 'Hang động rất đẹp, thiết bị chuẩn bị đầy đủ, nên thêm thời gian nghỉ giữa hai điểm.', SYSTIMESTAMP - NUMTODSINTERVAL(130, 'DAY'));
 INSERT INTO QUYETTOAN (MaQuyetToan, MaTourThucTe, TongDoanhThu, TongChiPhi, GiaCamKet, LoiNhuan, MaNhanVien, NgayQuyetToan, TrangThai, GhiChu)
-VALUES ('QT_TMN_PN_DONE', 'TTT_TMNEW_PN_QT', 0, 0, 23500000, 0, 'NV_KT01', SYSTIMESTAMP - INTERVAL '129' DAY, 'DA_QUYET_TOAN',
+VALUES ('QT_TMN_PN_DONE', 'TTT_TMNEW_PN_QT', 0, 0, 23500000, 0, 'NV_KT01', SYSTIMESTAMP - NUMTODSINTERVAL(129, 'DAY'), 'DA_QUYET_TOAN',
         'Quyết toán tour mẫu mới Phong Nha, đã có đủ doanh thu, chi phí thực tế, lịch sử tour và đánh giá.');
 
 INSERT INTO YEUCAUHOTRO (MaYeuCauHoTro, MaDatTour, MaKhachHang, LoaiYeuCau, NoiDung, TrangThai, MaNhanVienXuLy)
@@ -3782,7 +3783,7 @@ VALUES ('NKHT_TMN_DDT_PN10', 'TK_SALES01', 'THEM', 'DONDATTOUR_SALES', 'DDT_TMNE
 INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
 VALUES ('NKHT_TMN_BB_CP', 'TK_HDV11', 'THEM', 'CHIPHITHUCTE_HDV', 'CP_TMN_BB_RAINCOAT', SYSTIMESTAMP - INTERVAL '80' MINUTE);
 INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
-VALUES ('NKHT_TMN_PN_QT', 'TK_KT01', 'THEM', 'QUYETTOAN_KETOAN', 'QT_TMN_PN_DONE', SYSTIMESTAMP - INTERVAL '129' DAY);
+VALUES ('NKHT_TMN_PN_QT', 'TK_KT01', 'THEM', 'QUYETTOAN_KETOAN', 'QT_TMN_PN_DONE', SYSTIMESTAMP - NUMTODSINTERVAL(129, 'DAY'));
 
 -- Tính lại số chỗ còn lại sau toàn bộ cụm dữ liệu bổ sung.
 UPDATE CHITIETDATTOUR
