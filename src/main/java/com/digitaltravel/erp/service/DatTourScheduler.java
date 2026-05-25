@@ -1,6 +1,7 @@
 package com.digitaltravel.erp.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -41,8 +42,18 @@ public class DatTourScheduler {
 
         if (donHetHan.isEmpty()) return;
 
+        List<GiaoDich> giaoDichThatBai = new ArrayList<>();
         for (DonDatTour don : donHetHan) {
             don.setTrangThai("HET_HAN_GIU_CHO");
+            giaoDichRepository.findByMaDatTour(don.getMaDatTour()).stream()
+                    .filter(giaoDich -> "CHO_THANH_TOAN".equals(giaoDich.getTrangThai()))
+                    .forEach(giaoDich -> {
+                        giaoDich.setTrangThai("THAT_BAI");
+                        giaoDichThatBai.add(giaoDich);
+                    });
+        }
+        if (!giaoDichThatBai.isEmpty()) {
+            giaoDichRepository.saveAll(giaoDichThatBai);
         }
         donDatTourRepository.saveAll(donHetHan);
         log.info("[Scheduler] Da huy {} don dat tour het han giu cho", donHetHan.size());
