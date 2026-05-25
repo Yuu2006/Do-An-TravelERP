@@ -51,7 +51,7 @@ public class TourMauController {
 
     // UC06: Chi tiết 1 tour mẫu + lịch trình
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH'")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourMauService.chiTiet(id)));
     }
