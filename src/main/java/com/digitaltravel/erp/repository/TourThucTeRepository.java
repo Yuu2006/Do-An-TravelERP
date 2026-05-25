@@ -35,8 +35,15 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
             """)
     boolean existsByMaTourMau(@Param("maTourMau") String maTourMau);
 
-    @Query("""
-            SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
+    @Query(value = """
+            SELECT ttt FROM TourThucTe ttt LEFT JOIN FETCH ttt.tourMau
+            WHERE ((:trangThai IS NULL AND ttt.TrangThai <> 'HUY') OR ttt.TrangThai = :trangThai)
+              AND (:maTourMau IS NULL OR ttt.tourMau.MaTourMau = :maTourMau)
+              AND (:giaTu IS NULL OR ttt.GiaHienHanh >= :giaTu)
+              AND (:giaDen IS NULL OR ttt.GiaHienHanh <= :giaDen)
+            """,
+            countQuery = """
+            SELECT count(ttt) FROM TourThucTe ttt
             WHERE ((:trangThai IS NULL AND ttt.TrangThai <> 'HUY') OR ttt.TrangThai = :trangThai)
               AND (:maTourMau IS NULL OR ttt.tourMau.MaTourMau = :maTourMau)
               AND (:giaTu IS NULL OR ttt.GiaHienHanh >= :giaTu)
@@ -50,15 +57,25 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
             Pageable pageable
     );
 
-    @Query("""
-            SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
+    @Query(value = """
+            SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau tm
             WHERE ttt.TrangThai = 'MO_BAN'
               AND ttt.ChoConLai > 0
               AND ttt.NgayKhoiHanh > CURRENT_DATE
               AND (:giaTu IS NULL OR ttt.GiaHienHanh >= :giaTu)
               AND (:giaDen IS NULL OR ttt.GiaHienHanh <= :giaDen)
-              AND (:thoiLuongMin IS NULL OR ttt.tourMau.ThoiLuong >= :thoiLuongMin)
-              AND (:thoiLuongMax IS NULL OR ttt.tourMau.ThoiLuong <= :thoiLuongMax)
+              AND (:thoiLuongMin IS NULL OR tm.ThoiLuong >= :thoiLuongMin)
+              AND (:thoiLuongMax IS NULL OR tm.ThoiLuong <= :thoiLuongMax)
+            """,
+            countQuery = """
+            SELECT count(ttt) FROM TourThucTe ttt JOIN ttt.tourMau tm
+            WHERE ttt.TrangThai = 'MO_BAN'
+              AND ttt.ChoConLai > 0
+              AND ttt.NgayKhoiHanh > CURRENT_DATE
+              AND (:giaTu IS NULL OR ttt.GiaHienHanh >= :giaTu)
+              AND (:giaDen IS NULL OR ttt.GiaHienHanh <= :giaDen)
+              AND (:thoiLuongMin IS NULL OR tm.ThoiLuong >= :thoiLuongMin)
+              AND (:thoiLuongMax IS NULL OR tm.ThoiLuong <= :thoiLuongMax)
             """)
     Page<TourThucTe> timKiemCongKhai(
             @Param("giaTu") java.math.BigDecimal giaTu,
@@ -102,7 +119,7 @@ public interface TourThucTeRepository extends JpaRepository<TourThucTe, String> 
     // Lấy tất cả tour đang bán để tính dynamic pricing (JOIN FETCH tourMau để đọc GiaSan)
     @Query("""
             SELECT ttt FROM TourThucTe ttt JOIN FETCH ttt.tourMau
-            WHERE ttt.TrangThai IN ('MO_BAN', 'SAP_DIEN_RA')
+            WHERE ttt.TrangThai = 'MO_BAN'
             """)
     java.util.List<TourThucTe> findForDynamicPricing();
 

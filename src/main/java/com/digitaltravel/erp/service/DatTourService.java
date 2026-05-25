@@ -236,6 +236,7 @@ public class DatTourService {
         if (!daThanhToan && tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
+
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         don.setTongTien(tinhTongTienTuChiTiet(dsChiTiet, dsDichVu));
 

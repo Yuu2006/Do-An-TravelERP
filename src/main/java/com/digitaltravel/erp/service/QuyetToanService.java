@@ -43,16 +43,21 @@ public class QuyetToanService {
     private final ChiTietDatTourRepository chiTietDatTourRepository;
 
     // ── UC47: Danh sách tour cần quyết toán (đã kết thúc, chưa quyết toán)
+    @Transactional(readOnly = true)
     public Page<QuyetToanResponse> tourCanQuyetToan(Pageable pageable) {
-        // Tour trạng thái KET_THUC chưa có QuyetToan
-        return tourThucTeRepository.timKiem("KET_THUC", null, null, null, pageable)
-                .map(tt -> {
-                    boolean daqt = quyetToanRepository.existsByTourThucTe_MaTourThucTe(tt.getMaTourThucTe());
-                    if (daqt)
-                        return null;
-                    return toQuyetToanXemTruoc(tt);
-                })
-                .map(r -> r); // filter nulls handled by client or via separate query
+        try {
+            return tourThucTeRepository.timKiem("KET_THUC", null, null, null, pageable)
+                    .map(tt -> {
+                        boolean daqt = quyetToanRepository.existsByTourThucTe_MaTourThucTe(tt.getMaTourThucTe());
+                        if (daqt)
+                            return null;
+                        return toQuyetToanXemTruoc(tt);
+                    })
+                    .map(r -> r);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
     }
 
     // ── UC48: Tính toán sơ bộ (xem trước, không lưu DB) ──────────────────
@@ -87,7 +92,10 @@ public class QuyetToanService {
         }
 
         NhanVien nv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
+                .orElseGet(() -> nhanVienRepository.findAll().stream()
+                        .filter(n -> "KETOAN".equals(n.getLoaiNhanVien()) || "ADMIN".equals(n.getLoaiNhanVien()))
+                        .findFirst()
+                        .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên")));
 
         BigDecimal doanhThu = tinhDoanhThu(maTour);
         BigDecimal chiPhi = tinhChiPhi(maTour);
@@ -159,7 +167,7 @@ public class QuyetToanService {
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY");
+            throw AppException.badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " + don.getTrangThai());
         }
 
         gd.setTrangThai("DA_HOAN_TIEN");
@@ -168,7 +176,8 @@ public class QuyetToanService {
 
         TourThucTe tour = don.getTourThucTe();
         int soKhach = (int) chiTietDatTourRepository.countByDonDatTour_MaDatTour(don.getMaDatTour());
-        tour.setChoConLai(tour.getChoConLai() + soKhach);
+        int newChoConLai = Math.min(tour.getChoConLai() + soKhach, tour.getSoKhachToiDa());
+        tour.setChoConLai(newChoConLai);
         tourThucTeRepository.save(tour);
 
         don.setTrangThai("DA_HUY");
@@ -199,7 +208,7 @@ public class QuyetToanService {
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY");
+            throw AppException.badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " + don.getTrangThai());
         }
 
         gd.setTrangThai("THAT_BAI");
@@ -278,9 +287,15 @@ public class QuyetToanService {
     }
 
     private QuyetToanResponse toQuyetToanXemTruoc(TourThucTe tt) {
+        java.math.BigDecimal doanhThu = tinhDoanhThu(tt.getMaTourThucTe());
+        java.math.BigDecimal chiPhi = tinhChiPhi(tt.getMaTourThucTe());
         return QuyetToanResponse.builder()
                 .maTour(tt.getMaTourThucTe())
                 .tenTour(tt.getTourMau() != null ? tt.getTourMau().getTieuDe() : "")
+                .tongDoanhThu(doanhThu)
+                .tongChiPhi(chiPhi)
+                .loiNhuan(doanhThu.subtract(chiPhi))
+                .ngayQuyetToan(tt.getNgayKhoiHanh() != null ? tt.getNgayKhoiHanh().atStartOfDay() : null)
                 .trangThai("CHUA_QUYET_TOAN")
                 .build();
     }

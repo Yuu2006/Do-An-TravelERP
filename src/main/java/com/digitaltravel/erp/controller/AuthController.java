@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,8 @@ import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
 import com.digitaltravel.erp.service.MaTuDongService;
+import com.digitaltravel.erp.service.QuyetToanService;
+import org.springframework.data.domain.PageRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +50,19 @@ public class AuthController {
     private final VaiTroRepository vaiTroRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final MaTuDongService maTuDongService;
+    private final QuyetToanService quyetToanService;
+
+    @GetMapping("/debug")
+    public String debug() {
+        try {
+            quyetToanService.tourCanQuyetToan(PageRequest.of(0, 10));
+            return "SUCCESS";
+        } catch (Exception e) {
+            java.io.StringWriter sw = new java.io.StringWriter();
+            e.printStackTrace(new java.io.PrintWriter(sw));
+            return sw.toString();
+        }
+    }
 
     @PostMapping("/dang-ky")
     @Transactional

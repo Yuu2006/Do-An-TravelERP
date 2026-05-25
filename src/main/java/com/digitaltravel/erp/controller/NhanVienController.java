@@ -30,12 +30,12 @@ import com.digitaltravel.erp.dto.responses.NhanVienResponse;
 import com.digitaltravel.erp.dto.responses.PhanCongResponse;
 import com.digitaltravel.erp.dto.responses.YeuCauHoTroResponse;
 import com.digitaltravel.erp.service.DatTourService;
+import com.digitaltravel.erp.service.HanhDongXanhService;
 import com.digitaltravel.erp.service.HuyTourService;
 import com.digitaltravel.erp.service.NangLucService;
 import com.digitaltravel.erp.service.NhanVienService;
 import com.digitaltravel.erp.service.PhanCongTourService;
 import com.digitaltravel.erp.service.YeuCauHoTroService;
-import com.digitaltravel.erp.service.HanhDongXanhService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class NhanVienController {
      * UC68 — Danh sách nhân viên (filter + phân trang)
      */
     @GetMapping("/api/quan-tri/nhan-vien")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<NhanVienResponse>>> danhSachNhanVien(
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String maVaiTro,
@@ -72,7 +72,7 @@ public class NhanVienController {
      * UC68 — Chi tiết nhân viên
      */
     @GetMapping("/api/quan-tri/nhan-vien/{maNhanVien}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> chiTietNhanVien(
             @PathVariable String maNhanVien) {
         return ResponseEntity.ok(ApiResponse.ok(nhanVienService.chiTiet(maNhanVien)));
@@ -199,6 +199,16 @@ public class NhanVienController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
         return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.tourCuaToi(maTaiKhoan)));
+    }
+
+    /**
+     * Điều hành xem lịch công tác của 1 HDV cụ thể
+     */
+    @GetMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/lich-cong-tac")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<PhanCongResponse>>> lichCongTacNhanVien(
+            @PathVariable String maNhanVien) {
+        return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.lichCongTacNhanVien(maNhanVien)));
     }
 
     // ──────────────── UC24: Tìm kiếm khách hàng ──────────────────────────

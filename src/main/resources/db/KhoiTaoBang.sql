@@ -174,7 +174,7 @@ CREATE TABLE TOURTHUCTE (
                             CONSTRAINT CK_TTT_SoKhach              CHECK (SoKhachToiDa >= SoKhachToiThieu AND SoKhachToiThieu > 0),
                             CONSTRAINT CK_TTT_ChoConLai            CHECK (ChoConLai >= 0 AND ChoConLai <= SoKhachToiDa),
                             CONSTRAINT CK_TTT_TrangThai            CHECK (TrangThai IN (
-                                                                                        'CHO_KICH_HOAT','MO_BAN','SAP_DIEN_RA','DANG_DIEN_RA',
+                                                                                        'CHO_KICH_HOAT','MO_BAN','DANG_DIEN_RA',
                                                                                         'KET_THUC','HUY','DA_QUYET_TOAN'
                                 ))
 );
