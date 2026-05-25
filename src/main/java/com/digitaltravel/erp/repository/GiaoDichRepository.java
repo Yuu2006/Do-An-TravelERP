@@ -1,5 +1,6 @@
 package com.digitaltravel.erp.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,17 @@ public interface GiaoDichRepository extends JpaRepository<GiaoDich, String> {
     // Tìm giao dịch thanh toán đang chờ/đã hoàn thành của 1 đơn
     @Query("SELECT g FROM GiaoDich g WHERE g.donDatTour.maDatTour = :maDatTour AND g.loaiGiaoDich = 'THANH_TOAN' ORDER BY g.ngayThanhToan DESC")
     List<GiaoDich> findByMaDatTour(@Param("maDatTour") String maDatTour);
+
+    @Query("""
+            SELECT g FROM GiaoDich g
+            JOIN FETCH g.donDatTour d
+            WHERE g.loaiGiaoDich = 'THANH_TOAN'
+              AND g.trangThai = 'CHO_THANH_TOAN'
+              AND (g.maGDNH IS NULL OR g.maGDNH NOT LIKE 'KHXN:%')
+              AND d.trangThai = 'CHO_XAC_NHAN'
+              AND g.ngayThanhToan < :thoiDiemHetHan
+            """)
+    List<GiaoDich> findQrChoThanhToanQuaHan(@Param("thoiDiemHetHan") LocalDateTime thoiDiemHetHan);
 
     // Kiểm tra idempotency: transId đã xử lý chưa
     Optional<GiaoDich> findByMaGDNH(String maGDNH);

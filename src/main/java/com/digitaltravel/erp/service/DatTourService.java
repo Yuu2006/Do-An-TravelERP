@@ -60,6 +60,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DatTourService {
 
+    private static final String MA_GD_DA_BAO_CHUYEN_KHOAN = "KHXN:";
+
     private static final int TUOI_TOI_DA_TRE_EM = 11;
 
     private final DonDatTourRepository donDatTourRepository;
@@ -174,9 +176,16 @@ public class DatTourService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
 
         String trangThai = don.getTrangThai();
-        if (!"CHO_XAC_NHAN".equals(trangThai) && !"HET_HAN_GIU_CHO".equals(trangThai)) {
+        if (!"CHO_XAC_NHAN".equals(trangThai)) {
             throw AppException.badRequest(
                     "Chi co the huy don o trang thai CHO_XAC_NHAN. Trang thai hien tai: " + trangThai);
+        }
+        boolean daBaoChuyenKhoan = giaoDichRepository.findByMaDatTour(maDatTour).stream()
+                .anyMatch(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai())
+                        && gd.getMaGDNH() != null
+                        && gd.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN));
+        if (daBaoChuyenKhoan) {
+            throw AppException.badRequest("Don da bao chuyen khoan, khong the huy truc tiep.");
         }
 
         don.setTrangThai("DA_HUY");
@@ -208,28 +217,39 @@ public class DatTourService {
             throw AppException.badRequest(
                     "Chỉ có thể xác nhận đơn ở trạng thái 'Chờ xác nhận'. Trạng thái hiện tại: " + don.getTrangThai());
         }
-        // Admin/Nhân viên bấm xác nhận -> Bỏ qua check thời gian hết hạn vì đây là quyết định của con người
-        
-        // Kiểm tra xem đơn đã có giao dịch thành công (ví dụ từ webhook ngân hàng) hay chưa
+        // Nhan vien co the xac nhan sau thoi han giu cho khi da doi soat duoc tien.
         boolean daThanhToan = giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent();
+        GiaoDich giaoDichChoXacNhan = giaoDichRepository.findByMaDatTour(maDatTour).stream()
+                .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai()))
+                .findFirst()
+                .orElse(null);
+        if (!daThanhToan && giaoDichChoXacNhan != null
+                && (giaoDichChoXacNhan.getMaGDNH() == null
+                        || !giaoDichChoXacNhan.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN))) {
+            throw AppException.badRequest("Khach hang chua xac nhan da chuyen khoan.");
+        }
 
         TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế"));
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
         int soKhach = dsChiTiet.size();
-        
-        // Nếu đã thanh toán từ trước (tiền đã vào) thì có thểâm chỗ tạm thời, nếu chưa thanh toán mà hết chỗ thì báo lỗi
         if (!daThanhToan && tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
-        
+
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         don.setTongTien(tinhTongTienTuChiTiet(dsChiTiet, dsDichVu));
 
-        // Nếu chưa có giao dịch thành công, tạo giao dịch offline mới do Admin xác nhận
+        // Neu giao dich QR dang cho doi soat thi xac nhan chinh giao dich do, tranh tao trung giao dich.
         if (!daThanhToan) {
-            GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
-            giaoDichRepository.save(giaoDich);
+            if (giaoDichChoXacNhan != null) {
+                giaoDichChoXacNhan.setTrangThai("THANH_CONG");
+                giaoDichChoXacNhan.setNgayThanhToan(LocalDateTime.now());
+                giaoDichRepository.save(giaoDichChoXacNhan);
+            } else {
+                GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
+                giaoDichRepository.save(giaoDich);
+            }
         }
 
         don.setTrangThai("DA_XAC_NHAN");
@@ -245,6 +265,33 @@ public class DatTourService {
 
     public DonDatTourResponse xacNhanDon(String maDatTour, String nguoiXacNhan) {
         return xacNhanDon(maDatTour, nguoiXacNhan, null);
+    }
+
+    @Transactional
+    public DonDatTourResponse tuChoiThanhToan(String maDatTour) {
+        DonDatTour don = donDatTourRepository.findByIdWithDetails(maDatTour)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
+
+        if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
+            throw AppException.badRequest(
+                    "Chi co the tu choi thanh toan don o trang thai CHO_XAC_NHAN. Hien tai: " + don.getTrangThai());
+        }
+
+        GiaoDich giaoDich = giaoDichRepository.findByMaDatTour(maDatTour).stream()
+                .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai())
+                        && gd.getMaGDNH() != null
+                        && gd.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN))
+                .findFirst()
+                .orElseThrow(() -> AppException.badRequest("Khong co giao dich dang cho doi soat."));
+        giaoDich.setTrangThai("THAT_BAI");
+        giaoDichRepository.save(giaoDich);
+
+        don.setTrangThai("THANH_TOAN_THAT_BAI");
+        donDatTourRepository.save(don);
+
+        List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
+        List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
+        return toResponse(don, dsChiTiet, dsDichVu);
     }
 
     private GiaoDich taoGiaoDichOffline(
@@ -496,6 +543,11 @@ public class DatTourService {
                 .map(DatTourUuDai::getSoTienUuDai)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         DatTourUuDai uuDaiDauTien = dsUuDai.stream().findFirst().orElse(null);
+        boolean daBaoChuyenKhoan = giaoDichRepository.findByMaDatTour(don.getMaDatTour()).stream()
+                .findFirst()
+                .map(gd -> gd.getMaGDNH() != null
+                        && gd.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN))
+                .orElse(false);
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -513,6 +565,7 @@ public class DatTourService {
                 .maCodeVoucher(uuDaiDauTien != null ? uuDaiDauTien.getVoucher().getMaCode() : null)
                 .diemXanhDuKien(tinhDiemXanhDuKien(don.getHanhDongXanh()))
                 .trangThai(don.getTrangThai())
+                .daBaoChuyenKhoan(daBaoChuyenKhoan)
                 .trangThaiTour(ttt.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())

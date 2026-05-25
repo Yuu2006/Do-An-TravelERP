@@ -27,6 +27,7 @@ public class DonDatTourResponse {
     String maCodeVoucher;
     Long diemXanhDuKien;
     String trangThai;
+    Boolean daBaoChuyenKhoan;
     String trangThaiTour;
     LocalDateTime thoiGianHetHan;
     String ghiChu;

@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class ThanhToanService {
 
     private static final Logger log = LoggerFactory.getLogger(ThanhToanService.class);
+    private static final long THOI_HAN_QR_PHUT = 5;
+    private static final String MA_GD_DA_BAO_CHUYEN_KHOAN = "KHXN:";
 
     private final DonDatTourRepository donDatTourRepository;
     private final GiaoDichRepository giaoDichRepository;
@@ -52,10 +54,10 @@ public class ThanhToanService {
             throw AppException.forbidden("Bạn không có quyền thanh toán đơn này");
         }
 
-        // Chỉ thanh toán đơn CHO_XAC_NHAN và chưa hết hạn
+        // Chi khoi tao QR cho don chua bao da chuyen khoan va chua het han.
         if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
             throw AppException.badRequest(
-                    "Don chi co the thanh toan o trang thai CHO_XAC_NHAN. Hien tai: " + don.getTrangThai());
+                    "Don chi co the khoi tao thanh toan o trang thai CHO_XAC_NHAN. Hien tai: " + don.getTrangThai());
         }
         if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
             throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
@@ -107,6 +109,75 @@ public class ThanhToanService {
                 .ngayThanhToan(giaoDich.getNgayThanhToan())
                 .thongBao("Da tao giao dich cho thanh toan QR. Don se duoc xac nhan sau khi doi soat.")
                 .build();
+    }
+
+    @Transactional
+    public void hetHanThanhToanQr(String maTaiKhoan, String maDatTour) {
+        DonDatTour don = donDatTourRepository.findByIdWithDetails(maDatTour)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
+
+        if (!don.getKhachHang().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
+            throw AppException.forbidden("Bạn không có quyền cập nhật đơn này");
+        }
+
+        if ("HET_HAN_GIU_CHO".equals(don.getTrangThai())) {
+            return;
+        }
+        if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
+            throw AppException.badRequest("Đơn không ở trạng thái chờ xác nhận.");
+        }
+
+        GiaoDich giaoDich = giaoDichRepository.findByMaDatTour(maDatTour).stream()
+                .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai()))
+                .findFirst()
+                .orElseThrow(() -> AppException.badRequest("Không có giao dịch QR đang chờ thanh toán."));
+        if (giaoDich.getMaGDNH() != null
+                && giaoDich.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN)) {
+            return;
+        }
+
+        if (giaoDich.getNgayThanhToan() == null
+                || giaoDich.getNgayThanhToan().plusMinutes(THOI_HAN_QR_PHUT).isAfter(LocalDateTime.now())) {
+            throw AppException.badRequest("Mã thanh toán QR vẫn còn hiệu lực.");
+        }
+
+        giaoDich.setTrangThai("THAT_BAI");
+        giaoDichRepository.save(giaoDich);
+        don.setTrangThai("HET_HAN_GIU_CHO");
+        donDatTourRepository.save(don);
+        log.info("[ThanhToan] Don {} het han giu cho do QR het han", maDatTour);
+    }
+
+    @Transactional
+    public void xacNhanDaChuyenKhoan(String maTaiKhoan, String maDatTour) {
+        DonDatTour don = donDatTourRepository.findByIdWithDetails(maDatTour)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay don dat tour: " + maDatTour));
+
+        if (!don.getKhachHang().getTaiKhoan().getMaTaiKhoan().equals(maTaiKhoan)) {
+            throw AppException.forbidden("Bạn không có quyền cập nhật đơn này");
+        }
+
+        GiaoDich giaoDich = giaoDichRepository.findByMaDatTour(maDatTour).stream()
+                .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai()))
+                .findFirst()
+                .orElseThrow(() -> AppException.badRequest("Không có giao dịch QR đang chờ thanh toán."));
+
+        if (giaoDich.getMaGDNH() != null
+                && giaoDich.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN)) {
+            return;
+        }
+        if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
+            throw AppException.badRequest("Đơn không ở trạng thái chờ xác nhận.");
+        }
+
+        if (giaoDich.getNgayThanhToan() == null
+                || giaoDich.getNgayThanhToan().plusMinutes(THOI_HAN_QR_PHUT).isBefore(LocalDateTime.now())) {
+            throw AppException.badRequest("Mã thanh toán QR đã hết hiệu lực.");
+        }
+
+        giaoDich.setMaGDNH(MA_GD_DA_BAO_CHUYEN_KHOAN + giaoDich.getMaGDNH());
+        giaoDichRepository.save(giaoDich);
+        log.info("[ThanhToan] Don {} cho xac nhan sau khi khach bao da chuyen khoan", maDatTour);
     }
 
     @Transactional
