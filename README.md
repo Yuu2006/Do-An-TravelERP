@@ -54,24 +54,6 @@ Seed tài khoản nhân viên nếu cần:
 @src/main/resources/db/data_v1.sql
 ```
 
-Nếu schema đã được tạo trước khi bổ sung trạng thái `TU_CHOI_HOAN_TIEN`, chạy thêm:
-
-```sql
-@src/main/resources/db/CapNhatTrangThaiTuChoiHoanTien.sql
-```
-
-Nếu schema đã được tạo trước khi bổ sung trạng thái voucher/ví voucher, chạy thêm:
-
-```sql
-@src/main/resources/db/CapNhatTrangThaiVoucher.sql
-```
-
-Nếu schema đã được tạo trước khi bổ sung mức độ sự cố, chạy thêm:
-
-```sql
-@src/main/resources/db/CapNhatMucDoSuCo.sql
-```
-
 ### Chạy ứng dụng
 
 ```bash

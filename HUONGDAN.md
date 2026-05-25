@@ -98,6 +98,7 @@ Chạy script SQL thủ công bằng SQL Developer, SQL*Plus hoặc tool Oracle 
 ```sql
 @src/main/resources/db/KhoiTaoBang.sql
 @src/main/resources/db/data_v1.sql
+@src/main/resources/db/data_lien_ket.sql
 ```
 
 Ý nghĩa từng file:
@@ -106,6 +107,7 @@ Chạy script SQL thủ công bằng SQL Developer, SQL*Plus hoặc tool Oracle 
 |---|---|
 | `KhoiTaoBang.sql` | Drop và tạo lại toàn bộ bảng, khóa ngoại, check constraint, index |
 | `data_v1.sql` | Dữ liệu tài khoản nhân viên: vai trò, tài khoản nhân viên, hồ sơ nhân viên |
+| `CapNhatHanhDongXanhMotLan.sql` | Thêm ràng buộc chống ghi nhận trùng hành động xanh và bỏ trigger cộng điểm cũ |
 
 Cấu trúc database theo luồng nghiệp vụ:
 
