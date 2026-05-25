@@ -208,25 +208,29 @@ public class DatTourService {
             throw AppException.badRequest(
                     "Chỉ có thể xác nhận đơn ở trạng thái 'Chờ xác nhận'. Trạng thái hiện tại: " + don.getTrangThai());
         }
-        if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
-            throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
-        }
-        if (giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent()) {
-            throw AppException.badRequest("Đơn này đã có giao dịch thành công trước đó.");
-        }
+        // Admin/Nhân viên bấm xác nhận -> Bỏ qua check thời gian hết hạn vì đây là quyết định của con người
+        
+        // Kiểm tra xem đơn đã có giao dịch thành công (ví dụ từ webhook ngân hàng) hay chưa
+        boolean daThanhToan = giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent();
 
         TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế"));
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
         int soKhach = dsChiTiet.size();
-        if (tour.getChoConLai() < soKhach) {
+        
+        // Nếu đã thanh toán từ trước (tiền đã vào) thì có thểâm chỗ tạm thời, nếu chưa thanh toán mà hết chỗ thì báo lỗi
+        if (!daThanhToan && tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
+        
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         don.setTongTien(tinhTongTienTuChiTiet(dsChiTiet, dsDichVu));
 
-        GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
-        giaoDichRepository.save(giaoDich);
+        // Nếu chưa có giao dịch thành công, tạo giao dịch offline mới do Admin xác nhận
+        if (!daThanhToan) {
+            GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
+            giaoDichRepository.save(giaoDich);
+        }
 
         don.setTrangThai("DA_XAC_NHAN");
         donDatTourRepository.save(don);

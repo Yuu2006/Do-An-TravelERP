@@ -442,7 +442,14 @@ public class VoucherService {
 
     private KhuyenMaiKhResponse toKhuyenMaiKhResponse(KhuyenMaiKh k) {
         Voucher v = k.getVoucher();
+        HoChieuSo hcs = k.getKhachHang();
+        com.digitaltravel.erp.entity.TaiKhoan tk = hcs != null ? hcs.getTaiKhoan() : null;
         return KhuyenMaiKhResponse.builder()
+                .maKhachHang(hcs != null ? hcs.getMaKhachHang() : null)
+                .hoTenKhachHang(tk != null ? tk.getHoTen() : null)
+                .emailKhachHang(tk != null ? tk.getEmail() : null)
+                .soDienThoaiKhachHang(tk != null ? tk.getSoDienThoai() : null)
+                .hangThanhVien(hcs != null ? hcs.getHangThanhVien() : null)
                 .maVoucher(v.getMaVoucher())
                 .maCode(v.getMaCode())
                 .loaiUuDai(v.getLoaiUuDai())
