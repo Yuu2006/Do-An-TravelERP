@@ -42,6 +42,13 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
 
     @Query("""
             SELECT COUNT(pc) > 0 FROM PhanCongTour pc
+            WHERE pc.tourThucTe.MaTourThucTe = :maTourThucTe
+              AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
+            """)
+    boolean existsAcceptedByTourThucTe_MaTourThucTe(@Param("maTourThucTe") String maTourThucTe);
+
+    @Query("""
+            SELECT COUNT(pc) > 0 FROM PhanCongTour pc
             WHERE pc.tourThucTe.MaTourThucTe = :maTour
               AND pc.nhanVien.taiKhoan.MaTaiKhoan = :maTaiKhoan
               AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
