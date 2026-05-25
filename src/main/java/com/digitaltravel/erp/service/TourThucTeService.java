@@ -28,6 +28,7 @@ import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HdxTourThucTeRepository;
 import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
+import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourMauRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 
@@ -41,6 +42,7 @@ public class TourThucTeService {
     private final TourMauRepository tourMauRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
     private final DonDatTourRepository donDatTourRepository;
+    private final PhanCongTourRepository phanCongTourRepository;
     private final DichVuThemRepository dichVuThemRepository;
     private final DichVuTourThucTeRepository dichVuTourThucTeRepository;
     private final HanhDongXanhRepository hanhDongXanhRepository;
@@ -144,6 +146,9 @@ public class TourThucTeService {
                 ? request.getTrangThai()
                 : "CHO_KICH_HOAT";
         validateTrangThaiTourThucTe(trangThai);
+        if ("MO_BAN".equals(trangThai)) {
+            throw AppException.badRequest("Tour mới phải ở trạng thái CHO_KICH_HOAT để phân công và xác nhận HDV trước khi mở bán.");
+        }
         ttt.setTrangThai(trangThai);
         tourThucTeRepository.save(ttt);
         capNhatDichVuTour(ttt, request.getMaDichVuThem());
@@ -175,6 +180,11 @@ public class TourThucTeService {
         }
         if (request.getTrangThai() != null) {
             validateTrangThaiTourThucTe(request.getTrangThai());
+            if ("MO_BAN".equals(request.getTrangThai())
+                    && !"MO_BAN".equals(ttt.getTrangThai())
+                    && !phanCongTourRepository.existsAcceptedByTourThucTe_MaTourThucTe(id)) {
+                throw AppException.badRequest("Tour chỉ được mở bán khi có HDV đã xác nhận phân công.");
+            }
             ttt.setTrangThai(request.getTrangThai());
         }
         tourThucTeRepository.save(ttt);

@@ -381,6 +381,27 @@ CREATE TABLE PHANCONGTOUR (
                               CONSTRAINT CK_PCT_TrangThaiChapNhan    CHECK (TrangThaiChapNhan IN ('CHO_PHAN_HOI','DA_DONG_Y','TU_CHOI'))
 );
 
+-- Chỉ cho phép chuyển tour sang mở bán sau khi có HDV đã đồng ý phân công.
+CREATE OR REPLACE TRIGGER TRG_TTT_OPEN_REQUIRE_HDV
+BEFORE UPDATE OF TrangThai ON TOURTHUCTE
+FOR EACH ROW
+WHEN (NEW.TrangThai = 'MO_BAN' AND OLD.TrangThai <> 'MO_BAN')
+DECLARE
+    v_so_hdv NUMBER;
+BEGIN
+    SELECT COUNT(*)
+      INTO v_so_hdv
+      FROM PHANCONGTOUR
+     WHERE MaTourThucTe = :NEW.MaTourThucTe
+       AND TrangThaiChapNhan = 'DA_DONG_Y';
+
+    IF v_so_hdv = 0 THEN
+        RAISE_APPLICATION_ERROR(-20021,
+            'Tour chỉ được mở bán khi có HDV đã xác nhận phân công.');
+    END IF;
+END;
+/
+
 -- Nhat ky diem danh khach trong tour
 CREATE TABLE DIEMDANH (
                           MaDiemDanh       VARCHAR2(50)  PRIMARY KEY,
