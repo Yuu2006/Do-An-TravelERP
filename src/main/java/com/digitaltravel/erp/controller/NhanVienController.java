@@ -290,6 +290,15 @@ public class NhanVienController {
                 yeuCauHoTroService.yeuCauHdvGiaiTrinh(maYeuCau, request.getNoiDung())));
     }
 
+    @PostMapping("/api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}/yeu-cau-khach-hang-bo-sung")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> yeuCauKhachHangBoSung(
+            @PathVariable String maYeuCau,
+            @Valid @RequestBody BoSungRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok("Da gui yeu cau khach hang bo sung",
+                yeuCauHoTroService.yeuCauKhachHangBoSung(maYeuCau, request.getNoiDung())));
+    }
+
     @GetMapping("/api/huong-dan-vien/yeu-cau-giai-trinh")
     @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<YeuCauHoTroResponse>>> danhSachYeuCauGiaiTrinh(

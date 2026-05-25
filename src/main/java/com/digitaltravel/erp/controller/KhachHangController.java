@@ -164,6 +164,14 @@ public class KhachHangController {
                 yeuCauHoTroService.danhSachCuaKhachHang(user.getTaiKhoan().getMaTaiKhoan(), loaiYeuCau, pageable)));
     }
 
+    @GetMapping("/yeu-cau-ho-tro/can-bo-sung")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<YeuCauHoTroResponse>>> danhSachYeuCauCanBoSung(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                yeuCauHoTroService.danhSachCanKhachHangBoSung(user.getTaiKhoan().getMaTaiKhoan())));
+    }
+
     @PutMapping("/yeu-cau-ho-tro/{maYeuCau}/bo-sung")
     @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> boSungYeuCau(

@@ -81,6 +81,16 @@ public class YeuCauHoTroService {
                 .map(this::toResponse);
     }
 
+    @Transactional(readOnly = true)
+    public List<YeuCauHoTroResponse> danhSachCanKhachHangBoSung(String maTaiKhoan) {
+        HoChieuSo hcs = hoChieuSoRepository.findByMaTaiKhoan(maTaiKhoan)
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ khách hàng"));
+        return yeuCauHoTroRepository.findYeuCauCanKhachHangBoSung(hcs.getMaKhachHang())
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     // ── Bổ sung bằng chứng ───────────────────────────────────────────────────
     @Transactional
     public YeuCauHoTroResponse boSung(String maTaiKhoan, String maYeuCau, String noiDungBoSung) {
@@ -99,7 +109,7 @@ public class YeuCauHoTroService {
         }
 
         String ngayBoSung = java.time.LocalDate.now().toString();
-        yc.setNoiDung(yc.getNoiDung() + "\n\n[Bổ sung ngày " + ngayBoSung + "]: " + noiDungBoSung);
+        yc.setNoiDung(yc.getNoiDung() + "\n\n[Bổ sung ngày " + ngayBoSung + "]:\n" + noiDungBoSung);
         yc.setTrangThai("CHUA_XU_LY"); // Đưa lại hàng chờ
 
         yeuCauHoTroRepository.save(yc);
@@ -169,6 +179,24 @@ public class YeuCauHoTroService {
         yc.setNoiDung(yc.getNoiDung()
                 + "\n\n[Yêu cầu HDV giải trình lúc " + timestamp + "]: \n" + noiDungYeuCau);
         yc.setNhanVienXuLy(hdv);
+        yc.setTrangThai("CHO_BO_SUNG");
+
+        yeuCauHoTroRepository.save(yc);
+        return toResponse(yc);
+    }
+
+    @Transactional
+    public YeuCauHoTroResponse yeuCauKhachHangBoSung(String maYeuCau, String noiDungYeuCau) {
+        YeuCauHoTro yc = yeuCauHoTroRepository.findById(maYeuCau)
+                .orElseThrow(() -> AppException.notFound("Không tìm thấy yêu cầu: " + maYeuCau));
+
+        if ("DA_XU_LY".equals(yc.getTrangThai()) || "TU_CHOI".equals(yc.getTrangThai())) {
+            throw AppException.badRequest("Yêu cầu này đã kết thúc, không thể yêu cầu khách hàng bổ sung");
+        }
+
+        String timestamp = LocalDateTime.now().format(SUPPORT_NOTE_TIME_FORMAT);
+        yc.setNoiDung(yc.getNoiDung()
+                + "\n\n[Yêu cầu KH bổ sung lúc " + timestamp + "]: \n" + noiDungYeuCau);
         yc.setTrangThai("CHO_BO_SUNG");
 
         yeuCauHoTroRepository.save(yc);

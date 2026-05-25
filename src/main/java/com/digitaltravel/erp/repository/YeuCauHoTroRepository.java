@@ -74,4 +74,14 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             ORDER BY y.MaYeuCauHoTro DESC
             """)
     List<YeuCauHoTro> findYeuCauGiaiTrinhCuaHdv(@Param("maNhanVien") String maNhanVien);
+
+    @Query("""
+            SELECT y FROM YeuCauHoTro y
+            JOIN FETCH y.khachHang kh
+            LEFT JOIN FETCH y.donDatTour ddt
+            WHERE kh.MaKhachHang = :maKhachHang
+              AND y.TrangThai = 'CHO_BO_SUNG'
+            ORDER BY y.MaYeuCauHoTro DESC
+            """)
+    List<YeuCauHoTro> findYeuCauCanKhachHangBoSung(@Param("maKhachHang") String maKhachHang);
 }
