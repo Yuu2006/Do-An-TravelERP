@@ -70,4 +70,21 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
             @Param("tuNgay") java.time.LocalDateTime tuNgay,
             @Param("denNgay") java.time.LocalDateTime denNgay
     );
+
+    @Query("""
+            SELECT qt FROM QuyetToan qt
+            JOIN FETCH qt.tourThucTe tt
+            JOIN FETCH tt.tourMau
+            WHERE qt.TrangThai = 'CHUA_QUYET_TOAN'
+              AND qt.GhiChu LIKE '%[Yêu cầu bổ sung quyết toán%'
+              AND (qt.GhiChu NOT LIKE '%[HDV bổ sung quyết toán%' OR qt.GhiChu IS NULL)
+              AND EXISTS (
+                  SELECT 1 FROM PhanCongTour pc
+                  WHERE pc.tourThucTe.MaTourThucTe = tt.MaTourThucTe
+                    AND pc.nhanVien.MaNhanVien = :maNhanVien
+                    AND pc.TrangThaiChapNhan = 'DA_DONG_Y'
+              )
+            ORDER BY qt.NgayQuyetToan DESC
+            """)
+    java.util.List<QuyetToan> findCanBoSungByHdv(@Param("maNhanVien") String maNhanVien);
 }

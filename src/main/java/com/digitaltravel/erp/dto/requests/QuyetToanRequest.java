@@ -13,4 +13,7 @@ public class QuyetToanRequest {
 
     @Size(max = 4000)
     private String ghiChu;
+
+    @Size(max = 1000)
+    private String hoaDonAnh;
 }

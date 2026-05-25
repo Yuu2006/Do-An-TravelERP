@@ -32,6 +32,27 @@ class DatTourSchedulerTest {
     private DatTourScheduler datTourScheduler;
 
     @Test
+    void huyDonHetHan_chuyenGiaoDichDangChoSangThatBai() {
+        DonDatTour don = new DonDatTour();
+        don.setMaDatTour("DDT_001");
+        don.setTrangThai("CHO_XAC_NHAN");
+        GiaoDich giaoDich = new GiaoDich();
+        giaoDich.setDonDatTour(don);
+        giaoDich.setTrangThai("CHO_THANH_TOAN");
+        when(donDatTourRepository.findAllByTrangThaiAndThoiGianHetHanBefore(
+                org.mockito.ArgumentMatchers.eq("CHO_XAC_NHAN"), any(LocalDateTime.class)))
+                .thenReturn(List.of(don));
+        when(giaoDichRepository.findByMaDatTour("DDT_001")).thenReturn(List.of(giaoDich));
+
+        datTourScheduler.huyDonHetHan();
+
+        assertEquals("HET_HAN_GIU_CHO", don.getTrangThai());
+        assertEquals("THAT_BAI", giaoDich.getTrangThai());
+        verify(giaoDichRepository).saveAll(List.of(giaoDich));
+        verify(donDatTourRepository).saveAll(List.of(don));
+    }
+
+    @Test
     void danhDauQrHetHan_chuyenDonSangHetHanVaGiaoDichSangThatBai() {
         DonDatTour don = new DonDatTour();
         don.setTrangThai("CHO_XAC_NHAN");

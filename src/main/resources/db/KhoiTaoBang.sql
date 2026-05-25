@@ -479,6 +479,7 @@ CREATE TABLE QUYETTOAN (
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                            TrangThai        VARCHAR2(20)  DEFAULT 'CHUA_QUYET_TOAN' NOT NULL,
                            GhiChu           CLOB,
+                           HoaDonAnh        VARCHAR2(1000),
                            CONSTRAINT UQ_QUYETTOAN_TourThucTe     UNIQUE (MaTourThucTe),
                            CONSTRAINT FK_QT_TourThucTe            FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_QT_NhanVien              FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),
@@ -514,7 +515,7 @@ CREATE TABLE YEUCAUHOTRO (
                              CONSTRAINT FK_YCHT_KhachHang           FOREIGN KEY (MaKhachHang)    REFERENCES HOCHIEUSO(MaKhachHang),
                              CONSTRAINT FK_YCHT_NhanVienXL          FOREIGN KEY (MaNhanVienXuLy) REFERENCES NHANVIEN(MaNhanVien),
                              CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN (
-                                                                                         'CHUA_XU_LY','CHO_BO_SUNG','CHO_GIAI_TRINH','DA_XU_LY','TU_CHOI'
+                                                                                         'CHUA_XU_LY','CHO_BO_SUNG','CHO_GIAI_TRINH','CHO_DUYET','DA_XU_LY','TU_CHOI'
                                  ))
 );
 

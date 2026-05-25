@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
+import com.digitaltravel.erp.dto.requests.BoSungRequest;
 import com.digitaltravel.erp.dto.requests.QuyetToanRequest;
 import com.digitaltravel.erp.dto.responses.ApiResponse;
 import com.digitaltravel.erp.dto.responses.BaoCaoDoanhThuResponse;
@@ -72,6 +73,15 @@ public class QuyetToanController {
     @PreAuthorize("hasAnyRole('KETOAN', 'ADMIN')")
     public ResponseEntity<ApiResponse<QuyetToanResponse>> chotQuyetToan(@PathVariable String maQuyetToan) {
         return ResponseEntity.ok(ApiResponse.ok(quyetToanService.chotQuyetToan(maQuyetToan)));
+    }
+
+    @PostMapping("/quyet-toan/{maQuyetToan}/yeu-cau-bo-sung")
+    @PreAuthorize("hasAnyRole('KETOAN', 'ADMIN')")
+    public ResponseEntity<ApiResponse<QuyetToanResponse>> yeuCauHdvBoSung(
+            @PathVariable String maQuyetToan,
+            @Valid @RequestBody BoSungRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok("Da gui yeu cau HDV bo sung quyet toan",
+                quyetToanService.yeuCauHdvBoSung(maQuyetToan, request.getNoiDung())));
     }
 
     /**
