@@ -418,7 +418,8 @@ CREATE TABLE HANHDONG (
                           CONSTRAINT FK_HANHDONG_HanhDongXanh    FOREIGN KEY (MaHanhDongXanh)    REFERENCES HANHDONGXANH(MaHanhDongXanh),
                           CONSTRAINT FK_HANHDONG_NhanVienXM      FOREIGN KEY (MaNhanVienXacMinh) REFERENCES NHANVIEN(MaNhanVien),
                           CONSTRAINT FK_HANHDONG_PhanCong        FOREIGN KEY (MaTourThucTe, MaNhanVienXacMinh)
-                              REFERENCES PHANCONGTOUR(MaTourThucTe, MaNhanVien)
+                              REFERENCES PHANCONGTOUR(MaTourThucTe, MaNhanVien),
+                          CONSTRAINT UQ_HANHDONG_TOUR_KH_HDX    UNIQUE (MaTourThucTe, MaKhachHang, MaHanhDongXanh)
 );
 
 -- Nhat ky su co trong tour
@@ -1002,19 +1003,6 @@ BEGIN
     IF v_Count = 0 THEN
         RAISE_APPLICATION_ERROR(-20007, 'Chi duoc dat tour dang MO_BAN va chua khoi hanh');
     END IF;
-END;
-/
-
-CREATE OR REPLACE TRIGGER TRG_CONG_DIEM_XANH
-AFTER INSERT ON HANHDONG
-FOR EACH ROW
-DECLARE
-    v_DiemCong HANHDONGXANH.DiemCong%TYPE;
-BEGIN
-    SELECT DiemCong INTO v_DiemCong FROM HANHDONGXANH WHERE MaHanhDongXanh = :NEW.MaHanhDongXanh;
-    UPDATE HOCHIEUSO
-    SET DiemXanh = DiemXanh + v_DiemCong
-    WHERE MaKhachHang = :NEW.MaKhachHang;
 END;
 /
 

@@ -86,34 +86,34 @@ public class VanHanhService {
             HoChieuSo kh = don.getKhachHang();
             String hoTen = kh.getTaiKhoan() != null ? kh.getTaiKhoan().getHoTen() : "";
             result.add(ThanhVienDoanResponse.builder()
-                .maDatTour(don.getMaDatTour())
-                .loaiKhach("NGUOI_DAT")
-                .maKhachHang(kh.getMaKhachHang())
-                .hoTenKhachHang(hoTen)
-                .soDienThoai(kh.getTaiKhoan() != null ? kh.getTaiKhoan().getSoDienThoai() : null)
-                .hangThanhVien(kh.getHangThanhVien())
-                .ghiChuYTe(kh.getGhiChuYTe())
-                .diUng(kh.getDiUng())
-                .ghiChuDatTour(don.getGhiChu())
-                .hanhDongXanh(don.getHanhDongXanh())
-                .diemXanh(kh.getDiemXanh())
-                .trangThai(khStatus.getOrDefault(kh.getMaKhachHang(), "CHUA_DIEM_DANH"))
-                .build());
-            
-            dsNguoiDongHanhRepository.findByDonDatTour_MaDatTour(don.getMaDatTour()).forEach(ndh -> {
-                result.add(ThanhVienDoanResponse.builder()
                     .maDatTour(don.getMaDatTour())
-                    .loaiKhach("NGUOI_DONG_HANH")
-                    .maNguoiDongHanh(ndh.getMaNguoiDongHanh())
-                    .hoTenKhachHang(ndh.getHoTen())
-                    .soDienThoai(ndh.getSoDienThoai())
-                    .hangThanhVien("THANH_VIEN")
-                    .ghiChuYTe(ndh.getGhiChu())
+                    .loaiKhach("NGUOI_DAT")
+                    .maKhachHang(kh.getMaKhachHang())
+                    .hoTenKhachHang(hoTen)
+                    .soDienThoai(kh.getTaiKhoan() != null ? kh.getTaiKhoan().getSoDienThoai() : null)
+                    .hangThanhVien(kh.getHangThanhVien())
+                    .ghiChuYTe(kh.getGhiChuYTe())
+                    .diUng(kh.getDiUng())
                     .ghiChuDatTour(don.getGhiChu())
                     .hanhDongXanh(don.getHanhDongXanh())
-                    .diemXanh(0L)
-                    .trangThai(ndhStatus.getOrDefault(ndh.getMaNguoiDongHanh(), "CHUA_DIEM_DANH"))
+                    .diemXanh(kh.getDiemXanh())
+                    .trangThai(khStatus.getOrDefault(kh.getMaKhachHang(), "CHUA_DIEM_DANH"))
                     .build());
+
+            dsNguoiDongHanhRepository.findByDonDatTour_MaDatTour(don.getMaDatTour()).forEach(ndh -> {
+                result.add(ThanhVienDoanResponse.builder()
+                        .maDatTour(don.getMaDatTour())
+                        .loaiKhach("NGUOI_DONG_HANH")
+                        .maNguoiDongHanh(ndh.getMaNguoiDongHanh())
+                        .hoTenKhachHang(ndh.getHoTen())
+                        .soDienThoai(ndh.getSoDienThoai())
+                        .hangThanhVien("THANH_VIEN")
+                        .ghiChuYTe(ndh.getGhiChu())
+                        .ghiChuDatTour(don.getGhiChu())
+                        .hanhDongXanh(don.getHanhDongXanh())
+                        .diemXanh(0L)
+                        .trangThai(ndhStatus.getOrDefault(ndh.getMaNguoiDongHanh(), "CHUA_DIEM_DANH"))
+                        .build());
             });
         });
         return result;
@@ -150,7 +150,8 @@ public class VanHanhService {
             kiemTraKhachThuocTourDaXacNhan(maTour, kh.getMaKhachHang());
         } else {
             nguoiDongHanh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
-                    .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
+                    .orElseThrow(
+                            () -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
             if (!nguoiDongHanh.getDonDatTour().getTourThucTe().getMaTourThucTe().equals(maTour)) {
                 throw AppException.badRequest("Người đồng hành không thuộc tour này");
             }
@@ -174,7 +175,8 @@ public class VanHanhService {
 
     // ── UC44: Ghi nhận hành động xanh ────────────────────────────────────
     @Transactional
-    public HanhDongResponse ghiNhanHanhDong(String maTour, GhiNhanHanhDongRequest req, String maTaiKhoan, String maVaiTro) {
+    public HanhDongResponse ghiNhanHanhDong(String maTour, GhiNhanHanhDongRequest req, String maTaiKhoan,
+            String maVaiTro) {
         kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = getActiveTour(maTour);
         HoChieuSo kh = hoChieuSoRepository.findById(req.getMaKhachHang())
@@ -184,6 +186,10 @@ public class VanHanhService {
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
         if (!hanhDongXanhRepository.existsAvailableForTour(req.getMaHanhDongXanh(), maTour)) {
             throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + req.getMaHanhDongXanh());
+        }
+        if (!hanhDongRepository.findByTourAndKhachAndHanhDong(
+                maTour, kh.getMaKhachHang(), req.getMaHanhDongXanh()).isEmpty()) {
+            throw AppException.badRequest("Hành động xanh này đã được ghi nhận cho khách hàng trong tour.");
         }
         NhanVien hdv = getHdv(maTaiKhoan);
 
@@ -258,7 +264,8 @@ public class VanHanhService {
         }
         if (coNguoiDongHanh) {
             DsNguoiDongHanh ndh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
-                    .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
+                    .orElseThrow(
+                            () -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
             if (!ndh.getDonDatTour().getTourThucTe().getMaTourThucTe().equals(tour.getMaTourThucTe())) {
                 throw AppException.badRequest("Người đồng hành không thuộc tour này");
             }
@@ -267,7 +274,8 @@ public class VanHanhService {
     }
 
     private void guiCanhBaoDenQuanLyNeuCan(NhatKySuCo sc) {
-        // Do an hien chua co kenh thong bao rieng; tach method de the hien buoc thiet ke.
+        // Do an hien chua co kenh thong bao rieng; tach method de the hien buoc thiet
+        // ke.
         if ("SOS".equals(sc.getMucDo())) {
             // TODO: gui canh bao den Dieu hanh/Quan ly khi bo sung module thong bao.
         }
@@ -283,10 +291,14 @@ public class VanHanhService {
         NhatKySuCo sc = nhatKySuCoRepository.findById(maSuCo)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay su co: " + maSuCo));
         kiemTraQuyenVanHanhTour(sc.getTourThucTe().getMaTourThucTe(), maTaiKhoan, maVaiTro);
-        if (req.getGiaiPhap() != null) sc.setGiaiPhap(req.getGiaiPhap());
-        if (req.getMoTa() != null) sc.setMoTa(req.getMoTa());
-        if (req.getMucDo() != null) sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
-        if (req.getLoaiSuCo() != null) sc.setLoaiSuCo(chuanHoaLoaiSuCo(req.getLoaiSuCo()));
+        if (req.getGiaiPhap() != null)
+            sc.setGiaiPhap(req.getGiaiPhap());
+        if (req.getMoTa() != null)
+            sc.setMoTa(req.getMoTa());
+        if (req.getMucDo() != null)
+            sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
+        if (req.getLoaiSuCo() != null)
+            sc.setLoaiSuCo(chuanHoaLoaiSuCo(req.getLoaiSuCo()));
         nhatKySuCoRepository.save(sc);
         return toSuCoResponse(sc);
     }
@@ -389,7 +401,7 @@ public class VanHanhService {
     }
 
     public Page<CanhBaoChiPhiResponse> danhSachCanhBaoChiPhi(String trangThai, String loaiCanhBao,
-                                                             String mucDo, Pageable pageable) {
+            String mucDo, Pageable pageable) {
         List<CanhBaoChiPhiResponse> canhBao = chiPhiThucTeRepository.findAllWithRelations().stream()
                 .flatMap(cp -> taoCanhBaoDong(cp).stream())
                 .filter(cb -> trangThai == null || trangThai.equals(cb.getTrangThai()))
@@ -436,7 +448,8 @@ public class VanHanhService {
 
         BigDecimal giaThiTruong = giaThiTruongTheoDanhMuc(cp.getDanhMuc());
         if (giaThiTruong != null && cp.getThanhTien().compareTo(giaThiTruong.multiply(new BigDecimal("1.5"))) > 0) {
-            canhBao.add(toCanhBaoChiPhiResponse(cp, "BAT_THUONG_THI_TRUONG", mucDoVuotNguong(cp.getThanhTien(), giaThiTruong),
+            canhBao.add(toCanhBaoChiPhiResponse(cp, "BAT_THUONG_THI_TRUONG",
+                    mucDoVuotNguong(cp.getThanhTien(), giaThiTruong),
                     "Chi phi " + cp.getDanhMuc() + " cao bat thuong so voi gia thi truong " + giaThiTruong));
         }
         return canhBao;
@@ -444,31 +457,43 @@ public class VanHanhService {
 
     private BigDecimal dinhMucTheoDanhMuc(String danhMuc) {
         String key = chuanHoaDanhMuc(danhMuc);
-        if (key.contains("khach san")) return new BigDecimal("4000000");
-        if (key.contains("ve") || key.contains("tham quan")) return new BigDecimal("1500000");
-        if (key.contains("xe") || key.contains("dua don")) return new BigDecimal("3000000");
-        if (key.contains("an uong")) return new BigDecimal("2000000");
+        if (key.contains("khach san"))
+            return new BigDecimal("4000000");
+        if (key.contains("ve") || key.contains("tham quan"))
+            return new BigDecimal("1500000");
+        if (key.contains("xe") || key.contains("dua don"))
+            return new BigDecimal("3000000");
+        if (key.contains("an uong"))
+            return new BigDecimal("2000000");
         return null;
     }
 
     private BigDecimal giaThiTruongTheoDanhMuc(String danhMuc) {
         String key = chuanHoaDanhMuc(danhMuc);
-        if (key.contains("khach san")) return new BigDecimal("4200000");
-        if (key.contains("ve") || key.contains("tham quan")) return new BigDecimal("1600000");
-        if (key.contains("xe") || key.contains("dua don")) return new BigDecimal("2800000");
-        if (key.contains("an uong")) return new BigDecimal("2200000");
+        if (key.contains("khach san"))
+            return new BigDecimal("4200000");
+        if (key.contains("ve") || key.contains("tham quan"))
+            return new BigDecimal("1600000");
+        if (key.contains("xe") || key.contains("dua don"))
+            return new BigDecimal("2800000");
+        if (key.contains("an uong"))
+            return new BigDecimal("2200000");
         return null;
     }
 
     private String mucDoVuotNguong(BigDecimal thanhTien, BigDecimal nguong) {
-        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.5"))) > 0) return "NGHIEM_TRONG";
-        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.3"))) > 0) return "CAO";
-        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.1"))) > 0) return "TRUNG_BINH";
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.5"))) > 0)
+            return "NGHIEM_TRONG";
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.3"))) > 0)
+            return "CAO";
+        if (thanhTien.compareTo(nguong.multiply(new BigDecimal("1.1"))) > 0)
+            return "TRUNG_BINH";
         return "THAP";
     }
 
     private String chuanHoaDanhMuc(String danhMuc) {
-        if (danhMuc == null) return "";
+        if (danhMuc == null)
+            return "";
         return Normalizer.normalize(danhMuc, Normalizer.Form.NFD)
                 .replaceAll("\\p{M}", "")
                 .replace('đ', 'd')
@@ -561,7 +586,8 @@ public class VanHanhService {
                 .diaDiem(dd.getDiaDiem())
                 .trangThai(dd.getTrangThai())
                 .thoiGian(dd.getThoiGian())
-                .soDienThoai(kh != null ? kh.getTaiKhoan().getSoDienThoai() : (nguoiDongHanh != null ? nguoiDongHanh.getSoDienThoai() : null))
+                .soDienThoai(kh != null ? kh.getTaiKhoan().getSoDienThoai()
+                        : (nguoiDongHanh != null ? nguoiDongHanh.getSoDienThoai() : null))
                 .hangThanhVien(kh != null ? kh.getHangThanhVien() : "THANH_VIEN")
                 .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null))
                 .diemXanh(kh != null ? kh.getDiemXanh() : 0L)
@@ -570,7 +596,8 @@ public class VanHanhService {
 
     private HanhDongResponse toHanhDongResponse(HanhDong hd, HanhDongXanh hdx) {
         String hoTen = hd.getKhachHang().getTaiKhoan() != null
-                ? hd.getKhachHang().getTaiKhoan().getHoTen() : "";
+                ? hd.getKhachHang().getTaiKhoan().getHoTen()
+                : "";
         return HanhDongResponse.builder()
                 .maGhiNhan(hd.getMaGhiNhanHanhDong())
                 .maKhachHang(hd.getKhachHang().getMaKhachHang())
@@ -614,7 +641,8 @@ public class VanHanhService {
     }
 
     private String chuanHoaMucDoSuCoFilter(String mucDo) {
-        if (mucDo == null || mucDo.isBlank()) return null;
+        if (mucDo == null || mucDo.isBlank())
+            return null;
         return chuanHoaMucDoSuCo(mucDo);
     }
 
@@ -627,7 +655,8 @@ public class VanHanhService {
                     .replace(' ', '_');
         }
         if (!java.util.Set.of("Y_TE", "THOI_TIET", "PHUONG_TIEN", "AN_UONG", "KHAC").contains(normalized)) {
-            throw AppException.badRequest("Loại sự cố không hợp lệ. Chỉ chấp nhận: Y_TE, THOI_TIET, PHUONG_TIEN, AN_UONG, KHAC");
+            throw AppException
+                    .badRequest("Loại sự cố không hợp lệ. Chỉ chấp nhận: Y_TE, THOI_TIET, PHUONG_TIEN, AN_UONG, KHAC");
         }
         return normalized;
     }
@@ -649,7 +678,7 @@ public class VanHanhService {
     }
 
     private CanhBaoChiPhiResponse toCanhBaoChiPhiResponse(ChiPhiThucTe cp, String loaiCanhBao,
-                                                          String mucDo, String noiDung) {
+            String mucDo, String noiDung) {
         NhanVien nv = cp.getNhanVien();
         String tenNv = nv.getTaiKhoan() != null ? nv.getTaiKhoan().getHoTen() : "";
         return CanhBaoChiPhiResponse.builder()
