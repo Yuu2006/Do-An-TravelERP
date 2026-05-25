@@ -14,6 +14,7 @@ public class NhatKySuCoResponse {
     private String giaiPhap;
     private String mucDo;
     private String loaiSuCo;
+    private String maHdvBaoCao;
     private String maKhachHang;
     private String maNguoiDongHanh;
     private String hoTenKhachHang;

@@ -623,6 +623,7 @@ public class VanHanhService {
                 .giaiPhap(sc.getGiaiPhap())
                 .mucDo(sc.getMucDo())
                 .loaiSuCo(sc.getLoaiSuCo())
+                .maHdvBaoCao(sc.getNhanVienBaoCao() != null ? sc.getNhanVienBaoCao().getMaNhanVien() : null)
                 .maKhachHang(kh != null ? kh.getMaKhachHang() : null)
                 .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
                 .hoTenKhachHang(hoTenKhachHang)
