@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.BoSungRequest;
+import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
 import com.digitaltravel.erp.dto.requests.NangLucRequest;
 import com.digitaltravel.erp.dto.requests.XuLyHoTroRequest;
@@ -29,6 +30,7 @@ import com.digitaltravel.erp.dto.responses.HoChieuSoResponse;
 import com.digitaltravel.erp.dto.responses.NangLucResponse;
 import com.digitaltravel.erp.dto.responses.NhanVienResponse;
 import com.digitaltravel.erp.dto.responses.PhanCongResponse;
+import com.digitaltravel.erp.dto.responses.QuyetToanResponse;
 import com.digitaltravel.erp.dto.responses.YeuCauHoTroResponse;
 import com.digitaltravel.erp.service.DatTourService;
 import com.digitaltravel.erp.service.HanhDongXanhService;
@@ -36,6 +38,7 @@ import com.digitaltravel.erp.service.HuyTourService;
 import com.digitaltravel.erp.service.NangLucService;
 import com.digitaltravel.erp.service.NhanVienService;
 import com.digitaltravel.erp.service.PhanCongTourService;
+import com.digitaltravel.erp.service.QuyetToanService;
 import com.digitaltravel.erp.service.YeuCauHoTroService;
 
 import jakarta.validation.Valid;
@@ -52,6 +55,7 @@ public class NhanVienController {
     private final YeuCauHoTroService yeuCauHoTroService;
     private final NangLucService nangLucService;
     private final HanhDongXanhService hanhDongXanhService;
+    private final QuyetToanService quyetToanService;
 
     // ──────────────── QUẢN LÝ NHÂN VIÊN (ADMIN/MANAGER) ──────────────────
 
@@ -316,6 +320,28 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok("Da gui giai trinh den admin",
                 yeuCauHoTroService.hdvCapNhatGiaiTrinh(
                         user.getTaiKhoan().getMaTaiKhoan(), maYeuCau, request.getNoiDung())));
+    }
+
+    @GetMapping("/api/huong-dan-vien/quyet-toan/can-bo-sung")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<QuyetToanResponse>>> danhSachQuyetToanCanBoSung(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                quyetToanService.danhSachCanBoSungCuaHdv(user.getTaiKhoan().getMaTaiKhoan())));
+    }
+
+    @PutMapping("/api/huong-dan-vien/quyet-toan/{maQuyetToan}/bo-sung")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<QuyetToanResponse>> hdvBoSungQuyetToan(
+            @PathVariable String maQuyetToan,
+            @Valid @RequestBody BoSungQuyetToanRequest request,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Da gui bo sung quyet toan den admin",
+                quyetToanService.hdvBoSung(
+                        user.getTaiKhoan().getMaTaiKhoan(),
+                        maQuyetToan,
+                        request.getGhiChu(),
+                        request.getHoaDonAnh())));
     }
 
     // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────
