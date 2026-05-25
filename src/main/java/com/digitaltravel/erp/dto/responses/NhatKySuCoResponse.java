@@ -14,5 +14,10 @@ public class NhatKySuCoResponse {
     private String giaiPhap;
     private String mucDo;
     private String loaiSuCo;
+    private String maKhachHang;
+    private String maNguoiDongHanh;
+    private String hoTenKhachHang;
+    private String ghiChuYTe;
+    private String diUng;
     private LocalDateTime thoiGianBaoCao;
 }

@@ -426,6 +426,8 @@ CREATE TABLE NHATKYSUCO (
                             MaNhatKySuCo         VARCHAR2(50) PRIMARY KEY,
                             MaTourThucTe         VARCHAR2(50) NOT NULL,
                             MaNhanVienBaoCao     VARCHAR2(50) NOT NULL,
+                            MaKhachHang          VARCHAR2(50),
+                            MaNguoiDongHanh      VARCHAR2(50),
                             MoTa                 CLOB         NOT NULL,
                             GiaiPhap             CLOB,
                             MucDo                VARCHAR2(20) DEFAULT 'THAP' NOT NULL,
@@ -433,8 +435,15 @@ CREATE TABLE NHATKYSUCO (
                             ThoiGianBaoCao       TIMESTAMP    DEFAULT SYSTIMESTAMP NOT NULL,
                             CONSTRAINT FK_NKSC_TourThucTe          FOREIGN KEY (MaTourThucTe)     REFERENCES TOURTHUCTE(MaTourThucTe),
                             CONSTRAINT FK_NKSC_NhanVienBC          FOREIGN KEY (MaNhanVienBaoCao) REFERENCES NHANVIEN(MaNhanVien),
+                            CONSTRAINT FK_NKSC_KhachHang           FOREIGN KEY (MaKhachHang)      REFERENCES HOCHIEUSO(MaKhachHang),
+                            CONSTRAINT FK_NKSC_NguoiDongHanh       FOREIGN KEY (MaNguoiDongHanh)  REFERENCES DSNGUOIDONGHANH(MaNguoiDongHanh),
                             CONSTRAINT CK_NKSC_MucDo               CHECK (MucDo IN ('THAP','SOS')),
-                            CONSTRAINT CK_NKSC_LoaiSuCo            CHECK (LoaiSuCo IN ('Y_TE','THOI_TIET','PHUONG_TIEN','AN_UONG','KHAC'))
+                            CONSTRAINT CK_NKSC_LoaiSuCo            CHECK (LoaiSuCo IN ('Y_TE','THOI_TIET','PHUONG_TIEN','AN_UONG','KHAC')),
+                            CONSTRAINT CK_NKSC_MotNguoiLienQuan    CHECK (
+                                (MaKhachHang IS NULL AND MaNguoiDongHanh IS NULL)
+                                OR (MaKhachHang IS NOT NULL AND MaNguoiDongHanh IS NULL)
+                                OR (MaKhachHang IS NULL AND MaNguoiDongHanh IS NOT NULL)
+                            )
 );
 
 -- Chi phi thuc te do HDV khai bao

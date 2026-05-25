@@ -237,8 +237,33 @@ public class VanHanhService {
         sc.setGiaiPhap(req.getGiaiPhap());
         sc.setMucDo(chuanHoaMucDoSuCo(req.getMucDo()));
         sc.setLoaiSuCo(chuanHoaLoaiSuCo(req.getLoaiSuCo()));
+        ganNguoiLienQuanSuCo(sc, tour, req);
         sc.setThoiGianBaoCao(LocalDateTime.now());
         return nhatKySuCoRepository.save(sc);
+    }
+
+    private void ganNguoiLienQuanSuCo(NhatKySuCo sc, TourThucTe tour, BaoCaoSuCoRequest req) {
+        boolean coKhachHang = req.getMaKhachHang() != null && !req.getMaKhachHang().isBlank();
+        boolean coNguoiDongHanh = req.getMaNguoiDongHanh() != null && !req.getMaNguoiDongHanh().isBlank();
+
+        if (coKhachHang && coNguoiDongHanh) {
+            throw AppException.badRequest("Chỉ được gửi một trong hai trường: mã khách hàng hoặc mã người đồng hành");
+        }
+        if (coKhachHang) {
+            HoChieuSo kh = hoChieuSoRepository.findById(req.getMaKhachHang())
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay khach hang: " + req.getMaKhachHang()));
+            kiemTraKhachThuocTourDaXacNhan(tour.getMaTourThucTe(), kh.getMaKhachHang());
+            sc.setKhachHang(kh);
+            return;
+        }
+        if (coNguoiDongHanh) {
+            DsNguoiDongHanh ndh = dsNguoiDongHanhRepository.findById(req.getMaNguoiDongHanh())
+                    .orElseThrow(() -> AppException.notFound("Khong tim thay nguoi dong hanh: " + req.getMaNguoiDongHanh()));
+            if (!ndh.getDonDatTour().getTourThucTe().getMaTourThucTe().equals(tour.getMaTourThucTe())) {
+                throw AppException.badRequest("Người đồng hành không thuộc tour này");
+            }
+            sc.setNguoiDongHanh(ndh);
+        }
     }
 
     private void guiCanhBaoDenQuanLyNeuCan(NhatKySuCo sc) {
@@ -559,6 +584,11 @@ public class VanHanhService {
     }
 
     private NhatKySuCoResponse toSuCoResponse(NhatKySuCo sc) {
+        HoChieuSo kh = sc.getKhachHang();
+        DsNguoiDongHanh nguoiDongHanh = sc.getNguoiDongHanh();
+        String hoTenKhachHang = kh != null && kh.getTaiKhoan() != null
+                ? kh.getTaiKhoan().getHoTen()
+                : nguoiDongHanh != null ? nguoiDongHanh.getHoTen() : null;
         return NhatKySuCoResponse.builder()
                 .maNhatKySuCo(sc.getMaNhatKySuCo())
                 .maTour(sc.getTourThucTe().getMaTourThucTe())
@@ -566,6 +596,11 @@ public class VanHanhService {
                 .giaiPhap(sc.getGiaiPhap())
                 .mucDo(sc.getMucDo())
                 .loaiSuCo(sc.getLoaiSuCo())
+                .maKhachHang(kh != null ? kh.getMaKhachHang() : null)
+                .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
+                .hoTenKhachHang(hoTenKhachHang)
+                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null))
+                .diUng(kh != null ? kh.getDiUng() : null)
                 .thoiGianBaoCao(sc.getThoiGianBaoCao())
                 .build();
     }

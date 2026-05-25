@@ -13,4 +13,6 @@ public class BaoCaoSuCoRequest {
     private String giaiPhap;
     private String mucDo;
     private String loaiSuCo;
+    private String maKhachHang;
+    private String maNguoiDongHanh;
 }

@@ -35,6 +35,14 @@ public class NhatKySuCo {
     @JoinColumn(name = "MaNhanVienBaoCao", nullable = false)
     NhanVien nhanVienBaoCao;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaKhachHang")
+    HoChieuSo khachHang;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaNguoiDongHanh")
+    DsNguoiDongHanh nguoiDongHanh;
+
     // CLOB: mo ta chi tiet su co
     @Lob
     @Column(name = "MoTa", nullable = false)
