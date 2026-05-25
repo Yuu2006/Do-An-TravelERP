@@ -39,7 +39,7 @@ public class TourMauController {
 
     // UC06: Danh sách tour mẫu (filter + phân trang)
     @GetMapping
-    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<Page<TourMauResponse>>> danhSach(
             @RequestParam(required = false) String tieuDe,
             @RequestParam(required = false) Integer thoiLuongMin,
