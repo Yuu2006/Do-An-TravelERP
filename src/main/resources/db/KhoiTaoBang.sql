@@ -514,7 +514,7 @@ CREATE TABLE YEUCAUHOTRO (
                              CONSTRAINT FK_YCHT_KhachHang           FOREIGN KEY (MaKhachHang)    REFERENCES HOCHIEUSO(MaKhachHang),
                              CONSTRAINT FK_YCHT_NhanVienXL          FOREIGN KEY (MaNhanVienXuLy) REFERENCES NHANVIEN(MaNhanVien),
                              CONSTRAINT CK_YCHT_TrangThai           CHECK (TrangThai IN (
-                                                                                         'CHUA_XU_LY','CHO_BO_SUNG','CHO_GIAI_TRINH','DA_XU_LY','TU_CHOI'
+                                                                                         'CHUA_XU_LY','CHO_BO_SUNG','CHO_GIAI_TRINH','CHO_DUYET','DA_XU_LY','TU_CHOI'
                                  ))
 );
 

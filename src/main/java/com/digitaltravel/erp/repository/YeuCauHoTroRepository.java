@@ -26,7 +26,7 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             FROM YeuCauHoTro y
             WHERE y.khachHang.MaKhachHang = :maKhachHang
               AND y.LoaiYeuCau = 'KHIEU_NAI'
-              AND y.TrangThai IN ('CHUA_XU_LY', 'CHO_BO_SUNG', 'CHO_GIAI_TRINH')
+              AND y.TrangThai IN ('CHUA_XU_LY', 'CHO_BO_SUNG', 'CHO_GIAI_TRINH', 'CHO_DUYET')
               AND y.donDatTour.tourThucTe.MaTourThucTe = :maTourThucTe
             """)
     boolean existsActiveKhieuNaiByKhachHangAndTour(
@@ -63,4 +63,15 @@ public interface YeuCauHoTroRepository extends JpaRepository<YeuCauHoTro, String
             @Param("loaiYeuCau") String loaiYeuCau,
             Pageable pageable
     );
+
+    @Query("""
+            SELECT y FROM YeuCauHoTro y
+            JOIN FETCH y.khachHang kh
+            LEFT JOIN FETCH y.donDatTour ddt
+            LEFT JOIN FETCH ddt.tourThucTe tt
+            WHERE y.nhanVienXuLy.MaNhanVien = :maNhanVien
+              AND y.TrangThai = 'CHO_BO_SUNG'
+            ORDER BY y.MaYeuCauHoTro DESC
+            """)
+    List<YeuCauHoTro> findYeuCauGiaiTrinhCuaHdv(@Param("maNhanVien") String maNhanVien);
 }

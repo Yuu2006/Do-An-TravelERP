@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
+import com.digitaltravel.erp.dto.requests.BoSungRequest;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
 import com.digitaltravel.erp.dto.requests.NangLucRequest;
 import com.digitaltravel.erp.dto.requests.XuLyHoTroRequest;
@@ -278,6 +279,34 @@ public class NhanVienController {
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok("Cap nhat yeu cau thanh cong",
                 yeuCauHoTroService.xuLy(maYeuCau, request, user.getTaiKhoan().getMaTaiKhoan())));
+    }
+
+    @PostMapping("/api/kinh-doanh/yeu-cau-ho-tro/{maYeuCau}/yeu-cau-hdv-giai-trinh")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> yeuCauHdvGiaiTrinh(
+            @PathVariable String maYeuCau,
+            @Valid @RequestBody BoSungRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok("Da gui yeu cau HDV giai trinh",
+                yeuCauHoTroService.yeuCauHdvGiaiTrinh(maYeuCau, request.getNoiDung())));
+    }
+
+    @GetMapping("/api/huong-dan-vien/yeu-cau-giai-trinh")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<YeuCauHoTroResponse>>> danhSachYeuCauGiaiTrinh(
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                yeuCauHoTroService.danhSachGiaiTrinhCuaHdv(user.getTaiKhoan().getMaTaiKhoan())));
+    }
+
+    @PutMapping("/api/huong-dan-vien/yeu-cau-giai-trinh/{maYeuCau}")
+    @PreAuthorize("hasAnyRole('HDV', 'ADMIN')")
+    public ResponseEntity<ApiResponse<YeuCauHoTroResponse>> hdvCapNhatGiaiTrinh(
+            @PathVariable String maYeuCau,
+            @Valid @RequestBody BoSungRequest request,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok("Da gui giai trinh den admin",
+                yeuCauHoTroService.hdvCapNhatGiaiTrinh(
+                        user.getTaiKhoan().getMaTaiKhoan(), maYeuCau, request.getNoiDung())));
     }
 
     // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────

@@ -9,7 +9,7 @@ public class XuLyHoTroRequest {
     String maNhanVienXuLy;
 
     @NotBlank(message = "Trạng thái không được trống")
-    // CHUA_XU_LY | CHO_BO_SUNG | CHO_GIAI_TRINH | DA_XU_LY | TU_CHOI
+    // CHUA_XU_LY | CHO_BO_SUNG | CHO_GIAI_TRINH | CHO_DUYET | DA_XU_LY | TU_CHOI
     String trangThai;
 
     String ghiChu;
