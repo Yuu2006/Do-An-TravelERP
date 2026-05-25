@@ -479,6 +479,7 @@ CREATE TABLE QUYETTOAN (
                            NgayQuyetToan    TIMESTAMP     DEFAULT SYSTIMESTAMP NOT NULL,
                            TrangThai        VARCHAR2(20)  DEFAULT 'CHUA_QUYET_TOAN' NOT NULL,
                            GhiChu           CLOB,
+                           HoaDonAnh        VARCHAR2(1000),
                            CONSTRAINT UQ_QUYETTOAN_TourThucTe     UNIQUE (MaTourThucTe),
                            CONSTRAINT FK_QT_TourThucTe            FOREIGN KEY (MaTourThucTe) REFERENCES TOURTHUCTE(MaTourThucTe),
                            CONSTRAINT FK_QT_NhanVien              FOREIGN KEY (MaNhanVien)   REFERENCES NHANVIEN(MaNhanVien),

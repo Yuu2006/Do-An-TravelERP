@@ -32,4 +32,21 @@ public class SchemaCompatibilityRunner {
             log.warn("Could not update CK_YCHT_TrangThai to include CHO_DUYET: {}", ex.getMessage());
         }
     }
+
+    @PostConstruct
+    void addQuyetToanHoaDonAnhColumn() {
+        try {
+            Integer count = jdbcTemplate.queryForObject("""
+                    SELECT COUNT(*)
+                    FROM USER_TAB_COLUMNS
+                    WHERE TABLE_NAME = 'QUYETTOAN'
+                      AND COLUMN_NAME = 'HOADONANH'
+                    """, Integer.class);
+            if (count != null && count == 0) {
+                jdbcTemplate.execute("ALTER TABLE QUYETTOAN ADD HoaDonAnh VARCHAR2(1000)");
+            }
+        } catch (Exception ex) {
+            log.warn("Could not ensure QUYETTOAN.HoaDonAnh column exists: {}", ex.getMessage());
+        }
+    }
 }

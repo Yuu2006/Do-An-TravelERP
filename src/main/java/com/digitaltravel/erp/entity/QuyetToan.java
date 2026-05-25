@@ -64,4 +64,7 @@ public class QuyetToan {
     @Lob
     @Column(name = "GhiChu")
     String GhiChu;
+
+    @Column(name = "HoaDonAnh", length = 1000)
+    String HoaDonAnh;
 }

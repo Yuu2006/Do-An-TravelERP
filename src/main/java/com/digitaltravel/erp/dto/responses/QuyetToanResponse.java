@@ -18,6 +18,7 @@ public class QuyetToanResponse {
     private BigDecimal loiNhuan;
     private String trangThai;
     private String ghiChu;
+    private String hoaDonAnh;
     private LocalDateTime ngayQuyetToan;
     private String maNhanVien;
     private String tenNhanVien;
