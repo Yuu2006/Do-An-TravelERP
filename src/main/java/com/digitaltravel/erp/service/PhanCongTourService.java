@@ -176,6 +176,14 @@ public class PhanCongTourService {
                 .toList();
     }
 
+    // ── Điều hành xem lịch công tác của 1 nhân viên cụ thể ───────────────
+    @Transactional(readOnly = true)
+    public List<PhanCongResponse> lichCongTacNhanVien(String maNhanVien) {
+        return phanCongTourRepository.findByMaNhanVien(maNhanVien).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     // ── Mappers ───────────────────────────────────────────────────────────
     private PhanCongResponse toResponse(PhanCongTour pc) {
         NhanVien nv = pc.getNhanVien();

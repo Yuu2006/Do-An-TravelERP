@@ -14,6 +14,7 @@ public class KhuyenMaiKhResponse {
     String hoTenKhachHang;
     String emailKhachHang;
     String soDienThoaiKhachHang;
+    String hangThanhVien;
     String maVoucher;
     String maCode;
     String loaiUuDai;
