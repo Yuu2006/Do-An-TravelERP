@@ -19,6 +19,8 @@ public class KhuyenMaiKhResponse {
     String maCode;
     String loaiUuDai;
     BigDecimal giaTriGiam;
+    BigDecimal mucGiamToiDa;
+    Long diemCanDoi;
     String dieuKienApDung;
     LocalDate ngayHetHan;
     LocalDateTime ngayNhan;

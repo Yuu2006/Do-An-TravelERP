@@ -13,6 +13,8 @@ public class VoucherResponse {
     String maCode;
     String loaiUuDai;
     BigDecimal giaTriGiam;
+    BigDecimal mucGiamToiDa;
+    Long diemCanDoi;
     String dieuKienApDung;
     Integer soLuotPhatHanh;
     Integer soLuotDaDung;

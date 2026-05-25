@@ -166,6 +166,7 @@ public class VoucherService {
                 && request.getGiaTriGiam().compareTo(BigDecimal.valueOf(100)) > 0) {
             throw AppException.badRequest("Giảm PHAN_TRAM không được vượt qua 100%");
         }
+        kiemTraMucGiamToiDaPhanTram(request.getLoaiUuDai(), request.getMucGiamToiDa());
 
         if (request.getNgayHieuLuc().isAfter(request.getNgayHetHan())) {
             throw AppException.badRequest("Ngày hiệu lực phải trước Ngày hết hạn");
@@ -176,6 +177,7 @@ public class VoucherService {
         v.setMaCode(maCode);
         v.setLoaiUuDai(request.getLoaiUuDai());
         v.setGiaTriGiam(request.getGiaTriGiam());
+        v.setMucGiamToiDa("PHAN_TRAM".equals(request.getLoaiUuDai()) ? request.getMucGiamToiDa() : null);
         v.setDieuKienApDung(request.getDieuKienApDung());
         v.setSoLuotPhatHanh(request.getSoLuotPhatHanh());
         v.setSoLuotDaDung(0);
@@ -209,6 +211,10 @@ public class VoucherService {
                 && giaTriGiamSauCapNhat.compareTo(BigDecimal.valueOf(100)) > 0) {
             throw AppException.badRequest("Giảm PHAN_TRAM không được vượt qua 100%");
         }
+        BigDecimal mucGiamToiDaSauCapNhat = request.getMucGiamToiDa() != null
+                ? request.getMucGiamToiDa()
+                : v.getMucGiamToiDa();
+        kiemTraMucGiamToiDaPhanTram(loaiUuDaiSauCapNhat, mucGiamToiDaSauCapNhat);
 
         LocalDate ngayHieuLucSauCapNhat = request.getNgayHieuLuc() != null ? request.getNgayHieuLuc() : v.getNgayHieuLuc();
         LocalDate ngayHetHanSauCapNhat = request.getNgayHetHan() != null ? request.getNgayHetHan() : v.getNgayHetHan();
@@ -224,6 +230,7 @@ public class VoucherService {
         }
         if (request.getLoaiUuDai() != null) v.setLoaiUuDai(request.getLoaiUuDai());
         if (request.getGiaTriGiam() != null) v.setGiaTriGiam(request.getGiaTriGiam());
+        v.setMucGiamToiDa("PHAN_TRAM".equals(loaiUuDaiSauCapNhat) ? mucGiamToiDaSauCapNhat : null);
         if (request.getDieuKienApDung() != null) v.setDieuKienApDung(request.getDieuKienApDung());
         if (request.getSoLuotPhatHanh() != null) v.setSoLuotPhatHanh(request.getSoLuotPhatHanh());
         if (request.getNgayHieuLuc() != null) v.setNgayHieuLuc(request.getNgayHieuLuc());
@@ -338,8 +345,11 @@ public class VoucherService {
 
     private BigDecimal tinhSoTienGiam(Voucher voucher, BigDecimal tongTien) {
         if ("PHAN_TRAM".equals(voucher.getLoaiUuDai())) {
-            return tongTien.multiply(voucher.getGiaTriGiam())
+            BigDecimal tienGiamTheoPhanTram = tongTien.multiply(voucher.getGiaTriGiam())
                     .divide(BigDecimal.valueOf(100), 2, java.math.RoundingMode.HALF_UP);
+            return voucher.getMucGiamToiDa() != null
+                    ? tienGiamTheoPhanTram.min(voucher.getMucGiamToiDa())
+                    : tienGiamTheoPhanTram;
         }
         // SO_TIEN: không vượt quá tổng tiền
         return voucher.getGiaTriGiam().min(tongTien);
@@ -347,15 +357,27 @@ public class VoucherService {
 
     private long tinhDiemCanDung(Voucher voucher) {
         if ("SO_TIEN".equals(voucher.getLoaiUuDai())) {
-            // 100 VND = 1 điểm → n điểm = giaTriGiam / 100
-            return voucher.getGiaTriGiam().divide(BigDecimal.valueOf(100), 0, java.math.RoundingMode.CEILING).longValue();
+            return voucher.getGiaTriGiam().setScale(0, java.math.RoundingMode.CEILING).longValue();
         }
-        // PHAN_TRAM: 50 điểm / 1%
+        if (voucher.getMucGiamToiDa() != null) {
+            return voucher.getMucGiamToiDa()
+                    .multiply(voucher.getGiaTriGiam().multiply(BigDecimal.valueOf(2)))
+                    .divide(BigDecimal.valueOf(100), 0, java.math.RoundingMode.CEILING)
+                    .longValue();
+        }
+        // Tuong thich voi voucher phan tram cu chua co muc giam toi da.
         return voucher.getGiaTriGiam().multiply(BigDecimal.valueOf(50)).longValue();
     }
 
     private boolean laLoaiUuDaiHopLe(String loaiUuDai) {
         return "PHAN_TRAM".equals(loaiUuDai) || "SO_TIEN".equals(loaiUuDai);
+    }
+
+    private void kiemTraMucGiamToiDaPhanTram(String loaiUuDai, BigDecimal mucGiamToiDa) {
+        if ("PHAN_TRAM".equals(loaiUuDai)
+                && (mucGiamToiDa == null || mucGiamToiDa.compareTo(BigDecimal.ZERO) <= 0)) {
+            throw AppException.badRequest("Voucher PHAN_TRAM phải có mức giảm tối đa > 0");
+        }
     }
 
     private long soLuotDaPhanBo(Voucher voucher) {
@@ -423,6 +445,8 @@ public class VoucherService {
                 .maCode(v.getMaCode())
                 .loaiUuDai(v.getLoaiUuDai())
                 .giaTriGiam(v.getGiaTriGiam())
+                .mucGiamToiDa(v.getMucGiamToiDa())
+                .diemCanDoi(tinhDiemCanDung(v))
                 .dieuKienApDung(v.getDieuKienApDung())
                 .soLuotPhatHanh(v.getSoLuotPhatHanh())
                 .soLuotDaDung(v.getSoLuotDaDung())
@@ -454,6 +478,8 @@ public class VoucherService {
                 .maCode(v.getMaCode())
                 .loaiUuDai(v.getLoaiUuDai())
                 .giaTriGiam(v.getGiaTriGiam())
+                .mucGiamToiDa(v.getMucGiamToiDa())
+                .diemCanDoi(tinhDiemCanDung(v))
                 .dieuKienApDung(v.getDieuKienApDung())
                 .ngayHetHan(k.getNgayHetHan())
                 .ngayNhan(k.getNgayNhan())

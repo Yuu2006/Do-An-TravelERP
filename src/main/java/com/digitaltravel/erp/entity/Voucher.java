@@ -33,6 +33,10 @@ public class Voucher {
     @Column(name = "GiaTriGiam", nullable = false, precision = 18, scale = 2)
     BigDecimal GiaTriGiam;
 
+    // Tran tien giam cho voucher PHAN_TRAM; SO_TIEN khong su dung truong nay.
+    @Column(name = "MucGiamToiDa", precision = 18, scale = 2)
+    BigDecimal MucGiamToiDa;
+
     @Column(name = "DieuKienApDung", length = 2000)
     String DieuKienApDung;
 

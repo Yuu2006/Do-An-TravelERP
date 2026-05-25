@@ -289,6 +289,7 @@ CREATE TABLE VOUCHER (
                          MaCode               VARCHAR2(50)   NOT NULL,
                          LoaiUuDai            VARCHAR2(20)   NOT NULL,
                          GiaTriGiam           NUMBER(18,2)   NOT NULL,
+                         MucGiamToiDa         NUMBER(18,2),
                          DieuKienApDung       VARCHAR2(2000),
                          SoLuotPhatHanh       NUMBER(10)     DEFAULT 1 NOT NULL,
                           SoLuotDaDung         NUMBER(10)     DEFAULT 0 NOT NULL,
@@ -298,6 +299,7 @@ CREATE TABLE VOUCHER (
                           CONSTRAINT UQ_VOUCHER_MaCode           UNIQUE (MaCode),
                           CONSTRAINT CK_VOUCHER_LoaiUuDai        CHECK (LoaiUuDai IN ('PHAN_TRAM','SO_TIEN')),
                           CONSTRAINT CK_VOUCHER_GiaTriGiam       CHECK (GiaTriGiam >= 0),
+                          CONSTRAINT CK_VOUCHER_MucGiamToiDa     CHECK (MucGiamToiDa IS NULL OR MucGiamToiDa > 0),
                           CONSTRAINT CK_VOUCHER_SoLuot           CHECK (SoLuotPhatHanh > 0 AND SoLuotDaDung >= 0),
                           CONSTRAINT CK_VOUCHER_DaDung           CHECK (SoLuotDaDung <= SoLuotPhatHanh),
                           CONSTRAINT CK_VOUCHER_PhanTram         CHECK (LoaiUuDai <> 'PHAN_TRAM' OR GiaTriGiam <= 100),
@@ -567,14 +569,16 @@ CREATE OR REPLACE FUNCTION FN_TINH_TIEN_UU_DAI (
 IS
     v_LoaiUuDai  VOUCHER.LoaiUuDai%TYPE;
     v_GiaTriGiam VOUCHER.GiaTriGiam%TYPE;
+    v_MucGiamToiDa VOUCHER.MucGiamToiDa%TYPE;
 BEGIN
-    SELECT LoaiUuDai, GiaTriGiam
-    INTO v_LoaiUuDai, v_GiaTriGiam
+    SELECT LoaiUuDai, GiaTriGiam, MucGiamToiDa
+    INTO v_LoaiUuDai, v_GiaTriGiam, v_MucGiamToiDa
     FROM VOUCHER
     WHERE MaVoucher = p_MaVoucher;
 
     IF v_LoaiUuDai = 'PHAN_TRAM' THEN
-        RETURN NVL(p_TongTienDon, 0) * v_GiaTriGiam / 100;
+        RETURN LEAST(NVL(p_TongTienDon, 0) * v_GiaTriGiam / 100,
+                     NVL(v_MucGiamToiDa, NVL(p_TongTienDon, 0) * v_GiaTriGiam / 100));
     END IF;
 
     RETURN LEAST(v_GiaTriGiam, NVL(p_TongTienDon, 0));
@@ -1025,16 +1029,6 @@ BEGIN
     IF v_Count = 0 THEN
         RAISE_APPLICATION_ERROR(-20008, 'HDV xac minh phai duoc phan cong va tour dang dien ra');
     END IF;
-END;
-/
-
-CREATE OR REPLACE TRIGGER TRG_TRU_DIEM_DOI_VOUCHER
-AFTER INSERT ON NHATKYDOIDIEM
-FOR EACH ROW
-BEGIN
-    UPDATE HOCHIEUSO
-    SET DiemXanh = DiemXanh - :NEW.DiemQuyDoi
-    WHERE MaKhachHang = :NEW.MaKhachHang;
 END;
 /
 
