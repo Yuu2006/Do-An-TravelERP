@@ -44,15 +44,14 @@ public class TourMauController {
             @RequestParam(required = false) String tieuDe,
             @RequestParam(required = false) Integer thoiLuongMin,
             @RequestParam(required = false) Integer thoiLuongMax,
-            @PageableDefault(size = 10, sort = "MaTourMau", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
+            @PageableDefault(size = 10, sort = "MaTourMau", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<TourMauResponse> result = tourMauService.danhSach(tieuDe, thoiLuongMin, thoiLuongMax, pageable);
         return ResponseEntity.ok(ApiResponse.ok(result));
     }
 
     // UC06: Chi tiết 1 tour mẫu + lịch trình
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH'")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourMauService.chiTiet(id)));
     }
@@ -62,8 +61,7 @@ public class TourMauController {
     @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> taoMoi(
             @Valid @RequestBody TaoTourMauRequest request,
-            @AuthenticationPrincipal TaiKhoanDetails user
-    ) {
+            @AuthenticationPrincipal TaiKhoanDetails user) {
         TourMauChiTietResponse result = tourMauService.taoMoi(request, user.getUsername());
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
@@ -74,9 +72,9 @@ public class TourMauController {
     public ResponseEntity<ApiResponse<TourMauResponse>> capNhat(
             @PathVariable String id,
             @Valid @RequestBody CapNhatTourMauRequest request,
-            @AuthenticationPrincipal TaiKhoanDetails user
-    ) {
-        return ResponseEntity.ok(ApiResponse.ok("Cap nhat thanh cong", tourMauService.capNhat(id, request, user.getUsername())));
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity
+                .ok(ApiResponse.ok("Cap nhat thanh cong", tourMauService.capNhat(id, request, user.getUsername())));
     }
 
     // UC05: Xóa mềm tour mẫu
@@ -92,8 +90,7 @@ public class TourMauController {
     @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<TourMauChiTietResponse>> saoChep(
             @PathVariable String id,
-            @AuthenticationPrincipal TaiKhoanDetails user
-    ) {
+            @AuthenticationPrincipal TaiKhoanDetails user) {
         TourMauChiTietResponse result = tourMauService.saoChep(id, user.getUsername());
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
@@ -103,8 +100,7 @@ public class TourMauController {
     @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<LichTrinhResponse>> themLichTrinh(
             @PathVariable String id,
-            @Valid @RequestBody LichTrinhRequest request
-    ) {
+            @Valid @RequestBody LichTrinhRequest request) {
         LichTrinhResponse result = tourMauService.themLichTrinh(id, request);
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
@@ -115,8 +111,7 @@ public class TourMauController {
     public ResponseEntity<ApiResponse<LichTrinhResponse>> suaLichTrinh(
             @PathVariable String id,
             @PathVariable String maLichTrinh,
-            @Valid @RequestBody LichTrinhRequest request
-    ) {
+            @Valid @RequestBody LichTrinhRequest request) {
         return ResponseEntity.ok(ApiResponse.ok("Cap nhat lich trinh thanh cong",
                 tourMauService.suaLichTrinh(id, maLichTrinh, request)));
     }
@@ -126,8 +121,7 @@ public class TourMauController {
     @PreAuthorize("hasAnyRole('SANPHAM', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> xoaLichTrinh(
             @PathVariable String id,
-            @PathVariable String maLichTrinh
-    ) {
+            @PathVariable String maLichTrinh) {
         tourMauService.xoaLichTrinh(id, maLichTrinh);
         return ResponseEntity.ok(ApiResponse.noContent("Xoa lich trinh thanh cong"));
     }

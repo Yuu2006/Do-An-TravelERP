@@ -57,20 +57,25 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // Cho phép tất cả các ROLE nội bộ xem thông tin (GET) để phục vụ Dashboard và tra cứu chéo
-                        .requestMatchers(HttpMethod.GET, 
-                                "/api/kinh-doanh/khach-hang", 
-                                "/api/kinh-doanh/dat-tour", 
+                        // Cho phép tất cả các ROLE nội bộ xem thông tin (GET) để phục vụ Dashboard và
+                        // tra cứu chéo
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/kinh-doanh/khach-hang",
+                                "/api/kinh-doanh/dat-tour",
                                 "/api/kinh-doanh/dat-tour/**",
-                                "/api/san-pham/tour-thuc-te", 
-                                "/api/san-pham/tour-thuc-te/**", 
+                                "/api/san-pham/tour-thuc-te",
+                                "/api/san-pham/tour-thuc-te/**",
                                 "/api/dieu-hanh/tour-thuc-te",
                                 "/api/dieu-hanh/tour-thuc-te/**",
-                                "/api/san-pham/tour-mau", 
-                                "/api/san-pham/tour-mau/**", 
+                                "/api/san-pham/tour-mau",
+                                "/api/san-pham/tour-mau/**",
+                                "/api/san-pham/dich-vu-them",
+                                "/api/san-pham/dich-vu-them/**",
+                                "/api/san-pham/hanh-dong-xanh",
+                                "/api/san-pham/hanh-dong-xanh/**",
                                 "/api/huong-dan-vien/su-co",
-                                "/api/quan-tri/tai-khoan/**"
-                        ).hasAnyRole(ADMIN, SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV)
+                                "/api/quan-tri/tai-khoan/**")
+                        .hasAnyRole(ADMIN, SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV)
                         .requestMatchers("/api/quan-tri/**").hasRole(ADMIN)
                         .requestMatchers("/api/san-pham/**").hasAnyRole(ADMIN, SANPHAM)
                         .requestMatchers("/api/kinh-doanh/**").hasAnyRole(ADMIN, KINHDOANH)
@@ -79,13 +84,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/ke-toan/**").hasAnyRole(ADMIN, KETOAN)
                         .requestMatchers("/api/khach-hang/**").hasAnyRole(ADMIN, KHACHHANG)
                         .requestMatchers("/api/thanh-toan/**").hasAnyRole(ADMIN, KHACHHANG)
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(jwtAuthEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                )
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -98,8 +101,7 @@ public class SecurityConfig {
                 "http://127.0.0.1:*",
                 "http://10.53.153.35:*",
                 "http://192.168.*:*",
-                "http://10.*:*"
-        ));
+                "http://10.*:*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
