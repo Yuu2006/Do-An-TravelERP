@@ -37,7 +37,27 @@ public class ThanhToanController {
             @Valid @RequestBody KhoiTaoThanhToanRequest request) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
         ThanhToanResponse result = thanhToanService.khoiTaoThanhToan(maTaiKhoan, request);
-        return ResponseEntity.ok(ApiResponse.ok("Khoi tao thanh toan thanh cong", result));
+        return ResponseEntity.ok(ApiResponse.ok("Khởi tạo thanh toán thành công", result));
+    }
+
+    @PostMapping("/{maDatTour}/het-han-qr")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> hetHanThanhToanQr(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maDatTour) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        thanhToanService.hetHanThanhToanQr(maTaiKhoan, maDatTour);
+        return ResponseEntity.ok(ApiResponse.noContent("Mã QR đã hết hạn, đơn đã hết hạn giữ cho"));
+    }
+
+    @PostMapping("/{maDatTour}/xac-nhan-chuyen-khoan")
+    @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> xacNhanDaChuyenKhoan(
+            @AuthenticationPrincipal TaiKhoanDetails user,
+            @PathVariable String maDatTour) {
+        String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
+        thanhToanService.xacNhanDaChuyenKhoan(maTaiKhoan, maDatTour);
+        return ResponseEntity.ok(ApiResponse.noContent("Đã ghi nhận khách hàng chuyển khoản, chờ xác nhận"));
     }
 
     /**

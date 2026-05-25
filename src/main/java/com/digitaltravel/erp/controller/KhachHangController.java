@@ -72,7 +72,7 @@ public class KhachHangController {
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody CapNhatHoChieuSoRequest request) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
-        return ResponseEntity.ok(ApiResponse.ok("Cap nhat ho so thanh cong",
+        return ResponseEntity.ok(ApiResponse.ok("Cập nhật hồ sơ thành công",
                 khachHangService.capNhatHoSo(maTaiKhoan, request)));
     }
 
@@ -109,7 +109,7 @@ public class KhachHangController {
         return ResponseEntity.ok(ApiResponse.ok(datTourService.chiTietCuaToi(maTaiKhoan, maDatTour)));
     }
 
-    // Hủy đơn đặt tour (chỉ khi ở trạng thái CHO_XAC_NHAN)
+    // Hủy đơn đặt tour (chỉ khi ở trạng thái CHO_XAC_NHAN VA DA_XAC_NHAN)
     @DeleteMapping("/dat-tour/{maDatTour}")
     @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<Void>> huyDatTour(
@@ -117,7 +117,7 @@ public class KhachHangController {
             @PathVariable String maDatTour) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
         datTourService.huyDatTour(maTaiKhoan, maDatTour);
-        return ResponseEntity.ok(ApiResponse.noContent("Huy dat tour thanh cong"));
+        return ResponseEntity.ok(ApiResponse.noContent("ủy đơn đặt tour thành công  (chờ nhân viên duyệt)"));
     }
 
     // UC32 — Yêu cầu hủy tour đã thanh toán (DA_XAC_NHAN) → tạo yêu cầu hoàn tiền
@@ -129,7 +129,7 @@ public class KhachHangController {
             @Valid @RequestBody HuyTourRequest request) {
         String maTaiKhoan = user.getTaiKhoan().getMaTaiKhoan();
         YeuCauHoTroResponse result = huyTourService.yeuCauHuyTour(maTaiKhoan, maDatTour, request);
-        return ResponseEntity.ok(ApiResponse.ok("Gui yeu cau huy tour thanh cong. Dang cho nhan vien duyet.", result));
+        return ResponseEntity.ok(ApiResponse.ok("Gửi yêu cầu hủy tour thành công. Đang chờ nhân viên duyệt.", result));
     }
 
     // ──────────────────────── NHÂN VIÊN SALES ─────────────────────────────────
@@ -174,7 +174,8 @@ public class KhachHangController {
                 yeuCauHoTroService.boSung(user.getTaiKhoan().getMaTaiKhoan(), maYeuCau, request.getNoiDung())));
     }
 
-    // ──────────────────────── DANH MỤC DỊCH VỤ & HÀNH ĐỘNG XANH (Cho Form Đặt Tour) ─────────
+    // ──────────────────────── DANH MỤC DỊCH VỤ & HÀNH ĐỘNG XANH (Cho Form Đặt
+    // Tour) ─────────
     @GetMapping("/dich-vu-them")
     @PreAuthorize("hasAnyRole('KHACHHANG', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<DichVuThemResponse>>> danhSachDichVuThem(

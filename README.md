@@ -515,11 +515,13 @@ JWT_SECRET=your_base64_secret_key_here_at_least_42_chars
 
 1. `datTour()` — Tạo `DonDatTour` (CHO_XAC_NHAN), `ThoiGianHetHan = NOW() + 2 ngày`, KHÔNG trừ `ChoConLai`
 2. Scheduler chạy mỗi 60 giây — chuyển đơn hết hạn sang HET_HAN_GIU_CHO
-3. `khoiTaoThanhToan(mock=true)` — Tạo GiaoDich (THANH_CONG), đơn → DA_XAC_NHAN, trừ `ChoConLai`, tạo `LichSuTour`
-4. `yeuCauHuyTour()` — chỉ cho đơn DA_XAC_NHAN và còn hơn 2 ngày trước khởi hành; tính tỉ lệ hoàn theo ngày trước khởi hành, đơn → CHO_HUY
-5. `duyetHuyTour()` — kinh doanh duyệt yêu cầu, tạo GiaoDich (HOAN_TIEN, CHO_THANH_TOAN), đơn vẫn ở CHO_HUY chờ kế toán
-6. `xacNhanHoanTien()` — kế toán xác nhận hoàn tiền, hoàn `ChoConLai`, giao dịch → DA_HOAN_TIEN, đơn → DA_HUY
-7. `tuChoiHoanTien()` — kế toán từ chối hoàn tiền, giao dịch → THAT_BAI, đơn → TU_CHOI_HOAN_TIEN và vẫn còn hiệu lực
+3. Khách xác nhận đã chuyển khoản — đánh dấu trên giao dịch QR để nhân viên đối soát, không tạo trạng thái mới; QR quá 5 phút chưa xác nhận — giao dịch → THAT_BAI, đơn → HET_HAN_GIU_CHO
+4. Nhân viên từ chối thanh toán của đơn CHO_XAC_NHAN — giao dịch → THAT_BAI, đơn → THANH_TOAN_THAT_BAI
+5. `khoiTaoThanhToan(mock=true)` — Tạo GiaoDich (THANH_CONG), đơn → DA_XAC_NHAN, trừ `ChoConLai`, tạo `LichSuTour`
+6. `yeuCauHuyTour()` — cho đơn CHO_XAC_NHAN hoặc DA_XAC_NHAN còn hơn 2 ngày trước khởi hành; tính tỉ lệ hoàn theo ngày trước khởi hành, đơn → CHO_HUY
+7. `duyetHuyTour()` — kinh doanh duyệt yêu cầu, tạo GiaoDich (HOAN_TIEN, CHO_THANH_TOAN), đơn vẫn ở CHO_HUY chờ kế toán
+8. `xacNhanHoanTien()` — kế toán xác nhận hoàn tiền, hoàn `ChoConLai`, giao dịch → DA_HOAN_TIEN, đơn → DA_HUY
+9. `tuChoiHoanTien()` — kế toán từ chối hoàn tiền, giao dịch → THAT_BAI, đơn → TU_CHOI_HOAN_TIEN và vẫn còn hiệu lực
 
 ### Dynamic pricing
 

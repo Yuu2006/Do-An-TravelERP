@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.digitaltravel.erp.entity.DonDatTour;
+import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.repository.DonDatTourRepository;
+import com.digitaltravel.erp.repository.GiaoDichRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +26,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DatTourScheduler {
 
+    static final long THOI_HAN_QR_PHUT = 5;
+
     private static final Logger log = LoggerFactory.getLogger(DatTourScheduler.class);
 
     private final DonDatTourRepository donDatTourRepository;
+    private final GiaoDichRepository giaoDichRepository;
 
     @Scheduled(fixedDelay = 60_000)
     @Transactional
@@ -41,5 +46,23 @@ public class DatTourScheduler {
         }
         donDatTourRepository.saveAll(donHetHan);
         log.info("[Scheduler] Da huy {} don dat tour het han giu cho", donHetHan.size());
+    }
+
+    @Scheduled(fixedDelay = 60_000)
+    @Transactional
+    public void danhDauQrHetHan() {
+        List<GiaoDich> giaoDichHetHan = giaoDichRepository.findQrChoThanhToanQuaHan(
+                LocalDateTime.now().minusMinutes(THOI_HAN_QR_PHUT));
+        if (giaoDichHetHan.isEmpty()) return;
+
+        List<DonDatTour> donHetHan = giaoDichHetHan.stream()
+                .map(GiaoDich::getDonDatTour)
+                .distinct()
+                .toList();
+        giaoDichHetHan.forEach(giaoDich -> giaoDich.setTrangThai("THAT_BAI"));
+        donHetHan.forEach(don -> don.setTrangThai("HET_HAN_GIU_CHO"));
+        giaoDichRepository.saveAll(giaoDichHetHan);
+        donDatTourRepository.saveAll(donHetHan);
+        log.info("[Scheduler] Da cap nhat {} don het han giu cho do QR het han", giaoDichHetHan.size());
     }
 }
