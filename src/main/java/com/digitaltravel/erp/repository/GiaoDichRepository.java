@@ -29,7 +29,6 @@ public interface GiaoDichRepository extends JpaRepository<GiaoDich, String> {
             SELECT g FROM GiaoDich g
             JOIN FETCH g.donDatTour d
             WHERE g.loaiGiaoDich = 'HOAN_TIEN'
-              AND g.trangThai = 'CHO_THANH_TOAN'
             ORDER BY g.ngayThanhToan DESC
             """)
     org.springframework.data.domain.Page<GiaoDich> findChoHoanTien(
