@@ -68,7 +68,7 @@ CREATE TABLE NHATKYHETHONG (
                                MaDoiTuong      VARCHAR2(50),
                                ThoiGian        TIMESTAMP      DEFAULT SYSTIMESTAMP NOT NULL,
                                CONSTRAINT FK_NKHT_TaiKhoan FOREIGN KEY (MaTaiKhoan) REFERENCES TAIKHOAN(MaTaiKhoan),
-                               CONSTRAINT CK_NKHT_HanhDong CHECK (HanhDong IN ('THEM','CAP_NHAT','XOA'))
+                               CONSTRAINT CK_NKHT_HanhDong CHECK (HanhDong IN ('THEM','CAP_NHAT','XOA','XUAT_DU_LIEU_POWERBI','POWER_BI_XUAT_FILE'))
 );
 
 -- Ho so nghiep vu cua khach hang (1-1 voi TAIKHOAN co VaiTro = KHACHHANG)

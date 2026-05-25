@@ -100,7 +100,7 @@ public class PowerBiService {
         // Ghi nhật ký
         nhatKyHeThongService.ghiNhan(
                 userDetails.getTaiKhoan().getMaTaiKhoan(),
-                "TRUY_CAP_KETNO_POWERBI",
+                "XUAT_DU_LIEU_POWERBI",
                 "POWER_BI_KET_NOI",
                 maKho);
 
