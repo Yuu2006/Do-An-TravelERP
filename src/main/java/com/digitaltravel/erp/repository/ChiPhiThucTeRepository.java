@@ -31,9 +31,10 @@ public interface ChiPhiThucTeRepository extends JpaRepository<ChiPhiThucTe, Stri
     @Query("""
             SELECT c FROM ChiPhiThucTe c JOIN FETCH c.nhanVien nv JOIN FETCH nv.taiKhoan
             WHERE (:trangThai IS NULL OR c.TrangThaiDuyet = :trangThai)
+            AND (:maTour IS NULL OR c.tourThucTe.MaTourThucTe = :maTour)
             ORDER BY c.NgayKhai DESC
             """)
-    Page<ChiPhiThucTe> findByTrangThai(@Param("trangThai") String trangThai, Pageable pageable);
+    Page<ChiPhiThucTe> findByTrangThai(@Param("trangThai") String trangThai, @Param("maTour") String maTour, Pageable pageable);
 
     // Tổng chi phí đã duyệt của 1 tour (dùng cho quyết toán)
     @Query("SELECT c FROM ChiPhiThucTe c WHERE c.tourThucTe.MaTourThucTe = :maTour AND c.TrangThaiDuyet = 'DA_DUYET'")

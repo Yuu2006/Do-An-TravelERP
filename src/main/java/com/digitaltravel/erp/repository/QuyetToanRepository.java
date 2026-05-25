@@ -22,7 +22,11 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
         boolean existsByTourThucTe_MaTourThucTe(@Param("maTour") String maTour);
 
         @Query("""
-                        SELECT qt FROM QuyetToan qt JOIN FETCH qt.tourThucTe tt
+                        SELECT qt FROM QuyetToan qt
+                        JOIN FETCH qt.tourThucTe tt
+                        JOIN FETCH tt.tourMau
+                        JOIN FETCH qt.nhanVien nv
+                        JOIN FETCH nv.taiKhoan
                         WHERE (:trangThai IS NULL OR qt.TrangThai = :trangThai)
                         ORDER BY qt.NgayQuyetToan DESC
                         """)
@@ -32,6 +36,9 @@ public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
         @Query("""
                         SELECT qt FROM QuyetToan qt
                         JOIN FETCH qt.tourThucTe tt
+                        JOIN FETCH tt.tourMau
+                        JOIN FETCH qt.nhanVien nv
+                        JOIN FETCH nv.taiKhoan
                         JOIN PhanCongTour pc ON pc.tourThucTe.MaTourThucTe = tt.MaTourThucTe
                         WHERE pc.nhanVien.taiKhoan.MaTaiKhoan = :maTaiKhoan
                           AND pc.TrangThaiChapNhan = 'DA_DONG_Y'

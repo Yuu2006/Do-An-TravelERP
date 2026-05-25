@@ -401,8 +401,8 @@ public class VanHanhService {
     }
 
     // ── Kế toán: DS chi phí chờ duyệt ────────────────────────────────────
-    public Page<ChiPhiThucTeResponse> danhSachChiPhiChoXuLy(String trangThai, Pageable pageable) {
-        return chiPhiThucTeRepository.findByTrangThai(trangThai, pageable)
+    public Page<ChiPhiThucTeResponse> danhSachChiPhiChoXuLy(String trangThai, String maTour, Pageable pageable) {
+        return chiPhiThucTeRepository.findByTrangThai(trangThai, maTour, pageable)
                 .map(this::toChiPhiResponse);
     }
 
@@ -422,8 +422,9 @@ public class VanHanhService {
     }
 
     public Page<CanhBaoChiPhiResponse> danhSachCanhBaoChiPhi(String trangThai, String loaiCanhBao,
-            String mucDo, Pageable pageable) {
+            String mucDo, String maTour, Pageable pageable) {
         List<CanhBaoChiPhiResponse> canhBao = chiPhiThucTeRepository.findAllWithRelations().stream()
+                .filter(cp -> maTour == null || cp.getTourThucTe().getMaTourThucTe().equals(maTour))
                 .flatMap(cp -> taoCanhBaoDong(cp).stream())
                 .filter(cb -> trangThai == null || trangThai.equals(cb.getTrangThai()))
                 .filter(cb -> loaiCanhBao == null || loaiCanhBao.equals(cb.getLoaiCanhBao()))

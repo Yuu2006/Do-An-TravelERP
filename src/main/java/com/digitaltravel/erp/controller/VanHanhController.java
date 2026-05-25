@@ -196,8 +196,9 @@ public class VanHanhController {
     @PreAuthorize("hasAnyRole('KETOAN', 'ADMIN')")
     public ResponseEntity<ApiResponse<Page<ChiPhiThucTeResponse>>> danhSachChiPhi(
             @RequestParam(required = false) String trangThai,
+            @RequestParam(required = false) String maTour,
             Pageable pageable) {
-        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachChiPhiChoXuLy(trangThai, pageable)));
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.danhSachChiPhiChoXuLy(trangThai, maTour, pageable)));
     }
 
     @PutMapping("/api/ke-toan/chi-phi/{maChiPhi}/duyet")
@@ -227,9 +228,10 @@ public class VanHanhController {
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String loaiCanhBao,
             @RequestParam(required = false) String mucDo,
+            @RequestParam(required = false) String maTour,
             Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.ok(
-                vanHanhService.danhSachCanhBaoChiPhi(trangThai, loaiCanhBao, mucDo, pageable)));
+                vanHanhService.danhSachCanhBaoChiPhi(trangThai, loaiCanhBao, mucDo, maTour, pageable)));
     }
 
     @GetMapping("/api/ke-toan/canh-bao-chi-phi/{maCanhBao}")
