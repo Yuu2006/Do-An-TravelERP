@@ -201,6 +201,16 @@ public class NhanVienController {
         return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.tourCuaToi(maTaiKhoan)));
     }
 
+    /**
+     * Điều hành xem lịch công tác của 1 HDV cụ thể
+     */
+    @GetMapping("/api/dieu-hanh/nhan-vien/{maNhanVien}/lich-cong-tac")
+    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<PhanCongResponse>>> lichCongTacNhanVien(
+            @PathVariable String maNhanVien) {
+        return ResponseEntity.ok(ApiResponse.ok(phanCongTourService.lichCongTacNhanVien(maNhanVien)));
+    }
+
     // ──────────────── UC24: Tìm kiếm khách hàng ──────────────────────────
 
     /**
