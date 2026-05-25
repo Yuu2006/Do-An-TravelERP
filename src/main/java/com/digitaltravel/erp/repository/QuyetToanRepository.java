@@ -15,9 +15,11 @@ import com.digitaltravel.erp.entity.QuyetToan;
 @Repository
 public interface QuyetToanRepository extends JpaRepository<QuyetToan, String> {
 
-    Optional<QuyetToan> findByTourThucTe_MaTourThucTe(String maTour);
+    @Query("SELECT qt FROM QuyetToan qt WHERE qt.tourThucTe.MaTourThucTe = :maTour")
+    Optional<QuyetToan> findByTourThucTe_MaTourThucTe(@Param("maTour") String maTour);
 
-    boolean existsByTourThucTe_MaTourThucTe(String maTour);
+    @Query("SELECT CASE WHEN COUNT(qt) > 0 THEN true ELSE false END FROM QuyetToan qt WHERE qt.tourThucTe.MaTourThucTe = :maTour")
+    boolean existsByTourThucTe_MaTourThucTe(@Param("maTour") String maTour);
 
     @Query("""
             SELECT qt FROM QuyetToan qt JOIN FETCH qt.tourThucTe tt

@@ -3824,3 +3824,5 @@ COMMIT;
 -- ============================================================
 -- END SEED DATA LIEN KET
 -- ============================================================
+U P D A T E   D O N D A T T O U R   S E T   T r a n g T h a i   =   ' C H O _ H U Y '   W H E R E   M a D a t T o u r   I N   ( S E L E C T   M a D a t T o u r   F R O M   G I A O D I C H   W H E R E   L o a i G i a o D i c h   =   ' H O A N _ T I E N '   A N D   T r a n g T h a i   =   ' C H O _ T H A N H _ T O A N ' ) ;  
+ 

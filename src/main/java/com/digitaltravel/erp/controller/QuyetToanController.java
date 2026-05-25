@@ -61,7 +61,7 @@ public class QuyetToanController {
             @PathVariable String maTour,
             @Valid @RequestBody(required = false) QuyetToanRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
-        QuyetToanResponse result = quyetToanService.taoQuyetToan(maTour, request, user.getUsername());
+        QuyetToanResponse result = quyetToanService.taoQuyetToan(maTour, request, user.getTaiKhoan().getMaTaiKhoan());
         return ResponseEntity.status(201).body(ApiResponse.created(result));
     }
 
