@@ -69,7 +69,7 @@ public class VanHanhService {
 
     @Transactional(readOnly = true)
     public List<LichTrinhResponse> lichTrinhTour(String maTour, String maTaiKhoan, String maVaiTro) {
-        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
+        kiemTraQuyenXemLichTrinhTour(maTour, maTaiKhoan, maVaiTro);
         TourThucTe tour = tourThucTeRepository.findById(maTour)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
 
@@ -532,6 +532,14 @@ public class VanHanhService {
     private NhanVien getHdv(String maTaiKhoan) {
         return nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
+    }
+
+    private void kiemTraQuyenXemLichTrinhTour(String maTour, String maTaiKhoan, String maVaiTro) {
+        if (!VaiTroConst.HDV.equals(maVaiTro)
+                || phanCongTourRepository.existsViewableByMaTourAndMaTaiKhoan(maTour, maTaiKhoan)) {
+            return;
+        }
+        throw AppException.forbidden("Ban khong co quyen xem lich trinh tour nay");
     }
 
     private void kiemTraQuyenVanHanhTour(String maTour, String maTaiKhoan, String maVaiTro) {
