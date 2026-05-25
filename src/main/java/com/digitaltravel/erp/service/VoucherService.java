@@ -74,7 +74,7 @@ public class VoucherService {
 
         // Voucher chi ap dung truoc khi thanh toan/xac nhan don.
         if (!"CHO_XAC_NHAN".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chỉ có thể áp voucher cho đơn ở trạng thái CHO_XAC_NHAN");
+            throw AppException.badRequest("Chỉ có thể áp voucher cho đơn trước khi xác nhận chuyển khoản");
         }
 
         // Lấy voucher từ ví của KH

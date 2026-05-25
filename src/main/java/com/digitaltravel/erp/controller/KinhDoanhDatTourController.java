@@ -46,7 +46,14 @@ public class KinhDoanhDatTourController {
             @PathVariable String maDatTour,
             @AuthenticationPrincipal TaiKhoanDetails user,
             @Valid @RequestBody(required = false) XacNhanThanhToanOfflineRequest request) {
-        return ResponseEntity.ok(ApiResponse.ok("Xac nhan thanh toan offline thanh cong",
+        return ResponseEntity.ok(ApiResponse.ok("Ác nhận thanh toán thành công  cho đơn đặt tour " + maDatTour,
                 datTourService.xacNhanDon(maDatTour, user.getTaiKhoan().getMaTaiKhoan(), request)));
+    }
+
+    @PutMapping("/dat-tour/{maDatTour}/tu-choi-thanh-toan")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<DonDatTourResponse>> tuChoiThanhToan(@PathVariable String maDatTour) {
+        return ResponseEntity.ok(ApiResponse.ok("Đã từ chối thanh toán cho đơn đặt tour " + maDatTour,
+                datTourService.tuChoiThanhToan(maDatTour)));
     }
 }
