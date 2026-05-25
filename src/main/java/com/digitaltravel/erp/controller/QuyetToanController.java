@@ -77,11 +77,11 @@ public class QuyetToanController {
 
     @PostMapping("/quyet-toan/{maQuyetToan}/yeu-cau-bo-sung")
     @PreAuthorize("hasAnyRole('KETOAN', 'ADMIN')")
-    public ResponseEntity<ApiResponse<QuyetToanResponse>> yeuCauHdvBoSung(
+    public ResponseEntity<ApiResponse<QuyetToanResponse>> yeuCauBoSungQuyetToan(
             @PathVariable String maQuyetToan,
             @Valid @RequestBody BoSungRequest request) {
-        return ResponseEntity.ok(ApiResponse.ok("Da gui yeu cau HDV bo sung quyet toan",
-                quyetToanService.yeuCauHdvBoSung(maQuyetToan, request.getNoiDung())));
+        return ResponseEntity.ok(ApiResponse.ok("Da gui yeu cau bo sung quyet toan",
+                quyetToanService.yeuCauBoSung(maQuyetToan, request.getNoiDung())));
     }
 
     /**
