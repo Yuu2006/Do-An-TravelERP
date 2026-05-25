@@ -38,7 +38,7 @@ public class TourThucTeController {
 
     // UC14: Danh sach tour thuc te cho dieu hanh
     @GetMapping
-    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<Page<TourThucTeResponse>>> danhSach(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourMau,
@@ -61,7 +61,7 @@ public class TourThucTeController {
 
     // UC14: Chi tiết tour thực tế
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SANPHAM', 'DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<TourThucTeResponse>> chiTiet(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.ok(tourThucTeService.chiTiet(id)));
     }

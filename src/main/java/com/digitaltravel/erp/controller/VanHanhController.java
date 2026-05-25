@@ -95,7 +95,7 @@ public class VanHanhController {
     }
 
     @GetMapping("/api/huong-dan-vien/su-co")
-    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<List<NhatKySuCoResponse>>> lichSuSuCoCuaHdv(
             @RequestParam(required = false) String mucDo,
             @AuthenticationPrincipal TaiKhoanDetails user) {
