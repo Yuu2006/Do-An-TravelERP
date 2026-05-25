@@ -154,6 +154,16 @@ INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, E
 VALUES ('TK_KH_15', 'khach15', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
         'Phan Gia Bảo', '079199000115', DATE '1993-12-02', 'khach15@digitaltravel.vn', '0911000115', 'KHACHHANG', 'HOAT_DONG');
 
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_KH_16', 'khach16', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Nguyễn Thảo Nguyên', '079199000116', DATE '1994-04-21', 'khach16@digitaltravel.vn', '0911000116', 'KHACHHANG', 'HOAT_DONG');
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_KH_17', 'khach17', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Phạm Minh Anh', '079199000117', DATE '1996-09-12', 'khach17@digitaltravel.vn', '0911000117', 'KHACHHANG', 'HOAT_DONG');
+INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
+VALUES ('TK_KH_18', 'khach18', '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
+        'Vũ Hoàng Yến', '079199000118', DATE '1991-03-06', 'khach18@digitaltravel.vn', '0911000118', 'KHACHHANG', 'HOAT_DONG');
+
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
 VALUES ('KH_01', 'TK_KH_01', NULL, 'Hải sản', 'DONG', 650);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
@@ -184,6 +194,12 @@ INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien,
 VALUES ('KH_14', 'TK_KH_14', NULL, 'Trứng gà', 'DONG', 950);
 INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
 VALUES ('KH_15', 'TK_KH_15', NULL, 'Phấn hoa', 'THANH_VIEN', 320);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH_16', 'TK_KH_16', NULL, NULL, 'DONG', 520);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH_17', 'TK_KH_17', NULL, NULL, 'THANH_VIEN', 460);
+INSERT INTO HOCHIEUSO (MaKhachHang, MaTaiKhoan, GhiChuYTe, DiUng, HangThanhVien, DiemXanh)
+VALUES ('KH_18', 'TK_KH_18', NULL, NULL, 'DONG', 610);
 
 -- ------------------------------------------------------------
 -- 2. DANH MUC TOUR, DICH VU, HANH DONG XANH
@@ -429,104 +445,104 @@ Không bao gồm:
 - Tips cho hướng dẫn viên và tài xế', 3, 4700000, 4.42, 69);
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_SAPA_01', 'TM_SAPA', 1, 'Hà Nội - Sa Pa - Cát Cát', 'Di chuyển, nhận phòng, tham quan bản Cát Cát.', 'Cơm lam, gà đồi');
+VALUES ('LTT_SAPA_01', 'TM_SAPA', 1, 'Hà Nội - Sa Pa - Cát Cát', 'Di chuyển, nhận phòng, tham quan bản Cát Cát.', 'Sáng: Buffet khách sạn | Trưa: Cơm lam, gà đồi | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_SAPA_02', 'TM_SAPA', 2, 'Fansipan - Chợ đêm Sa Pa', 'Săn mây Fansipan và tự do khám phá thị trấn.', 'Lẩu cá tầm');
+VALUES ('LTT_SAPA_02', 'TM_SAPA', 2, 'Fansipan - Chợ đêm Sa Pa', 'Săn mây Fansipan và tự do khám phá thị trấn.', 'Sáng: Buffet khách sạn | Trưa: Lẩu cá tầm | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_SAPA_03', 'TM_SAPA', 3, 'Tả Van - Hà Nội', 'Tham quan Tả Van, ăn trưa và về lại Hà Nội.', 'Cơm rang, đặc sản');
+VALUES ('LTT_SAPA_03', 'TM_SAPA', 3, 'Tả Van - Hà Nội', 'Tham quan Tả Van, ăn trưa và về lại Hà Nội.', 'Sáng: Buffet khách sạn | Trưa: Cơm rang, đặc sản | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DANANG_01', 'TM_DANANG', 1, 'Đà Nẵng - Sơn Trà', 'Đón khách, tham quan bán đảo Sơn Trà.', 'Hải sản địa phương');
+VALUES ('LTT_DANANG_01', 'TM_DANANG', 1, 'Đà Nẵng - Sơn Trà', 'Đón khách, tham quan bán đảo Sơn Trà.', 'Sáng: Buffet khách sạn | Trưa: Hải sản địa phương | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DANANG_02', 'TM_DANANG', 2, 'Hội An', 'Tham quan phố cổ, ăn trưa đặc sản.', 'Cao lầu, mì Quảng');
+VALUES ('LTT_DANANG_02', 'TM_DANANG', 2, 'Hội An', 'Tham quan phố cổ, ăn trưa đặc sản.', 'Sáng: Buffet khách sạn | Trưa: Cao lầu, mì Quảng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DANANG_03', 'TM_DANANG', 3, 'Bà Nà Hills', 'Tham quan Bà Nà Hills, cầu Vàng.', 'Buffet');
+VALUES ('LTT_DANANG_03', 'TM_DANANG', 3, 'Bà Nà Hills', 'Tham quan Bà Nà Hills, cầu Vàng.', 'Sáng: Buffet khách sạn | Trưa: Buffet | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DANANG_04', 'TM_DANANG', 4, 'Mua sắm - Tiễn khách', 'Mua sắm đặc sản, tiễn khách ra sân bay.', 'Hải sản nhẹ');
+VALUES ('LTT_DANANG_04', 'TM_DANANG', 4, 'Mua sắm - Tiễn khách', 'Mua sắm đặc sản, tiễn khách ra sân bay.', 'Sáng: Buffet khách sạn | Trưa: Hải sản nhẹ | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DALAT_01', 'TM_DALAT', 1, 'Nông trại hữu cơ', 'Làm quen lịch trình xanh và thu hoạch rau sạch.', 'Rau củ cao nguyên');
+VALUES ('LTT_DALAT_01', 'TM_DALAT', 1, 'Nông trại hữu cơ', 'Làm quen lịch trình xanh và thu hoạch rau sạch.', 'Sáng: Buffet khách sạn | Trưa: Rau củ cao nguyên | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DALAT_02', 'TM_DALAT', 2, 'Đồi chè Cầu Đất', 'Ngắm bình minh, tham quan xưởng chè.', 'Lẩu thả');
+VALUES ('LTT_DALAT_02', 'TM_DALAT', 2, 'Đồi chè Cầu Đất', 'Ngắm bình minh, tham quan xưởng chè.', 'Sáng: Buffet khách sạn | Trưa: Lẩu thả | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_DALAT_03', 'TM_DALAT', 3, 'Làng hoa Vạn Thành', 'Tham quan làng hoa, xe đưa khách về.', 'Cơm niêu');
+VALUES ('LTT_DALAT_03', 'TM_DALAT', 3, 'Làng hoa Vạn Thành', 'Tham quan làng hoa, xe đưa khách về.', 'Sáng: Buffet khách sạn | Trưa: Cơm niêu | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_NB_01', 'TM_NINHBINH', 1, 'Tràng An - Hoa Lư', 'Đi thuyền tham quan Tràng An, thăm cố đô Hoa Lư.', 'Dê núi, cơm cháy');
+VALUES ('LTT_NB_01', 'TM_NINHBINH', 1, 'Tràng An - Hoa Lư', 'Đi thuyền tham quan Tràng An, thăm cố đô Hoa Lư.', 'Sáng: Buffet khách sạn | Trưa: Dê núi, cơm cháy | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_NB_02', 'TM_NINHBINH', 2, 'Chùa Bái Đính', 'Tham quan chùa Bái Đính, kết thúc chương trình.', 'Cơm chay');
+VALUES ('LTT_NB_02', 'TM_NINHBINH', 2, 'Chùa Bái Đính', 'Tham quan chùa Bái Đính, kết thúc chương trình.', 'Sáng: Buffet khách sạn | Trưa: Cơm chay | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HUE_01', 'TM_HUE', 1, 'Kinh thành Huế', 'Tham quan Đại Nội và nghe ca Huế trên sông Hương.', 'Bún bò Huế');
+VALUES ('LTT_HUE_01', 'TM_HUE', 1, 'Kinh thành Huế', 'Tham quan Đại Nội và nghe ca Huế trên sông Hương.', 'Sáng: Buffet khách sạn | Trưa: Bún bò Huế | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HUE_02', 'TM_HUE', 2, 'Lăng tẩm', 'Tham quan lăng Tự Đức, Khải Định.', 'Bánh bèo nậm lọc');
+VALUES ('LTT_HUE_02', 'TM_HUE', 2, 'Lăng tẩm', 'Tham quan lăng Tự Đức, Khải Định.', 'Sáng: Buffet khách sạn | Trưa: Bánh bèo nậm lọc | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HUE_03', 'TM_HUE', 3, 'Chợ Đông Ba', 'Mua sắm đặc sản, tiễn khách ra ga/sân bay.', 'Bún thịt nướng');
+VALUES ('LTT_HUE_03', 'TM_HUE', 3, 'Chợ Đông Ba', 'Mua sắm đặc sản, tiễn khách ra ga/sân bay.', 'Sáng: Buffet khách sạn | Trưa: Bún thịt nướng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HALONG_01', 'TM_HALONG', 1, 'Hà Nội - Hạ Long - Du thuyền', 'Nhận phòng trên du thuyền và ngắm hoàng hôn trên vịnh.', 'Hải sản trên tàu');
+VALUES ('LTT_HALONG_01', 'TM_HALONG', 1, 'Hà Nội - Hạ Long - Du thuyền', 'Nhận phòng trên du thuyền và ngắm hoàng hôn trên vịnh.', 'Sáng: Buffet khách sạn | Trưa: Hải sản trên tàu | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CANTHO_01', 'TM_CANTHO', 1, 'Cần Thơ - Bến Ninh Kiều', 'Đón khách và tham quan bến Ninh Kiều buổi tối.', 'Lẩu mắm miền Tây');
+VALUES ('LTT_CANTHO_01', 'TM_CANTHO', 1, 'Cần Thơ - Bến Ninh Kiều', 'Đón khách và tham quan bến Ninh Kiều buổi tối.', 'Sáng: Buffet khách sạn | Trưa: Lẩu mắm miền Tây | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_01', 'TM_CONDAO', 1, 'Côn Đảo - Bãi Đầm Trầu', 'Nhận phòng, nghỉ biển và hướng dẫn quy tắc bảo vệ môi trường biển.', 'Hải sản địa phương');
+VALUES ('LTT_CONDAO_01', 'TM_CONDAO', 1, 'Côn Đảo - Bãi Đầm Trầu', 'Nhận phòng, nghỉ biển và hướng dẫn quy tắc bảo vệ môi trường biển.', 'Sáng: Buffet khách sạn | Trưa: Hải sản địa phương | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MOCCHAU_01', 'TM_MOCCHAU', 1, 'Đồi chè trái tim', 'Tham quan đồi chè, cầu kính và nông trại bò sữa.', 'Bê chao, rau cải mèo');
+VALUES ('LTT_MOCCHAU_01', 'TM_MOCCHAU', 1, 'Đồi chè trái tim', 'Tham quan đồi chè, cầu kính và nông trại bò sữa.', 'Sáng: Buffet khách sạn | Trưa: Bê chao, rau cải mèo | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_QUYNHON_01', 'TM_QUYNHON', 1, 'Kỳ Co - Eo Gió', 'Đi canoe ra Kỳ Co, tham quan Eo Gió và làng chài Nhơn Lý.', 'Bún chả cá Quy Nhơn');
+VALUES ('LTT_QUYNHON_01', 'TM_QUYNHON', 1, 'Kỳ Co - Eo Gió', 'Đi canoe ra Kỳ Co, tham quan Eo Gió và làng chài Nhơn Lý.', 'Sáng: Buffet khách sạn | Trưa: Bún chả cá Quy Nhơn | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HOIAN_01', 'TM_HOIAN', 1, 'Phố cổ Hội An - Trà Quế', 'Tham quan phố cổ và lớp nấu ăn tại làng rau Trà Quế.', 'Cao lầu, bánh vạc');
+VALUES ('LTT_HOIAN_01', 'TM_HOIAN', 1, 'Phố cổ Hội An - Trà Quế', 'Tham quan phố cổ và lớp nấu ăn tại làng rau Trà Quế.', 'Sáng: Buffet khách sạn | Trưa: Cao lầu, bánh vạc | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BMT_01', 'TM_BUONMATHUOT', 1, 'Bảo tàng cà phê - Buôn Đôn', 'Trải nghiệm văn hóa cà phê và không gian Tây Nguyên.', 'Gà nướng cơm lam');
+VALUES ('LTT_BMT_01', 'TM_BUONMATHUOT', 1, 'Bảo tàng cà phê - Buôn Đôn', 'Trải nghiệm văn hóa cà phê và không gian Tây Nguyên.', 'Sáng: Buffet khách sạn | Trưa: Gà nướng cơm lam | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PULUONG_01', 'TM_PULUONG', 1, 'Bản Đôn - Ruộng bậc thang', 'Đi bộ nhẹ quanh bản, ngắm hoàng hôn trên thung lũng.', 'Vịt Cổ Lũng, rau rừng');
+VALUES ('LTT_PULUONG_01', 'TM_PULUONG', 1, 'Bản Đôn - Ruộng bậc thang', 'Đi bộ nhẹ quanh bản, ngắm hoàng hôn trên thung lũng.', 'Sáng: Buffet khách sạn | Trưa: Vịt Cổ Lũng, rau rừng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MUINE_01', 'TM_MUINE', 1, 'Đồi cát bay - Làng chài Mũi Né', 'Tham quan đồi cát, làng chài và nghỉ biển buổi chiều.', 'Lẩu thả Phan Thiết');
+VALUES ('LTT_MUINE_01', 'TM_MUINE', 1, 'Đồi cát bay - Làng chài Mũi Né', 'Tham quan đồi cát, làng chài và nghỉ biển buổi chiều.', 'Sáng: Buffet khách sạn | Trưa: Lẩu thả Phan Thiết | Chiều: Trái cây nhẹ');
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HALONG_02', 'TM_HALONG', 2, 'Hang Sửng Sốt - đảo Titop', 'Tham quan hang, chèo kayak và ngắm toàn cảnh vịnh từ đỉnh Titop.', 'Cơm Việt trên tàu');
+VALUES ('LTT_HALONG_02', 'TM_HALONG', 2, 'Hang Sửng Sốt - đảo Titop', 'Tham quan hang, chèo kayak và ngắm toàn cảnh vịnh từ đỉnh Titop.', 'Sáng: Buffet khách sạn | Trưa: Cơm Việt trên tàu | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HALONG_03', 'TM_HALONG', 3, 'Cát Bà - Hà Nội', 'Trải nghiệm buổi sáng trên vịnh, trả phòng và về lại Hà Nội.', 'Bún hải sản');
+VALUES ('LTT_HALONG_03', 'TM_HALONG', 3, 'Cát Bà - Hà Nội', 'Trải nghiệm buổi sáng trên vịnh, trả phòng và về lại Hà Nội.', 'Sáng: Buffet khách sạn | Trưa: Bún hải sản | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CANTHO_02', 'TM_CANTHO', 2, 'Chợ nổi Cái Răng - miệt vườn', 'Đi chợ nổi sớm, thăm vườn trái cây và làm bánh dân gian.', 'Cá lóc nướng trui');
+VALUES ('LTT_CANTHO_02', 'TM_CANTHO', 2, 'Chợ nổi Cái Răng - miệt vườn', 'Đi chợ nổi sớm, thăm vườn trái cây và làm bánh dân gian.', 'Sáng: Buffet khách sạn | Trưa: Cá lóc nướng trui | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CANTHO_03', 'TM_CANTHO', 3, 'Nhà cổ Bình Thủy - tiễn khách', 'Tham quan nhà cổ, mua đặc sản và kết thúc chương trình.', 'Hủ tiếu Nam Vang');
+VALUES ('LTT_CANTHO_03', 'TM_CANTHO', 3, 'Nhà cổ Bình Thủy - tiễn khách', 'Tham quan nhà cổ, mua đặc sản và kết thúc chương trình.', 'Sáng: Buffet khách sạn | Trưa: Hủ tiếu Nam Vang | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_02', 'TM_CONDAO', 2, 'Hòn Bảy Cạnh - bảo tồn biển', 'Trải nghiệm biển đảo và nghe giới thiệu về bảo tồn rùa biển.', 'Cơm niêu hải sản');
+VALUES ('LTT_CONDAO_02', 'TM_CONDAO', 2, 'Hòn Bảy Cạnh - bảo tồn biển', 'Trải nghiệm biển đảo và nghe giới thiệu về bảo tồn rùa biển.', 'Sáng: Buffet khách sạn | Trưa: Cơm niêu hải sản | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_03', 'TM_CONDAO', 3, 'Di tích Côn Đảo', 'Tham quan các điểm di tích lịch sử và bảo tàng địa phương.', 'Bánh xèo hải sản');
+VALUES ('LTT_CONDAO_03', 'TM_CONDAO', 3, 'Di tích Côn Đảo', 'Tham quan các điểm di tích lịch sử và bảo tàng địa phương.', 'Sáng: Buffet khách sạn | Trưa: Bánh xèo hải sản | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CONDAO_04', 'TM_CONDAO', 4, 'Đầm Trầu - tiễn khách', 'Nghỉ biển buổi sáng, mua đặc sản và ra sân bay.', 'Cơm đoàn');
+VALUES ('LTT_CONDAO_04', 'TM_CONDAO', 4, 'Đầm Trầu - tiễn khách', 'Nghỉ biển buổi sáng, mua đặc sản và ra sân bay.', 'Sáng: Buffet khách sạn | Trưa: Cơm đoàn | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MOCCHAU_02', 'TM_MOCCHAU', 2, 'Thác Dải Yếm - kết thúc', 'Tham quan thác, mua đặc sản sữa và về lại điểm đón.', 'Lẩu gà đen');
+VALUES ('LTT_MOCCHAU_02', 'TM_MOCCHAU', 2, 'Thác Dải Yếm - kết thúc', 'Tham quan thác, mua đặc sản sữa và về lại điểm đón.', 'Sáng: Buffet khách sạn | Trưa: Lẩu gà đen | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_QUYNHON_02', 'TM_QUYNHON', 2, 'Eo Gió - Tháp Đôi', 'Tham quan Eo Gió, Tháp Đôi và thưởng thức đặc sản địa phương.', 'Nem nướng, bánh xèo tôm nhảy');
+VALUES ('LTT_QUYNHON_02', 'TM_QUYNHON', 2, 'Eo Gió - Tháp Đôi', 'Tham quan Eo Gió, Tháp Đôi và thưởng thức đặc sản địa phương.', 'Sáng: Buffet khách sạn | Trưa: Nem nướng, bánh xèo tôm nhảy | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_QUYNHON_03', 'TM_QUYNHON', 3, 'Làng chài - tiễn khách', 'Trải nghiệm làng chài, mua đặc sản và kết thúc tour.', 'Cơm nhà hàng biển');
+VALUES ('LTT_QUYNHON_03', 'TM_QUYNHON', 3, 'Làng chài - tiễn khách', 'Trải nghiệm làng chài, mua đặc sản và kết thúc tour.', 'Sáng: Buffet khách sạn | Trưa: Cơm nhà hàng biển | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HOIAN_02', 'TM_HOIAN', 2, 'Mỹ Sơn - rừng dừa Bảy Mẫu', 'Tham quan Mỹ Sơn, đi thuyền thúng và ăn tối phố cổ.', 'Mì Quảng, bánh đập');
+VALUES ('LTT_HOIAN_02', 'TM_HOIAN', 2, 'Mỹ Sơn - rừng dừa Bảy Mẫu', 'Tham quan Mỹ Sơn, đi thuyền thúng và ăn tối phố cổ.', 'Sáng: Buffet khách sạn | Trưa: Mì Quảng, bánh đập | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HOIAN_03', 'TM_HOIAN', 3, 'Trà Quế - tiễn khách', 'Trải nghiệm làng rau, mua quà và kết thúc chương trình.', 'Cơm gà Hội An');
+VALUES ('LTT_HOIAN_03', 'TM_HOIAN', 3, 'Trà Quế - tiễn khách', 'Trải nghiệm làng rau, mua quà và kết thúc chương trình.', 'Sáng: Buffet khách sạn | Trưa: Cơm gà Hội An | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
 VALUES ('LTT_BMT_02', 'TM_BUONMATHUOT', 2, 'Thác Dray Nur - Buôn Đôn', 'Tham quan thác, tìm hiểu văn hóa Ê Đê và M''Nông.', 'Cơm lam, thịt nướng');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BMT_03', 'TM_BUONMATHUOT', 3, 'Làng cà phê - tiễn khách', 'Thưởng thức cà phê, mua quà và ra sân bay.', 'Bún đỏ Buôn Ma Thuột');
+VALUES ('LTT_BMT_03', 'TM_BUONMATHUOT', 3, 'Làng cà phê - tiễn khách', 'Thưởng thức cà phê, mua quà và ra sân bay.', 'Sáng: Buffet khách sạn | Trưa: Bún đỏ Buôn Ma Thuột | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PULUONG_02', 'TM_PULUONG', 2, 'Hiêu - kết thúc', 'Đi bộ nhẹ ra thác Hiêu, ăn trưa và về lại Hà Nội.', 'Cơm bản');
+VALUES ('LTT_PULUONG_02', 'TM_PULUONG', 2, 'Hiêu - kết thúc', 'Đi bộ nhẹ ra thác Hiêu, ăn trưa và về lại Hà Nội.', 'Sáng: Buffet khách sạn | Trưa: Cơm bản | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MUINE_02', 'TM_MUINE', 2, 'Bàu Trắng - Suối Tiên', 'Ngắm bình minh Bàu Trắng, tham quan Suối Tiên và nghỉ biển.', 'Hải sản nướng');
+VALUES ('LTT_MUINE_02', 'TM_MUINE', 2, 'Bàu Trắng - Suối Tiên', 'Ngắm bình minh Bàu Trắng, tham quan Suối Tiên và nghỉ biển.', 'Sáng: Buffet khách sạn | Trưa: Hải sản nướng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_MUINE_03', 'TM_MUINE', 3, 'Phan Thiết - tiễn khách', 'Tham quan lầu Ông Hoàng, mua đặc sản và kết thúc tour.', 'Lẩu thả Phan Thiết');
+VALUES ('LTT_MUINE_03', 'TM_MUINE', 3, 'Phan Thiết - tiễn khách', 'Tham quan lầu Ông Hoàng, mua đặc sản và kết thúc tour.', 'Sáng: Buffet khách sạn | Trưa: Lẩu thả Phan Thiết | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_01', 'TM_HAGIANG', 1, 'Hà Nội - Quản Bạ', 'Di chuyển lên Hà Giang, nhận phòng và tham quan cổng trời Quản Bạ.', 'Thắng cố, rau cải mèo');
+VALUES ('LTT_HAGIANG_01', 'TM_HAGIANG', 1, 'Hà Nội - Quản Bạ', 'Di chuyển lên Hà Giang, nhận phòng và tham quan cổng trời Quản Bạ.', 'Sáng: Buffet khách sạn | Trưa: Thắng cố, rau cải mèo | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_02', 'TM_HAGIANG', 2, 'Yên Minh - Đồng Văn', 'Tham quan rừng thông Yên Minh, dinh vua Mèo và phố cổ Đồng Văn.', 'Lẩu gà đen');
+VALUES ('LTT_HAGIANG_02', 'TM_HAGIANG', 2, 'Yên Minh - Đồng Văn', 'Tham quan rừng thông Yên Minh, dinh vua Mèo và phố cổ Đồng Văn.', 'Sáng: Buffet khách sạn | Trưa: Lẩu gà đen | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_03', 'TM_HAGIANG', 3, 'Mã Pì Lèng - Mèo Vạc', 'Đi cung đường Mã Pì Lèng, sông Nho Quế và chợ phiên địa phương.', 'Cơm lam, thịt lợn cắp nách');
+VALUES ('LTT_HAGIANG_03', 'TM_HAGIANG', 3, 'Mã Pì Lèng - Mèo Vạc', 'Đi cung đường Mã Pì Lèng, sông Nho Quế và chợ phiên địa phương.', 'Sáng: Buffet khách sạn | Trưa: Cơm lam, thịt lợn cắp nách | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_HAGIANG_04', 'TM_HAGIANG', 4, 'Mèo Vạc - Hà Nội', 'Mua đặc sản, trả phòng và về lại Hà Nội.', 'Phở chua Hà Giang');
+VALUES ('LTT_HAGIANG_04', 'TM_HAGIANG', 4, 'Mèo Vạc - Hà Nội', 'Mua đặc sản, trả phòng và về lại Hà Nội.', 'Sáng: Buffet khách sạn | Trưa: Phở chua Hà Giang | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_01', 'TM_PHUQUOC', 1, 'Dương Đông - Bãi Trường', 'Đón khách, nhận phòng và ngắm hoàng hôn trên Bãi Trường.', 'Gỏi cá trích');
+VALUES ('LTT_PHUQUOC_01', 'TM_PHUQUOC', 1, 'Dương Đông - Bãi Trường', 'Đón khách, nhận phòng và ngắm hoàng hôn trên Bãi Trường.', 'Sáng: Buffet khách sạn | Trưa: Gỏi cá trích | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_02', 'TM_PHUQUOC', 2, 'Nam Đảo - Hòn Thơm', 'Tham quan Nam Đảo, trải nghiệm cáp treo và bãi biển Hòn Thơm.', 'Hải sản nướng');
+VALUES ('LTT_PHUQUOC_02', 'TM_PHUQUOC', 2, 'Nam Đảo - Hòn Thơm', 'Tham quan Nam Đảo, trải nghiệm cáp treo và bãi biển Hòn Thơm.', 'Sáng: Buffet khách sạn | Trưa: Hải sản nướng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_03', 'TM_PHUQUOC', 3, 'Rạch Vẹm - vườn tiêu', 'Tham quan Rạch Vẹm, vườn tiêu và cơ sở nước mắm truyền thống.', 'Bún quậy');
+VALUES ('LTT_PHUQUOC_03', 'TM_PHUQUOC', 3, 'Rạch Vẹm - vườn tiêu', 'Tham quan Rạch Vẹm, vườn tiêu và cơ sở nước mắm truyền thống.', 'Sáng: Buffet khách sạn | Trưa: Bún quậy | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PHUQUOC_04', 'TM_PHUQUOC', 4, 'Chợ Dương Đông - tiễn khách', 'Mua đặc sản, trả phòng và kết thúc tour.', 'Cơm gia đình');
+VALUES ('LTT_PHUQUOC_04', 'TM_PHUQUOC', 4, 'Chợ Dương Đông - tiễn khách', 'Mua đặc sản, trả phòng và kết thúc tour.', 'Sáng: Buffet khách sạn | Trưa: Cơm gia đình | Chiều: Trái cây nhẹ');
 
 INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
 VALUES ('DVT_SINGLE', 'Phụ thu phòng đơn', 'Phòng/đêm', 650000);
@@ -602,8 +618,8 @@ VALUES ('PC_QT_HDV01', 'TTT_QT', 'NV_HDV01', SYSTIMESTAMP - INTERVAL '3' DAY, 'D
 -- ------------------------------------------------------------
 -- 4. VOUCHER VA VI KHUYEN MAI
 -- ------------------------------------------------------------
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_EARLY10', 'EARLY-10', 'PHAN_TRAM', 10, 'Giảm 10% cho đơn đặt sớm', 100, 0, TRUNC(SYSDATE) - 30, TRUNC(SYSDATE) + 120, 'SAN_SANG');
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, MucGiamToiDa, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
+VALUES ('VC_EARLY10', 'EARLY-10', 'PHAN_TRAM', 10, 500000, 'Giảm 10% cho đơn đặt sớm', 100, 0, TRUNC(SYSDATE) - 30, TRUNC(SYSDATE) + 120, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
 VALUES ('VC_GREEN500', 'GREEN-500', 'SO_TIEN', 500000, 'Đổi điểm xanh lấy voucher 500.000 VND', 50, 0, TRUNC(SYSDATE) - 15, TRUNC(SYSDATE) + 90, 'SAN_SANG');
@@ -614,8 +630,8 @@ VALUES ('VC_EXPIRED', 'EXPIRED', 'SO_TIEN', 300000, 'Voucher hết hạn để m
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
 VALUES ('VC_FAMILY700', 'FAMILY-700', 'SO_TIEN', 700000, 'Giảm cho nhóm gia đình từ 3 khách trở lên', 80, 0, TRUNC(SYSDATE) - 20, TRUNC(SYSDATE) + 150, 'SAN_SANG');
 
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_MEMBER15', 'MEMBER-15', 'PHAN_TRAM', 15, 'Ưu đãi 15% cho thành viên hạng vàng trở lên', 60, 0, TRUNC(SYSDATE) - 10, TRUNC(SYSDATE) + 120, 'SAN_SANG');
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, MucGiamToiDa, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
+VALUES ('VC_MEMBER15', 'MEMBER-15', 'PHAN_TRAM', 15, 750000, 'Ưu đãi 15% cho thành viên hạng vàng trở lên', 60, 0, TRUNC(SYSDATE) - 10, TRUNC(SYSDATE) + 120, 'SAN_SANG');
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
 VALUES ('VC_DIEMXANH800', 'DIEMXANH-800', 'SO_TIEN', 800000, 'Quy đổi 800 điểm xanh khi đặt tour', 40, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 120, 'SAN_SANG');
@@ -631,7 +647,7 @@ VALUES ('KH_03', 'VC_EARLY10', TRUNC(SYSDATE) + 60, SYSTIMESTAMP - INTERVAL '8' 
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
 VALUES ('KH_04', 'VC_EXPIRED', TRUNC(SYSDATE) - 1, SYSTIMESTAMP - INTERVAL '40' DAY, 'HET_HAN');
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
-VALUES ('KH_12', 'VC_FAMILY700', TRUNC(SYSDATE) + 90, SYSTIMESTAMP - INTERVAL '3' DAY, 'DA_SU_DUNG');
+VALUES ('KH_16', 'VC_FAMILY700', TRUNC(SYSDATE) + 90, SYSTIMESTAMP - INTERVAL '3' DAY, 'DA_SU_DUNG');
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
 VALUES ('KH_13', 'VC_MEMBER15', TRUNC(SYSDATE) + 80, SYSTIMESTAMP - INTERVAL '4' DAY, 'DA_SU_DUNG');
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
@@ -1061,7 +1077,7 @@ INSERT INTO NHATKYSUCO (MaNhatKySuCo, MaTourThucTe, MaNhanVienBaoCao, MoTa, Giai
 VALUES ('SC_CONDAO_TRANSPORT', 'TTT_CONDAO', 'NV_HDV02', 'Xe đưa đón chậm 20 phút do thời tiết.',
         'Thông báo khách, điều xe dự phòng và đổi lịch tham quan nhẹ.', 'THAP', 'PHUONG_TIEN', SYSTIMESTAMP - INTERVAL '40' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
-VALUES ('CP_CONDAO_WATER', 'TTT_CONDAO', 'NV_HDV02', 'Nước uống bổ sung tai ben tau', 240000, 'https://seed.local/hoa-don/condao-water.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '35' MINUTE);
+VALUES ('CP_CONDAO_WATER', 'TTT_CONDAO', 'NV_HDV02', 'Nước uống bổ sung tại bến tàu', 240000, 'https://seed.local/hoa-don/condao-water.jpg', 'CHO_DUYET', SYSTIMESTAMP - INTERVAL '35' MINUTE);
 INSERT INTO CHIPHITHUCTE (MaChiPhiThucTe, MaTourThucTe, MaNhanVien, DanhMuc, ThanhTien, HoaDonAnh, TrangThaiDuyet, NgayKhai)
 VALUES ('CP_CONDAO_TRANSFER', 'TTT_CONDAO', 'NV_HDV02', 'Xe trung chuyển dự phòng', 750000, 'https://seed.local/hoa-don/condao-transfer.jpg', 'DA_DUYET', SYSTIMESTAMP - INTERVAL '25' MINUTE);
 
@@ -1154,14 +1170,14 @@ VALUES ('GD_HOIAN_CHO', 'DDT_HOIAN_CHO', 'THANH_TOAN', 'CHUYEN_KHOAN', 14640000,
 
 -- Don dat tour co su dung voucher FAMILY-700.
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
-VALUES ('DDT_HOIAN_VOUCHER', 'TTT_HOIAN', 'KH_12', SYSTIMESTAMP - INTERVAL '4' HOUR, 9060000, 'CHO_XAC_NHAN',
+VALUES ('DDT_HOIAN_VOUCHER', 'TTT_HOIAN', 'KH_16', SYSTIMESTAMP - INTERVAL '4' HOUR, 9060000, 'CHO_XAC_NHAN',
         SYSTIMESTAMP + INTERVAL '1' DAY, 'Áp dụng voucher VC_FAMILY700: tiền tour 9.200.000, dịch vụ 560.000, giảm 700.000, tổng sau giảm 9.060.000.', 'HDX_LOCAL:1');
 
 INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
 VALUES ('NDH_HOIAN_VOUCHER_01', 'DDT_HOIAN_VOUCHER', 'Trịnh Hoàng Phúc', '079299000219', '0922000219', DATE '1995-01-24', 'NAM', NULL);
 
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
-VALUES ('CTDT_HOIAN_VOUCHER_KH', 'DDT_HOIAN_VOUCHER', 'KH_12', NULL, 'NGUOI_DAT', 4600000);
+VALUES ('CTDT_HOIAN_VOUCHER_KH', 'DDT_HOIAN_VOUCHER', 'KH_16', NULL, 'NGUOI_DAT', 4600000);
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_HOIAN_VOUCHER_NDH1', 'DDT_HOIAN_VOUCHER', NULL, 'NDH_HOIAN_VOUCHER_01', 'NGUOI_DONG_HANH', 4600000);
 
@@ -2869,10 +2885,10 @@ INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDo
 
 -- Voucher bo sung: tao master, vi khach hang, lich su ap dung va dong bo tong tien/giao dich.
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_FAMILY1M', 'OPEN-FAMILY-1M', 'SO_TIEN', 1000000, 'Giảm 1.000.000 cho nhóm gia đình từ 4 khách trong giai đoạn mở bán', 120, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_SUMMER8', 'OPEN-SUMMER-8', 'PHAN_TRAM', 8, 'Giảm 8% cho tour biển, đảo và miền Trung đặt trước 60 ngày', 150, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 210, 'SAN_SANG');
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, MucGiamToiDa, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_SUMMER8', 'OPEN-SUMMER-8', 'PHAN_TRAM', 8, 600000, 'Giảm 8% cho tour biển, đảo và miền Trung đặt trước 60 ngày', 150, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 210, 'SAN_SANG');
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_GREEN600', 'OPEN-GREEN-600', 'SO_TIEN', 600000, 'Giảm 600.000 cho khách cam kết tối thiểu một hành động xanh', 100, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_COUPLE500', 'OPEN-COUPLE-500', 'SO_TIEN', 500000, 'Giảm 500.000 cho đơn hai khách', 90, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 160, 'SAN_SANG');
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_LOCAL5', 'OPEN-LOCAL-5', 'PHAN_TRAM', 5, 'Giảm 5% cho tour có trải nghiệm cộng đồng địa phương', 110, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, MucGiamToiDa, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_LOCAL5', 'OPEN-LOCAL-5', 'PHAN_TRAM', 5, 300000, 'Giảm 5% cho tour có trải nghiệm cộng đồng địa phương', 110, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai) VALUES ('VC_OPEN_PREMIUM2M', 'OPEN-PREMIUM-2M', 'SO_TIEN', 2000000, 'Giảm 2.000.000 cho đơn trên 25.000.000 của khách hạng cao', 40, 0, TRUNC(SYSDATE) - 7, TRUNC(SYSDATE) + 180, 'SAN_SANG');
 
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai) VALUES ('KH_01', 'VC_OPEN_FAMILY1M', TRUNC(SYSDATE) + 120, SYSTIMESTAMP - INTERVAL '6' DAY, 'DA_SU_DUNG');
@@ -3126,13 +3142,13 @@ DECLARE
 BEGIN
     -- TTT_HAGIANG_OPEN_03: da co 3/22 khach, bo sung 19 khach => full 22/22.
     them_don_day_cho('DDT_HG_FULL_01', 'TTT_HAGIANG_OPEN_03', 'KH_10', 5, 6500000, 'DVT_HAGIANG_MOTOR', 5, 700000, 'CHUYEN_KHOAN', 'Nhóm bạn trekking Hà Giang, yêu cầu xe máy có lái bản địa cho toàn bộ khách.', 'HDX_TREE:3;HDX_REFILL:5', 6);
-    them_don_day_cho('DDT_HG_FULL_02', 'TTT_HAGIANG_OPEN_03', 'KH_11', 5, 6500000, 'DVT_INSURANCE', 5, 120000, 'THE_NOI_DIA', 'Gia đình đặt sớm, cần bảo hiểm du lịch và phòng nghỉ tầng thấp khi có thể.', 'HDX_TREE:2;HDX_LOCAL_MEAL:5', 5);
+    them_don_day_cho('DDT_HG_FULL_02', 'TTT_HAGIANG_OPEN_03', 'KH_17', 5, 6500000, 'DVT_INSURANCE', 5, 120000, 'THE_NOI_DIA', 'Gia đình đặt sớm, cần bảo hiểm du lịch và phòng nghỉ tầng thấp khi có thể.', 'HDX_TREE:2;HDX_LOCAL_MEAL:5', 5);
     them_don_day_cho('DDT_HG_FULL_03', 'TTT_HAGIANG_OPEN_03', 'KH_12', 5, 6500000, 'DVT_HAGIANG_MOTOR', 5, 700000, 'VI_DIEN_TU', 'Nhóm khách trẻ muốn đi cung Đồng Văn - Mèo Vạc, đã gửi danh sách căn cước.', 'HDX_REFILL:5', 4);
     them_don_day_cho('DDT_HG_FULL_04', 'TTT_HAGIANG_OPEN_03', 'KH_13', 4, 6500000, 'DVT_INSURANCE', 4, 120000, 'CHUYEN_KHOAN', 'Bốn khách đi nghỉ lễ, yêu cầu xác nhận ghế xe cạnh nhau.', 'HDX_TREE:1;HDX_REUSABLE_BAG:4', 3);
 
     -- TTT_CONDAO_OPEN_03: da co 2/20 khach, bo sung 18 khach => full 20/20.
     them_don_day_cho('DDT_CD_FULL_01', 'TTT_CONDAO_OPEN_03', 'KH_14', 5, 8850000, 'DVT_CONDAO_TURTLE', 5, 520000, 'THE_QUOC_TE', 'Nhóm gia đình quan tâm hoạt động bảo tồn rùa biển, cần phòng gần nhau.', 'HDX_CLEANUP:5;HDX_CORAL_SAFE:5', 6);
-    them_don_day_cho('DDT_CD_FULL_02', 'TTT_CONDAO_OPEN_03', 'KH_15', 5, 8850000, 'DVT_INSURANCE', 5, 120000, 'CHUYEN_KHOAN', 'Nhóm công ty nhỏ đặt trọn gói, yêu cầu xuất hóa đơn sau thanh toán.', 'HDX_CLEANUP:3', 5);
+    them_don_day_cho('DDT_CD_FULL_02', 'TTT_CONDAO_OPEN_03', 'KH_18', 5, 8850000, 'DVT_INSURANCE', 5, 120000, 'CHUYEN_KHOAN', 'Nhóm công ty nhỏ đặt trọn gói, yêu cầu xuất hóa đơn sau thanh toán.', 'HDX_CLEANUP:3', 5);
     them_don_day_cho('DDT_CD_FULL_03', 'TTT_CONDAO_OPEN_03', 'KH_01', 4, 8850000, 'DVT_CONDAO_TURTLE', 4, 520000, 'VI_DIEN_TU', 'Bốn khách nghỉ dưỡng biển, ưu tiên lịch trình nhẹ và bữa tối hải sản.', 'HDX_CORAL_SAFE:4', 4);
     them_don_day_cho('DDT_CD_FULL_04', 'TTT_CONDAO_OPEN_03', 'KH_02', 4, 8850000, 'DVT_INSURANCE', 4, 120000, 'THE_NOI_DIA', 'Nhóm bạn đã thanh toán đủ, cần hỗ trợ check-in online trước ngày bay.', 'HDX_CLEANUP:2;HDX_REFILL:4', 3);
 
@@ -3334,8 +3350,8 @@ VALUES ('HDX_BSLK_NOPLASTIC', 'Không sử dụng túi nhựa dùng một lần 
 
 INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
 VALUES ('VC_BSLK_GROUP900', 'BSLK-GROUP-900', 'SO_TIEN', 900000, 'Giảm cho nhóm từ bốn khách trở lên trong cụm dữ liệu liên kết', 30, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 180, 'SAN_SANG');
-INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
-VALUES ('VC_BSLK_GREEN12', 'BSLK-GREEN-12', 'PHAN_TRAM', 12, 'Ưu đãi khách có điểm xanh và chọn hành động xanh khi đặt tour', 25, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 150, 'SAN_SANG');
+INSERT INTO VOUCHER (MaVoucher, MaCode, LoaiUuDai, GiaTriGiam, MucGiamToiDa, DieuKienApDung, SoLuotPhatHanh, SoLuotDaDung, NgayHieuLuc, NgayHetHan, TrangThai)
+VALUES ('VC_BSLK_GREEN12', 'BSLK-GREEN-12', 'PHAN_TRAM', 12, 700000, 'Ưu đãi khách có điểm xanh và chọn hành động xanh khi đặt tour', 25, 0, TRUNC(SYSDATE) - 5, TRUNC(SYSDATE) + 150, 'SAN_SANG');
 
 INSERT INTO KHUYENMAI_KH (MaKhachHang, MaVoucher, NgayHetHan, NgayNhan, TrangThai)
 VALUES ('KH_05', 'VC_BSLK_GROUP900', TRUNC(SYSDATE) + 90, SYSTIMESTAMP - INTERVAL '2' DAY, 'DA_SU_DUNG');
@@ -3560,25 +3576,25 @@ Không bao gồm:
 - VAT và tips', 2, 3400000, 0, 0);
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PN_NEW_01', 'TM_PHONGNHA', 1, 'Đồng Hới - Phong Nha - sông Son', 'Đón khách, di chuyển về Phong Nha, đi thuyền sông Son và nhận phòng nghỉ.', 'Cá sông Son, rau rừng, canh chua');
+VALUES ('LTT_PN_NEW_01', 'TM_PHONGNHA', 1, 'Đồng Hới - Phong Nha - sông Son', 'Đón khách, di chuyển về Phong Nha, đi thuyền sông Son và nhận phòng nghỉ.', 'Sáng: Buffet khách sạn | Trưa: Cá sông Son, rau rừng, canh chua | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PN_NEW_02', 'TM_PHONGNHA', 2, 'Động Thiên Đường - sông Chày', 'Tham quan động Thiên Đường, trải nghiệm tuyến sông Chày và hoạt động nhẹ ngoài trời.', 'Gà nướng, xôi nếp, rau luộc');
+VALUES ('LTT_PN_NEW_02', 'TM_PHONGNHA', 2, 'Động Thiên Đường - sông Chày', 'Tham quan động Thiên Đường, trải nghiệm tuyến sông Chày và hoạt động nhẹ ngoài trời.', 'Sáng: Buffet khách sạn | Trưa: Gà nướng, xôi nếp, rau luộc | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_PN_NEW_03', 'TM_PHONGNHA', 3, 'Làng địa phương - Đồng Hới', 'Gặp hộ dân làm sản phẩm thủ công, mua đặc sản và kết thúc chương trình.', 'Cháo canh Quảng Bình, bánh lọc');
+VALUES ('LTT_PN_NEW_03', 'TM_PHONGNHA', 3, 'Làng địa phương - Đồng Hới', 'Gặp hộ dân làm sản phẩm thủ công, mua đặc sản và kết thúc chương trình.', 'Sáng: Buffet khách sạn | Trưa: Cháo canh Quảng Bình, bánh lọc | Chiều: Trái cây nhẹ');
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CM_NEW_01', 'TM_CAMAU', 1, 'Cà Mau - chợ đêm - bờ kè', 'Đón khách, nhận phòng, tham quan chợ đêm và nghe giới thiệu văn hóa miền cực Nam.', 'Lẩu mắm, rau đồng');
+VALUES ('LTT_CM_NEW_01', 'TM_CAMAU', 1, 'Cà Mau - chợ đêm - bờ kè', 'Đón khách, nhận phòng, tham quan chợ đêm và nghe giới thiệu văn hóa miền cực Nam.', 'Sáng: Buffet khách sạn | Trưa: Lẩu mắm, rau đồng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CM_NEW_02', 'TM_CAMAU', 2, 'Đất Mũi - cột mốc tọa độ', 'Đi tàu đến Đất Mũi, tham quan rừng ngập mặn và điểm cực Nam Tổ quốc.', 'Cua Cà Mau, cá thòi lòi nướng');
+VALUES ('LTT_CM_NEW_02', 'TM_CAMAU', 2, 'Đất Mũi - cột mốc tọa độ', 'Đi tàu đến Đất Mũi, tham quan rừng ngập mặn và điểm cực Nam Tổ quốc.', 'Sáng: Buffet khách sạn | Trưa: Cua Cà Mau, cá thòi lòi nướng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CM_NEW_03', 'TM_CAMAU', 3, 'Rừng U Minh - trải nghiệm cộng đồng', 'Tham quan rừng tràm, nghe kể chuyện nghề gác kèo ong và dùng bữa tại hộ dân.', 'Cá lóc nướng trui, mật ong rừng');
+VALUES ('LTT_CM_NEW_03', 'TM_CAMAU', 3, 'Rừng U Minh - trải nghiệm cộng đồng', 'Tham quan rừng tràm, nghe kể chuyện nghề gác kèo ong và dùng bữa tại hộ dân.', 'Sáng: Buffet khách sạn | Trưa: Cá lóc nướng trui, mật ong rừng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_CM_NEW_04', 'TM_CAMAU', 4, 'Mua đặc sản - tiễn khách', 'Mua quà địa phương, tổng kết hành trình xanh và tiễn khách ra sân bay/bến xe.', 'Bún nước lèo, bánh tằm cay');
+VALUES ('LTT_CM_NEW_04', 'TM_CAMAU', 4, 'Mua đặc sản - tiễn khách', 'Mua quà địa phương, tổng kết hành trình xanh và tiễn khách ra sân bay/bến xe.', 'Sáng: Buffet khách sạn | Trưa: Bún nước lèo, bánh tằm cay | Chiều: Trái cây nhẹ');
 
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BB_NEW_01', 'TM_BABE', 1, 'Hà Nội - hồ Ba Bể - Pác Ngòi', 'Di chuyển lên Ba Bể, đi thuyền trên hồ, nhận homestay và ăn tối cùng gia đình địa phương.', 'Cá hồ nướng, lợn bản, rau rừng');
+VALUES ('LTT_BB_NEW_01', 'TM_BABE', 1, 'Hà Nội - hồ Ba Bể - Pác Ngòi', 'Di chuyển lên Ba Bể, đi thuyền trên hồ, nhận homestay và ăn tối cùng gia đình địa phương.', 'Sáng: Buffet khách sạn | Trưa: Cá hồ nướng, lợn bản, rau rừng | Chiều: Trái cây nhẹ');
 INSERT INTO LICHTRINHTOUR (MaLichTrinhTour, MaTourMau, NgayThu, HoatDong, MoTa, ThucDon)
-VALUES ('LTT_BB_NEW_02', 'TM_BABE', 2, 'Động Puông - Hà Nội', 'Tham quan động Puông, mua đặc sản, ăn trưa và về lại Hà Nội.', 'Xôi ngũ sắc, gà đồi');
+VALUES ('LTT_BB_NEW_02', 'TM_BABE', 2, 'Động Puông - Hà Nội', 'Tham quan động Puông, mua đặc sản, ăn trưa và về lại Hà Nội.', 'Sáng: Buffet khách sạn | Trưa: Xôi ngũ sắc, gà đồi | Chiều: Trái cây nhẹ');
 
 INSERT INTO DICHVUTHEM (MaDichVuThem, Ten, DonViTinh, DonGia)
 VALUES ('DVT_TMNEW_CAVE', 'Gói đèn đội đầu và thiết bị hang động', 'Khách', 220000);
@@ -3784,6 +3800,126 @@ INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDo
 VALUES ('NKHT_TMN_BB_CP', 'TK_HDV11', 'THEM', 'CHIPHITHUCTE_HDV', 'CP_TMN_BB_RAINCOAT', SYSTIMESTAMP - INTERVAL '80' MINUTE);
 INSERT INTO NHATKYHETHONG (MaNhatKyHeThong, MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong, ThoiGian)
 VALUES ('NKHT_TMN_PN_QT', 'TK_KT01', 'THEM', 'QUYETTOAN_KETOAN', 'QT_TMN_PN_DONE', SYSTIMESTAMP - NUMTODSINTERVAL(129, 'DAY'));
+
+-- ------------------------------------------------------------
+-- BỔ SUNG DỮ LIỆU NGHIỆP VỤ THỰC TẾ VÀ CHUẨN HOÁ NỘI DUNG
+-- ------------------------------------------------------------
+-- Hai tour đang chờ kích hoạt, chưa gửi yêu cầu phân công cho bất kỳ hướng dẫn viên nào.
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_CHOKH_CAMAU', 'TM_CAMAU', TRUNC(SYSDATE) + 435, 7100000, 22, 8, 22, 'CHO_KICH_HOAT');
+INSERT INTO TOURTHUCTE (MaTourThucTe, MaTourMau, NgayKhoiHanh, GiaHienHanh, SoKhachToiDa, SoKhachToiThieu, ChoConLai, TrangThai)
+VALUES ('TTT_CHOKH_BABE', 'TM_BABE', TRUNC(SYSDATE) + 442, 4680000, 20, 6, 20, 'CHO_KICH_HOAT');
+
+-- Đơn đã thanh toán thành công nhưng đang chờ nhân viên xác nhận đối soát.
+INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan, GhiChu, HanhDongXanh)
+VALUES ('DDT_XN_TTTC_DALAT', 'TTT_BSLK_OPEN_FAM', 'KH_15', SYSTIMESTAMP - INTERVAL '6' HOUR,
+        4500000, 'CHO_XAC_NHAN', SYSTIMESTAMP + INTERVAL '2' DAY,
+        'Yêu cầu xuất hóa đơn điện tử và hỗ trợ giờ tập trung trễ 15 phút.', 'HDX_BSLK_NOPLASTIC:1');
+INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
+VALUES ('CTDT_XN_TTTC_DALAT_KH', 'DDT_XN_TTTC_DALAT', 'KH_15', NULL, 'NGUOI_DAT', 4500000);
+INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
+VALUES ('GD_XN_TTTC_DALAT', 'DDT_XN_TTTC_DALAT', 'THANH_TOAN', 'CHUYEN_KHOAN', 4500000,
+        'NGAN-HANG-XAC-NHAN-001', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '5' HOUR);
+
+-- Mỗi ngày lưu timeline trong trường HoatDong, mỗi dòng gồm thời gian và hoạt động tương ứng.
+UPDATE LICHTRINHTOUR
+SET HoatDong = CASE MOD(ORA_HASH(MaLichTrinhTour), 3)
+    WHEN 0 THEN '06:30 - Dùng bữa sáng và chuẩn bị cho lịch trình trong ngày.'
+        || CHR(10) || '08:00 - ' || RTRIM(TRIM(MoTa), '.')
+        || CHR(10) || '11:30 - Dùng bữa trưa theo thực đơn của chương trình.'
+        || CHR(10) || '14:00 - Khám phá cảnh quan thiên nhiên và tìm hiểu nét đặc trưng của điểm đến.'
+        || CHR(10) || '18:30 - Nghỉ ngơi tại nơi lưu trú hoặc điểm dừng chân đã bố trí.'
+    WHEN 1 THEN '07:00 - Tập trung, kiểm tra hành lý và bắt đầu lịch trình trong ngày.'
+        || CHR(10) || '08:30 - ' || RTRIM(TRIM(MoTa), '.')
+        || CHR(10) || '12:00 - Dùng bữa trưa theo thực đơn của chương trình.'
+        || CHR(10) || '14:30 - Trải nghiệm cảnh quan và văn hóa địa phương theo hành trình.'
+        || CHR(10) || '19:00 - Về nơi lưu trú, nghỉ ngơi và chuẩn bị cho ngày tiếp theo.'
+    ELSE '06:45 - Dùng bữa sáng và nghe hướng dẫn lịch trình trong ngày.'
+        || CHR(10) || '09:00 - ' || RTRIM(TRIM(MoTa), '.')
+        || CHR(10) || '11:45 - Thưởng thức bữa trưa với món ăn đặc trưng địa phương.'
+        || CHR(10) || '15:00 - Tham quan bổ sung và tìm hiểu cảnh quan thiên nhiên tại điểm đến.'
+        || CHR(10) || '18:00 - Nhận phòng hoặc nghỉ ngơi tại điểm dừng chân theo chương trình.'
+    END,
+    MoTa = NULL;
+
+-- Mỗi ngày bắt buộc có nhiều mốc giờ hoạt động đúng định dạng timeline.
+DECLARE
+    v_so_lich_trinh_thieu_moc_gio NUMBER;
+BEGIN
+    SELECT COUNT(*)
+      INTO v_so_lich_trinh_thieu_moc_gio
+      FROM LICHTRINHTOUR
+     WHERE REGEXP_COUNT(HoatDong, '(^|' || CHR(10) || ')([01][0-9]|2[0-3]):[0-5][0-9] - ') < 2;
+
+    IF v_so_lich_trinh_thieu_moc_gio > 0 THEN
+        RAISE_APPLICATION_ERROR(-20024, 'Có lịch trình chưa đủ ít nhất hai mốc giờ hoạt động trong ngày.');
+    END IF;
+END;
+/
+
+-- Ghi chú cấp đơn chỉ lưu các yêu cầu vận hành chung, không gắn thông tin riêng của hành khách.
+UPDATE DONDATTOUR
+SET GhiChu = CASE MOD(ORA_HASH(MaDatTour), 5)
+    WHEN 0 THEN NULL
+    WHEN 1 THEN 'Yêu cầu in hóa đơn điện tử sau khi hoàn tất thanh toán.'
+    WHEN 2 THEN 'Mang theo hành lý lớn, cần hỗ trợ sắp xếp khoang chứa đồ.'
+    WHEN 3 THEN 'Hỗ trợ giờ tập trung trễ 15 phút so với lịch đón ban đầu.'
+    ELSE 'Yêu cầu nhắc lại điểm tập trung và số điện thoại điều phối trước ngày khởi hành.'
+END;
+
+-- Chuẩn hoá mô tả chuyên môn của hướng dẫn viên theo khả năng phục vụ tour.
+UPDATE NANGLUCNHANVIEN
+SET ChuyenMon = CASE MaNhanVien
+    WHEN 'NV_HDV01' THEN 'Chuyên thuyết minh lịch sử - văn hóa: Có khả năng kể chuyện hấp dẫn về di tích, lịch sử, phong tục và đời sống địa phương.'
+    WHEN 'NV_HDV02' THEN 'Chuyên chăm sóc khách gia đình: Biết cách hỗ trợ đoàn có trẻ em, người lớn tuổi và khách cần sự quan tâm đặc biệt.'
+    WHEN 'NV_HDV03' THEN 'Chuyên thuyết minh lịch sử - văn hóa: Am hiểu di sản miền Trung, văn hóa Chăm và đời sống địa phương.'
+    WHEN 'NV_HDV04' THEN 'Chuyên chăm sóc khách gia đình: Biết cách hỗ trợ đoàn nghỉ dưỡng có trẻ em, người lớn tuổi và khách cần sự quan tâm đặc biệt.'
+    WHEN 'NV_HDV05' THEN 'Chuyên thuyết minh lịch sử - văn hóa: Am hiểu kiến trúc, di tích và phục vụ đoàn trải nghiệm cao cấp.'
+    WHEN 'NV_HDV06' THEN 'Chuyên tour học sinh - sinh viên: Biết cách truyền đạt dễ hiểu, tổ chức hoạt động tập thể và quản lý đoàn trẻ.'
+    WHEN 'NV_HDV07' THEN 'Chuyên dẫn tour mạo hiểm: Có kinh nghiệm hỗ trợ khách trong các hoạt động như leo núi, trekking, chèo thuyền và cắm trại.'
+    WHEN 'NV_HDV08' THEN 'Chuyên chăm sóc đoàn doanh nghiệp: Thành thạo tổ chức lịch trình sự kiện, hội họp và yêu cầu dịch vụ theo đoàn.'
+    WHEN 'NV_HDV09' THEN 'Chuyên dẫn tour sinh thái: Am hiểu thiên nhiên, rừng, biển, hệ sinh thái và các hoạt động bảo vệ môi trường.'
+    WHEN 'NV_HDV10' THEN 'Chuyên dẫn tour sinh thái: Am hiểu thiên nhiên, sông nước, đời sống địa phương và bảo vệ môi trường.'
+    WHEN 'NV_HDV11' THEN 'Chuyên dẫn tour biển đảo và di sản: Có kinh nghiệm hỗ trợ hoạt động biển, tham quan văn hóa và chăm sóc đoàn gia đình.'
+    WHEN 'NV_HDV12' THEN 'Chuyên dẫn tour sinh thái sông nước: Am hiểu rừng ngập mặn, chợ nổi, đường thủy và du lịch cộng đồng bền vững.'
+    ELSE ChuyenMon
+END;
+
+-- Bảo đảm mọi tour mẫu có lịch trình đủ từ ngày 1 đến đúng thời lượng đã công bố.
+DECLARE
+    v_so_tour_thieu_lich_trinh NUMBER;
+BEGIN
+    SELECT COUNT(*)
+      INTO v_so_tour_thieu_lich_trinh
+      FROM TOURMAU tm
+     WHERE (SELECT COUNT(DISTINCT lt.NgayThu) FROM LICHTRINHTOUR lt WHERE lt.MaTourMau = tm.MaTourMau) <> tm.ThoiLuong
+        OR (SELECT MIN(lt.NgayThu) FROM LICHTRINHTOUR lt WHERE lt.MaTourMau = tm.MaTourMau) <> 1
+        OR (SELECT MAX(lt.NgayThu) FROM LICHTRINHTOUR lt WHERE lt.MaTourMau = tm.MaTourMau) <> tm.ThoiLuong;
+
+    IF v_so_tour_thieu_lich_trinh > 0 THEN
+        RAISE_APPLICATION_ERROR(-20022, 'Có tour mẫu chưa đủ lịch trình theo thời lượng.');
+    END IF;
+END;
+/
+
+-- Kiểm tra một khách hàng không xuất hiện ở hai đơn thuộc cùng một tour thực tế.
+DECLARE
+    v_so_khach_trung NUMBER;
+BEGIN
+    SELECT COUNT(*)
+      INTO v_so_khach_trung
+      FROM (
+          SELECT MaTourThucTe, MaKhachHang
+            FROM DONDATTOUR
+           GROUP BY MaTourThucTe, MaKhachHang
+          HAVING COUNT(*) > 1
+      );
+
+    IF v_so_khach_trung > 0 THEN
+        RAISE_APPLICATION_ERROR(-20023, 'Có khách hàng bị lặp lại trong cùng một tour thực tế.');
+    END IF;
+END;
+/
 
 -- Tính lại số chỗ còn lại sau toàn bộ cụm dữ liệu bổ sung.
 UPDATE CHITIETDATTOUR

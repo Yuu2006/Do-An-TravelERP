@@ -43,6 +43,7 @@ class VoucherAdminControllerIntegrationTest {
                   "maCode": "%s",
                   "loaiUuDai": "PHAN_TRAM",
                   "giaTriGiam": 10,
+                  "mucGiamToiDa": 500000,
                   "dieuKienApDung": "Test API persistence",
                   "soLuotPhatHanh": 5,
                   "ngayHieuLuc": "2026-06-01",

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.BoSungRequest;
+import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
 import com.digitaltravel.erp.dto.requests.NangLucRequest;
 import com.digitaltravel.erp.dto.requests.XuLyHoTroRequest;
@@ -337,8 +338,11 @@ public class NhanVienController {
             @Valid @RequestBody BoSungQuyetToanRequest request,
             @AuthenticationPrincipal TaiKhoanDetails user) {
         return ResponseEntity.ok(ApiResponse.ok("Da gui bo sung quyet toan den admin",
-                quyetToanService.hdvBoSungQuyetToan(
-                        user.getTaiKhoan().getMaTaiKhoan(), maQuyetToan, request)));
+                quyetToanService.hdvBoSung(
+                        user.getTaiKhoan().getMaTaiKhoan(),
+                        maQuyetToan,
+                        request.getGhiChu(),
+                        request.getHoaDonAnh())));
     }
 
     // ──────────────── UC63: Năng lực & Hồ sơ HDV ───────────────────────────

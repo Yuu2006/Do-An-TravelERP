@@ -58,6 +58,7 @@ class VoucherServiceTest {
         VoucherRequest request = taoRequest("SUMMER10", "PHAN_TRAM", BigDecimal.TEN,
                 "Ap dung cho don hang tu 1 trieu", 100,
                 LocalDate.of(2026, 6, 1), LocalDate.of(2026, 6, 30));
+        setField(request, "mucGiamToiDa", BigDecimal.valueOf(500_000));
         when(voucherRepository.findByMaCode("SUMMER10")).thenReturn(Optional.empty());
         when(voucherRepository.findMaxVoucherNumber()).thenReturn(0);
         when(voucherRepository.save(any(Voucher.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -72,6 +73,8 @@ class VoucherServiceTest {
         assertEquals("SUMMER10", saved.getMaCode());
         assertEquals("PHAN_TRAM", response.getLoaiUuDai());
         assertEquals(BigDecimal.TEN, response.getGiaTriGiam());
+        assertEquals(BigDecimal.valueOf(500_000), response.getMucGiamToiDa());
+        assertEquals(100_000L, response.getDiemCanDoi());
         assertEquals(100, response.getSoLuotPhatHanh());
         assertEquals(0, response.getSoLuotDaDung());
         assertEquals("SAN_SANG", response.getTrangThai());

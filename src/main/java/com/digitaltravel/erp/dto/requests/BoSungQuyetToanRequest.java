@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class BoSungQuyetToanRequest {
-    @NotBlank(message = "Ghi chú không được để trống")
+    @NotBlank(message = "Ghi chú bổ sung không được để trống")
     @Size(max = 4000)
     private String ghiChu;
 
-    @Size(max = 1000)
+    @Size(max = 2000)
     private String hoaDonAnh;
 }

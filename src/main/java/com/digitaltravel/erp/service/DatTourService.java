@@ -680,7 +680,8 @@ public class DatTourService {
             parts.add(ghiChuYTe);
         }
         if (diUng != null && !diUng.isBlank()) {
-            parts.add("Dị ứng: " + diUng);
+            String allergy = diUng.trim();
+            parts.add("Dị ứng " + Character.toLowerCase(allergy.charAt(0)) + allergy.substring(1));
         }
         return String.join(" | ", parts);
     }

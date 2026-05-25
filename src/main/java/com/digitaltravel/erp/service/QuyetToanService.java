@@ -36,7 +36,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QuyetToanService {
 
-    private static final DateTimeFormatter NOTE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String YEU_CAU_BO_SUNG_MARKER = "[Yêu cầu bổ sung quyết toán";
+    private static final String HDV_BO_SUNG_MARKER = "[HDV bổ sung quyết toán";
 
     private final QuyetToanRepository quyetToanRepository;
     private final TourThucTeRepository tourThucTeRepository;
@@ -155,49 +156,49 @@ public class QuyetToanService {
     }
 
     @Transactional
-    public QuyetToanResponse yeuCauHdvBoSung(String maQuyetToan, String ghiChu) {
+    public QuyetToanResponse yeuCauBoSung(String maQuyetToan, String noiDung) {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));
         if ("DA_QUYET_TOAN".equals(qt.getTrangThai())) {
             throw AppException.badRequest("Quyết toán đã bị chốt, không thể yêu cầu bổ sung.");
         }
 
-        String timestamp = LocalDateTime.now().format(NOTE_TIME_FORMAT);
-        qt.setGhiChu(appendNote(qt.getGhiChu(),
-                "[Yêu cầu bổ sung quyết toán lúc " + timestamp + "]:\n" + ghiChu));
+        qt.setGhiChu(noiGhiChuMoi(qt.getGhiChu(), YEU_CAU_BO_SUNG_MARKER, noiDung));
+        qt.setNgayQuyetToan(LocalDateTime.now());
         quyetToanRepository.save(qt);
         return toResponse(qt);
     }
 
     @Transactional(readOnly = true)
     public List<QuyetToanResponse> danhSachCanBoSungCuaHdv(String maTaiKhoan) {
-        NhanVien hdv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
-        return quyetToanRepository.findCanBoSungByHdv(hdv.getMaNhanVien())
-                .stream()
+        return quyetToanRepository.findChuaQuyetToanTheoHdv(maTaiKhoan).stream()
+                .filter(qt -> dangChoHdvBoSung(qt.getGhiChu()))
                 .map(this::toResponse)
                 .toList();
     }
 
     @Transactional
-    public QuyetToanResponse hdvBoSungQuyetToan(String maTaiKhoan, String maQuyetToan, BoSungQuyetToanRequest req) {
-        NhanVien hdv = nhanVienRepository.findByMaTaiKhoan(maTaiKhoan)
-                .orElseThrow(() -> AppException.notFound("Không tìm thấy hồ sơ nhân viên"));
+    public QuyetToanResponse hdvBoSung(
+            String maTaiKhoan,
+            String maQuyetToan,
+            String ghiChu,
+            String hoaDonAnh) {
         QuyetToan qt = quyetToanRepository.findById(maQuyetToan)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay quyet toan: " + maQuyetToan));
-
-        boolean isAssignedGuide = qt.getTourThucTe() != null
-                && qt.getTourThucTe().getMaTourThucTe() != null
-                && quyetToanRepository.findCanBoSungByHdv(hdv.getMaNhanVien()).stream()
-                        .anyMatch(item -> item.getMaQuyetToan().equals(maQuyetToan));
-        if (!isAssignedGuide) {
+        if (!quyetToanRepository.findChuaQuyetToanTheoHdv(maTaiKhoan).stream()
+                .anyMatch(item -> item.getMaQuyetToan().equals(maQuyetToan))) {
             throw AppException.forbidden("Không có quyền bổ sung quyết toán này");
         }
+        if (!dangChoHdvBoSung(qt.getGhiChu())) {
+            throw AppException.badRequest("Quyết toán này không chờ hướng dẫn viên bổ sung.");
+        }
 
-        String timestamp = LocalDateTime.now().format(NOTE_TIME_FORMAT);
-        qt.setGhiChu(appendNote(qt.getGhiChu(),
-                "[HDV bổ sung quyết toán lúc " + timestamp + "]:\n" + req.getGhiChu()));
-        qt.setHoaDonAnh(req.getHoaDonAnh());
+        String noiDung = ghiChu;
+        if (hoaDonAnh != null && !hoaDonAnh.isBlank()) {
+            noiDung += "\nHóa đơn ảnh: " + hoaDonAnh.trim();
+        }
+        qt.setGhiChu(noiGhiChuMoi(qt.getGhiChu(), HDV_BO_SUNG_MARKER, noiDung));
+        qt.setNgayQuyetToan(LocalDateTime.now());
         quyetToanRepository.save(qt);
         return toResponse(qt);
     }
@@ -322,6 +323,22 @@ public class QuyetToanService {
         return list.stream()
                 .map(ChiPhiThucTe::getThanhTien)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private String noiGhiChuMoi(String ghiChuHienTai, String marker, String noiDung) {
+        String phanTruoc = ghiChuHienTai == null || ghiChuHienTai.isBlank()
+                ? ""
+                : ghiChuHienTai + "\n\n";
+        return phanTruoc + marker + " lúc " + LocalDateTime.now() + "]:\n" + noiDung.trim();
+    }
+
+    private boolean dangChoHdvBoSung(String ghiChu) {
+        if (ghiChu == null) {
+            return false;
+        }
+        int lanYeuCauCuoi = ghiChu.lastIndexOf(YEU_CAU_BO_SUNG_MARKER);
+        int lanBoSungCuoi = ghiChu.lastIndexOf(HDV_BO_SUNG_MARKER);
+        return lanYeuCauCuoi >= 0 && lanYeuCauCuoi > lanBoSungCuoi;
     }
 
     private QuyetToanResponse capNhatQT(QuyetToan qt, String maTour, QuyetToanRequest req, String maTaiKhoan) {

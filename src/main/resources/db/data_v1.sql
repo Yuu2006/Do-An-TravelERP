@@ -46,7 +46,7 @@ VALUES ('TK_SALES01', 'sales01',
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES ('TK_KT01', 'ketoan01',
         '$2a$10$BBvBS1dGLV8lLRIF47sbfukbnxchs/ZbP6Gdb.JI2H5UZSeHOMmkK',
-        'Lê Thị Thanh Tiền', '079099000004', DATE '1991-12-02', 'ketoan01@digitaltravel.vn', '0900000004',
+        'Lê Thị Minh Châu', '079099000004', DATE '1991-12-02', 'ketoan01@digitaltravel.vn', '0900000004',
         'KETOAN', 'HOAT_DONG');
 
 INSERT INTO TAIKHOAN (MaTaiKhoan, TenDangNhap, MatKhau, HoTen, CCCD, NgaySinh, Email, SoDienThoai, VaiTro, TrangThai)
@@ -147,34 +147,34 @@ VALUES ('NV_HDV10',    'TK_HDV10',    'HDV',       DATE '2023-07-01', 'HOAT_DONG
 -- 4. NANGLUCNHANVIEN — Đánh giá và năng lực
 -- ------------------------------------------------------------
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV01', 'NV_HDV01', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Lịch sử, Văn hóa, Ẩm thực', 4.8, 126);
+VALUES ('NLNV_HDV01', 'NV_HDV01', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Chuyên thuyết minh lịch sử - văn hóa: Có khả năng kể chuyện hấp dẫn về di tích, lịch sử, phong tục và đời sống địa phương.', 4.8, 126);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV02', 'NV_HDV02', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế', 'Mua sắm, Ẩm thực', 4.5, 89);
+VALUES ('NLNV_HDV02', 'NV_HDV02', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế', 'Chuyên chăm sóc khách gia đình: Biết cách hỗ trợ đoàn có trẻ em, người lớn tuổi và khách cần sự quan tâm đặc biệt.', 4.5, 89);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV03', 'NV_HDV03', 'Tiếng Anh, Tiếng Nhật', 'Thẻ HDV Quốc tế, Nghiệp vụ lữ hành', 'Di sản miền Trung, Văn hóa Chăm', 4.7, 102);
+VALUES ('NLNV_HDV03', 'NV_HDV03', 'Tiếng Anh, Tiếng Nhật', 'Thẻ HDV Quốc tế, Nghiệp vụ lữ hành', 'Chuyên thuyết minh lịch sử - văn hóa: Có khả năng kể chuyện hấp dẫn về di sản miền Trung, văn hóa Chăm và đời sống địa phương.', 4.7, 102);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV04', 'NV_HDV04', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Du lịch gia đình, Nghỉ dưỡng biển', 4.6, 94);
+VALUES ('NLNV_HDV04', 'NV_HDV04', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Quốc tế, Sơ cấp cứu', 'Chuyên chăm sóc khách gia đình: Biết cách hỗ trợ đoàn nghỉ dưỡng biển có trẻ em, người lớn tuổi và khách cần sự quan tâm đặc biệt.', 4.6, 94);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV05', 'NV_HDV05', 'Tiếng Anh, Tiếng Đức', 'Thẻ HDV Quốc tế', 'Lịch sử, Kiến trúc, Tour cao cấp', 4.9, 138);
+VALUES ('NLNV_HDV05', 'NV_HDV05', 'Tiếng Anh, Tiếng Đức', 'Thẻ HDV Quốc tế', 'Chuyên thuyết minh lịch sử - văn hóa: Am hiểu kiến trúc, di tích và biết phục vụ các đoàn trải nghiệm cao cấp.', 4.9, 138);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV06', 'NV_HDV06', 'Tiếng Anh, Tiếng Thái', 'Thẻ HDV Nội địa, Kỹ năng hoạt náo', 'Ẩm thực địa phương, Team building', 4.4, 76);
+VALUES ('NLNV_HDV06', 'NV_HDV06', 'Tiếng Anh, Tiếng Thái', 'Thẻ HDV Nội địa, Kỹ năng hoạt náo', 'Chuyên tour học sinh - sinh viên: Biết cách truyền đạt dễ hiểu, tổ chức hoạt động tập thể và quản lý đoàn trẻ.', 4.4, 76);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV07', 'NV_HDV07', 'Tiếng Anh, Tiếng Nga', 'Thẻ HDV Quốc tế, Cứu hộ du lịch', 'Du lịch mạo hiểm, Trekking, Sinh thái', 4.75, 117);
+VALUES ('NLNV_HDV07', 'NV_HDV07', 'Tiếng Anh, Tiếng Nga', 'Thẻ HDV Quốc tế, Cứu hộ du lịch', 'Chuyên dẫn tour mạo hiểm: Có kinh nghiệm hỗ trợ khách trong các hoạt động như leo núi, trekking, chèo thuyền và cắm trại.', 4.75, 117);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV08', 'NV_HDV08', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế, Nghiệp vụ chăm sóc khách hàng', 'MICE, Tour doanh nghiệp, Mua sắm', 4.55, 83);
+VALUES ('NLNV_HDV08', 'NV_HDV08', 'Tiếng Anh, Tiếng Trung', 'Thẻ HDV Quốc tế, Nghiệp vụ chăm sóc khách hàng', 'Chuyên chăm sóc đoàn doanh nghiệp: Thành thạo tổ chức lịch trình MICE, hỗ trợ sự kiện và yêu cầu dịch vụ theo đoàn.', 4.55, 83);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV09', 'NV_HDV09', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế', 'Văn hóa Tây Nguyên, Nhiếp ảnh du lịch', 4.65, 91);
+VALUES ('NLNV_HDV09', 'NV_HDV09', 'Tiếng Anh, Tiếng Pháp', 'Thẻ HDV Quốc tế', 'Chuyên dẫn tour sinh thái: Am hiểu thiên nhiên, rừng, cảnh quan Tây Nguyên và các hoạt động bảo vệ môi trường.', 4.65, 91);
 
 INSERT INTO NANGLUCNHANVIEN (MaNangLucNhanVien, MaNhanVien, NgonNgu, ChungChi, ChuyenMon, DanhGia, SoDanhGia)
-VALUES ('NLNV_HDV10', 'NV_HDV10', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Nội địa, Sơ cấp cứu', 'Du lịch xanh, Trải nghiệm cộng đồng', 4.5, 68);
+VALUES ('NLNV_HDV10', 'NV_HDV10', 'Tiếng Anh, Tiếng Hàn', 'Thẻ HDV Nội địa, Sơ cấp cứu', 'Chuyên dẫn tour sinh thái: Am hiểu thiên nhiên, hệ sinh thái và trải nghiệm cộng đồng gắn với bảo vệ môi trường.', 4.5, 68);
 
 COMMIT;
 -- ============================================================
