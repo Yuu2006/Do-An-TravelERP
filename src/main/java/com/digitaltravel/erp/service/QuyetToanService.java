@@ -66,6 +66,7 @@ public class QuyetToanService {
     }
 
     // ── UC48: Tính toán sơ bộ (xem trước, không lưu DB) ──────────────────
+    @Transactional(readOnly = true)
     public QuyetToanResponse tinhToan(String maTour) {
         TourThucTe tour = getKetThucTour(maTour);
         BigDecimal doanhThu = tinhDoanhThu(maTour);
