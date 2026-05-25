@@ -31,6 +31,8 @@ public class DonDatTourResponse {
     String trangThaiTour;
     LocalDateTime thoiGianHetHan;
     String ghiChu;
+    String maGiaoDich;
+    String phuongThuc;
     List<String> danhSachHanhDongXanh;
     Integer soNguoiLon;
     Integer soTreEm;

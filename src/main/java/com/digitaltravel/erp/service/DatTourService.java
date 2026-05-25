@@ -543,11 +543,14 @@ public class DatTourService {
                 .map(DatTourUuDai::getSoTienUuDai)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         DatTourUuDai uuDaiDauTien = dsUuDai.stream().findFirst().orElse(null);
-        boolean daBaoChuyenKhoan = giaoDichRepository.findByMaDatTour(don.getMaDatTour()).stream()
+        List<GiaoDich> dsGiaoDich = giaoDichRepository.findByMaDatTour(don.getMaDatTour());
+        boolean daBaoChuyenKhoan = dsGiaoDich.stream()
                 .findFirst()
                 .map(gd -> gd.getMaGDNH() != null
                         && gd.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN))
                 .orElse(false);
+        String maGiaoDich = dsGiaoDich.isEmpty() ? null : dsGiaoDich.getFirst().getMaGiaoDich();
+        String phuongThuc = dsGiaoDich.isEmpty() ? null : dsGiaoDich.getFirst().getPhuongThuc();
         return DonDatTourResponse.builder()
                 .maDatTour(don.getMaDatTour())
                 .maTourThucTe(ttt.getMaTourThucTe())
@@ -566,6 +569,8 @@ public class DatTourService {
                 .diemXanhDuKien(tinhDiemXanhDuKien(don.getHanhDongXanh()))
                 .trangThai(don.getTrangThai())
                 .daBaoChuyenKhoan(daBaoChuyenKhoan)
+                .maGiaoDich(maGiaoDich)
+                .phuongThuc(phuongThuc)
                 .trangThaiTour(ttt.getTrangThai())
                 .thoiGianHetHan(don.getThoiGianHetHan())
                 .ghiChu(don.getGhiChu())
