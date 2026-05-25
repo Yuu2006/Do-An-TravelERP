@@ -22,6 +22,9 @@ public class VoucherRequest {
     @DecimalMin(value = "0", message = "Giá trị giảm phải >= 0")
     BigDecimal giaTriGiam;
 
+    @DecimalMin(value = "0", inclusive = false, message = "Mức giảm tối đa phải > 0")
+    BigDecimal mucGiamToiDa;
+
     String dieuKienApDung;
 
     @NotNull(message = "Số lượt phát hành không được trống")
