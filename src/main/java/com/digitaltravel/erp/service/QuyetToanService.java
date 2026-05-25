@@ -2,9 +2,11 @@ package com.digitaltravel.erp.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
+import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -114,6 +116,7 @@ public class QuyetToanService {
         qt.setNgayQuyetToan(LocalDateTime.now());
         qt.setTrangThai("CHUA_QUYET_TOAN");
         qt.setGhiChu(req != null ? req.getGhiChu() : null);
+        qt.setHoaDonAnh(req != null ? req.getHoaDonAnh() : null);
         quyetToanRepository.save(qt);
 
         return toResponse(qt);
@@ -349,8 +352,17 @@ public class QuyetToanService {
         qt.setNgayQuyetToan(LocalDateTime.now());
         if (req != null && req.getGhiChu() != null)
             qt.setGhiChu(req.getGhiChu());
+        if (req != null && req.getHoaDonAnh() != null)
+            qt.setHoaDonAnh(req.getHoaDonAnh());
         quyetToanRepository.save(qt);
         return toResponse(qt);
+    }
+
+    private String appendNote(String current, String note) {
+        if (current == null || current.isBlank()) {
+            return note;
+        }
+        return current + "\n\n" + note;
     }
 
     private QuyetToanResponse toQuyetToanXemTruoc(TourThucTe tt) {
@@ -380,6 +392,7 @@ public class QuyetToanService {
                 .loiNhuan(qt.getLoiNhuan())
                 .trangThai(qt.getTrangThai())
                 .ghiChu(qt.getGhiChu())
+                .hoaDonAnh(qt.getHoaDonAnh())
                 .ngayQuyetToan(qt.getNgayQuyetToan())
                 .maNhanVien(nv.getMaNhanVien())
                 .tenNhanVien(nv.getTaiKhoan() != null ? nv.getTaiKhoan().getHoTen() : "")

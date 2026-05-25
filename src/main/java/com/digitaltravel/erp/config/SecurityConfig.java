@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -56,6 +57,20 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // Cho phép tất cả các ROLE nội bộ xem thông tin (GET) để phục vụ Dashboard và tra cứu chéo
+                        .requestMatchers(HttpMethod.GET, 
+                                "/api/kinh-doanh/khach-hang", 
+                                "/api/kinh-doanh/dat-tour", 
+                                "/api/kinh-doanh/dat-tour/**",
+                                "/api/san-pham/tour-thuc-te", 
+                                "/api/san-pham/tour-thuc-te/**", 
+                                "/api/dieu-hanh/tour-thuc-te",
+                                "/api/dieu-hanh/tour-thuc-te/**",
+                                "/api/san-pham/tour-mau", 
+                                "/api/san-pham/tour-mau/**", 
+                                "/api/huong-dan-vien/su-co",
+                                "/api/quan-tri/tai-khoan/**"
+                        ).hasAnyRole(ADMIN, SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV)
                         .requestMatchers("/api/quan-tri/**").hasRole(ADMIN)
                         .requestMatchers("/api/san-pham/**").hasAnyRole(ADMIN, SANPHAM)
                         .requestMatchers("/api/kinh-doanh/**").hasAnyRole(ADMIN, KINHDOANH)

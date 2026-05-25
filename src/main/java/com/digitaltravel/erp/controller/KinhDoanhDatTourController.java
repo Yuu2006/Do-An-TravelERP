@@ -32,7 +32,7 @@ public class KinhDoanhDatTourController {
     private final DatTourService datTourService;
 
     @GetMapping("/dat-tour")
-    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<Page<DonDatTourResponse>>> danhSachTatCa(
             @RequestParam(required = false) String trangThai,
             @RequestParam(required = false) String maTourThucTe,
@@ -41,7 +41,7 @@ public class KinhDoanhDatTourController {
     }
 
     @PutMapping("/dat-tour/{maDatTour}/xac-nhan")
-    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN', 'KETOAN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> xacNhanDon(
             @PathVariable String maDatTour,
             @AuthenticationPrincipal TaiKhoanDetails user,
@@ -51,7 +51,7 @@ public class KinhDoanhDatTourController {
     }
 
     @PutMapping("/dat-tour/{maDatTour}/tu-choi-thanh-toan")
-    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN', 'KETOAN')")
     public ResponseEntity<ApiResponse<DonDatTourResponse>> tuChoiThanhToan(@PathVariable String maDatTour) {
         return ResponseEntity.ok(ApiResponse.ok("Đã từ chối thanh toán cho đơn đặt tour " + maDatTour,
                 datTourService.tuChoiThanhToan(maDatTour)));

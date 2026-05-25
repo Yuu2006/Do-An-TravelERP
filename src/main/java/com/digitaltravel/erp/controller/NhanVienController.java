@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitaltravel.erp.config.TaiKhoanDetails;
+import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.BoSungRequest;
 import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
@@ -77,7 +78,7 @@ public class NhanVienController {
      * UC68 — Chi tiết nhân viên
      */
     @GetMapping("/api/quan-tri/nhan-vien/{maNhanVien}")
-    @PreAuthorize("hasAnyRole('DIEUHANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<NhanVienResponse>> chiTietNhanVien(
             @PathVariable String maNhanVien) {
         return ResponseEntity.ok(ApiResponse.ok(nhanVienService.chiTiet(maNhanVien)));
@@ -222,7 +223,7 @@ public class NhanVienController {
      * Tìm kiếm khách hàng cho kinh doanh.
      */
     @GetMapping("/api/kinh-doanh/khach-hang")
-    @PreAuthorize("hasAnyRole('KINHDOANH', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SANPHAM', 'KINHDOANH', 'DIEUHANH', 'KETOAN', 'HDV')")
     public ResponseEntity<ApiResponse<Page<HoChieuSoResponse>>> timKiemKhachHang(
             @RequestParam(required = false) String hoTen,
             @RequestParam(required = false) String email,
