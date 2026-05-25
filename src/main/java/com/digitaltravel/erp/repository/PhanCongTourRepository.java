@@ -58,6 +58,17 @@ public interface PhanCongTourRepository extends JpaRepository<PhanCongTour, Stri
             @Param("maTaiKhoan") String maTaiKhoan
     );
 
+    @Query("""
+            SELECT COUNT(pc) > 0 FROM PhanCongTour pc
+            WHERE pc.tourThucTe.MaTourThucTe = :maTour
+              AND pc.nhanVien.taiKhoan.MaTaiKhoan = :maTaiKhoan
+              AND pc.TrangThaiChapNhan <> 'TU_CHOI'
+            """)
+    boolean existsViewableByMaTourAndMaTaiKhoan(
+            @Param("maTour") String maTour,
+            @Param("maTaiKhoan") String maTaiKhoan
+    );
+
     // Tìm HDV khả dụng: không bị phân công trùng lịch theo toàn bộ thời lượng tour.
     @Query(value = """
             SELECT nv.MaNhanVien
