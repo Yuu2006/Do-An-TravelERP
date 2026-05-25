@@ -217,16 +217,7 @@ public class DatTourService {
             throw AppException.badRequest(
                     "Chỉ có thể xác nhận đơn ở trạng thái 'Chờ xác nhận'. Trạng thái hiện tại: " + don.getTrangThai());
         }
-<<<<<<< Updated upstream
-        if (don.getThoiGianHetHan() != null && don.getThoiGianHetHan().isBefore(LocalDateTime.now())) {
-            throw AppException.badRequest("Đơn đặt tour đã hết hạn giữ chỗ. Vui lòng đặt lại.");
-        }
-        if (giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent()) {
-            throw AppException.badRequest("Đơn này đã có giao dịch thành công trước đó.");
-=======
-        // Admin/Nhân viên bấm xác nhận -> Bỏ qua check thời gian hết hạn vì đây là quyết định của con người
-        
-        // Kinh doanh xac nhan giao dich khach da bao chuyen khoan.
+        // Nhan vien co the xac nhan sau thoi han giu cho khi da doi soat duoc tien.
         boolean daThanhToan = giaoDichRepository.findThanhCongByMaDatTour(maDatTour).isPresent();
         GiaoDich giaoDichChoXacNhan = giaoDichRepository.findByMaDatTour(maDatTour).stream()
                 .filter(gd -> "CHO_THANH_TOAN".equals(gd.getTrangThai()))
@@ -236,23 +227,18 @@ public class DatTourService {
                 && (giaoDichChoXacNhan.getMaGDNH() == null
                         || !giaoDichChoXacNhan.getMaGDNH().startsWith(MA_GD_DA_BAO_CHUYEN_KHOAN))) {
             throw AppException.badRequest("Khach hang chua xac nhan da chuyen khoan.");
->>>>>>> Stashed changes
         }
 
         TourThucTe tour = tourThucTeRepository.findByIdForUpdate(don.getTourThucTe().getMaTourThucTe())
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy tour thực tế"));
         List<ChiTietDatTour> dsChiTiet = chiTietDatTourRepository.findByMaDatTour(maDatTour);
         int soKhach = dsChiTiet.size();
-        if (tour.getChoConLai() < soKhach) {
+        if (!daThanhToan && tour.getChoConLai() < soKhach) {
             throw AppException.badRequest("Tour không còn đủ chỗ cho đơn đặt này");
         }
         List<ChiTietDichVu> dsDichVu = chiTietDichVuRepository.findByMaDatTour(maDatTour);
         don.setTongTien(tinhTongTienTuChiTiet(dsChiTiet, dsDichVu));
 
-<<<<<<< Updated upstream
-        GiaoDich giaoDich = taoGiaoDichOffline(don, nguoiXacNhan, request);
-        giaoDichRepository.save(giaoDich);
-=======
         // Neu giao dich QR dang cho doi soat thi xac nhan chinh giao dich do, tranh tao trung giao dich.
         if (!daThanhToan) {
             if (giaoDichChoXacNhan != null) {
@@ -264,7 +250,6 @@ public class DatTourService {
                 giaoDichRepository.save(giaoDich);
             }
         }
->>>>>>> Stashed changes
 
         don.setTrangThai("DA_XAC_NHAN");
         donDatTourRepository.save(don);
