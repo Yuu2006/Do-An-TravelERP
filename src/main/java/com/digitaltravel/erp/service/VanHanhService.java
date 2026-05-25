@@ -22,6 +22,7 @@ import com.digitaltravel.erp.dto.responses.CanhBaoChiPhiResponse;
 import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
+import com.digitaltravel.erp.dto.responses.LichTrinhResponse;
 import com.digitaltravel.erp.dto.responses.NhatKySuCoResponse;
 import com.digitaltravel.erp.dto.responses.ThanhVienDoanResponse;
 import com.digitaltravel.erp.entity.ChiPhiThucTe;
@@ -41,6 +42,7 @@ import com.digitaltravel.erp.repository.DsNguoiDongHanhRepository;
 import com.digitaltravel.erp.repository.HanhDongRepository;
 import com.digitaltravel.erp.repository.HanhDongXanhRepository;
 import com.digitaltravel.erp.repository.HoChieuSoRepository;
+import com.digitaltravel.erp.repository.LichTrinhTourRepository;
 import com.digitaltravel.erp.repository.NhanVienRepository;
 import com.digitaltravel.erp.repository.NhatKySuCoRepository;
 import com.digitaltravel.erp.repository.PhanCongTourRepository;
@@ -63,6 +65,24 @@ public class VanHanhService {
     private final ChiPhiThucTeRepository chiPhiThucTeRepository;
     private final PhanCongTourRepository phanCongTourRepository;
     private final DonDatTourRepository donDatTourRepository;
+    private final LichTrinhTourRepository lichTrinhTourRepository;
+
+    @Transactional(readOnly = true)
+    public List<LichTrinhResponse> lichTrinhTour(String maTour, String maTaiKhoan, String maVaiTro) {
+        kiemTraQuyenVanHanhTour(maTour, maTaiKhoan, maVaiTro);
+        TourThucTe tour = tourThucTeRepository.findById(maTour)
+                .orElseThrow(() -> AppException.notFound("Khong tim thay tour: " + maTour));
+
+        return lichTrinhTourRepository.findByMaTourMau(tour.getTourMau().getMaTourMau()).stream()
+                .map(item -> LichTrinhResponse.builder()
+                        .maLichTrinhTour(item.getMaLichTrinhTour())
+                        .ngayThu(item.getNgayThu())
+                        .hoatDong(item.getHoatDong())
+                        .moTa(item.getMoTa())
+                        .thucDon(item.getThucDon())
+                        .build())
+                .toList();
+    }
 
     // ── UC42: Xem danh sách đoàn ─────────────────────────────────────────
     @Transactional(readOnly = true)
@@ -125,7 +145,8 @@ public class VanHanhService {
             parts.add(ghiChuYTe);
         }
         if (diUng != null && !diUng.isBlank()) {
-            parts.add("Dị ứng: " + diUng);
+            String allergy = diUng.trim();
+            parts.add("Dị ứng " + Character.toLowerCase(allergy.charAt(0)) + allergy.substring(1));
         }
         return String.join(" | ", parts);
     }

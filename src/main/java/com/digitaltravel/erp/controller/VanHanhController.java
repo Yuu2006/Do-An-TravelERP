@@ -25,6 +25,7 @@ import com.digitaltravel.erp.dto.responses.CanhBaoChiPhiResponse;
 import com.digitaltravel.erp.dto.responses.ChiPhiThucTeResponse;
 import com.digitaltravel.erp.dto.responses.DiemDanhResponse;
 import com.digitaltravel.erp.dto.responses.HanhDongResponse;
+import com.digitaltravel.erp.dto.responses.LichTrinhResponse;
 import com.digitaltravel.erp.dto.responses.NhatKySuCoResponse;
 import com.digitaltravel.erp.dto.responses.ThanhVienDoanResponse;
 import com.digitaltravel.erp.service.VanHanhService;
@@ -37,6 +38,17 @@ import lombok.RequiredArgsConstructor;
 public class VanHanhController {
 
     private final VanHanhService vanHanhService;
+
+    @GetMapping("/api/huong-dan-vien/tour/{maTour}/lich-trinh")
+    @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<LichTrinhResponse>>> lichTrinhTour(
+            @PathVariable String maTour,
+            @AuthenticationPrincipal TaiKhoanDetails user) {
+        return ResponseEntity.ok(ApiResponse.ok(vanHanhService.lichTrinhTour(
+                maTour,
+                user.getTaiKhoan().getMaTaiKhoan(),
+                user.getTaiKhoan().getVaiTro().getMaVaiTro())));
+    }
 
     // ── UC42: Xem danh sách đoàn ─────────────────────────────────────────
     @GetMapping({"/api/huong-dan-vien/tour/{maTour}/doan", "/api/dieu-hanh/tour/{maTour}/doan"})
