@@ -74,12 +74,14 @@ public class SecurityConfig {
                                 "/api/san-pham/hanh-dong-xanh",
                                 "/api/san-pham/hanh-dong-xanh/**",
                                 "/api/huong-dan-vien/su-co",
-                                "/api/quan-tri/tai-khoan/**")
+                                "/api/quan-tri/tai-khoan/**",
+                                "/api/quan-tri/nhan-vien",
+                                "/api/quan-tri/nhan-vien/**")
                         .hasAnyRole(ADMIN, SANPHAM, KINHDOANH, DIEUHANH, KETOAN, HDV)
                         .requestMatchers("/api/quan-tri/**").hasRole(ADMIN)
                         .requestMatchers("/api/san-pham/**").hasAnyRole(ADMIN, SANPHAM)
                         .requestMatchers("/api/kinh-doanh/**").hasAnyRole(ADMIN, KINHDOANH)
-                        .requestMatchers("/api/dieu-hanh/**").hasAnyRole(ADMIN, DIEUHANH)
+                        .requestMatchers("/api/dieu-hanh/**").hasAnyRole(ADMIN, DIEUHANH, SANPHAM)
                         .requestMatchers("/api/huong-dan-vien/**").hasAnyRole(ADMIN, DIEUHANH, HDV)
                         .requestMatchers("/api/ke-toan/**").hasAnyRole(ADMIN, KETOAN)
                         .requestMatchers("/api/khach-hang/**").hasAnyRole(ADMIN, KHACHHANG)

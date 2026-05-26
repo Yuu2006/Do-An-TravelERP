@@ -50,6 +50,7 @@ public class TourThucTeService {
     private final MaTuDongService maTuDongService;
 
     // ── UC14: Danh sách tour thực tế (nội bộ - có filter) ───────────────────
+    @Transactional(readOnly = true)
     public Page<TourThucTeResponse> danhSach(String trangThai, String maTourMau,
                                               java.math.BigDecimal giaTu, java.math.BigDecimal giaDen,
                                               Pageable pageable) {
@@ -58,6 +59,7 @@ public class TourThucTeService {
     }
 
     // ── UC14: Danh sách tour thực tế (công khai cho KH) ─────────────────────
+    @Transactional(readOnly = true)
     public Page<TourThucTeResponse> danhSachCongKhai(java.math.BigDecimal giaTu, java.math.BigDecimal giaDen,
                                                       Integer thoiLuongMin, Integer thoiLuongMax,
                                                       Pageable pageable) {
