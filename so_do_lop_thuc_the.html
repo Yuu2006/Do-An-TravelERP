@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sơ đồ lớp thực thể - Digital Travel ERP</title>
+  <style>
+    :root {
+      --ink: #000000;
+      --muted: #000000;
+      --line: #000000;
+      --panel: #ffffff;
+      --header: #ffffff;
+      --accent: #000000;
+      --canvas: #ffffff;
+      --grid: #ffffff;
+      --shadow: transparent;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--canvas);
+      overflow: hidden;
+    }
+    header {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 8px 16px;
+      background: #fff;
+      border-bottom: 1px solid #000;
+      position: relative;
+      z-index: 20;
+    }
+    .title h1 { font-size: 17px; margin: 0 0 2px; font-weight: 650; }
+    .title p { font-size: 11px; color: var(--muted); margin: 0; }
+    .toolbar { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .toolbar button, .toolbar label, .toolbar select {
+      height: 34px;
+      border: 1px solid #000;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 0 11px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .toolbar select { padding: 0 8px; }
+    .toolbar button:hover, .toolbar label:hover { text-decoration: underline; }
+    .toolbar input[type="checkbox"] { accent-color: var(--accent); }
+    .zoom { min-width: 53px; color: var(--muted); text-align: center; font-size: 12px; }
+    #viewport {
+      height: calc(100vh - 62px);
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      cursor: grab;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    #viewport.panning { cursor: grabbing; }
+    #diagram {
+      position: absolute;
+      transform-origin: 0 0;
+      width: 6900px;
+      height: 3300px;
+    }
+    #relationships {
+      position: absolute;
+      inset: 0;
+      width: 6900px;
+      height: 3300px;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .rel-line {
+      stroke: var(--line);
+      stroke-width: 1.3;
+      fill: none;
+      vector-effect: non-scaling-stroke;
+    }
+    .rel-label, .mult-label {
+      font-size: 12px;
+      fill: #000;
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 3px;
+      stroke-linejoin: round;
+    }
+    .rel-label { font-size: 11px; fill: #000; }
+    .class-box {
+      position: absolute;
+      width: 520px;
+      background: var(--panel);
+      border: 1px solid #000;
+      box-shadow: 0 2px 9px var(--shadow);
+      font-size: 12px;
+      cursor: move;
+      user-select: none;
+      z-index: 2;
+    }
+    .class-box:hover, .class-box.active {
+      z-index: 5;
+      border-width: 2px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .16);
+    }
+    .class-title {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 8px;
+      background: var(--header);
+      border-bottom: 1px solid #000;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .15px;
+      text-align: center;
+    }
+    .class-box.highlight .class-title { text-decoration: underline; color: #000; }
+    .class-box.hidden { display: none; }
+    .segment {
+      border-bottom: 1px solid #000;
+      padding: 5px 7px 5px 10px;
+      line-height: 1.55;
+    }
+    .segment:last-child { border-bottom: 0; }
+    .segment div { white-space: normal; overflow-wrap: anywhere; }
+    .field::before { content: "- "; color: var(--muted); }
+    .method::before { content: "+ "; color: var(--accent); font-weight: 700; }
+    .methods-hidden .methods { display: none; }
+    .legend {
+      position: fixed;
+      bottom: 14px;
+      left: 16px;
+      z-index: 30;
+      background: rgba(255, 255, 255, .95);
+      border: 1px solid #000;
+      box-shadow: 0 2px 8px var(--shadow);
+      padding: 8px 11px;
+      border-radius: 7px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .legend strong { color: var(--ink); }
+    .legend span { display: inline-block; width: 26px; border-top: 1px solid var(--line); margin: 0 5px 3px 10px; }
+    .counter {
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      z-index: 30;
+      padding: 7px 10px;
+      border: 1px solid #000;
+      border-radius: 7px;
+      background: rgba(255,255,255,.94);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    @media print {
+      header, .legend, .counter { display: none; }
+      body, #viewport { overflow: visible; height: auto; background: #fff; }
+      #diagram { position: relative; transform: none !important; }
+      .class-box { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      <h1>SƠ ĐỒ LỚP THỰC THỂ - DIGITAL TRAVEL ERP</h1>
+      <p>Thuộc tính theo Oracle DDL; phương thức tiếng Việt theo tài liệu mô tả chi tiết thực thể.</p>
+    </div>
+    <div class="toolbar">
+      <select id="viewSelector" aria-label="Phạm vi sơ đồ">
+        <option value="tongThe">Tổng thể</option>
+        <option value="taiKhoan">Tài khoản và nhân sự</option>
+        <option value="sanPham">Tour mẫu và dịch vụ</option>
+        <option value="datTour">Đặt tour và ưu đãi</option>
+        <option value="doan">Đoàn và điểm danh</option>
+        <option value="hanhDong">Hành động xanh</option>
+        <option value="suCo">Nhật ký sự cố</option>
+        <option value="chiPhi">Chi phí và quyết toán</option>
+        <option value="danhGia">Lịch sử và đánh giá</option>
+      </select>
+      <button type="button" id="zoomOut">- Thu nhỏ</button>
+      <span class="zoom" id="zoomValue">100%</span>
+      <button type="button" id="zoomIn">+ Phóng to</button>
+      <button type="button" id="fit">Vừa màn hình</button>
+      <button type="button" id="reset">Bố cục gốc</button>
+      <label><input type="checkbox" id="toggleMethods" checked> Phương thức</label>
+      <label><input type="checkbox" id="toggleLabels"> Tên liên kết</label>
+    </div>
+  </header>
+  <main id="viewport">
+    <div id="diagram">
+      <svg id="relationships" aria-hidden="true">
+        <defs>
+          <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7" fill="none" stroke="#000000" stroke-width="1"></path>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </main>
+  <aside class="legend">
+    <strong>Ký hiệu:</strong> - Thuộc tính &nbsp; + Phương thức
+    <span></span> association &nbsp; `0..1`: tùy chọn &nbsp; `0..*`: nhiều bản ghi
+  </aside>
+  <div class="counter" id="counter">31 thực thể | 55 liên kết | Tổng thể</div>
+  <script>
+    const classes = [
+      { id:'VAITRO', x:30, y:35, fields:['MaVaiTro: VARCHAR2(50)','TenHienThi: VARCHAR2(100)'], methods:['GanVaiTroChoNhanVien(MaNhanVien, MaVaiTro)'] },
+      { id:'TAIKHOAN', x:330, y:35, fields:['MaTaiKhoan: VARCHAR2(50)','TenDangNhap: VARCHAR2(100)','MatKhau: VARCHAR2(255)','HoTen: VARCHAR2(200)','CCCD: VARCHAR2(20)','NgaySinh: DATE','Email: VARCHAR2(200)','SoDienThoai: VARCHAR2(20)','VaiTro: VARCHAR2(50)','TrangThai: VARCHAR2(20)'], methods:['DangNhap(TenDangNhap, MatKhau)','DangKy(ThongTinTaiKhoan)','DangKyNhanVien(ThongTinNhanVien)','DoiMatKhau(MaTaiKhoan, MatKhauMoi)','KiemTraMatKhau(MaTaiKhoan, MatKhau)','QuenMatKhau(Email)','DatLaiMatKhau(ThongTinDatLai)','DangXuat()','KhoaTaiKhoan(MaNhanVien)','MoKhoaTaiKhoan(MaNhanVien)'] },
+      { id:'NHATKYHETHONG', x:630, y:35, fields:['MaNhatKyHeThong: VARCHAR2(50)','MaTaiKhoan: VARCHAR2(50)','HanhDong: VARCHAR2(100)','DoiTuong: VARCHAR2(100)','MaDoiTuong: VARCHAR2(50)','ThoiGian: TIMESTAMP'], methods:['GhiNhan(MaTaiKhoan, HanhDong, DoiTuong, MaDoiTuong)','TimKiem(TuNgay, DenNgay, HanhDong, DoiTuong)'] },
+      { id:'NHANVIEN', x:930, y:35, fields:['MaNhanVien: VARCHAR2(50)','MaTaiKhoan: VARCHAR2(50)','LoaiNhanVien: VARCHAR2(50)','NgayVaoLam: DATE','TrangThaiLamViec: VARCHAR2(20)'], methods:['DangKyNhanVien(ThongTinNhanVien)','TimKiemNhanVien(HoTen, MaVaiTro, TrangThai)','ChiTietNhanVien(MaNhanVien)','KhoaTaiKhoan(MaNhanVien)','MoKhoaTaiKhoan(MaNhanVien)','GanVaiTro(MaNhanVien, MaVaiTro)','LayHoSoCaNhan(MaTaiKhoan)'] },
+      { id:'NANGLUCNHANVIEN', x:1230, y:35, fields:['MaNangLucNhanVien: VARCHAR2(50)','MaNhanVien: VARCHAR2(50)','NgonNgu: VARCHAR2(200)','ChungChi: VARCHAR2(500)','ChuyenMon: VARCHAR2(500)','DanhGia: NUMBER(3,2)','SoDanhGia: NUMBER(10)'], methods:['LayNangLuc(MaNhanVien)','CapNhatNangLuc(MaNhanVien, ThongTin)','CapNhatDanhGiaHuongDanVien()'] },
+      { id:'HOCHIEUSO', x:330, y:430, fields:['MaKhachHang: VARCHAR2(50)','MaTaiKhoan: VARCHAR2(50)','GhiChuYTe: CLOB','DiUng: VARCHAR2(1000)','HangThanhVien: VARCHAR2(20)','DiemXanh: NUMBER(15)'], methods:['LayHoSo(MaTaiKhoan)','CapNhatHoSo(MaTaiKhoan, ThongTinHoSo)','LichSuTour(MaTaiKhoan)','TimKiemKhachHang(HoTen, Email, SoDienThoai)','ChiTietKhachHang(MaKhachHang)','CapNhatDiemXanh(MaKhachHang, SoDiem)'] },
+
+      { id:'TOURMAU', x:30, y:770, fields:['MaTourMau: VARCHAR2(50)','TieuDe: VARCHAR2(500)','MoTa: CLOB','ThoiLuong: NUMBER(5)','GiaSan: NUMBER(18,2)','DanhGia: NUMBER(3,2)','SoDanhGia: NUMBER(10)'], methods:['DanhSachTourMau(TieuDe, ThoiLuongToiThieu, ThoiLuongToiDa)','ChiTietTourMau(MaTourMau)','TaoMoiTourMau(ThongTinTour)','CapNhatTourMau(MaTourMau, ThongTinTour)','XoaTourMau(MaTourMau)','SaoChepTourMau(MaTourMau)'] },
+      { id:'LICHTRINHTOUR', x:30, y:1120, fields:['MaLichTrinhTour: VARCHAR2(50)','MaTourMau: VARCHAR2(50)','NgayThu: NUMBER(3)','HoatDong: VARCHAR2(1000)','MoTa: CLOB','ThucDon: VARCHAR2(1000)'], methods:['LayLichTrinhTour(MaTourThucTe)','ThemLichTrinh(MaTourMau, ThongTinLichTrinh)','SuaLichTrinh(MaTourMau, MaLichTrinh, ThongTin)','XoaLichTrinh(MaTourMau, MaLichTrinh)'] },
+      { id:'TOURTHUCTE', x:330, y:770, fields:['MaTourThucTe: VARCHAR2(50)','MaTourMau: VARCHAR2(50)','NgayKhoiHanh: DATE','GiaHienHanh: NUMBER(18,2)','SoKhachToiDa: NUMBER(5)','SoKhachToiThieu: NUMBER(5)','ChoConLai: NUMBER(5)','TrangThai: VARCHAR2(20)'], methods:['DanhSachTourThucTe(TrangThai, MaTourMau)','DanhSachTourCongKhai(KhoangGia, ThoiLuong)','DanhSachTourCanPhanCong()','ChiTietTourThucTe(MaTourThucTe)','ChiTietTourCongKhai(MaTourThucTe)','TaoMoiTourThucTe(ThongTinKhoiHanh)','CapNhatTourThucTe(MaTourThucTe, ThongTin)','XoaTourThucTe(MaTourThucTe)','CapNhatGiaDong()'] },
+      { id:'DICHVU_TOURTHUCTE', x:630, y:770, fields:['MaTourThucTe: VARCHAR2(50)','MaDichVuThem: VARCHAR2(50)'], methods:['GanDichVuChoTour(MaTourThucTe, DanhSachDichVu)','LayDichVuCuaTour(MaTourThucTe)'] },
+      { id:'DICHVUTHEM', x:930, y:770, fields:['MaDichVuThem: VARCHAR2(50)','Ten: VARCHAR2(200)','DonViTinh: VARCHAR2(100)','DonGia: NUMBER(18,2)'], methods:['DanhSachDichVu()','DanhSachDichVuTheoTour(MaTourThucTe)','ChiTietDichVu(MaDichVuThem)','TaoMoiDichVu(ThongTinDichVu)','CapNhatDichVu(MaDichVuThem, ThongTin)','XoaDichVu(MaDichVuThem)'] },
+      { id:'HDX_TOURTHUCTE', x:630, y:1090, fields:['MaTourThucTe: VARCHAR2(50)','MaHanhDongXanh: VARCHAR2(50)'], methods:['GanHanhDongXanhChoTour(MaTourThucTe, DanhSachHanhDongXanh)','LayHanhDongXanhCuaTour(MaTourThucTe)'] },
+      { id:'HANHDONGXANH', x:930, y:1090, fields:['MaHanhDongXanh: VARCHAR2(50)','TenHanhDong: VARCHAR2(200)','DiemCong: NUMBER(10)'], methods:['DanhSachHanhDongXanh(MaTourThucTe)','ChiTietHanhDongXanh(MaHanhDongXanh)','TaoMoiHanhDongXanh(ThongTinHanhDong)','CapNhatHanhDongXanh(MaHanhDongXanh, ThongTin)','XoaHanhDongXanh(MaHanhDongXanh)'] },
+
+      { id:'DONDATTOUR', x:1230, y:650, fields:['MaDatTour: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','NgayDat: TIMESTAMP','TongTien: NUMBER(18,2)','TrangThai: VARCHAR2(30)','ThoiGianHetHan: TIMESTAMP','GhiChu: VARCHAR2(2000)','HanhDongXanh: VARCHAR2(1000)'], methods:['DatTour(MaTaiKhoan, YeuCauDatTour)','DanhSachCuaToi(MaTaiKhoan)','ChiTietDonCuaToi(MaTaiKhoan, MaDatTour)','HuyDatTour(MaTaiKhoan, MaDatTour)','DanhSachTatCaDon(TrangThai, MaTourThucTe)','XacNhanDon(MaDatTour)','TuChoiThanhToan(MaDatTour)','HuyDonHetHan()'] },
+      { id:'DSNGUOIDONGHANH', x:1530, y:620, fields:['MaNguoiDongHanh: VARCHAR2(50)','MaDatTour: VARCHAR2(50)','HoTen: VARCHAR2(200)','CCCD: VARCHAR2(20)','SoDienThoai: VARCHAR2(20)','NgaySinh: DATE','GioiTinh: VARCHAR2(20)','GhiChu: VARCHAR2(1000)'], methods:['ThemNguoiDongHanh(MaDatTour, ThongTin)','LayDanhSachNguoiDongHanh(MaDatTour)'] },
+      { id:'CHITIETDATTOUR', x:1830, y:620, fields:['MaChiTietDat: VARCHAR2(50)','MaDatTour: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaNguoiDongHanh: VARCHAR2(50)','LoaiKhach: VARCHAR2(30)','GiaTaiThoiDiemDat: NUMBER(18,2)'], methods:['TaoChiTietDatTour(MaDatTour, DanhSachKhach)','LayChiTietDatTour(MaDatTour)'] },
+      { id:'CHITIETDICHVU', x:1530, y:1000, fields:['MaChiTietDichVu: VARCHAR2(50)','MaDatTour: VARCHAR2(50)','MaDichVuThem: VARCHAR2(50)','SoLuong: NUMBER(10)','DonGia: NUMBER(18,2)','ThanhTien: NUMBER(18,2)'], methods:['ThemDichVuVaoDon(MaDatTour, DanhSachDichVu)','TinhTongTienTuChiTiet(MaDatTour)'] },
+      { id:'VOUCHER', x:930, y:1430, fields:['MaVoucher: VARCHAR2(50)','MaCode: VARCHAR2(50)','LoaiUuDai: VARCHAR2(20)','GiaTriGiam: NUMBER(18,2)','MucGiamToiDa: NUMBER(18,2)','DieuKienApDung: VARCHAR2(2000)','SoLuotPhatHanh: NUMBER(10)','SoLuotDaDung: NUMBER(10)','NgayHieuLuc: DATE','NgayHetHan: DATE','TrangThai: VARCHAR2(20)'], methods:['TaoVoucher(ThongTinVoucher)','CapNhatVoucher(MaVoucher, ThongTin)','VoHieuHoaVoucher(MaVoucher)','ApVoucher(MaTaiKhoan, MaDatTour, MaVoucher)','DanhSachVoucher()','DanhSachVoucherCoTheDoi()','ChiTietVoucher(MaVoucher)'] },
+      { id:'KHUYENMAI_KH', x:630, y:1440, fields:['MaKhachHang: VARCHAR2(50)','MaVoucher: VARCHAR2(50)','NgayHetHan: DATE','NgayNhan: TIMESTAMP','TrangThai: VARCHAR2(20)'], methods:['ViVoucher(MaTaiKhoan)','PhatHanhChoKhachHang(MaVoucher, MaKhachHang)','ThuHoiVoucher(MaVoucher, MaKhachHang)','DanhSachKhachHangDaPhanBo(MaVoucher)'] },
+      { id:'DATTOUR_UUDAI', x:1230, y:1230, fields:['MaDatTour: VARCHAR2(50)','MaVoucher: VARCHAR2(50)','SoTienUuDai: NUMBER(18,2)','NgayApDung: TIMESTAMP'], methods:['ApUuDaiVaoDon(MaDatTour, MaVoucher)','LayUuDaiCuaDon(MaDatTour)'] },
+      { id:'GIAODICH', x:1530, y:1340, fields:['MaGiaoDich: VARCHAR2(50)','MaDatTour: VARCHAR2(50)','LoaiGiaoDich: VARCHAR2(50)','PhuongThuc: VARCHAR2(50)','SoTien: NUMBER(18,2)','MaGDNH: VARCHAR2(200)','TrangThai: VARCHAR2(30)','NgayThanhToan: TIMESTAMP'], methods:['KhoiTaoThanhToan(MaTaiKhoan, MaDatTour)','DanhDauThanhToanMaQrHetHan(MaTaiKhoan, MaDatTour)','DanhDauMaQrHetHanTuDong()','XacNhanDaChuyenKhoan(MaTaiKhoan, MaDatTour)','KetQuaThanhToan(MaTaiKhoan, MaDatTour)','TaoGiaoDichHoanTien(MaDatTour)','DanhSachChoHoanTien()','XacNhanHoanTien(MaGiaoDich)','TuChoiHoanTien(MaGiaoDich)'] },
+      { id:'YEUCAUHOTRO', x:1830, y:1160, fields:['MaYeuCauHoTro: VARCHAR2(50)','MaDatTour: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','LoaiYeuCau: VARCHAR2(100)','NoiDung: CLOB','TrangThai: VARCHAR2(20)','MaNhanVienXuLy: VARCHAR2(50)'], methods:['TaoYeuCau(MaTaiKhoan, NoiDung)','DanhSachYeuCauCuaKhachHang(MaTaiKhoan, LoaiYeuCau)','DanhSachCanKhachHangBoSung(MaTaiKhoan)','BoSung(MaTaiKhoan, MaYeuCau, NoiDung)','DanhSachTatCaYeuCau(LoaiYeuCau, TrangThai)','XuLy(MaYeuCau, KetQua, MaNhanVien)','YeuCauHuongDanVienGiaiTrinh(MaYeuCau, NoiDung)','YeuCauKhachHangBoSung(MaYeuCau, NoiDung)','DanhSachGiaiTrinhCuaHuongDanVien(MaTaiKhoan)','HuongDanVienCapNhatGiaiTrinh(MaTaiKhoan, MaYeuCau, NoiDung)','ChiTietYeuCau(MaYeuCau)','YeuCauHuyTour(MaTaiKhoan, MaDatTour)','DuyetHuyTour(MaYeuCau, MaNhanVien)','TuChoiHuyTour(MaYeuCau, MaNhanVien)','DanhSachYeuCauHuy(LoaiYeuCau, TrangThai)'] },
+
+      { id:'LICHSUTOUR', x:330, y:1590, fields:['MaLichSuTour: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaChiTietDat: VARCHAR2(50)','NgayThamGia: DATE'], methods:['TaoLichSuSauXacNhanDon()','LichSuTour(MaTaiKhoan)'] },
+      { id:'NHATKYDOIDIEM', x:630, y:1780, fields:['MaNhatKyDoiDiem: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaVoucher: VARCHAR2(50)','DiemQuyDoi: NUMBER(15)','NgayQuyDoi: TIMESTAMP'], methods:['DoiDiem(MaTaiKhoan, MaVoucher)','GhiNhatKyDoiDiem(MaKhachHang, MaVoucher, Diem)'] },
+      { id:'PHANCONGTOUR', x:30, y:1870, fields:['MaPhanCongTour: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaNhanVien: VARCHAR2(50)','NgayPhanCong: TIMESTAMP','TrangThaiChapNhan: VARCHAR2(30)','NgayPhanHoi: TIMESTAMP'], methods:['TimHuongDanVienKhaDung(MaTourThucTe)','PhanCongHuongDanVien(MaTourThucTe, MaNhanVien)','DongYPhanCong(MaPhanCongTour, MaTaiKhoan)','TuChoiPhanCong(MaPhanCongTour, MaTaiKhoan)','HuyPhanCong(MaPhanCongTour)','TourCuaToi(MaTaiKhoan)','LichCongTacNhanVien(MaNhanVien)'] },
+      { id:'DIEMDANH', x:330, y:2020, fields:['MaDiemDanh: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaNguoiDongHanh: VARCHAR2(50)','LoaiKhach: VARCHAR2(30)','MaNhanVien: VARCHAR2(50)','ThoiGian: TIMESTAMP','DiaDiem: VARCHAR2(500)','TrangThai: VARCHAR2(30)'], methods:['DanhSachDoan(MaTourThucTe)','DiemDanh(MaTourThucTe, YeuCauDiemDanh)'] },
+      { id:'HANHDONG', x:630, y:2110, fields:['MaGhiNhanHanhDong: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaHanhDongXanh: VARCHAR2(50)','MaNhanVienXacMinh: VARCHAR2(50)','ThoiGian: TIMESTAMP','MinhChung: VARCHAR2(1000)'], methods:['GhiNhanHanhDong(MaTourThucTe, YeuCau)','CongDiemXanh(MaKhachHang, MaHanhDongXanh)'] },
+      { id:'NHATKYSUCO', x:930, y:2080, fields:['MaNhatKySuCo: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaNhanVienBaoCao: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','MaNguoiDongHanh: VARCHAR2(50)','MoTa: CLOB','GiaiPhap: CLOB','MucDo: VARCHAR2(20)','LoaiSuCo: VARCHAR2(30)','ThoiGianBaoCao: TIMESTAMP'], methods:['BaoCaoSuCo(MaTourThucTe, YeuCauSuCo)','CapNhatSuCo(MaNhatKySuCo, GiaiPhap)','DanhSachSuCo(DieuKien)','LichSuSuCoCuaHuongDanVien(MucDo, MaTaiKhoan)'] },
+      { id:'CHIPHITHUCTE', x:1230, y:2110, fields:['MaChiPhiThucTe: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaNhanVien: VARCHAR2(50)','DanhMuc: VARCHAR2(200)','ThanhTien: NUMBER(18,2)','HoaDonAnh: VARCHAR2(1000)','TrangThaiDuyet: VARCHAR2(20)','NgayKhai: TIMESTAMP'], methods:['KhaiChiPhi(MaTourThucTe, ThongTinChiPhi)','ChiPhiCuaTour(MaTourThucTe)','LichSuChiPhiCuaHuongDanVien(MaTaiKhoan)','BoSungChiPhi(MaChiPhi, ThongTin)','DanhSachChiPhiChoXuLy(TrangThai, MaTourThucTe)','DuyetChiPhi(MaChiPhi)','TuChoiChiPhi(MaChiPhi)','YeuCauBoSungChiPhi(MaChiPhi)','DanhSachCanhBaoChiPhi(TrangThai, LoaiCanhBao)','ChiTietCanhBaoChiPhi(MaCanhBao)'] },
+      { id:'QUYETTOAN', x:1530, y:2030, fields:['MaQuyetToan: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','TongDoanhThu: NUMBER(18,2)','TongChiPhi: NUMBER(18,2)','GiaCamKet: NUMBER(18,2)','LoiNhuan: NUMBER(18,2)','MaNhanVien: VARCHAR2(50)','NgayQuyetToan: TIMESTAMP','TrangThai: VARCHAR2(20)','GhiChu: CLOB','HoaDonAnh: VARCHAR2(1000)'], methods:['TourCanQuyetToan()','TinhToanQuyetToan(MaTourThucTe)','TaoQuyetToan(MaTourThucTe, ThongTin)','ChotQuyetToan(MaQuyetToan)','DanhSachQuyetToan(TrangThai)','ChiTietQuyetToan(MaQuyetToan)','YeuCauBoSungQuyetToan(MaQuyetToan, NoiDung)','DanhSachCanBoSungCuaHuongDanVien(MaTaiKhoan)','HuongDanVienBoSungQuyetToan(MaQuyetToan, ThongTin)','BaoCaoDoanhThu(TuNgay, DenNgay)'] },
+      { id:'DANHGIAKH', x:330, y:2520, fields:['MaDanhGiaKhachHang: VARCHAR2(50)','MaTourThucTe: VARCHAR2(50)','MaKhachHang: VARCHAR2(50)','SoSao: NUMBER(1)','NhanXet: CLOB','NgayDanhGia: TIMESTAMP'], methods:['GuiDanhGia(MaTaiKhoan, ThongTinDanhGia)','DanhSachDanhGia(MaTourThucTe)','TatCaDanhGia()','CapNhatDiemTrungBinhTourMau()','CapNhatDiemTrungBinhHuongDanVien()'] }
+    ];
+
+    // Bo cuc landscape rong: moi dai co hanh lang rieng cho duong noi.
+    const layout = {
+      VAITRO:[80,100], TAIKHOAN:[700,100], NHATKYHETHONG:[1320,100],
+      HOCHIEUSO:[2180,100], NHANVIEN:[3040,100], NANGLUCNHANVIEN:[3660,100],
+
+      LICHTRINHTOUR:[80,820], TOURMAU:[700,820], TOURTHUCTE:[1320,820],
+      DONDATTOUR:[2180,820], DSNGUOIDONGHANH:[2800,820],
+      CHITIETDATTOUR:[3420,820], YEUCAUHOTRO:[4280,790], GIAODICH:[5140,820],
+
+      DICHVUTHEM:[80,1610], DICHVU_TOURTHUCTE:[700,1610],
+      HDX_TOURTHUCTE:[1320,1610], HANHDONGXANH:[1940,1610],
+      CHITIETDICHVU:[2560,1610], DATTOUR_UUDAI:[3180,1610],
+      VOUCHER:[3800,1610], KHUYENMAI_KH:[4420,1610],
+      NHATKYDOIDIEM:[5040,1610], LICHSUTOUR:[5660,1610], DANHGIAKH:[6280,1610],
+
+      PHANCONGTOUR:[1320,2480], DIEMDANH:[2180,2480], HANHDONG:[2800,2480],
+      NHATKYSUCO:[3420,2460], CHIPHITHUCTE:[4280,2460], QUYETTOAN:[5140,2420]
+    };
+    classes.forEach(c => {
+      [c.x, c.y] = layout[c.id];
+    });
+
+    const relations = [
+      ['VAITRO','TAIKHOAN','1','0..*','vai trò'],
+      ['TAIKHOAN','NHATKYHETHONG','0..1','0..*','ghi nhật ký'],
+      ['TAIKHOAN','HOCHIEUSO','1','0..1','sở hữu hồ sơ'],
+      ['TAIKHOAN','NHANVIEN','1','0..1','sở hữu hồ sơ'],
+      ['NHANVIEN','NANGLUCNHANVIEN','1','0..*','năng lực'],
+      ['TOURMAU','LICHTRINHTOUR','1','0..*','lịch trình'],
+      ['TOURMAU','TOURTHUCTE','1','0..*','khởi tạo chuyến'],
+      ['TOURTHUCTE','DICHVU_TOURTHUCTE','1','0..*','dịch vụ'],
+      ['DICHVUTHEM','DICHVU_TOURTHUCTE','1','0..*','được áp dụng'],
+      ['TOURTHUCTE','HDX_TOURTHUCTE','1','0..*','hành động xanh'],
+      ['HANHDONGXANH','HDX_TOURTHUCTE','1','0..*','được áp dụng'],
+      ['TOURTHUCTE','DONDATTOUR','1','0..*','đơn đặt'],
+      ['HOCHIEUSO','DONDATTOUR','1','0..*','đặt tour'],
+      ['DONDATTOUR','DSNGUOIDONGHANH','1','0..*','người đi cùng'],
+      ['DONDATTOUR','CHITIETDATTOUR','1','0..*','hành khách'],
+      ['HOCHIEUSO','CHITIETDATTOUR','0..1','0..*','người đặt'],
+      ['DSNGUOIDONGHANH','CHITIETDATTOUR','0..1','0..*','người đi cùng'],
+      ['DONDATTOUR','CHITIETDICHVU','1','0..*','dịch vụ chọn'],
+      ['DICHVUTHEM','CHITIETDICHVU','1','0..*','dịch vụ đặt'],
+      ['HOCHIEUSO','KHUYENMAI_KH','1','0..*','ví ưu đãi'],
+      ['VOUCHER','KHUYENMAI_KH','1','0..*','phát hành'],
+      ['DONDATTOUR','DATTOUR_UUDAI','1','0..*','áp dụng'],
+      ['VOUCHER','DATTOUR_UUDAI','1','0..*','áp dụng'],
+      ['DONDATTOUR','GIAODICH','1','0..*','thanh toán'],
+      ['HOCHIEUSO','LICHSUTOUR','1','0..*','lịch sử'],
+      ['TOURTHUCTE','LICHSUTOUR','1','0..*','đã tham gia'],
+      ['CHITIETDATTOUR','LICHSUTOUR','0..1','0..*','xác nhận'],
+      ['TOURTHUCTE','PHANCONGTOUR','1','0..*','phân công'],
+      ['NHANVIEN','PHANCONGTOUR','1','0..*','nhận tour'],
+      ['TOURTHUCTE','DIEMDANH','1','0..*','điểm danh'],
+      ['HOCHIEUSO','DIEMDANH','0..1','0..*','được điểm danh'],
+      ['DSNGUOIDONGHANH','DIEMDANH','0..1','0..*','được điểm danh'],
+      ['NHANVIEN','DIEMDANH','1','0..*','thực hiện'],
+      ['PHANCONGTOUR','DIEMDANH','1','0..*','vận hành'],
+      ['TOURTHUCTE','HANHDONG','1','0..*','ghi nhận'],
+      ['HOCHIEUSO','HANHDONG','1','0..*','nhận điểm'],
+      ['HANHDONGXANH','HANHDONG','1','0..*','xác minh'],
+      ['NHANVIEN','HANHDONG','1','0..*','xác minh'],
+      ['PHANCONGTOUR','HANHDONG','1','0..*','vận hành'],
+      ['TOURTHUCTE','NHATKYSUCO','1','0..*','sự cố'],
+      ['NHANVIEN','NHATKYSUCO','1','0..*','báo cáo'],
+      ['HOCHIEUSO','NHATKYSUCO','0..1','0..*','liên quan'],
+      ['DSNGUOIDONGHANH','NHATKYSUCO','0..1','0..*','liên quan'],
+      ['TOURTHUCTE','CHIPHITHUCTE','1','0..*','chi phí'],
+      ['NHANVIEN','CHIPHITHUCTE','1','0..*','kê khai'],
+      ['TOURTHUCTE','QUYETTOAN','1','0..1','quyết toán'],
+      ['NHANVIEN','QUYETTOAN','1','0..*','thực hiện'],
+      ['HOCHIEUSO','NHATKYDOIDIEM','1','0..*','đổi điểm'],
+      ['VOUCHER','NHATKYDOIDIEM','1','0..*','được đổi'],
+      ['DONDATTOUR','YEUCAUHOTRO','0..1','0..*','yêu cầu'],
+      ['HOCHIEUSO','YEUCAUHOTRO','1','0..*','gửi yêu cầu'],
+      ['NHANVIEN','YEUCAUHOTRO','0..1','0..*','xử lý'],
+      ['TOURTHUCTE','DANHGIAKH','1','0..*','đánh giá'],
+      ['HOCHIEUSO','DANHGIAKH','1','0..*','gửi đánh giá'],
+      ['LICHSUTOUR','DANHGIAKH','1','0..*','đủ điều kiện']
+    ];
+
+    const allClassIds = classes.map(c => c.id);
+    const views = {
+      tongThe: { title:'Tổng thể', ids:allClassIds, layout },
+      taiKhoan: {
+        title:'Tài khoản và nhân sự',
+        ids:['VAITRO','TAIKHOAN','NHATKYHETHONG','HOCHIEUSO','NHANVIEN','NANGLUCNHANVIEN'],
+        layout: {
+          VAITRO:[80,120], TAIKHOAN:[780,120], NHATKYHETHONG:[1480,120],
+          HOCHIEUSO:[780,880], NHANVIEN:[1480,880], NANGLUCNHANVIEN:[2180,880]
+        }
+      },
+      sanPham: {
+        title:'Tour mẫu và dịch vụ',
+        ids:['LICHTRINHTOUR','TOURMAU','TOURTHUCTE','DICHVU_TOURTHUCTE','DICHVUTHEM','HDX_TOURTHUCTE','HANHDONGXANH'],
+        layout: {
+          LICHTRINHTOUR:[80,120], TOURMAU:[780,120], TOURTHUCTE:[1480,120],
+          DICHVUTHEM:[80,880], DICHVU_TOURTHUCTE:[780,880],
+          HDX_TOURTHUCTE:[1480,880], HANHDONGXANH:[2180,880]
+        }
+      },
+      datTour: {
+        title:'Đặt tour và ưu đãi',
+        ids:['HOCHIEUSO','NHANVIEN','TOURTHUCTE','DONDATTOUR','DSNGUOIDONGHANH','CHITIETDATTOUR','DICHVUTHEM','CHITIETDICHVU','VOUCHER','KHUYENMAI_KH','DATTOUR_UUDAI','NHATKYDOIDIEM','GIAODICH','YEUCAUHOTRO'],
+        layout: {
+          HOCHIEUSO:[80,120], TOURTHUCTE:[780,120], DONDATTOUR:[1480,120], DSNGUOIDONGHANH:[2180,120],
+          CHITIETDATTOUR:[80,900], DICHVUTHEM:[780,900], CHITIETDICHVU:[1480,900], GIAODICH:[2180,900],
+          KHUYENMAI_KH:[80,1690], VOUCHER:[780,1690], DATTOUR_UUDAI:[1480,1690], NHATKYDOIDIEM:[2180,1690],
+          NHANVIEN:[2880,120], YEUCAUHOTRO:[2880,900]
+        }
+      },
+      doan: {
+        title:'Đoàn và điểm danh',
+        ids:['HOCHIEUSO','DSNGUOIDONGHANH','NHANVIEN','TOURTHUCTE','PHANCONGTOUR','DIEMDANH'],
+        layout: {
+          HOCHIEUSO:[80,120], TOURTHUCTE:[780,120], NHANVIEN:[1480,120],
+          DSNGUOIDONGHANH:[80,900], PHANCONGTOUR:[780,900], DIEMDANH:[1480,900]
+        }
+      },
+      hanhDong: {
+        title:'Hành động xanh',
+        ids:['HOCHIEUSO','NHANVIEN','TOURTHUCTE','HANHDONGXANH','HANHDONG'],
+        layout: {
+          HOCHIEUSO:[80,120], TOURTHUCTE:[780,120], NHANVIEN:[1480,120],
+          HANHDONGXANH:[430,900], HANHDONG:[1130,900]
+        }
+      },
+      suCo: {
+        title:'Nhật ký sự cố',
+        ids:['HOCHIEUSO','DSNGUOIDONGHANH','NHANVIEN','TOURTHUCTE','NHATKYSUCO'],
+        layout: {
+          HOCHIEUSO:[80,120], DSNGUOIDONGHANH:[780,120],
+          TOURTHUCTE:[80,900], NHANVIEN:[780,900], NHATKYSUCO:[1480,510]
+        }
+      },
+      chiPhi: {
+        title:'Chi phí và quyết toán',
+        ids:['NHANVIEN','TOURTHUCTE','CHIPHITHUCTE','QUYETTOAN'],
+        layout: {
+          TOURTHUCTE:[80,120], NHANVIEN:[780,120],
+          CHIPHITHUCTE:[80,900], QUYETTOAN:[780,900]
+        }
+      },
+      danhGia: {
+        title:'Lịch sử và đánh giá',
+        ids:['HOCHIEUSO','TOURTHUCTE','CHITIETDATTOUR','LICHSUTOUR','DANHGIAKH'],
+        layout: {
+          HOCHIEUSO:[80,120], TOURTHUCTE:[780,120], CHITIETDATTOUR:[1480,120],
+          LICHSUTOUR:[430,900], DANHGIAKH:[1130,900]
+        }
+      }
+    };
+
+    const diagram = document.getElementById('diagram');
+    const svg = document.getElementById('relationships');
+    const viewport = document.getElementById('viewport');
+    let scale = 1, panX = 20, panY = 20, showLabels = false;
+    let activeView = views.tongThe;
+    let activeIds = new Set(activeView.ids);
+    let activeRelations = relations;
+    let drag = null, pan = null;
+
+    function esc(value) {
+      return value.replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    }
+    function renderClasses() {
+      classes.forEach(c => {
+        const el = document.createElement('section');
+        el.className = 'class-box';
+        el.id = 'class-' + c.id;
+        el.dataset.id = c.id;
+        el.style.left = c.x + 'px';
+        el.style.top = c.y + 'px';
+        el.innerHTML =
+          '<div class="class-title">' + esc(c.id) + '</div>' +
+          '<div class="segment fields">' + c.fields.map(v => '<div class="field">' + esc(v) + '</div>').join('') + '</div>' +
+          '<div class="segment methods">' + c.methods.map(v => '<div class="method">' + esc(v) + '</div>').join('') + '</div>';
+        diagram.appendChild(el);
+        el.addEventListener('mousedown', startDrag);
+        el.addEventListener('click', () => highlight(c.id));
+      });
+    }
+    function bounds(id) {
+      const el = document.getElementById('class-' + id);
+      return { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+    }
+    const canvasSize = { w: 6900, h: 3300 };
+    const grid = 20;
+    function chooseSides(a, b) {
+      const dx = (b.x + b.w / 2) - (a.x + a.w / 2);
+      const dy = (b.y + b.h / 2) - (a.y + a.h / 2);
+      if (Math.abs(dx) > Math.abs(dy) * .78) {
+        return dx >= 0 ? ['right', 'left'] : ['left', 'right'];
+      }
+      return dy >= 0 ? ['bottom', 'top'] : ['top', 'bottom'];
+    }
+    function anchor(box, side, position, total) {
+      const ratio = (position + 1) / (total + 1);
+      if (side === 'left' || side === 'right') {
+        return { x: side === 'right' ? box.x + box.w : box.x, y: box.y + 18 + ratio * (box.h - 36), side };
+      }
+      return { x: box.x + 18 + ratio * (box.w - 36), y: side === 'bottom' ? box.y + box.h : box.y, side };
+    }
+    function outside(point) {
+      const gap = 30;
+      if (point.side === 'left') return { x:point.x - gap, y:point.y };
+      if (point.side === 'right') return { x:point.x + gap, y:point.y };
+      if (point.side === 'top') return { x:point.x, y:point.y - gap };
+      return { x:point.x, y:point.y + gap };
+    }
+    function gridPoint(point) {
+      return { x: Math.round(point.x / grid), y: Math.round(point.y / grid) };
+    }
+    function cellKey(point) { return point.x + ',' + point.y; }
+    function edgeKey(a, b) {
+      const one = cellKey(a), two = cellKey(b);
+      return one < two ? one + '|' + two : two + '|' + one;
+    }
+    function blockedCells() {
+      const blocked = new Set();
+      classes.filter(c => activeIds.has(c.id)).forEach(c => {
+        const b = bounds(c.id), margin = 18;
+        const minX = Math.floor((b.x - margin) / grid), maxX = Math.ceil((b.x + b.w + margin) / grid);
+        const minY = Math.floor((b.y - margin) / grid), maxY = Math.ceil((b.y + b.h + margin) / grid);
+        for (let x = minX; x <= maxX; x++) {
+          for (let y = minY; y <= maxY; y++) blocked.add(x + ',' + y);
+        }
+      });
+      return blocked;
+    }
+    class MinHeap {
+      constructor() { this.items = []; }
+      push(item) {
+        const a = this.items; a.push(item); let i = a.length - 1;
+        while (i) { const p = (i - 1) >> 1; if (a[p].f <= item.f) break; a[i] = a[p]; i = p; }
+        a[i] = item;
+      }
+      pop() {
+        const a = this.items; if (!a.length) return null;
+        const root = a[0], last = a.pop(); if (!a.length) return root;
+        let i = 0;
+        while (true) {
+          let l = i * 2 + 1, r = l + 1, n = i;
+          if (l < a.length && a[l].f < last.f) n = l;
+          if (r < a.length && a[r].f < (n === i ? last.f : a[l].f)) n = r;
+          if (n === i) break;
+          a[i] = a[n]; i = n;
+        }
+        a[i] = last; return root;
+      }
+      get length() { return this.items.length; }
+    }
+    function findRoute(startPoint, endPoint, blocked, occupied) {
+      const start = gridPoint(startPoint), end = gridPoint(endPoint);
+      const endKey = cellKey(end), startKey = cellKey(start);
+      const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+      const heap = new MinHeap(), dist = new Map(), prior = new Map();
+      const initial = startKey + ',-1';
+      dist.set(initial, 0);
+      heap.push({ x:start.x, y:start.y, dir:-1, g:0, f:0, state:initial });
+      let finalState = null;
+      while (heap.length) {
+        const cur = heap.pop();
+        if (cur.g !== dist.get(cur.state)) continue;
+        if (cur.x === end.x && cur.y === end.y) { finalState = cur.state; break; }
+        dirs.forEach(([dx, dy], nextDir) => {
+          const next = { x:cur.x + dx, y:cur.y + dy };
+          if (next.x < 0 || next.y < 0 || next.x * grid > canvasSize.w || next.y * grid > canvasSize.h) return;
+          const key = cellKey(next);
+          if (key !== startKey && key !== endKey && blocked.has(key)) return;
+          const bend = cur.dir !== -1 && cur.dir !== nextDir ? .45 : 0;
+          const overlap = (occupied.get('E:' + edgeKey({x:cur.x,y:cur.y}, next)) || 0) * 34;
+          const crossing = (occupied.get('C:' + key) || 0) * 13;
+          const g = cur.g + 1 + bend + overlap + crossing;
+          const state = key + ',' + nextDir;
+          if (g >= (dist.get(state) ?? Infinity)) return;
+          dist.set(state, g);
+          prior.set(state, cur.state);
+          const h = Math.abs(next.x - end.x) + Math.abs(next.y - end.y);
+          heap.push({ x:next.x, y:next.y, dir:nextDir, g, f:g + h, state });
+        });
+      }
+      if (!finalState) return [startPoint, {x:startPoint.x, y:endPoint.y}, endPoint];
+      const cells = [];
+      for (let state = finalState; state; state = prior.get(state)) {
+        const parts = state.split(',');
+        cells.push({ x:Number(parts[0]), y:Number(parts[1]) });
+      }
+      cells.reverse();
+      for (let i = 1; i < cells.length; i++) {
+        const edge = 'E:' + edgeKey(cells[i - 1], cells[i]);
+        const cell = 'C:' + cellKey(cells[i]);
+        occupied.set(edge, (occupied.get(edge) || 0) + 1);
+        occupied.set(cell, (occupied.get(cell) || 0) + 1);
+      }
+      const points = [startPoint, ...cells.map(p => ({x:p.x * grid, y:p.y * grid})), endPoint];
+      return points.filter((p, i, all) => i === 0 || p.x !== all[i - 1].x || p.y !== all[i - 1].y);
+    }
+    function simplify(points) {
+      return points.filter((point, i) => {
+        if (i === 0 || i === points.length - 1) return true;
+        const prev = points[i - 1], next = points[i + 1];
+        return !((prev.x === point.x && point.x === next.x) || (prev.y === point.y && point.y === next.y));
+      });
+    }
+    function pathText(points) {
+      return points.map((p, i) => (i ? 'L ' : 'M ') + p.x + ' ' + p.y).join(' ');
+    }
+    function multPosition(point) {
+      if (point.side === 'left') return {x:point.x - 43, y:point.y - 7};
+      if (point.side === 'right') return {x:point.x + 7, y:point.y - 7};
+      if (point.side === 'top') return {x:point.x + 7, y:point.y - 8};
+      return {x:point.x + 7, y:point.y + 17};
+    }
+    function node(tag, attrs, text) {
+      const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attrs).forEach(([key, val]) => n.setAttribute(key, val));
+      if (text) n.textContent = text;
+      return n;
+    }
+    function drawRelations() {
+      svg.querySelectorAll('.drawn').forEach(el => el.remove());
+      const planned = activeRelations.map((rel, index) => {
+        const a = bounds(rel[0]), b = bounds(rel[1]);
+        const sides = chooseSides(a, b);
+        return { rel, index, a, b, sideA:sides[0], sideB:sides[1],
+          length: Math.abs(a.x - b.x) + Math.abs(a.y - b.y) };
+      });
+      const groups = {};
+      planned.forEach(plan => {
+        [[plan.rel[0], plan.sideA], [plan.rel[1], plan.sideB]].forEach(([id, side]) => {
+          const key = id + ':' + side;
+          (groups[key] ||= []).push(plan);
+        });
+      });
+      planned.forEach(plan => {
+        const ga = groups[plan.rel[0] + ':' + plan.sideA];
+        const gb = groups[plan.rel[1] + ':' + plan.sideB];
+        plan.p1 = anchor(plan.a, plan.sideA, ga.indexOf(plan), ga.length);
+        plan.p2 = anchor(plan.b, plan.sideB, gb.indexOf(plan), gb.length);
+      });
+      const blocked = blockedCells(), occupied = new Map();
+      planned.sort((left, right) => left.length - right.length).forEach(plan => {
+        const [from, to, fm, tm, label] = plan.rel;
+        const exterior1 = outside(plan.p1), exterior2 = outside(plan.p2);
+        const middle = findRoute(exterior1, exterior2, blocked, occupied);
+        const points = simplify([plan.p1, ...middle, plan.p2]);
+        const line = node('path', { d:pathText(points), class:'drawn rel-line association', 'data-link':from + '-' + to });
+        svg.appendChild(line);
+        const firstLabel = multPosition(plan.p1), secondLabel = multPosition(plan.p2);
+        svg.appendChild(node('text', { x:firstLabel.x, y:firstLabel.y, class:'drawn mult-label' }, fm));
+        svg.appendChild(node('text', { x:secondLabel.x, y:secondLabel.y, class:'drawn mult-label' }, tm));
+        const center = points[Math.floor(points.length / 2)];
+        if (showLabels) svg.appendChild(node('text', { x:center.x + 7, y:center.y - 7, class:'drawn rel-label' }, label));
+      });
+    }
+    function transform() {
+      diagram.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+      document.getElementById('zoomValue').textContent = Math.round(scale * 100) + '%';
+    }
+    function setScale(next) {
+      scale = Math.min(1.45, Math.max(.22, next));
+      transform();
+    }
+    function fit() {
+      const padding = 30;
+      const activeBounds = classes.filter(c => activeIds.has(c.id)).map(c => bounds(c.id));
+      const minX = Math.min(...activeBounds.map(b => b.x)) - 50;
+      const minY = Math.min(...activeBounds.map(b => b.y)) - 50;
+      const maxX = Math.max(...activeBounds.map(b => b.x + b.w)) + 50;
+      const maxY = Math.max(...activeBounds.map(b => b.y + b.h)) + 50;
+      const width = maxX - minX, height = maxY - minY;
+      const sx = (viewport.clientWidth - padding * 2) / width;
+      const sy = (viewport.clientHeight - padding * 2) / height;
+      scale = Math.min(sx, sy, 1);
+      panX = (viewport.clientWidth - width * scale) / 2 - minX * scale;
+      panY = (viewport.clientHeight - height * scale) / 2 - minY * scale;
+      transform();
+    }
+    function applyView(viewName) {
+      activeView = views[viewName];
+      activeIds = new Set(activeView.ids);
+      activeRelations = relations.filter(rel => activeIds.has(rel[0]) && activeIds.has(rel[1]));
+      classes.forEach(c => {
+        const el = document.getElementById('class-' + c.id);
+        const visible = activeIds.has(c.id);
+        el.classList.toggle('hidden', !visible);
+        if (visible) {
+          const position = activeView.layout[c.id];
+          el.style.left = position[0] + 'px';
+          el.style.top = position[1] + 'px';
+        }
+      });
+      document.getElementById('counter').textContent =
+        activeView.ids.length + ' thực thể | ' + activeRelations.length + ' liên kết | ' + activeView.title;
+      drawRelations();
+      fit();
+    }
+    function reset() {
+      classes.filter(c => activeIds.has(c.id)).forEach(c => {
+        const el = document.getElementById('class-' + c.id);
+        const position = activeView.layout[c.id];
+        el.style.left = position[0] + 'px';
+        el.style.top = position[1] + 'px';
+      });
+      drawRelations();
+      fit();
+    }
+    function startDrag(e) {
+      if (e.button !== 0) return;
+      e.stopPropagation();
+      const el = e.currentTarget;
+      drag = { el, x: e.clientX, y: e.clientY, left: el.offsetLeft, top: el.offsetTop };
+      el.classList.add('active');
+    }
+    function highlight(id) {
+      document.querySelectorAll('.class-box').forEach(box => box.classList.toggle('highlight', box.dataset.id === id));
+    }
+    viewport.addEventListener('mousedown', e => {
+      if (e.button !== 0 || e.target.closest('.class-box')) return;
+      pan = { x:e.clientX, y:e.clientY, left:panX, top:panY };
+      viewport.classList.add('panning');
+    });
+    window.addEventListener('mousemove', e => {
+      if (drag) {
+        drag.el.style.left = (drag.left + (e.clientX - drag.x) / scale) + 'px';
+        drag.el.style.top = (drag.top + (e.clientY - drag.y) / scale) + 'px';
+        drawRelations();
+      } else if (pan) {
+        panX = pan.left + e.clientX - pan.x;
+        panY = pan.top + e.clientY - pan.y;
+        transform();
+      }
+    });
+    window.addEventListener('mouseup', () => {
+      if (drag) drag.el.classList.remove('active');
+      drag = null;
+      pan = null;
+      viewport.classList.remove('panning');
+    });
+    viewport.addEventListener('wheel', e => {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      setScale(scale + (e.deltaY < 0 ? .05 : -.05));
+    }, { passive:false });
+    document.getElementById('zoomIn').addEventListener('click', () => setScale(scale + .08));
+    document.getElementById('zoomOut').addEventListener('click', () => setScale(scale - .08));
+    document.getElementById('fit').addEventListener('click', fit);
+    document.getElementById('reset').addEventListener('click', reset);
+    document.getElementById('viewSelector').addEventListener('change', e => applyView(e.target.value));
+    document.getElementById('toggleLabels').addEventListener('change', e => {
+      showLabels = e.target.checked;
+      drawRelations();
+    });
+    document.getElementById('toggleMethods').addEventListener('change', e => {
+      diagram.classList.toggle('methods-hidden', !e.target.checked);
+      drawRelations();
+      fit();
+    });
+    renderClasses();
+    const requestedView = new URLSearchParams(window.location.search).get('view');
+    const initialView = views[requestedView] ? requestedView : 'tongThe';
+    document.getElementById('viewSelector').value = initialView;
+    applyView(initialView);
+    window.addEventListener('resize', fit);
+  </script>
+</body>
+</html>
