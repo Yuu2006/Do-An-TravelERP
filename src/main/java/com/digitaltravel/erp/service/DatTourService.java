@@ -39,6 +39,7 @@ import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiTietDatTourRepository;
 import com.digitaltravel.erp.repository.ChiTietDichVuRepository;
+import com.digitaltravel.erp.repository.DanhGiaKhRepository;
 import com.digitaltravel.erp.repository.DatTourUuDaiRepository;
 import com.digitaltravel.erp.repository.DichVuThemRepository;
 import com.digitaltravel.erp.repository.DichVuTourThucTeRepository;
@@ -52,7 +53,6 @@ import com.digitaltravel.erp.repository.NangLucNhanVienRepository;
 import com.digitaltravel.erp.repository.PhanCongTourRepository;
 import com.digitaltravel.erp.repository.TourThucTeRepository;
 import com.digitaltravel.erp.repository.YeuCauHoTroRepository;
-import com.digitaltravel.erp.repository.DanhGiaKhRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -432,6 +432,10 @@ public class DatTourService {
                     dv.getMaDichVuThem(), tour.getMaTourThucTe())) {
                 throw AppException.badRequest("Dịch vụ thêm không thuộc tour thực tế: " + dv.getMaDichVuThem());
             }
+            // Dịch vụ: ThanhTien = DonGia * SoLuong
+            // TongTien = Sum(GiaVeKhach) + ThanhTien (dịch vụ)
+            // Voucher: Giảm thẳng: TongTien = TongTien - SoTienGiam
+            //          Giảm phần trăm: TongTien = TongTien * GiaTriGiam / 100
             BigDecimal thanhTien = dv.getDonGia().multiply(BigDecimal.valueOf(dvReq.getSoLuong()));
 
             ChiTietDichVu ct = new ChiTietDichVu();
