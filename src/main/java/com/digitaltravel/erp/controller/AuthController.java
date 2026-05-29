@@ -7,7 +7,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,8 +31,6 @@ import com.digitaltravel.erp.repository.HoChieuSoRepository;
 import com.digitaltravel.erp.repository.TaiKhoanRepository;
 import com.digitaltravel.erp.repository.VaiTroRepository;
 import com.digitaltravel.erp.service.MaTuDongService;
-import com.digitaltravel.erp.service.QuyetToanService;
-import org.springframework.data.domain.PageRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,19 +47,8 @@ public class AuthController {
     private final VaiTroRepository vaiTroRepository;
     private final HoChieuSoRepository hoChieuSoRepository;
     private final MaTuDongService maTuDongService;
-    private final QuyetToanService quyetToanService;
 
-    @GetMapping("/debug")
-    public String debug() {
-        try {
-            quyetToanService.tourCanQuyetToan(PageRequest.of(0, 10));
-            return "SUCCESS";
-        } catch (Exception e) {
-            java.io.StringWriter sw = new java.io.StringWriter();
-            e.printStackTrace(new java.io.PrintWriter(sw));
-            return sw.toString();
-        }
-    }
+
 
     @PostMapping("/dang-ky")
     @Transactional
@@ -168,12 +154,12 @@ public class AuthController {
     }
 
     @PostMapping("/quen-mat-khau")
-    public ResponseEntity<ApiResponse<String>> quenMatKhau(@Valid @RequestBody QuenMatKhauRequest request) {
+    public ResponseEntity<ApiResponse<Void>> quenMatKhau(@Valid @RequestBody QuenMatKhauRequest request) {
         TaiKhoan taiKhoan = taiKhoanRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> AppException.notFound("Không tìm thấy tài khoản với email này"));
         String resetToken = jwtUtil.generateResetToken(taiKhoan.getTenDangNhap());
-        // TODO: Thay viec tra ve token bang gui email trong production
-        return ResponseEntity.ok(ApiResponse.ok("Đã tạo token đặt lại mật khẩu (hiệu lực 15 phút)", resetToken));
+        // TODO: Gửi email chứa resetToken cho người dùng
+        return ResponseEntity.ok(ApiResponse.ok("Đã gửi hướng dẫn đặt lại mật khẩu vào email của bạn", null));
     }
 
     @PostMapping("/dat-lai-mat-khau")

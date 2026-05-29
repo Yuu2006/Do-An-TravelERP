@@ -3459,6 +3459,8 @@ BEGIN
                   SYSTIMESTAMP - INTERVAL '8' DAY, 'Nhóm ba khách đang tham gia tour Quy Nhơn, có một khách dễ say xe.', 'HDX_BSLK_SORT:3', 0, NULL, 'Y');
     them_don_bslk('DONE_A', 'TTT_BSLK_DONE_CT', 'KH_12', 3900000, 2, 'DVT_BSLK_WORKSHOP', 320000, 'CHUYEN_KHOAN',
                   SYSTIMESTAMP - INTERVAL '20' DAY, 'Hai khách ăn chay đã hoàn thành tour Cần Thơ và tham gia lớp làm bánh dân gian.', 'HDX_BSLK_NOPLASTIC:2', 0, NULL, 'Y');
+    them_don_bslk('REVIEW_A', 'TTT_BSLK_DONE_CT', 'KH_16', 3900000, 1, 'DVT_BSLK_WORKSHOP', 320000, 'CHUYEN_KHOAN',
+                  SYSTIMESTAMP - INTERVAL '20' DAY, 'Khách đã hoàn thành tour Cần Thơ, dữ liệu dành cho thao tác gửi đánh giá trong demo.', 'HDX_BSLK_NOPLASTIC:1', 0, NULL, 'Y');
     them_don_bslk('CANCEL_A', 'TTT_BSLK_CANCEL_HG', 'KH_10', 6400000, 2, 'DVT_BSLK_HEALTH', 150000, 'THE_QUOC_TE',
                   SYSTIMESTAMP - INTERVAL '6' DAY, 'Hai khách đã thanh toán tour Hà Giang, tour hủy do cảnh báo sạt lở đường đèo.', 'HDX_BSLK_SORT:2', 0, NULL, 'Y');
     them_don_bslk('SETTLE_A', 'TTT_BSLK_SETTLE_HA', 'KH_09', 4700000, 3, 'DVT_BSLK_SEAT', 180000, 'CHUYEN_KHOAN',
@@ -3470,6 +3472,7 @@ UPDATE TOURTHUCTE SET TrangThai = 'DANG_DIEN_RA' WHERE MaTourThucTe = 'TTT_BSLK_
 UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC' WHERE MaTourThucTe = 'TTT_BSLK_DONE_CT';
 UPDATE TOURTHUCTE SET TrangThai = 'KET_THUC' WHERE MaTourThucTe = 'TTT_BSLK_SETTLE_HA';
 UPDATE TOURTHUCTE SET TrangThai = 'HUY' WHERE MaTourThucTe = 'TTT_BSLK_CANCEL_HG';
+UPDATE DONDATTOUR SET TrangThai = 'DA_XAC_NHAN' WHERE MaDatTour = 'DDT_BSLK_REVIEW_A';
 
 INSERT INTO DIEMDANH (MaDiemDanh, MaTourThucTe, MaKhachHang, MaNguoiDongHanh, LoaiKhach, MaNhanVien, ThoiGian, DiaDiem, TrangThai)
 VALUES ('DD_BSLK_ACTIVE_KH06', 'TTT_BSLK_ACTIVE_QN', 'KH_06', NULL, 'NGUOI_DAT', 'NV_HDV12', SYSTIMESTAMP - INTERVAL '5' HOUR, 'Bãi Kỳ Co', 'DA_DIEM_DANH');
@@ -3490,6 +3493,9 @@ VALUES ('CP_BSLK_ACTIVE_WATER', 'TTT_BSLK_ACTIVE_QN', 'NV_HDV12', 'Nước đi�
 
 INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
 VALUES ('LST_BSLK_DONE_KH12', 'KH_12', 'TTT_BSLK_DONE_CT', 'CTDT_BSLK_DONE_A_KH', TRUNC(SYSDATE) - 12);
+-- Khong tao DANHGIAKH cho KH_16: du lieu nay danh rieng de quay thao tac gui danh gia moi.
+INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
+VALUES ('LST_BSLK_REVIEW_KH16', 'KH_16', 'TTT_BSLK_DONE_CT', 'CTDT_BSLK_REVIEW_A_KH', TRUNC(SYSDATE) - 12);
 INSERT INTO LICHSUTOUR (MaLichSuTour, MaKhachHang, MaTourThucTe, MaChiTietDat, NgayThamGia)
 VALUES ('LST_BSLK_SETTLE_KH09', 'KH_09', 'TTT_BSLK_SETTLE_HA', 'CTDT_BSLK_SETTLE_A_KH', TRUNC(SYSDATE) - 60);
 
