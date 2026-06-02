@@ -66,7 +66,6 @@ public class VanHanhService {
     private final PhanCongTourRepository phanCongTourRepository;
     private final DonDatTourRepository donDatTourRepository;
     private final LichTrinhTourRepository lichTrinhTourRepository;
-
     @Transactional(readOnly = true)
     public List<LichTrinhResponse> lichTrinhTour(String maTour, String maTaiKhoan, String maVaiTro) {
         kiemTraQuyenXemLichTrinhTour(maTour, maTaiKhoan, maVaiTro);
@@ -128,7 +127,7 @@ public class VanHanhService {
                         .hoTenKhachHang(ndh.getHoTen())
                         .soDienThoai(ndh.getSoDienThoai())
                         .hangThanhVien("THANH_VIEN")
-                        .ghiChuYTe(ndh.getGhiChu())
+                        .ghiChuYTe(chuanHoaGhiChuNguoiDongHanh(ndh.getGhiChu()))
                         .ghiChuDatTour(don.getGhiChu())
                         .hanhDongXanh(don.getHanhDongXanh())
                         .diemXanh(0L)
@@ -137,6 +136,32 @@ public class VanHanhService {
             });
         });
         return result;
+    }
+
+    private String chuanHoaGhiChuNguoiDongHanh(String ghiChu) {
+        if (ghiChu == null || ghiChu.isBlank()) {
+            return null;
+        }
+        String value = ghiChu.trim();
+        if (java.util.Set.of(
+                "Người đồng hành chính, nhận thông báo lịch trình cùng người đặt.",
+                "Đi cùng nhóm, đã xác nhận thông tin cá nhân.",
+                "Người thân đi cùng người đặt tour",
+                "Thành viên trong đoàn đã cung cấp đủ thông tin cá nhân",
+                "Đi công tác kết hợp nghỉ dưỡng",
+                "Trẻ em đi cùng gia đình").contains(value)) {
+            return null;
+        }
+        if ("Trẻ em".equals(value)) {
+            return "Trẻ em, cần lưu ý lịch nghỉ và bữa ăn phù hợp.";
+        }
+        if ("Người cao tuổi".equals(value)) {
+            return "Người cao tuổi, cần lịch trình nhẹ và hỗ trợ khi di chuyển.";
+        }
+        if ("Có ghi chú cần hỗ trợ ăn uống và giờ nghỉ".equals(value)) {
+            return "Cần hỗ trợ ăn uống và bố trí giờ nghỉ phù hợp.";
+        }
+        return value;
     }
 
     private String gopGhiChuYTeVaDiUng(String ghiChuYTe, String diUng) {
@@ -205,9 +230,6 @@ public class VanHanhService {
         kiemTraKhachThuocTourDaXacNhan(maTour, kh.getMaKhachHang());
         HanhDongXanh hdx = hanhDongXanhRepository.findById(req.getMaHanhDongXanh())
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + req.getMaHanhDongXanh()));
-        if (!hanhDongXanhRepository.existsAvailableForTour(req.getMaHanhDongXanh(), maTour)) {
-            throw AppException.badRequest("Hanh dong xanh khong thuoc tour thuc te: " + req.getMaHanhDongXanh());
-        }
         if (!hanhDongRepository.findByTourAndKhachAndHanhDong(
                 maTour, kh.getMaKhachHang(), req.getMaHanhDongXanh()).isEmpty()) {
             throw AppException.badRequest("Hành động xanh này đã được ghi nhận cho khách hàng trong tour.");
@@ -619,7 +641,7 @@ public class VanHanhService {
                 .soDienThoai(kh != null ? kh.getTaiKhoan().getSoDienThoai()
                         : (nguoiDongHanh != null ? nguoiDongHanh.getSoDienThoai() : null))
                 .hangThanhVien(kh != null ? kh.getHangThanhVien() : "THANH_VIEN")
-                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null))
+                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? chuanHoaGhiChuNguoiDongHanh(nguoiDongHanh.getGhiChu()) : null))
                 .diemXanh(kh != null ? kh.getDiemXanh() : 0L)
                 .build();
     }
@@ -657,7 +679,7 @@ public class VanHanhService {
                 .maKhachHang(kh != null ? kh.getMaKhachHang() : null)
                 .maNguoiDongHanh(nguoiDongHanh != null ? nguoiDongHanh.getMaNguoiDongHanh() : null)
                 .hoTenKhachHang(hoTenKhachHang)
-                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? nguoiDongHanh.getGhiChu() : null))
+                .ghiChuYTe(kh != null ? kh.getGhiChuYTe() : (nguoiDongHanh != null ? chuanHoaGhiChuNguoiDongHanh(nguoiDongHanh.getGhiChu()) : null))
                 .diUng(kh != null ? kh.getDiUng() : null)
                 .thoiGianBaoCao(sc.getThoiGianBaoCao())
                 .build();

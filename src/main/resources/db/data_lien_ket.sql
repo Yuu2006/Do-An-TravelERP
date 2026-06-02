@@ -565,6 +565,15 @@ INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
 VALUES ('HDX_TREE', 'Đóng góp trồng cây tại điểm đến', 200);
 INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
 VALUES ('HDX_LOCAL', 'Sử dụng sản phẩm địa phương thay đồ nhựa dùng một lần', 100);
+-- Hanh dong xanh chung de HDV xac nhan thuc te, khong gan vao tour cu the.
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX_COMMON_BOTTLE', 'Mang bình nước cá nhân trong tour', 80);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX_COMMON_CLEANUP', 'Tham gia nhặt rác tại điểm tham quan', 150);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX_COMMON_REFILL', 'Dùng trạm tiếp nước thay chai nhựa dùng một lần', 90);
+INSERT INTO HANHDONGXANH (MaHanhDongXanh, TenHanhDong, DiemCong)
+VALUES ('HDX_COMMON_LOCAL', 'Ưu tiên sản phẩm địa phương ít bao bì nhựa', 100);
 
 -- ------------------------------------------------------------
 -- 3. TOUR THUC TE - DU 7 TRANG THAI TOUR
@@ -3103,19 +3112,47 @@ DECLARE
         FOR i IN 1 .. p_SoKhach - 1 LOOP
             v_MaNguoiDongHanh := 'NDH_' || SUBSTR(p_MaDatTour, 5) || '_' || LPAD(i, 2, '0');
             v_MaChiTietDat := 'CTDT_' || SUBSTR(p_MaDatTour, 5) || '_N' || LPAD(i, 2, '0');
-            v_HoTen := CASE MOD(i + p_NgayLui, 12)
-                WHEN 0 THEN 'Nguyễn Minh An'
-                WHEN 1 THEN 'Trần Gia Bảo'
-                WHEN 2 THEN 'Lê Hoài Thương'
-                WHEN 3 THEN 'Phạm Hải Đăng'
-                WHEN 4 THEN 'Vũ Khánh Linh'
-                WHEN 5 THEN 'Đỗ Nhật Minh'
-                WHEN 6 THEN 'Bùi Thanh Trúc'
-                WHEN 7 THEN 'Hoàng Đức Huy'
-                WHEN 8 THEN 'Mai Phương Uyên'
-                WHEN 9 THEN 'Cao Tuấn Kiệt'
-                WHEN 10 THEN 'Tạ Ngọc Mai'
-                ELSE 'Đặng Quốc Việt'
+            v_HoTen := CASE MOD(ORA_HASH(p_MaDatTour), 12)
+                WHEN 0 THEN 'Nguyễn'
+                WHEN 1 THEN 'Trần'
+                WHEN 2 THEN 'Lê'
+                WHEN 3 THEN 'Phạm'
+                WHEN 4 THEN 'Vũ'
+                WHEN 5 THEN 'Đỗ'
+                WHEN 6 THEN 'Bùi'
+                WHEN 7 THEN 'Hoàng'
+                WHEN 8 THEN 'Mai'
+                WHEN 9 THEN 'Cao'
+                WHEN 10 THEN 'Tạ'
+                ELSE 'Đặng'
+            END || ' ' || CASE MOD(p_NgayLui, 10)
+                WHEN 0 THEN 'Minh'
+                WHEN 1 THEN 'Gia'
+                WHEN 2 THEN 'Hoài'
+                WHEN 3 THEN 'Hải'
+                WHEN 4 THEN 'Khánh'
+                WHEN 5 THEN 'Nhật'
+                WHEN 6 THEN 'Thanh'
+                WHEN 7 THEN 'Đức'
+                WHEN 8 THEN 'Phương'
+                ELSE 'Tuấn'
+            END || ' ' || CASE MOD(i, 16)
+                WHEN 0 THEN 'An'
+                WHEN 1 THEN 'Bảo'
+                WHEN 2 THEN 'Thương'
+                WHEN 3 THEN 'Đăng'
+                WHEN 4 THEN 'Linh'
+                WHEN 5 THEN 'Minh'
+                WHEN 6 THEN 'Trúc'
+                WHEN 7 THEN 'Huy'
+                WHEN 8 THEN 'Uyên'
+                WHEN 9 THEN 'Kiệt'
+                WHEN 10 THEN 'Mai'
+                WHEN 11 THEN 'Việt'
+                WHEN 12 THEN 'Khoa'
+                WHEN 13 THEN 'Nhi'
+                WHEN 14 THEN 'Nam'
+                ELSE 'Yến'
             END;
 
             INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
@@ -3873,6 +3910,25 @@ SET GhiChu = CASE MOD(ORA_HASH(MaDatTour), 5)
     ELSE 'Yêu cầu nhắc lại điểm tập trung và số điện thoại điều phối trước ngày khởi hành.'
 END;
 
+-- Ghi chú người đồng hành chỉ lưu lưu ý y tế/sức khỏe riêng từng hành khách.
+-- Không dùng trường này cho mô tả quan hệ, thông báo lịch trình hoặc ghi chú vận hành chung.
+UPDATE DSNGUOIDONGHANH
+SET GhiChu = CASE
+    WHEN GhiChu IN (
+        'Người đồng hành chính, nhận thông báo lịch trình cùng người đặt.',
+        'Đi cùng nhóm, đã xác nhận thông tin cá nhân.',
+        'Người thân đi cùng người đặt tour',
+        'Thành viên trong đoàn đã cung cấp đủ thông tin cá nhân',
+        'Đi công tác kết hợp nghỉ dưỡng',
+        'Trẻ em đi cùng gia đình'
+    ) THEN NULL
+    WHEN GhiChu = 'Trẻ em' THEN 'Trẻ em, cần lưu ý lịch nghỉ và bữa ăn phù hợp.'
+    WHEN GhiChu = 'Người cao tuổi' THEN 'Người cao tuổi, cần lịch trình nhẹ và hỗ trợ khi di chuyển.'
+    WHEN GhiChu = 'Có ghi chú cần hỗ trợ ăn uống và giờ nghỉ' THEN 'Cần hỗ trợ ăn uống và bố trí giờ nghỉ phù hợp.'
+    ELSE GhiChu
+END
+WHERE MaNguoiDongHanh LIKE 'NDH_%';
+
 -- Chuẩn hoá mô tả chuyên môn của hướng dẫn viên theo khả năng phục vụ tour.
 UPDATE NANGLUCNHANVIEN
 SET ChuyenMon = CASE MaNhanVien
@@ -3960,6 +4016,26 @@ END;
 UPDATE TOURMAU tm
 SET SoDanhGia = (SELECT COUNT(*) FROM TOURTHUCTE ttt JOIN DANHGIAKH dg ON ttt.MaTourThucTe = dg.MaTourThucTe WHERE ttt.MaTourMau = tm.MaTourMau),
     DanhGia = NVL((SELECT ROUND(AVG(dg.SoSao), 2) FROM TOURTHUCTE ttt JOIN DANHGIAKH dg ON ttt.MaTourThucTe = dg.MaTourThucTe WHERE ttt.MaTourMau = tm.MaTourMau), 0);
+
+-- Chuan hoa cac phieu mau huy tour/hoan tien ve cung format UC32.
+UPDATE YEUCAUHOTRO yc
+SET LoaiYeuCau = 'HUY_TOUR',
+    NoiDung = '- Ly do: Khach yeu cau huy tour do thay doi ke hoach.'
+        || CHR(10) || '- Ngay con lai den khoi hanh: '
+        || NVL((
+            SELECT GREATEST(TRUNC(ttt.NgayKhoiHanh) - TRUNC(SYSDATE), 0)
+              FROM DONDATTOUR ddt
+              JOIN TOURTHUCTE ttt ON ttt.MaTourThucTe = ddt.MaTourThucTe
+             WHERE ddt.MaDatTour = yc.MaDatTour
+        ), 0)
+        || CHR(10) || '- Ti le hoan: 90%'
+        || CHR(10) || '- So tien hoan: '
+        || NVL((
+            SELECT TO_CHAR(ROUND(ddt.TongTien * 0.9, 2), 'FM999999999999990D00', 'NLS_NUMERIC_CHARACTERS=.,')
+              FROM DONDATTOUR ddt
+             WHERE ddt.MaDatTour = yc.MaDatTour
+        ), '0.00')
+WHERE yc.MaDatTour LIKE 'DDT_HUY_%';
 
 COMMIT;
 

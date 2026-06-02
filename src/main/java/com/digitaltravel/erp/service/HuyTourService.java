@@ -84,7 +84,7 @@ public class HuyTourService {
         yc.setKhachHang(kh);
         yc.setLoaiYeuCau("HUY_TOUR");
         yc.setNoiDung(String.format(
-                "Ly do: %s | Ngay con lai den khoi hanh: %d | Ti le hoan: %d%% | So tien hoan: %s",
+                "- Lý do: %s\n- Ngày còn lại đến khởi hành: %d\n- Tỉ lệ hoàn: %d%%\n- Số tiền hoàn: %s",
                 request.getLyDo(), soNgayConLai, tiLeHoan, soTienHoan.toPlainString()));
         yc.setTrangThai("CHUA_XU_LY");
         yeuCauHoTroRepository.save(yc);
@@ -139,7 +139,7 @@ public class HuyTourService {
         don.setTrangThai("DA_XAC_NHAN");
         donDatTourRepository.save(don);
 
-        String noiDung = yc.getNoiDung() + " | TU_CHOI: " + (request.getGhiChu() != null ? request.getGhiChu() : "");
+        String noiDung = yc.getNoiDung() + "\n- Từ chối: " + (request.getGhiChu() != null ? request.getGhiChu() : "");
         yc.setNoiDung(noiDung);
         yc.setTrangThai("TU_CHOI");
         yeuCauHoTroRepository.save(yc);
@@ -167,9 +167,9 @@ public class HuyTourService {
     private BigDecimal tinhSoTienHoanTuNoiDung(String noiDung, BigDecimal tongTien) {
         // Parse tỉ lệ từ NoiDung (pattern: "Ti le hoan: XX%")
         try {
-            int idx = noiDung.indexOf("Ti le hoan: ");
+            int idx = noiDung.indexOf("Tỉ lệ hoàn: ");
             if (idx >= 0) {
-                String sub = noiDung.substring(idx + "Ti le hoan: ".length());
+                String sub = noiDung.substring(idx + "Tỉ lệ hoàn: ".length());
                 int pct = Integer.parseInt(sub.substring(0, sub.indexOf('%')).trim());
                 return tongTien.multiply(BigDecimal.valueOf(pct))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);

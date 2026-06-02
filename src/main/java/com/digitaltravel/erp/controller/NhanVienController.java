@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.digitaltravel.erp.config.TaiKhoanDetails;
 import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.BoSungRequest;
-import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import com.digitaltravel.erp.dto.requests.GanVaiTroRequest;
 import com.digitaltravel.erp.dto.requests.NangLucRequest;
 import com.digitaltravel.erp.dto.requests.XuLyHoTroRequest;
@@ -189,9 +188,8 @@ public class NhanVienController {
      */
     @GetMapping("/api/huong-dan-vien/hanh-dong-xanh")
     @PreAuthorize("hasAnyRole('HDV', 'DIEUHANH', 'ADMIN')")
-    public ResponseEntity<ApiResponse<List<com.digitaltravel.erp.dto.responses.HanhDongXanhResponse>>> danhSachHanhDongXanh(
-            @RequestParam(required = false) String maTourThucTe) {
-        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSach(maTourThucTe)));
+    public ResponseEntity<ApiResponse<List<com.digitaltravel.erp.dto.responses.HanhDongXanhResponse>>> danhSachHanhDongXanh() {
+        return ResponseEntity.ok(ApiResponse.ok(hanhDongXanhService.danhSachChung()));
     }
 
     // ──────────────── UC39: HDV xem lịch công tác ─────────────────────────

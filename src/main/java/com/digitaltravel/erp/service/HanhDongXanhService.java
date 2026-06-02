@@ -36,6 +36,12 @@ public class HanhDongXanhService {
                 .toList();
     }
 
+    public List<HanhDongXanhResponse> danhSachChung() {
+        return hanhDongXanhRepository.findCommonActions().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public HanhDongXanhResponse chiTiet(String id) {
         HanhDongXanh hdx = hanhDongXanhRepository.findById(id)
                 .orElseThrow(() -> AppException.notFound("Khong tim thay hanh dong xanh: " + id));
