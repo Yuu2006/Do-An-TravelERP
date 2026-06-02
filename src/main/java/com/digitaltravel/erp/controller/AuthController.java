@@ -48,8 +48,6 @@ public class AuthController {
     private final HoChieuSoRepository hoChieuSoRepository;
     private final MaTuDongService maTuDongService;
 
-
-
     @PostMapping("/dang-ky")
     @Transactional
     public ResponseEntity<ApiResponse<DangNhapResponse>> dangKy(@Valid @RequestBody DangKyRequest request) {
@@ -93,8 +91,7 @@ public class AuthController {
         hoChieuSoRepository.save(hoChieuSo);
 
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
-        );
+                new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau()));
         TaiKhoanDetails details = (TaiKhoanDetails) auth.getPrincipal();
         String token = jwtUtil.generateToken(details);
         DangNhapResponse body = DangNhapResponse.builder()
@@ -110,8 +107,7 @@ public class AuthController {
     @PostMapping("/dang-nhap")
     public ResponseEntity<ApiResponse<DangNhapResponse>> dangNhap(@Valid @RequestBody DangNhapRequest request) {
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau())
-        );
+                new UsernamePasswordAuthenticationToken(request.getTenDangNhap(), request.getMatKhau()));
         TaiKhoanDetails details = (TaiKhoanDetails) auth.getPrincipal();
         String token = jwtUtil.generateToken(details);
         DangNhapResponse body = DangNhapResponse.builder()

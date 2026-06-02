@@ -2,11 +2,9 @@ package com.digitaltravel.erp.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-import com.digitaltravel.erp.dto.requests.BoSungQuyetToanRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -225,7 +223,9 @@ public class QuyetToanService {
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " + don.getTrangThai());
+            throw AppException
+                    .badRequest("Chỉ có thể xác nhận hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: "
+                            + don.getTrangThai());
         }
 
         gd.setTrangThai("DA_HOAN_TIEN");
@@ -267,7 +267,9 @@ public class QuyetToanService {
 
         DonDatTour don = gd.getDonDatTour();
         if (!"CHO_HUY".equals(don.getTrangThai())) {
-            throw AppException.badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: " + don.getTrangThai());
+            throw AppException
+                    .badRequest("Chỉ có thể từ chối hoàn tiền cho đơn ở trạng thái CHO_HUY. Trạng thái hiện tại: "
+                            + don.getTrangThai());
         }
 
         gd.setTrangThai("THAT_BAI");
