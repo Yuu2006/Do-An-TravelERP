@@ -1,4 +1,7 @@
 -- ============================================================
+ROLLBACK;
+ALTER SESSION SET ISOLATION_LEVEL = READ COMMITTED;
+
 -- SEED DATA — Tài khoản nhân viên
 -- Phạm vi    : Vai trò, tài khoản nhân viên, hồ sơ nhân viên
 -- Mật khẩu mặc định cho tất cả tài khoản: password

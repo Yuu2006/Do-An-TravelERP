@@ -1267,4 +1267,5 @@ END;
 /
 
 
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+-- Seed data scripts explicitly set READ COMMITTED before inserting rows
+-- through role-check triggers immediately after schema creation.
