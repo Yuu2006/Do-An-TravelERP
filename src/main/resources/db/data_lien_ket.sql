@@ -3,6 +3,8 @@
 -- Chay sau:
 --   @src/main/resources/db/KhoiTaoBang.sql
 --   @src/main/resources/db/data_v1.sql
+--   data_v1.sql la BAT BUOC vi file nay khong tu tao du lieu nen
+--   VAITRO / TAIKHOAN / NHANVIEN.
 --
 -- Ghi chu nghiep vu:
 -- - TOURTHUCTE khong co FK truc tiep den nhan vien dieu hanh.
@@ -10,6 +12,9 @@
 --   TK_MGR01 / NV_MGR01 ghi nhan THEM/CAP_NHAT tren tung TOURTHUCTE.
 -- - Ten TOURMAU dung dinh dang: Dia diem - tieu de.
 -- ============================================================
+
+ROLLBACK;
+ALTER SESSION SET ISOLATION_LEVEL = READ COMMITTED;
 
 -- ------------------------------------------------------------
 -- 0. RESET DU LIEU LIEN KET NEU CHAY LAI SCRIPT
@@ -1427,7 +1432,7 @@ INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHan
 VALUES ('CTDT_HA_NEW_NDH', 'DDT_HA_NEW', NULL, 'NDH_HA_NEW_01', 'NGUOI_DONG_HANH', 5980000);
 
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
-VALUES ('GD_HA_NEW', 'DDT_HA_NEW', 'THANH_TOAN', 'THE_TIN_DUNG', 11960000, 'BANK-HA-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '1' DAY);
+VALUES ('GD_HA_NEW', 'DDT_HA_NEW', 'THANH_TOAN', 'THE_QUOC_TE', 11960000, 'BANK-HA-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '1' DAY);
 
 -- Dat tour cho Mui Ne
 INSERT INTO DONDATTOUR (MaDatTour, MaTourThucTe, MaKhachHang, NgayDat, TongTien, TrangThai, ThoiGianHetHan)
@@ -1435,7 +1440,7 @@ VALUES ('DDT_MN_NEW', 'TTT_MUINE', 'KH_10', SYSTIMESTAMP - INTERVAL '1' DAY, 591
 INSERT INTO CHITIETDATTOUR (MaChiTietDat, MaDatTour, MaKhachHang, MaNguoiDongHanh, LoaiKhach, GiaTaiThoiDiemDat)
 VALUES ('CTDT_MN_NEW_KH', 'DDT_MN_NEW', 'KH_10', NULL, 'NGUOI_DAT', 5910000);
 INSERT INTO GIAODICH (MaGiaoDich, MaDatTour, LoaiGiaoDich, PhuongThuc, SoTien, MaGDNH, TrangThai, NgayThanhToan)
-VALUES ('GD_MN_NEW', 'DDT_MN_NEW', 'THANH_TOAN', 'VNPAY', 5910000, 'BANK-MN-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '12' HOUR);
+VALUES ('GD_MN_NEW', 'DDT_MN_NEW', 'THANH_TOAN', 'VI_DIEN_TU', 5910000, 'BANK-MN-NEW', 'THANH_CONG', SYSTIMESTAMP - INTERVAL '12' HOUR);
 
 -- ============================================================
 -- BO SUNG: DATA TOUR QUA KHU DE CO DANH GIA CHO HOI AN, MUI NE, HA LONG
@@ -3112,7 +3117,7 @@ DECLARE
         FOR i IN 1 .. p_SoKhach - 1 LOOP
             v_MaNguoiDongHanh := 'NDH_' || SUBSTR(p_MaDatTour, 5) || '_' || LPAD(i, 2, '0');
             v_MaChiTietDat := 'CTDT_' || SUBSTR(p_MaDatTour, 5) || '_N' || LPAD(i, 2, '0');
-            v_HoTen := CASE MOD(ORA_HASH(p_MaDatTour), 12)
+            v_HoTen := CASE MOD(p_NgayLui, 12)
                 WHEN 0 THEN 'Nguyễn'
                 WHEN 1 THEN 'Trần'
                 WHEN 2 THEN 'Lê'
@@ -3464,8 +3469,8 @@ DECLARE
             INSERT INTO DSNGUOIDONGHANH (MaNguoiDongHanh, MaDatTour, HoTen, CCCD, SoDienThoai, NgaySinh, GioiTinh, GhiChu)
             VALUES (v_Ndh, v_MaDatTour,
                     CASE i WHEN 1 THEN 'Nguyễn Minh An' WHEN 2 THEN 'Lê Thanh Trúc' WHEN 3 THEN 'Phạm Hoàng Nam' ELSE 'Trần Gia Hân' END,
-                    '07929977' || LPAD(ORA_HASH(v_Ndh, 9999), 4, '0'),
-                    '0933' || LPAD(ORA_HASH(v_Ndh, 999999), 6, '0'),
+                    '07929977' || LPAD(MOD(LENGTH(v_Ndh) * 97 + i * 131, 10000), 4, '0'),
+                    '0933' || LPAD(MOD(LENGTH(v_Ndh) * 1009 + i * 733, 1000000), 6, '0'),
                     ADD_MONTHS(TRUNC(SYSDATE), -12 * (22 + i * 4)),
                     CASE MOD(i, 2) WHEN 0 THEN 'NỮ' ELSE 'NAM' END,
                     CASE WHEN i = p_SoKhach - 1 THEN 'Người đồng hành có ghi chú ăn uống và vị trí ghế' ELSE 'Người đồng hành trong cùng đơn đặt tour' END);
@@ -3866,7 +3871,7 @@ VALUES ('GD_XN_TTTC_DALAT', 'DDT_XN_TTTC_DALAT', 'THANH_TOAN', 'CHUYEN_KHOAN', 4
 
 -- Mỗi ngày lưu timeline trong trường HoatDong, mỗi dòng gồm thời gian và hoạt động tương ứng.
 UPDATE LICHTRINHTOUR
-SET HoatDong = CASE MOD(ORA_HASH(MaLichTrinhTour), 3)
+SET HoatDong = CASE MOD(NgayThu + LENGTH(MaLichTrinhTour), 3)
     WHEN 0 THEN '06:30 - Dùng bữa sáng và chuẩn bị cho lịch trình trong ngày.'
         || CHR(10) || '08:00 - ' || RTRIM(TRIM(MoTa), '.')
         || CHR(10) || '11:30 - Dùng bữa trưa theo thực đơn của chương trình.'
@@ -3902,7 +3907,7 @@ END;
 
 -- Ghi chú cấp đơn chỉ lưu các yêu cầu vận hành chung, không gắn thông tin riêng của hành khách.
 UPDATE DONDATTOUR
-SET GhiChu = CASE MOD(ORA_HASH(MaDatTour), 5)
+SET GhiChu = CASE MOD(ASCII(SUBSTR(MaDatTour, -1, 1)) + LENGTH(MaDatTour), 5)
     WHEN 0 THEN NULL
     WHEN 1 THEN 'Yêu cầu in hóa đơn điện tử sau khi hoàn tất thanh toán.'
     WHEN 2 THEN 'Mang theo hành lý lớn, cần hỗ trợ sắp xếp khoang chứa đồ.'
@@ -3973,6 +3978,7 @@ BEGIN
       FROM (
           SELECT MaTourThucTe, MaKhachHang
             FROM DONDATTOUR
+           WHERE TrangThai IN ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'CHO_HUY')
            GROUP BY MaTourThucTe, MaKhachHang
           HAVING COUNT(*) > 1
       );

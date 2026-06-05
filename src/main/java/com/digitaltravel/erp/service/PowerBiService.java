@@ -26,7 +26,6 @@ import com.digitaltravel.erp.entity.ChiPhiThucTe;
 import com.digitaltravel.erp.entity.DonDatTour;
 import com.digitaltravel.erp.entity.GiaoDich;
 import com.digitaltravel.erp.entity.QuyetToan;
-import com.digitaltravel.erp.entity.TaiKhoan;
 import com.digitaltravel.erp.entity.TourThucTe;
 import com.digitaltravel.erp.exception.AppException;
 import com.digitaltravel.erp.repository.ChiPhiThucTeRepository;
@@ -47,7 +46,6 @@ public class PowerBiService {
 
     private final PowerBiProperties powerBiProperties;
     private final NhatKyHeThongService nhatKyHeThongService;
-    private final TaiKhoanRepository taiKhoanRepository;
     private final QuyetToanRepository quyetToanRepository;
     private final DonDatTourRepository donDatTourRepository;
     private final ChiPhiThucTeRepository chiPhiThucTeRepository;
@@ -82,8 +80,7 @@ public class PowerBiService {
                         .maKho("GIAO_DICH")
                         .tenKho("Giao dịch thanh toán")
                         .moTa("Giao dịch thanh toán: loại, phương thức, số tiền, trạng thái")
-                        .build()
-        );
+                        .build());
     }
 
     @Transactional
@@ -148,14 +145,14 @@ public class PowerBiService {
     // Các phương thức xuất dữ liệu giữ nguyên
     private byte[] xuatDoanhThu(LocalDateTime tuNgay, LocalDateTime denNgay, boolean isExcel) {
         List<QuyetToan> data = quyetToanRepository.xuatDuLieuDoanhThu(tuNgay, denNgay);
-        String[] headers = {"Mã QT", "Mã Tour TT", "Tiêu đề Tour", "Tổng Doanh Thu",
-                "Tổng Chi Phí", "Lợi Nhuận", "Ngày QT", "Trạng Thái"};
+        String[] headers = { "Mã QT", "Mã Tour TT", "Tiêu đề Tour", "Tổng Doanh Thu",
+                "Tổng Chi Phí", "Lợi Nhuận", "Ngày QT", "Trạng Thái" };
         return isExcel ? writeExcel("DoanhThu", headers, data, this::doanhThuToRow)
-                       : writeCsv(headers, data, this::doanhThuToRow);
+                : writeCsv(headers, data, this::doanhThuToRow);
     }
 
     private String[] doanhThuToRow(QuyetToan qt) {
-        return new String[]{
+        return new String[] {
                 qt.getMaQuyetToan(),
                 qt.getTourThucTe().getMaTourThucTe(),
                 qt.getTourThucTe().getTourMau().getTieuDe(),
@@ -169,14 +166,14 @@ public class PowerBiService {
 
     private byte[] xuatDonDatTour(LocalDateTime tuNgay, LocalDateTime denNgay, boolean isExcel) {
         List<DonDatTour> data = donDatTourRepository.xuatDuLieu(tuNgay, denNgay);
-        String[] headers = {"Mã Đặt Tour", "Mã Tour TT", "Tiêu đề Tour",
-                "Ngày Đặt", "Tổng Tiền", "Trạng Thái"};
+        String[] headers = { "Mã Đặt Tour", "Mã Tour TT", "Tiêu đề Tour",
+                "Ngày Đặt", "Tổng Tiền", "Trạng Thái" };
         return isExcel ? writeExcel("DonDatTour", headers, data, this::donDatTourToRow)
-                       : writeCsv(headers, data, this::donDatTourToRow);
+                : writeCsv(headers, data, this::donDatTourToRow);
     }
 
     private String[] donDatTourToRow(DonDatTour d) {
-        return new String[]{
+        return new String[] {
                 d.getMaDatTour(),
                 d.getTourThucTe().getMaTourThucTe(),
                 d.getTourThucTe().getTourMau().getTieuDe(),
@@ -188,14 +185,14 @@ public class PowerBiService {
 
     private byte[] xuatChiPhi(LocalDateTime tuNgay, LocalDateTime denNgay, boolean isExcel) {
         List<ChiPhiThucTe> data = chiPhiThucTeRepository.xuatDuLieu(tuNgay, denNgay);
-        String[] headers = {"Mã Chi Phí", "Mã Tour TT", "Danh Mục",
-                "Thành Tiền", "Trạng Thái Duyệt", "Ngày Khai"};
+        String[] headers = { "Mã Chi Phí", "Mã Tour TT", "Danh Mục",
+                "Thành Tiền", "Trạng Thái Duyệt", "Ngày Khai" };
         return isExcel ? writeExcel("ChiPhi", headers, data, this::chiPhiToRow)
-                       : writeCsv(headers, data, this::chiPhiToRow);
+                : writeCsv(headers, data, this::chiPhiToRow);
     }
 
     private String[] chiPhiToRow(ChiPhiThucTe c) {
-        return new String[]{
+        return new String[] {
                 c.getMaChiPhiThucTe(),
                 c.getTourThucTe().getMaTourThucTe(),
                 c.getDanhMuc(),
@@ -207,14 +204,14 @@ public class PowerBiService {
 
     private byte[] xuatTour(boolean isExcel) {
         List<TourThucTe> data = tourThucTeRepository.xuatDuLieuTour();
-        String[] headers = {"Mã Tour TT", "Tiêu đề", "Ngày Khởi Hành",
-                "Giá Hiện Hành", "Số Khách Tối Đa", "Chỗ Còn Lại", "Trạng Thái"};
+        String[] headers = { "Mã Tour TT", "Tiêu đề", "Ngày Khởi Hành",
+                "Giá Hiện Hành", "Số Khách Tối Đa", "Chỗ Còn Lại", "Trạng Thái" };
         return isExcel ? writeExcel("Tour", headers, data, this::tourToRow)
-                       : writeCsv(headers, data, this::tourToRow);
+                : writeCsv(headers, data, this::tourToRow);
     }
 
     private String[] tourToRow(TourThucTe t) {
-        return new String[]{
+        return new String[] {
                 t.getMaTourThucTe(),
                 t.getTourMau().getTieuDe(),
                 t.getNgayKhoiHanh() != null ? t.getNgayKhoiHanh().toString() : "",
@@ -227,14 +224,14 @@ public class PowerBiService {
 
     private byte[] xuatGiaoDich(LocalDateTime tuNgay, LocalDateTime denNgay, boolean isExcel) {
         List<GiaoDich> data = giaoDichRepository.xuatDuLieu(tuNgay, denNgay);
-        String[] headers = {"Mã Giao Dịch", "Mã Đặt Tour", "Loại GD",
-                "Phương Thức", "Số Tiền", "Trạng Thái", "Ngày Thanh Toán"};
+        String[] headers = { "Mã Giao Dịch", "Mã Đặt Tour", "Loại GD",
+                "Phương Thức", "Số Tiền", "Trạng Thái", "Ngày Thanh Toán" };
         return isExcel ? writeExcel("GiaoDich", headers, data, this::giaoDichToRow)
-                       : writeCsv(headers, data, this::giaoDichToRow);
+                : writeCsv(headers, data, this::giaoDichToRow);
     }
 
     private String[] giaoDichToRow(GiaoDich g) {
-        return new String[]{
+        return new String[] {
                 g.getMaGiaoDich(),
                 g.getDonDatTour().getMaDatTour(),
                 g.getLoaiGiaoDich(),
@@ -246,7 +243,7 @@ public class PowerBiService {
     }
 
     private <T> byte[] writeExcel(String sheetName, String[] headers, List<T> data,
-                                  java.util.function.Function<T, String[]> rowMapper) {
+            java.util.function.Function<T, String[]> rowMapper) {
         try (SXSSFWorkbook workbook = new SXSSFWorkbook(100)) {
             Sheet sheet = workbook.createSheet(sheetName);
             CellStyle headerStyle = workbook.createCellStyle();
@@ -289,10 +286,10 @@ public class PowerBiService {
     }
 
     private <T> byte[] writeCsv(String[] headers, List<T> data,
-                                java.util.function.Function<T, String[]> rowMapper) {
+            java.util.function.Function<T, String[]> rowMapper) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bos.write(new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF});
+            bos.write(new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF });
             try (CSVWriter writer = new CSVWriter(
                     new OutputStreamWriter(bos, StandardCharsets.UTF_8))) {
                 writer.writeNext(headers);
